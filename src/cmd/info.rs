@@ -1,8 +1,5 @@
 use super::cmd;
-use crate::param::cmds::CmdMask;
-use crate::param::features::LmpFeatureMask;
-use crate::param::info::CoreSpecificationVersion;
-use crate::param::BdAddr;
+use crate::param::{BdAddr, CmdMask, CoreSpecificationVersion, LmpFeatureMask};
 
 cmd! {
     ReadLocalVersionInformation(INFO_PARAMS, 0x0001) {

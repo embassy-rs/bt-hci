@@ -1,6 +1,5 @@
 use super::cmd;
-use crate::param::events::{EventMask, EventMaskPage2};
-use crate::param::{param, ConnHandle, Duration};
+use crate::param::{ConnHandle, ControllerToHostFlowControl, Duration, EventMask, EventMaskPage2, PowerLevelKind};
 
 cmd! {
     SetEventMask(CONTROL_BASEBAND, 0x0001) {
@@ -18,13 +17,6 @@ cmd! {
     }
 }
 
-param! {
-    enum PowerLevelKind {
-        Current = 0,
-        Maximum = 1,
-    }
-}
-
 cmd! {
     ReadTransmitPowerLevel(CONTROL_BASEBAND, 0x002d) {
         Params {
@@ -35,15 +27,6 @@ cmd! {
             handle: ConnHandle,
             tx_power_level: i8,
         }
-    }
-}
-
-param! {
-    enum ControllerToHostFlowControl {
-        Off = 0,
-        AclOnSyncOff = 1,
-        AclOffSyncOn = 2,
-        BothOn = 3,
     }
 }
 

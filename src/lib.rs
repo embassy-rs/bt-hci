@@ -11,7 +11,6 @@ pub mod cmd;
 pub mod data;
 pub mod event;
 pub mod param;
-pub mod transport;
 
 pub enum FromHciBytesError {
     InvalidSize,
@@ -19,11 +18,11 @@ pub enum FromHciBytesError {
 }
 
 pub trait FromHciBytes<'de>: Sized {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError>;
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError>;
 }
 
 pub enum ReadHciError<E: embedded_io::Error> {
-    BufTooSmall,
+    BufferTooSmall,
     InvalidValue,
     Read(ReadExactError<E>),
 }
@@ -43,14 +42,17 @@ impl<E: embedded_io::Error> From<FromHciBytesError> for ReadHciError<E> {
     }
 }
 
-pub trait ReadHci<'de>: Sized {
-    fn read_hci<R: embedded_io::blocking::Read>(reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>>;
+pub trait ReadHci<'de>: FromHciBytes<'de> {
+    fn read_hci<R: embedded_io::blocking::Read>(
+        reader: R,
+        buf: &'de mut [u8],
+    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>>;
 
     #[cfg(feature = "async")]
     async fn read_hci_async<R: embedded_io::asynch::Read>(
         reader: R,
         buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>>;
+    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>>;
 }
 
 pub trait WriteHci {
@@ -61,6 +63,10 @@ pub trait WriteHci {
 
     #[cfg(feature = "async")]
     async fn write_hci_async<W: embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error>;
+}
+
+pub trait HostToControllerPacket: WriteHci {
+    const KIND: PacketKind;
 }
 
 #[repr(u8)]
@@ -75,16 +81,17 @@ pub enum PacketKind {
 }
 
 impl<'de> FromHciBytes<'de> for PacketKind {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
         if data.is_empty() {
             Err(FromHciBytesError::InvalidSize)
         } else {
+            let (data, rest) = data.split_at(1);
             match data[0] {
-                1 => Ok((PacketKind::Cmd, 1)),
-                2 => Ok((PacketKind::AclData, 1)),
-                3 => Ok((PacketKind::SyncData, 1)),
-                4 => Ok((PacketKind::Event, 1)),
-                5 => Ok((PacketKind::IsoData, 1)),
+                1 => Ok((PacketKind::Cmd, rest)),
+                2 => Ok((PacketKind::AclData, rest)),
+                3 => Ok((PacketKind::SyncData, rest)),
+                4 => Ok((PacketKind::Event, rest)),
+                5 => Ok((PacketKind::IsoData, rest)),
                 _ => Err(FromHciBytesError::InvalidValue),
             }
         }
@@ -94,21 +101,21 @@ impl<'de> FromHciBytes<'de> for PacketKind {
 impl<'de> ReadHci<'de> for PacketKind {
     fn read_hci<R: embedded_io::blocking::Read>(
         mut reader: R,
-        _buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
-        let mut buf = [0];
-        reader.read_exact(&mut buf)?;
-        Self::from_hci_bytes(&buf).map(|(x, _)| x).map_err(Into::into)
+        buf: &'de mut [u8],
+    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
+        let mut val = [0];
+        reader.read_exact(&mut val)?;
+        Self::from_hci_bytes(&val).map(|(x, _)| (x, buf)).map_err(Into::into)
     }
 
     #[cfg(feature = "async")]
     async fn read_hci_async<R: embedded_io::asynch::Read>(
         mut reader: R,
-        _buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
-        let mut buf = [0];
-        reader.read_exact(&mut buf).await?;
-        Self::from_hci_bytes(&buf).map(|(x, _)| x).map_err(Into::into)
+        buf: &'de mut [u8],
+    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
+        let mut val = [0];
+        reader.read_exact(&mut val).await?;
+        Self::from_hci_bytes(&val).map(|(x, _)| (x, buf)).map_err(Into::into)
     }
 }
 
@@ -127,51 +134,59 @@ impl WriteHci for PacketKind {
     }
 }
 
-pub enum Packet<'a> {
-    // Cmd(CmdPacket),
+pub enum ControllerToHostPacket<'a> {
     Acl(data::AclPacket<'a>),
     Sync(data::SyncPacket<'a>),
     // Event(EventPacket),
     Iso(data::IsoPacket<'a>),
 }
 
-impl<'a> Packet<'a> {
+impl<'a> ControllerToHostPacket<'a> {
     pub fn kind(&self) -> PacketKind {
         match self {
-            Packet::Acl(_) => PacketKind::AclData,
-            Packet::Sync(_) => PacketKind::SyncData,
-            Packet::Iso(_) => PacketKind::IsoData,
+            ControllerToHostPacket::Acl(_) => PacketKind::AclData,
+            ControllerToHostPacket::Sync(_) => PacketKind::SyncData,
+            ControllerToHostPacket::Iso(_) => PacketKind::IsoData,
         }
     }
 }
 
-impl<'de> FromHciBytes<'de> for Packet<'de> {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
-        let (kind, kind_len) = PacketKind::from_hci_bytes(data)?;
-        let data = &data[kind_len..];
+impl<'de> FromHciBytes<'de> for ControllerToHostPacket<'de> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        let (kind, data) = PacketKind::from_hci_bytes(data)?;
         match kind {
-            PacketKind::Cmd => todo!(),
-            PacketKind::AclData => data::AclPacket::from_hci_bytes(data).map(|(x, y)| (Packet::Acl(x), kind_len + y)),
+            PacketKind::Cmd => Err(FromHciBytesError::InvalidValue),
+            PacketKind::AclData => {
+                data::AclPacket::from_hci_bytes(data).map(|(x, y)| (ControllerToHostPacket::Acl(x), y))
+            }
             PacketKind::SyncData => {
-                data::SyncPacket::from_hci_bytes(data).map(|(x, y)| (Packet::Sync(x), kind_len + y))
+                data::SyncPacket::from_hci_bytes(data).map(|(x, y)| (ControllerToHostPacket::Sync(x), y))
             }
             PacketKind::Event => todo!(),
-            PacketKind::IsoData => data::IsoPacket::from_hci_bytes(data).map(|(x, y)| (Packet::Iso(x), kind_len + y)),
+            PacketKind::IsoData => {
+                data::IsoPacket::from_hci_bytes(data).map(|(x, y)| (ControllerToHostPacket::Iso(x), y))
+            }
         }
     }
 }
 
-impl<'de> ReadHci<'de> for Packet<'de> {
+impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
     fn read_hci<R: embedded_io::blocking::Read>(
         mut reader: R,
         buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
+    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
         match PacketKind::read_hci(&mut reader, buf)? {
-            PacketKind::Cmd => todo!(),
-            PacketKind::AclData => data::AclPacket::read_hci(reader, buf).map(Packet::Acl),
-            PacketKind::SyncData => data::SyncPacket::read_hci(reader, buf).map(Packet::Sync),
-            PacketKind::Event => todo!(),
-            PacketKind::IsoData => data::IsoPacket::read_hci(reader, buf).map(Packet::Iso),
+            (PacketKind::Cmd, _buf) => Err(ReadHciError::InvalidValue),
+            (PacketKind::AclData, buf) => {
+                data::AclPacket::read_hci(reader, buf).map(|(x, y)| (ControllerToHostPacket::Acl(x), y))
+            }
+            (PacketKind::SyncData, buf) => {
+                data::SyncPacket::read_hci(reader, buf).map(|(x, y)| (ControllerToHostPacket::Sync(x), y))
+            }
+            (PacketKind::Event, _buf) => todo!(),
+            (PacketKind::IsoData, buf) => {
+                data::IsoPacket::read_hci(reader, buf).map(|(x, y)| (ControllerToHostPacket::Iso(x), y))
+            }
         }
     }
 
@@ -179,32 +194,38 @@ impl<'de> ReadHci<'de> for Packet<'de> {
     async fn read_hci_async<R: embedded_io::asynch::Read>(
         mut reader: R,
         buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
+    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
         match PacketKind::read_hci_async(&mut reader, buf).await? {
-            PacketKind::Cmd => todo!(),
-            PacketKind::AclData => data::AclPacket::read_hci_async(reader, buf).await.map(Packet::Acl),
-            PacketKind::SyncData => data::SyncPacket::read_hci_async(reader, buf).await.map(Packet::Sync),
-            PacketKind::Event => todo!(),
-            PacketKind::IsoData => data::IsoPacket::read_hci_async(reader, buf).await.map(Packet::Iso),
+            (PacketKind::Cmd, _buf) => Err(ReadHciError::InvalidValue),
+            (PacketKind::AclData, buf) => data::AclPacket::read_hci_async(reader, buf)
+                .await
+                .map(|(x, y)| (ControllerToHostPacket::Acl(x), y)),
+            (PacketKind::SyncData, buf) => data::SyncPacket::read_hci_async(reader, buf)
+                .await
+                .map(|(x, y)| (ControllerToHostPacket::Sync(x), y)),
+            (PacketKind::Event, _buf) => todo!(),
+            (PacketKind::IsoData, buf) => data::IsoPacket::read_hci_async(reader, buf)
+                .await
+                .map(|(x, y)| (ControllerToHostPacket::Iso(x), y)),
         }
     }
 }
 
-impl<'a> WriteHci for Packet<'a> {
+impl<'a> WriteHci for ControllerToHostPacket<'a> {
     fn size(&self) -> usize {
         1 + match self {
-            Packet::Acl(pkt) => pkt.size(),
-            Packet::Sync(pkt) => pkt.size(),
-            Packet::Iso(pkt) => pkt.size(),
+            ControllerToHostPacket::Acl(pkt) => pkt.size(),
+            ControllerToHostPacket::Sync(pkt) => pkt.size(),
+            ControllerToHostPacket::Iso(pkt) => pkt.size(),
         }
     }
 
     fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         self.kind().write_hci(&mut writer)?;
         match self {
-            Packet::Acl(pkt) => pkt.write_hci(writer),
-            Packet::Sync(pkt) => pkt.write_hci(writer),
-            Packet::Iso(pkt) => pkt.write_hci(writer),
+            ControllerToHostPacket::Acl(pkt) => pkt.write_hci(writer),
+            ControllerToHostPacket::Sync(pkt) => pkt.write_hci(writer),
+            ControllerToHostPacket::Iso(pkt) => pkt.write_hci(writer),
         }
     }
 
@@ -212,10 +233,39 @@ impl<'a> WriteHci for Packet<'a> {
     async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         self.kind().write_hci_async(&mut writer).await?;
         match self {
-            Packet::Acl(pkt) => pkt.write_hci_async(writer).await,
-            Packet::Sync(pkt) => pkt.write_hci_async(writer).await,
-            Packet::Iso(pkt) => pkt.write_hci_async(writer).await,
+            ControllerToHostPacket::Acl(pkt) => pkt.write_hci_async(writer).await,
+            ControllerToHostPacket::Sync(pkt) => pkt.write_hci_async(writer).await,
+            ControllerToHostPacket::Iso(pkt) => pkt.write_hci_async(writer).await,
         }
+    }
+}
+
+pub struct WithIndicator<T: HostToControllerPacket>(T);
+
+impl<T: HostToControllerPacket> WithIndicator<T> {
+    pub fn new(pkt: T) -> Self {
+        Self(pkt)
+    }
+
+    pub fn into_inner(self) -> T {
+        self.0
+    }
+}
+
+impl<T: HostToControllerPacket> WriteHci for WithIndicator<T> {
+    fn size(&self) -> usize {
+        1 + self.0.size()
+    }
+
+    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        T::KIND.write_hci(&mut writer)?;
+        self.0.write_hci(writer)
+    }
+
+    #[cfg(feature = "async")]
+    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        T::KIND.write_hci_async(&mut writer).await?;
+        self.0.write_hci_async(writer).await
     }
 }
 
