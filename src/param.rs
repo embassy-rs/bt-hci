@@ -1,3 +1,5 @@
+use crate::{FromHciBytes, FromHciBytesError, WriteHci};
+
 pub mod cmds;
 pub mod events;
 pub mod features;
@@ -5,50 +7,31 @@ pub mod info;
 pub mod le;
 pub mod status;
 
-pub trait CmdParam {
-    /// The size (in bytes) of the parameter
-    fn size(&self) -> usize;
-
-    fn write<W: embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error>;
-
-    #[cfg(feature = "async")]
-    async fn write_async<W: embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error>;
-}
-
-pub enum FromBytesError {
-    InvalidSize,
-    InvalidValue,
-}
-
-pub trait EventParam<'de>: Sized {
-    fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), FromBytesError>;
-}
-
 macro_rules! impl_param_int {
     ($($ty:ty),+) => {
         $(
-            impl CmdParam for $ty {
+            impl WriteHci for $ty {
                 fn size(&self) -> usize {
                     ::core::mem::size_of::<Self>()
                 }
 
-                fn write<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                     writer.write_all(&self.to_le_bytes())
                 }
 
                 #[cfg(feature = "async")]
-                async fn write_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                     writer.write_all(&self.to_le_bytes()).await
                 }
             }
 
-            impl<'de> EventParam<'de> for $ty {
-                fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), FromBytesError> {
+            impl<'de> FromHciBytes<'de> for $ty {
+                fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
                     let size = ::core::mem::size_of::<Self>();
                     if data.len() >= size {
                         Ok((Self::from_le_bytes(unsafe { data[..size].try_into().unwrap_unchecked() }), size))
                     } else {
-                        Err($crate::param::FromBytesError::InvalidSize)
+                        Err($crate::FromHciBytesError::InvalidSize)
                     }
 
                 }
@@ -59,96 +42,96 @@ macro_rules! impl_param_int {
 
 impl_param_int!(u8, i8, u16, i16, u32, i32, u64, i64, u128, i128);
 
-impl CmdParam for bool {
+impl WriteHci for bool {
     fn size(&self) -> usize {
         ::core::mem::size_of::<Self>()
     }
-    fn write<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes())
     }
     #[cfg(feature = "async")]
-    async fn write_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes()).await
     }
 }
 
-impl<'de> EventParam<'de> for bool {
-    fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), FromBytesError> {
+impl<'de> FromHciBytes<'de> for bool {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
         match data.first() {
             Some(0) => Ok((false, 1)),
             Some(1) => Ok((true, 1)),
-            Some(_) => Err(FromBytesError::InvalidValue),
-            None => Err(FromBytesError::InvalidSize),
+            Some(_) => Err(FromHciBytesError::InvalidValue),
+            None => Err(FromHciBytesError::InvalidSize),
         }
     }
 }
 
-impl<'a> CmdParam for &'a [u8] {
+impl<'a> WriteHci for &'a [u8] {
     fn size(&self) -> usize {
         self.len()
     }
 
-    fn write<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&[self.size() as u8])?;
         writer.write_all(self)
     }
 
     #[cfg(feature = "async")]
-    async fn write_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&[self.size() as u8]).await?;
         writer.write_all(self).await
     }
 }
 
-impl<'de: 'a, 'a> EventParam<'de> for &'a [u8] {
-    fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), FromBytesError> {
+impl<'de: 'a, 'a> FromHciBytes<'de> for &'a [u8] {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
         match data.split_first() {
             Some((len, rest)) if usize::from(*len) <= rest.len() => Ok((rest, usize::from(*len))),
-            _ => Err(FromBytesError::InvalidSize),
+            _ => Err(FromHciBytesError::InvalidSize),
         }
     }
 }
 
-impl<'de: 'a, 'a, T: EventParam<'de>, const N: usize> EventParam<'de> for heapless::Vec<T, N> {
-    fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), FromBytesError> {
+impl<'de: 'a, 'a, T: FromHciBytes<'de>, const N: usize> FromHciBytes<'de> for heapless::Vec<T, N> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
         let mut vec = heapless::Vec::new();
         match data.split_first() {
             Some((&count, mut data)) => {
                 let mut total = 1;
                 for _ in 0..count {
-                    let (val, len) = T::from_bytes(data)?;
-                    vec.push(val).or(Err(FromBytesError::InvalidValue))?;
+                    let (val, len) = T::from_hci_bytes(data)?;
+                    vec.push(val).or(Err(FromHciBytesError::InvalidValue))?;
                     data = &data[len..];
                     total += len;
                 }
                 Ok((vec, total))
             }
-            _ => Err(FromBytesError::InvalidSize),
+            _ => Err(FromHciBytesError::InvalidSize),
         }
     }
 }
 
-impl<const N: usize> CmdParam for [u8; N] {
+impl<const N: usize> WriteHci for [u8; N] {
     fn size(&self) -> usize {
         N
     }
 
-    fn write<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self)
     }
 
     #[cfg(feature = "async")]
-    async fn write_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self).await
     }
 }
 
-impl<'de, const N: usize> EventParam<'de> for [u8; N] {
-    fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), FromBytesError> {
+impl<'de, const N: usize> FromHciBytes<'de> for [u8; N] {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
         if data.len() >= N {
             Ok((unsafe { data[..N].try_into().unwrap_unchecked() }, N))
         } else {
-            Err(FromBytesError::InvalidSize)
+            Err(FromHciBytesError::InvalidSize)
         }
     }
 }
@@ -157,36 +140,36 @@ macro_rules! impl_param_tuple {
     ($($a:ident)*) => {
         #[automatically_derived]
         #[allow(non_snake_case)]
-        impl<$($a: CmdParam,)*> CmdParam for ($($a,)*) {
+        impl<$($a: WriteHci,)*> WriteHci for ($($a,)*) {
             fn size(&self) -> usize {
                 let ($(ref $a,)*) = *self;
                 $($a.size() +)* 0
             }
 
             #[allow(unused_mut, unused_variables)]
-            fn write<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 let ($(ref $a,)*) = *self;
-                $($a.write(&mut writer)?;)*
+                $($a.write_hci(&mut writer)?;)*
                 Ok(())
             }
 
             #[cfg(feature = "async")]
             #[allow(unused_mut, unused_variables)]
-            async fn write_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 let ($(ref $a,)*) = *self;
-                $($a.write_async(&mut writer).await?;)*
+                $($a.write_hci_async(&mut writer).await?;)*
                 Ok(())
             }
         }
 
         #[automatically_derived]
         #[allow(non_snake_case)]
-        impl<'de, $($a: EventParam<'de>,)*> EventParam<'de> for ($($a,)*) {
+        impl<'de, $($a: FromHciBytes<'de>,)*> FromHciBytes<'de> for ($($a,)*) {
             #[allow(unused_mut, unused_variables)]
-            fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), FromBytesError> {
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
                 let total = 0;
                 $(
-                    let ($a, len) = $a::from_bytes(data)?;
+                    let ($a, len) = $a::from_hci_bytes(data)?;
                     let total = total + len;
                     let data = &data[len..];
                 )*
@@ -232,24 +215,24 @@ macro_rules! param {
             }
         }
 
-        impl $crate::param::CmdParam for $name {
+        impl $crate::WriteHci for $name {
             fn size(&self) -> usize {
-                $crate::param::CmdParam::size(&self.0)
+                $crate::WriteHci::size(&self.0)
             }
 
-            fn write<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <$wrapped as $crate::param::CmdParam>::write(&self.0, writer)
+            fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+                <$wrapped as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
             #[cfg(feature = "async")]
-            async fn write_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <$wrapped as $crate::param::CmdParam>::write_async(&self.0, writer).await
+            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+                <$wrapped as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
 
-        impl<'de> $crate::param::EventParam<'de> for $name {
-            fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), $crate::param::FromBytesError> {
-                <$wrapped as $crate::param::EventParam>::from_bytes(data).map(|(x, y)| (Self(x), y))
+        impl<'de> $crate::FromHciBytes<'de> for $name {
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), $crate::FromHciBytesError> {
+                <$wrapped as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
             }
         }
     };
@@ -278,29 +261,29 @@ macro_rules! param {
             pub $($field: $ty,)*
         }
 
-        impl $crate::param::CmdParam for $name {
+        impl $crate::WriteHci for $name {
             fn size(&self) -> usize {
-                $(<$ty as $crate::param::CmdParam>::size(&self.$field) +)* 0
+                $(<$ty as $crate::WriteHci>::size(&self.$field) +)* 0
             }
 
-            fn write<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                $(<$ty as $crate::param::CmdParam>::write(&self.$field, &mut writer)?;)*
+            fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                $(<$ty as $crate::WriteHci>::write_hci(&self.$field, &mut writer)?;)*
                 Ok(())
             }
 
             #[cfg(feature = "async")]
-            async fn write_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                $(<$ty as $crate::param::CmdParam>::write_async(&self.$field, &mut writer).await?;)*
+            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                $(<$ty as $crate::WriteHci>::write_hci_async(&self.$field, &mut writer).await?;)*
                 Ok(())
             }
         }
 
-        impl<'de> $crate::param::EventParam<'de> for $name {
+        impl<'de> $crate::FromHciBytes<'de> for $name {
             #[allow(unused_variables)]
-            fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), $crate::param::FromBytesError> {
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), $crate::FromHciBytesError> {
                 let total = 0;
                 $(
-                    let ($field, len) = <$ty as $crate::param::EventParam>::from_bytes(data)?;
+                    let ($field, len) = <$ty as $crate::FromHciBytes>::from_hci_bytes(data)?;
                     let total = total + len;
                     let data = &data[len..];
                 )*
@@ -342,30 +325,30 @@ macro_rules! param {
             )+
         }
 
-        impl $crate::param::CmdParam for $name {
+        impl $crate::WriteHci for $name {
             fn size(&self) -> usize {
                 1
             }
 
-            fn write<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <u8 as $crate::param::CmdParam>::write(&(*self as u8), writer)
+            fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+                <u8 as $crate::WriteHci>::write_hci(&(*self as u8), writer)
             }
 
             #[cfg(feature = "async")]
-            async fn write_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <u8 as $crate::param::CmdParam>::write_async(&(*self as u8), writer).await
+            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+                <u8 as $crate::WriteHci>::write_hci_async(&(*self as u8), writer).await
             }
         }
 
-        impl<'de> $crate::param::EventParam<'de> for $name {
+        impl<'de> $crate::FromHciBytes<'de> for $name {
             #[allow(unused_variables)]
-            fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), $crate::param::FromBytesError> {
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), $crate::FromHciBytesError> {
                 match data.first() {
                     Some(byte) => match byte {
                         $($value => Ok((Self::$variant, 1)),)+
-                        _ => Err($crate::param::FromBytesError::InvalidValue),
+                        _ => Err($crate::FromHciBytesError::InvalidValue),
                     }
-                    None => Err($crate::param::FromBytesError::InvalidSize),
+                    None => Err($crate::FromHciBytesError::InvalidSize),
                 }
             }
         }
@@ -410,19 +393,19 @@ macro_rules! param {
             )+
         }
 
-        impl $crate::param::CmdParam for $name {
+        impl $crate::WriteHci for $name {
             fn size(&self) -> usize {
                 1
             }
 
-            fn write<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <u8 as $crate::param::CmdParam>::write(&self.0, writer)
+            fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+                <u8 as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
             #[cfg(feature = "async")]
             #[allow(unused_mut)]
-            async fn write_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                <u8 as $crate::param::CmdParam>::write_async(&self.0, writer).await
+            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                <u8 as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
     };
@@ -458,48 +441,48 @@ macro_rules! param {
             )+
         }
 
-        impl $crate::param::CmdParam for $name {
+        impl $crate::WriteHci for $name {
             fn size(&self) -> usize {
                 $octets
             }
 
-            fn write<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <[u8; $octets] as $crate::param::CmdParam>::write(&self.0, writer)
+            fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+                <[u8; $octets] as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
             #[cfg(feature = "async")]
             #[allow(unused_mut)]
-            async fn write_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                <[u8; $octets] as $crate::param::CmdParam>::write_async(&self.0, writer).await
+            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                <[u8; $octets] as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
 
-        impl<'de> $crate::param::EventParam<'de> for $name {
-            fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), $crate::param::FromBytesError> {
-                <[u8; $octets] as $crate::param::EventParam>::from_bytes(data).map(|(x,y)| (Self(x), y))
+        impl<'de> $crate::FromHciBytes<'de> for $name {
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), $crate::FromHciBytesError> {
+                <[u8; $octets] as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x,y)| (Self(x), y))
             }
         }
     };
 
     (&$life:lifetime [$el:ty]) => {
-        impl<$life> $crate::param::CmdParam for &$life [$el] {
+        impl<$life> $crate::WriteHci for &$life [$el] {
             fn size(&self) -> usize {
-                1 + self.iter().map($crate::param::CmdParam::size).sum::<usize>()
+                1 + self.iter().map($crate::WriteHci::size).sum::<usize>()
             }
 
-            fn write<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 writer.write_all(&[self.len() as u8])?;
                 for x in self.iter() {
-                    <$el as $crate::param::CmdParam>::write(x, &mut writer)?;
+                    <$el as $crate::WriteHci>::write_hci(x, &mut writer)?;
                 }
                 Ok(())
             }
 
             #[cfg(feature = "async")]
-            async fn write_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 writer.write_all(&[self.len() as u8]).await?;
                 for x in self.iter() {
-                    <$el as $crate::param::CmdParam>::write_async(x, &mut writer).await?;
+                    <$el as $crate::WriteHci>::write_hci_async(x, &mut writer).await?;
                 }
                 Ok(())
             }
@@ -531,25 +514,25 @@ impl ConnHandle {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct Duration<const N: u32 = 1>(u16);
 
-impl<const N: u32> CmdParam for Duration<N> {
+impl<const N: u32> WriteHci for Duration<N> {
     fn size(&self) -> usize {
-        CmdParam::size(&self.0)
+        WriteHci::size(&self.0)
     }
 
-    fn write<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
-        self.0.write(writer)
+    fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+        self.0.write_hci(writer)
     }
 
     #[cfg(feature = "async")]
     #[allow(unused_mut)]
-    async fn write_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
-        self.0.write_async(writer).await
+    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+        self.0.write_hci_async(writer).await
     }
 }
 
-impl<'de, const N: u32> EventParam<'de> for Duration<N> {
-    fn from_bytes(data: &'de [u8]) -> Result<(Self, usize), FromBytesError> {
-        u16::from_bytes(data).map(|(x, y)| (Self(x), y))
+impl<'de, const N: u32> FromHciBytes<'de> for Duration<N> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, usize), FromHciBytesError> {
+        u16::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
     }
 }
 

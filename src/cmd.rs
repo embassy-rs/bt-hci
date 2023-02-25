@@ -1,4 +1,4 @@
-use crate::param::EventParam;
+use crate::{FromHciBytes, WriteHci};
 
 pub mod controller_baseband;
 pub mod info;
@@ -48,26 +48,18 @@ impl Opcode {
     }
 }
 
-pub trait Cmd {
+pub trait Cmd: WriteHci {
     const OPCODE: Opcode;
-
-    /// The size (in bytes) of the params for this command
-    fn size(&self) -> u8;
 
     /// The command packet header for this command
     fn header(&self) -> [u8; 3] {
         let opcode_bytes = Self::OPCODE.0.to_le_bytes();
-        [opcode_bytes[0], opcode_bytes[1], self.size()]
+        [opcode_bytes[0], opcode_bytes[1], (self.size() - 3) as u8]
     }
-
-    fn write<W: embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error>;
-
-    #[cfg(feature = "async")]
-    async fn write_async<W: embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error>;
 }
 
-pub trait Synchronous: Cmd {
-    type Return<'de>: EventParam<'de>;
+pub trait SyncCmd: Cmd {
+    type Return<'de>: FromHciBytes<'de>;
 }
 
 macro_rules! cmd {
@@ -109,7 +101,7 @@ macro_rules! cmd {
             }
         }
 
-        impl$(<$life>)? $crate::cmd::Synchronous for $name$(<$life>)? {
+        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
             type Return<'ret> = $ret_ty;
         }
     };
@@ -130,29 +122,35 @@ macro_rules! cmd {
 
         #[automatically_derived]
         #[allow(unused_mut, unused_variables, unused_imports)]
-        impl$(<$life>)? $crate::cmd::Cmd for $name$(<$life>)? {
-            const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
-
-            fn size(&self) -> u8 {
-                ($(core::mem::size_of::<$param_ty>() +)* 0) as u8
+        impl$(<$life>)? $crate::WriteHci for $name$(<$life>)? {
+            fn size(&self) -> usize {
+                $(core::mem::size_of::<$param_ty>() +)* 3
             }
 
-            fn write<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                use $crate::cmd::Cmd;
                 writer.write_all(&self.header())?;
                 $(
-                    <$param_ty as $crate::param::CmdParam>::write(&self.$param_name, &mut writer)?;
+                    <$param_ty as $crate::WriteHci>::write_hci(&self.$param_name, &mut writer)?;
                 )*
                 Ok(())
             }
 
             #[cfg(feature = "async")]
-            async fn write_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                use $crate::cmd::Cmd;
                 writer.write_all(&self.header()).await?;
                 $(
-                    <$param_ty as $crate::param::CmdParam>::write_async(&self.$param_name, &mut writer).await?;
+                    <$param_ty as $crate::WriteHci>::write_hci_async(&self.$param_name, &mut writer).await?;
                 )*
                 Ok(())
             }
+        }
+
+        #[automatically_derived]
+        #[allow(unused_mut, unused_variables, unused_imports)]
+        impl$(<$life>)? $crate::cmd::Cmd for $name$(<$life>)? {
+            const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
         }
     };
 }
