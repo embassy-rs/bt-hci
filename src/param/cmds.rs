@@ -50,7 +50,7 @@ commands! {
         (3, link_key_request_negative_reply);
         (4, pin_code_request_reply);
         (5, pin_code_request_negative_reply);
-        (6, change_conn_packet_type);
+        (6, change_conn_packet_kind);
         (7, authentication_requested);
     }
     2 => {
@@ -87,8 +87,8 @@ commands! {
     6 => {
         (0, set_event_filter);
         (1, flush);
-        (2, read_pin_type);
-        (3, write_pin_type);
+        (2, read_pin_kind);
+        (3, write_pin_kind);
         (5, read_stored_link_key);
         (6, write_stored_link_key);
         (7, delete_stored_link_key);
@@ -140,14 +140,14 @@ commands! {
     }
     12 => {
         (1, set_afh_host_channel_classification);
-        (4, read_inquiry_scan_type);
-        (5, write_inquiry_scan_type);
+        (4, read_inquiry_scan_kind);
+        (5, write_inquiry_scan_kind);
         (6, read_inquiry_mode);
         (7, write_inquiry_mode);
     }
     13 => {
-        (0, read_page_scan_type);
-        (1, write_page_scan_type);
+        (0, read_page_scan_kind);
+        (1, write_page_scan_kind);
         (2, read_afh_channel_assessment_mode);
         (3, write_afh_channel_assessment_mode);
     }

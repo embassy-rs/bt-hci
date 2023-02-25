@@ -1,11 +1,11 @@
 use super::cmd;
 use crate::param::events::LeEventMask;
 use crate::param::features::LeFeatureMask;
-use crate::param::le::{AddrType, AdvChannelMap, ChannelMap};
+use crate::param::le::{AddrKind, AdvChannelMap, ChannelMap};
 use crate::param::{param, BdAddr, ConnHandle, Duration};
 
 param! {
-    enum AdvType {
+    enum AdvKind {
         AdvInd = 0,
         AdvDirectIndHigh = 1,
         AdvScanInd = 2,
@@ -24,7 +24,7 @@ param! {
 }
 
 param! {
-    enum LeScanType {
+    enum LeScanKind {
         Passive = 0,
         Active = 1,
     }
@@ -79,9 +79,9 @@ cmd! {
         Params {
             adv_interval_min: Duration<1>,
             adv_interval_max: Duration<1>,
-            adv_type: AdvType,
-            own_addr_type: AddrType,
-            peer_addr_type: AddrType,
+            adv_kind: AdvKind,
+            own_addr_kind: AddrKind,
+            peer_addr_kind: AddrKind,
             adv_channel_map: AdvChannelMap,
             adv_filter_policy: AdvFilterPolicy,
         }
@@ -128,10 +128,10 @@ cmd! {
 cmd! {
     LeSetScanParams(LE, 0x000b) {
         Params {
-            le_scan_type: LeScanType,
+            le_scan_kind: LeScanKind,
             le_scan_interval: Duration<16>,
             le_scan_window: Duration<16>,
-            own_addr_type: AddrType,
+            own_addr_kind: AddrKind,
             scanning_filter_policy: ScanningFilterPolicy,
         }
         Return = ();
@@ -154,9 +154,9 @@ cmd! {
             le_scan_interval: Duration<16>,
             le_scan_window: Duration<16>,
             use_filter_accept_list: bool,
-            peer_addr_type: AddrType,
+            peer_addr_kind: AddrKind,
             peer_addr: BdAddr,
-            own_addr_type: AddrType,
+            own_addr_kind: AddrKind,
             conn_interval_min: Duration<2>,
             conn_interval_max: Duration<2>,
             max_latency: u16,
@@ -191,7 +191,7 @@ cmd! {
 cmd! {
     LeAddDeviceToFilterAcceptList(LE, 0x0011) {
         Params {
-            addr_type: AddrType,
+            addr_kind: AddrKind,
             addr: BdAddr,
         }
         Return = ();
@@ -201,7 +201,7 @@ cmd! {
 cmd! {
     LeRemoveDeviceFromFilterAcceptList(LE, 0x0012) {
         Params {
-            addr_type: AddrType,
+            addr_kind: AddrKind,
             addr: BdAddr,
         }
         Return = ();
@@ -347,7 +347,7 @@ cmd! {
 cmd! {
     LeAddDeviceToResolvingList(LE, 0x0027) {
         Params {
-            peer_id_addr_type: AddrType,
+            peer_id_addr_kind: AddrKind,
             peer_id_addr: BdAddr,
             peer_irk: [u8; 16],
             local_irk: [u8; 16],
@@ -359,7 +359,7 @@ cmd! {
 cmd! {
     LeRemoveDeviceFromResolvingList(LE, 0x0028) {
         Params {
-            peer_id_addr_type: AddrType,
+            peer_id_addr_kind: AddrKind,
             peer_id_addr: BdAddr,
         }
         Return = ();
@@ -511,8 +511,8 @@ cmd! {
                 primary_adv_interval_min: Duration<1>,
                 primary_adv_interval_max: Duration<1>,
                 primary_adv_channel_map: AdvChannelMap,
-                own_addr_type: AddrType,
-                peer_addr_type: AddrType,
+                own_addr_kind: AddrKind,
+                peer_addr_kind: AddrKind,
                 peer_addr: BdAddr,
                 adv_filter_policy: AdvFilterPolicy,
                 adv_tx_power: i8,
@@ -682,8 +682,8 @@ cmd! {
     LeExtCreateConn(LE, 0x0043) {
         Params {
             initiator_filter_policy: bool,
-            own_addr_type: AddrType,
-            peer_addr_type: AddrType,
+            own_addr_kind: AddrKind,
+            peer_addr_kind: AddrKind,
             peer_addr: BdAddr,
             initiating_phys: PhyMask,
         }
@@ -714,11 +714,11 @@ cmd! {
         Params {
             options: LePeriodicAdvCreateSyncOptions,
             adv_sid: u8,
-            adv_addr_type: AddrType,
+            adv_addr_kind: AddrKind,
             adv_addr: BdAddr,
             skip: u16,
             sync_timeout: Duration<16>,
-            sync_cte_type: CteMask,
+            sync_cte_kind: CteMask,
         }
         Return = ();
     }
@@ -744,7 +744,7 @@ cmd! {
 cmd! {
     LeAddDeviceToPeriodicAdvList(LE, 0x0047) {
         Params {
-            adv_addr_type: AddrType,
+            adv_addr_kind: AddrKind,
             adv_addr: BdAddr,
             adv_sid: u8,
         }
@@ -755,7 +755,7 @@ cmd! {
 cmd! {
     LeRemoveDeviceFromPeriodicAdvList(LE, 0x0048) {
         Params {
-            adv_addr_type: AddrType,
+            adv_addr_kind: AddrKind,
             adv_addr: BdAddr,
             adv_sid: u8,
         }
@@ -811,7 +811,7 @@ param! {
 cmd! {
     LeSetPrivacyMode(LE, 0x004e) {
         Params {
-            peer_id_addr_type: AddrType,
+            peer_id_addr_kind: AddrKind,
             peer_id_addr: BdAddr,
             privacy_mode: PrivacyMode,
         }
@@ -820,7 +820,7 @@ cmd! {
 }
 
 param! {
-    enum CteType {
+    enum CteKind {
         AoA = 0,
         AoD1Us = 1,
         AoD2Us = 2,
@@ -832,7 +832,7 @@ cmd! {
         Params<'a> {
             adv_handle: AdvHandle,
             cte_length: u8,
-            cte_type: CteType,
+            cte_kind: CteKind,
             cte_count: u8,
             switching_pattern: &'a [u8],
         }
@@ -854,7 +854,7 @@ cmd! {
     LeSetConnCteTransmitParams(LE, 0x0055) {
         Params<'a> {
             handle: ConnHandle,
-            cte_types: CteMask,
+            cte_kinds: CteMask,
             switching_pattern: &'a [u8],
         }
         Return = ConnHandle;
@@ -946,7 +946,7 @@ cmd! {
             mode: LePeriodicAdvSyncTransferMode,
             skip: u16,
             sync_timeout: Duration<16>,
-            cte_type: CteMask,
+            cte_kind: CteMask,
         }
         Return = ();
     }
@@ -958,7 +958,7 @@ cmd! {
             mode: LePeriodicAdvSyncTransferMode,
             skip: u16,
             sync_timeout: Duration<16>,
-            cte_type: CteMask,
+            cte_kind: CteMask,
         }
         Return = ();
     }

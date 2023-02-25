@@ -1,13 +1,13 @@
 use super::param;
 
-param!(struct AddrType(u8));
+param!(struct AddrKind(u8));
 
-impl AddrType {
-    pub const PUBLIC: AddrType = AddrType(0);
-    pub const RANDOM: AddrType = AddrType(1);
-    pub const RESOLVABLE_PRIVATE_OR_PUBLIC: AddrType = AddrType(2);
-    pub const RESOLVABLE_PRIVATE_OR_RANDOM: AddrType = AddrType(3);
-    pub const ANONYMOUS_ADV: AddrType = AddrType(0xff);
+impl AddrKind {
+    pub const PUBLIC: AddrKind = AddrKind(0);
+    pub const RANDOM: AddrKind = AddrKind(1);
+    pub const RESOLVABLE_PRIVATE_OR_PUBLIC: AddrKind = AddrKind(2);
+    pub const RESOLVABLE_PRIVATE_OR_RANDOM: AddrKind = AddrKind(3);
+    pub const ANONYMOUS_ADV: AddrKind = AddrKind(0xff);
 }
 
 param! {

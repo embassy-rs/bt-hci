@@ -12,7 +12,7 @@ pub mod transport;
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum PacketType {
+pub enum PacketKind {
     Cmd = 1,
     AclData = 2,
     SyncData = 3,
@@ -28,4 +28,5 @@ pub enum PacketType {
 /// - address -> addr
 /// - connection -> conn
 /// - extended -> ext
+/// - type -> kind
 const _FOO: () = ();

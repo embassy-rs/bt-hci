@@ -11,7 +11,7 @@ param! {
         (6, is_remote_name_request_complete_enabled, enable_remote_name_request_complete);
         (7, is_encryption_change_v1_enabled, enable_encryption_change_v1);
         (8, is_change_conn_link_key_complete_enabled, enable_change_conn_link_key_complete);
-        (9, is_link_key_type_changed_enabled, enable_link_key_type_changed);
+        (9, is_link_key_kind_changed_enabled, enable_link_key_kind_changed);
         (10, supports_read_remote_features_complete_enabled, enable_read_remote_supported_features_complete);
         (11, is_read_remote_version_information_complete_enabled, enable_read_remote_version_information_complete);
         (12, is_qos_setup_complete_enabled, enable_qos_setup_complete);
@@ -27,7 +27,7 @@ param! {
         (25, is_data_buffer_overflow_enabled, enable_data_buffer_overflow);
         (26, is_max_slots_change_enabled, enable_max_slots_change);
         (27, is_read_clock_offset_complete_enabled, enable_read_clock_offset_complete);
-        (28, is_conn_packet_type_changed_enabled, enable_conn_packet_type_changed);
+        (28, is_conn_packet_kind_changed_enabled, enable_conn_packet_kind_changed);
         (29, is_qos_violation_enabled, enable_qos_violation);
         (31, is_page_scan_repetition_mode_change_enabled, enable_page_scan_repetition_mode_change);
         (32, is_flow_specification_complete_enabled, enable_flow_specification_complete);
