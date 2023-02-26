@@ -1,4 +1,4 @@
-use crate::{FromHciBytes, FromHciBytesError, ReadHci, ReadHciError, WriteHci};
+use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
 macro_rules! impl_param_int {
     ($($ty:ty),+) => {
@@ -28,29 +28,6 @@ macro_rules! impl_param_int {
                         Err($crate::FromHciBytesError::InvalidSize)
                     }
 
-                }
-            }
-
-            impl<'de> ReadHci<'de> for $ty {
-                fn read_hci<R: embedded_io::blocking::Read>(
-                    mut reader: R,
-                    buf: &'de mut [u8],
-                ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-                    const SIZE: usize = core::mem::size_of::<$ty>();
-                    let mut val = [0; SIZE];
-                    reader.read_exact(&mut val)?;
-                    Ok((Self::from_le_bytes(val), buf))
-                }
-
-                #[cfg(feature = "async")]
-                async fn read_hci_async<R: embedded_io::asynch::Read>(
-                    mut reader: R,
-                    buf: &'de mut [u8],
-                ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-                    const SIZE: usize = core::mem::size_of::<$ty>();
-                    let mut val = [0; SIZE];
-                    reader.read_exact(&mut val).await?;
-                    Ok((Self::from_le_bytes(val), buf))
                 }
             }
         )+
@@ -95,33 +72,6 @@ macro_rules! impl_param_tuple {
                     let ($a, data) = $a::from_hci_bytes(data)?;
                 )*
                 Ok((($($a,)*), data))
-            }
-        }
-
-        #[automatically_derived]
-        #[allow(non_snake_case)]
-        impl<'de, $($a: ReadHci<'de>,)*> ReadHci<'de> for ($($a,)*) {
-            #[allow(unused_mut, unused_variables)]
-            fn read_hci<R: embedded_io::blocking::Read>(
-                mut reader: R,
-                buf: &'de mut [u8],
-            ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-                $(
-                    let ($a, buf) = $a::read_hci(&mut reader, buf)?;
-                )*
-                Ok((($($a,)*), buf))
-            }
-
-            #[cfg(feature = "async")]
-            #[allow(unused_mut, unused_variables)]
-            async fn read_hci_async<R: embedded_io::asynch::Read>(
-                mut reader: R,
-                buf: &'de mut [u8],
-            ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-                $(
-                    let ($a, buf) = $a::read_hci_async(&mut reader, buf).await?;
-                )*
-                Ok((($($a,)*), buf))
             }
         }
     };
@@ -170,20 +120,6 @@ macro_rules! param {
         impl<'de> $crate::FromHciBytes<'de> for $name {
             fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
                 <$wrapped as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
-            }
-        }
-
-        impl<'de> $crate::ReadHci<'de> for $name {
-            fn read_hci<R: embedded_io::blocking::Read>(reader: R, buf: &'de mut [u8]) -> Result<(Self, &'de mut [u8]), $crate::ReadHciError<R::Error>> {
-                <$wrapped as $crate::ReadHci>::read_hci(reader, buf).map(|(x, y)| (Self(x), y))
-            }
-
-            #[cfg(feature = "async")]
-            async fn read_hci_async<R: embedded_io::asynch::Read>(
-                reader: R,
-                buf: &'de mut [u8],
-            ) -> Result<(Self, &'de mut [u8]), $crate::ReadHciError<R::Error>> {
-                <$wrapped as $crate::ReadHci>::read_hci_async(reader, buf).await.map(|(x, y)| (Self(x), y))
             }
         }
     };
@@ -239,26 +175,6 @@ macro_rules! param {
                 Ok((Self {
                     $($field,)*
                 }, data))
-            }
-        }
-
-        impl<'de> $crate::ReadHci<'de> for $name {
-            fn read_hci<R: embedded_io::blocking::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<(Self, &'de mut [u8]), $crate::ReadHciError<R::Error>> {
-                $(let ($field, buf) = <$ty as $crate::ReadHci>::read_hci(&mut reader, buf)?;)*
-                Ok((Self {
-                    $($field,)*
-                }, buf))
-            }
-
-            #[cfg(feature = "async")]
-            async fn read_hci_async<R: embedded_io::asynch::Read>(
-                mut reader: R,
-                buf: &'de mut [u8],
-            ) -> Result<(Self, &'de mut [u8]), $crate::ReadHciError<R::Error>> {
-                $(let ($field, buf) = <$ty as $crate::ReadHci>::read_hci_async(&mut reader, buf).await?;)*
-                Ok((Self {
-                    $($field,)*
-                }, buf))
             }
         }
     };
@@ -319,24 +235,6 @@ macro_rules! param {
                     }
                     None => Err($crate::FromHciBytesError::InvalidSize),
                 }
-            }
-        }
-
-        impl<'de> $crate::ReadHci<'de> for $name {
-            fn read_hci<R: embedded_io::blocking::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<(Self, &'de mut [u8]), $crate::ReadHciError<R::Error>> {
-                let mut val = [0];
-                reader.read_exact(&mut val)?;
-                <Self as $crate::FromHciBytes>::from_hci_bytes(&val).map(|(x, _)| (x, buf)).map_err(Into::into)
-            }
-
-            #[cfg(feature = "async")]
-            async fn read_hci_async<R: embedded_io::asynch::Read>(
-                mut reader: R,
-                buf: &'de mut [u8],
-            ) -> Result<(Self, &'de mut [u8]), $crate::ReadHciError<R::Error>> {
-                let mut val = [0];
-                reader.read_exact(&mut val).await?;
-                <Self as $crate::FromHciBytes>::from_hci_bytes(&val).map(|(x, _)| (x, buf)).map_err(Into::into)
             }
         }
     };
@@ -447,24 +345,6 @@ macro_rules! param {
         impl<'de> $crate::FromHciBytes<'de> for $name {
             fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
                 <[u8; $octets] as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x,y)| (Self(x), y))
-            }
-        }
-
-        impl<'de> $crate::ReadHci<'de> for $name {
-            fn read_hci<R: embedded_io::blocking::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<(Self, &'de mut [u8]), $crate::ReadHciError<R::Error>> {
-                let mut val = [0; $octets];
-                reader.read_exact(&mut val)?;
-                <Self as $crate::FromHciBytes>::from_hci_bytes(&val).map(|(x, _)| (x, buf)).map_err(Into::into)
-            }
-
-            #[cfg(feature = "async")]
-            async fn read_hci_async<R: embedded_io::asynch::Read>(
-                mut reader: R,
-                buf: &'de mut [u8],
-            ) -> Result<(Self, &'de mut [u8]), $crate::ReadHciError<R::Error>> {
-                let mut val = [0; $octets];
-                reader.read_exact(&mut val).await?;
-                <Self as $crate::FromHciBytes>::from_hci_bytes(&val).map(|(x, _)| (x, buf)).map_err(Into::into)
             }
         }
     };

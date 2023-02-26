@@ -1,4 +1,4 @@
-use crate::{FromHciBytes, FromHciBytesError, ReadHci, ReadHciError, WriteHci};
+use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
 mod cmd_mask;
 mod event_masks;
@@ -56,23 +56,6 @@ impl<const N: u32> WriteHci for Duration<N> {
 impl<'de, const N: u32> FromHciBytes<'de> for Duration<N> {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
         u16::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
-    }
-}
-
-impl<'de, const N: u32> ReadHci<'de> for Duration<N> {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        u16::read_hci(reader, buf).map(|(x, y)| (Self(x), y))
-    }
-
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
-        reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        u16::read_hci_async(reader, buf).await.map(|(x, y)| (Self(x), y))
     }
 }
 

@@ -1,4 +1,4 @@
-use crate::{FromHciBytes, FromHciBytesError, ReadHci, ReadHciError, WriteHci};
+use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
 impl WriteHci for bool {
     fn size(&self) -> usize {
@@ -21,27 +21,6 @@ impl<'de> FromHciBytes<'de> for bool {
             Some(_) => Err(FromHciBytesError::InvalidValue),
             None => Err(FromHciBytesError::InvalidSize),
         }
-    }
-}
-
-impl<'de> ReadHci<'de> for bool {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        let mut val = [0; 1];
-        reader.read_exact(&mut val)?;
-        Self::from_hci_bytes(&val).map(|(x, _)| (x, buf)).map_err(Into::into)
-    }
-
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        let mut val = [0; 1];
-        reader.read_exact(&mut val).await?;
-        Self::from_hci_bytes(&val).map(|(x, _)| (x, buf)).map_err(Into::into)
     }
 }
 
@@ -71,41 +50,6 @@ impl<'de: 'a, 'a> FromHciBytes<'de> for &'a [u8] {
     }
 }
 
-impl<'de> ReadHci<'de> for &'de [u8] {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        let mut len = [0; 1];
-        reader.read_exact(&mut len)?;
-        let len = usize::from(len[0]);
-        if buf.len() < len {
-            Err(ReadHciError::BufferTooSmall)
-        } else {
-            let (buf, rest) = buf.split_at_mut(len);
-            reader.read_exact(buf)?;
-            Ok((buf, rest))
-        }
-    }
-
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        let mut len = [0; 1];
-        reader.read_exact(&mut len).await?;
-        let len = usize::from(len[0]);
-        if buf.len() < len {
-            Err(ReadHciError::BufferTooSmall)
-        } else {
-            let (data, rest) = buf.split_at_mut(len);
-            reader.read_exact(data).await?;
-            Ok((data, rest))
-        }
-    }
-}
-
 impl<'de: 'a, 'a, T: FromHciBytes<'de>, const N: usize> FromHciBytes<'de> for heapless::Vec<T, N> {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
         let mut vec = heapless::Vec::new();
@@ -120,41 +64,6 @@ impl<'de: 'a, 'a, T: FromHciBytes<'de>, const N: usize> FromHciBytes<'de> for he
             }
             _ => Err(FromHciBytesError::InvalidSize),
         }
-    }
-}
-
-impl<'de, T: ReadHci<'de>, const N: usize> ReadHci<'de> for heapless::Vec<T, N> {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        mut buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        let mut count = [0; 1];
-        reader.read_exact(&mut count)?;
-        let count = usize::from(count[0]);
-        let mut vec = heapless::Vec::new();
-        for _ in 0..count {
-            let (val, b) = T::read_hci(&mut reader, buf)?;
-            vec.push(val).or(Err(ReadHciError::InvalidValue))?;
-            buf = b;
-        }
-        Ok((vec, buf))
-    }
-
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
-        mut reader: R,
-        mut buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        let mut count = [0; 1];
-        reader.read_exact(&mut count).await?;
-        let count = usize::from(count[0]);
-        let mut vec = heapless::Vec::new();
-        for _ in 0..count {
-            let (val, rest) = T::read_hci_async(&mut reader, buf).await?;
-            buf = rest;
-            vec.push(val).or(Err(ReadHciError::InvalidValue))?;
-        }
-        Ok((vec, buf))
     }
 }
 
@@ -181,26 +90,5 @@ impl<'de, const N: usize> FromHciBytes<'de> for [u8; N] {
         } else {
             Err(FromHciBytesError::InvalidSize)
         }
-    }
-}
-
-impl<'de, const N: usize> ReadHci<'de> for [u8; N] {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        let mut val = [0; N];
-        reader.read_exact(&mut val)?;
-        Ok((val, buf))
-    }
-
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<(Self, &'de mut [u8]), ReadHciError<R::Error>> {
-        let mut val = [0; N];
-        reader.read_exact(&mut val).await?;
-        Ok((val, buf))
     }
 }

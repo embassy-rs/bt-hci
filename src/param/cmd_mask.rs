@@ -11,7 +11,7 @@ impl Default for CmdMask {
     }
 }
 
-macro_rules! commands {
+macro_rules! cmds {
     (
         $(
             $octet:expr => {
@@ -33,7 +33,7 @@ macro_rules! commands {
     }
 }
 
-commands! {
+cmds! {
     0 => {
         (0, inquiry);
         (1, inquiry_cancel);

@@ -1,4 +1,4 @@
-use crate::{HostToControllerPacket, PacketKind, ReadHci, WriteHci};
+use crate::{FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
 pub mod info;
@@ -63,7 +63,7 @@ impl<T: Cmd> HostToControllerPacket for T {
 }
 
 pub trait SyncCmd: Cmd {
-    type Return<'de>: ReadHci<'de>;
+    type Return<'de>: FromHciBytes<'de>;
 }
 
 macro_rules! cmd {
