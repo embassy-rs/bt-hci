@@ -244,7 +244,6 @@ cmd! {
             encrypted_diversifier: u16,
             long_term_key: [u8; 16],
         }
-        Return = ();
     }
 }
 
@@ -411,7 +410,6 @@ cmd! {
             rx_phys: PhyMask,
             phy_options: PhyOptions,
         }
-        Return = ();
     }
 }
 
@@ -575,7 +573,6 @@ cmd! {
             peer_addr: BdAddr,
             initiating_phys: PhyMask,
         }
-        Return = ();
     }
 }
 
@@ -590,7 +587,6 @@ cmd! {
             sync_timeout: Duration<16>,
             sync_cte_kind: CteMask,
         }
-        Return = ();
     }
 }
 cmd! {
@@ -798,7 +794,6 @@ cmd! {
         Params {
             handle: ConnHandle,
         }
-        Return = ();
     }
 }
 
