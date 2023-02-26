@@ -50,23 +50,6 @@ impl<'de: 'a, 'a> FromHciBytes<'de> for &'a [u8] {
     }
 }
 
-impl<'de: 'a, 'a, T: FromHciBytes<'de>, const N: usize> FromHciBytes<'de> for heapless::Vec<T, N> {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        let mut vec = heapless::Vec::new();
-        match data.split_first() {
-            Some((&count, mut data)) => {
-                for _ in 0..count {
-                    let (val, d) = T::from_hci_bytes(data)?;
-                    vec.push(val).or(Err(FromHciBytesError::InvalidValue))?;
-                    data = d;
-                }
-                Ok((vec, data))
-            }
-            _ => Err(FromHciBytesError::InvalidSize),
-        }
-    }
-}
-
 impl<const N: usize> WriteHci for [u8; N] {
     fn size(&self) -> usize {
         N
