@@ -1,3 +1,4 @@
+use crate::param::param;
 use crate::{FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
@@ -25,10 +26,7 @@ impl OpcodeGroup {
     }
 }
 
-#[repr(transparent)]
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct Opcode(u16);
+param!(struct Opcode(u16));
 
 impl Opcode {
     pub const fn new(ogf: OpcodeGroup, ocf: u16) -> Self {

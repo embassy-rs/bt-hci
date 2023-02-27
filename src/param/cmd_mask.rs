@@ -1,9 +1,6 @@
 use super::param;
 
-param! {
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    struct CmdMask([u8; 64]);
-}
+param!(struct CmdMask([u8; 64]));
 
 impl Default for CmdMask {
     fn default() -> Self {

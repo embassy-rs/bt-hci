@@ -218,5 +218,8 @@ impl<T: HostToControllerPacket> WriteHci for WithIndicator<T> {
 /// - address -> addr
 /// - connection -> conn
 /// - extended -> ext
+/// - extension -> ext
+/// - identifier -> id
+/// - packet -> pkt
 /// - type -> kind
 const _FOO: () = ();

@@ -41,15 +41,6 @@ impl<'a> WriteHci for &'a [u8] {
     }
 }
 
-impl<'de: 'a, 'a> FromHciBytes<'de> for &'a [u8] {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        match data.split_first() {
-            Some((&len, data)) if usize::from(len) <= data.len() => Ok(data.split_at(usize::from(len))),
-            _ => Err(FromHciBytesError::InvalidSize),
-        }
-    }
-}
-
 impl<const N: usize> WriteHci for [u8; N] {
     fn size(&self) -> usize {
         N

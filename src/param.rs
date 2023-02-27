@@ -15,6 +15,25 @@ pub use le::*;
 pub(crate) use macros::param;
 pub use status::*;
 
+/// A special parameter which takes all remaining bytes in the buffer
+#[repr(transparent)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct RemainingBytes<'a>(&'a [u8]);
+
+impl<'a> core::ops::Deref for RemainingBytes<'a> {
+    type Target = [u8];
+
+    fn deref(&self) -> &Self::Target {
+        self.0
+    }
+}
+
+impl<'a> FromHciBytes<'a> for RemainingBytes<'a> {
+    fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
+        Ok((RemainingBytes(data), &[]))
+    }
+}
+
 param!(struct BdAddr([u8; 6]));
 
 impl BdAddr {
@@ -137,4 +156,48 @@ impl CoreSpecificationVersion {
     pub const VERSION_5_1: CoreSpecificationVersion = CoreSpecificationVersion(0x0A);
     pub const VERSION_5_2: CoreSpecificationVersion = CoreSpecificationVersion(0x0B);
     pub const VERSION_5_3: CoreSpecificationVersion = CoreSpecificationVersion(0x0C);
+}
+
+param! {
+    enum LinkType {
+        SyncData = 0,
+        AclData = 1,
+        IsoData = 2,
+    }
+}
+
+#[repr(transparent)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ConnHandleCompletedPackets([u8; 4]);
+
+impl ConnHandleCompletedPackets {
+    pub fn handle(&self) -> Result<ConnHandle, FromHciBytesError> {
+        ConnHandle::from_hci_bytes(&self.0).map(|(x, _)| x)
+    }
+
+    pub fn num_completed_packets(&self) -> Result<u16, FromHciBytesError> {
+        u16::from_hci_bytes(&self.0).map(|(x, _)| x)
+    }
+}
+
+impl<'a, 'de: 'a> FromHciBytes<'de> for &'a [ConnHandleCompletedPackets] {
+    #[allow(unused_variables)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        match data.split_first() {
+            Some((&len, data)) => {
+                let len = usize::from(len);
+                let size = 4 * len;
+                if data.len() >= size {
+                    let (data, rest) = data.split_at(size);
+                    // Safety: ConnHandleCompletedPackets has align of 1, no padding, and all bit patterns are valid
+                    let slice = unsafe { core::slice::from_raw_parts(data.as_ptr() as *const _, len) };
+                    Ok((slice, rest))
+                } else {
+                    Err(FromHciBytesError::InvalidSize)
+                }
+            }
+            None => Err(FromHciBytesError::InvalidSize),
+        }
+    }
 }

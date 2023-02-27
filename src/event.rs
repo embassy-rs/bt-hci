@@ -1,4 +1,8 @@
-use crate::param::{param, Status};
+use crate::cmd::{Opcode, SyncCmd};
+use crate::param::{
+    param, ConnHandle, ConnHandleCompletedPackets, CoreSpecificationVersion, DisconnectReason, LinkType,
+    RemainingBytes, Status,
+};
 use crate::{FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
 pub trait EventParams<'a>: FromHciBytes<'a> {
@@ -95,33 +99,23 @@ impl<'de> ReadHci<'de> for EventPacket<'de> {
 }
 
 macro_rules! event {
-    (struct $name:ident$(<$life:lifetime>)?($code:expr) {
-        $($field:ident: $ty:ty),*
-        $(,)?
-    }) => {
-        $crate::event::event! {
-            #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-            struct $name$(<$life>)?($code) {
-                $($field: $ty,)*
-            }
-        }
-    };
     (
-        #[derive($($derive:ty),*)]
+        $(#[$attrs:meta])*
         struct $name:ident$(<$life:lifetime>)?($code:expr) {
             $($field:ident: $ty:ty),*
             $(,)?
         }
     ) => {
-        #[derive($($derive,)*)]
+        $(#[$attrs])*
+        #[derive(Debug, Clone, Copy, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name$(<$life>)? {
             pub $($field: $ty,)*
         }
 
-        impl<$($life,)? 'de> $crate::FromHciBytes<'de> for $name $(where 'de: $life)? {
+        impl<'a> $crate::FromHciBytes<'a> for $name$(<$life>)? {
             #[allow(unused_variables)]
-            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
+            fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), $crate::FromHciBytesError> {
                 let total = 0;
                 $(
                     let ($field, data) = <$ty as $crate::FromHciBytes>::from_hci_bytes(data)?;
@@ -134,7 +128,7 @@ macro_rules! event {
 
         #[automatically_derived]
         #[allow(unused_mut, unused_variables, unused_imports)]
-        impl<$($life,)? 'de> $crate::event::EventParams<'de> for $name$(<$life>)? $(where 'de: $life)? {
+        impl<'a> $crate::event::EventParams<'a> for $name$(<$life>)? {
             const CODE: u8 = $code;
         }
     };
@@ -143,7 +137,151 @@ macro_rules! event {
 pub(crate) use event;
 
 event! {
-    struct InquiryComplete(0x01) {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.5
+    struct DisconnectionComplete(0x05) {
         status: Status,
+        handle: ConnHandle,
+        reasdon: DisconnectReason,
     }
 }
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.8
+    struct EncryptionChangeV1(0x08) {
+        status: Status,
+        handle: ConnHandle,
+        enabled: bool,
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.8
+    struct EncryptionChangeV2(0x59) {
+        status: Status,
+        handle: ConnHandle,
+        encryption_enabled: bool,
+        encryption_key_size: u8,
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.12
+    struct ReadRemoteVersionInformationComplete(0x0c) {
+        status: Status,
+        handle: ConnHandle,
+        version: CoreSpecificationVersion,
+        company_id: u16,
+        subversion: u16,
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.14
+    struct CommandComplete<'a>(0x0e) {
+        num_hci_cmd_pkts: u8,
+        cmd_opcode: Opcode,
+        return_param_bytes: RemainingBytes<'a>,
+    }
+}
+
+impl<'a> CommandComplete<'a> {
+    pub fn return_params<C: SyncCmd>(&self) -> Result<C::Return<'_>, FromHciBytesError> {
+        assert_eq!(self.cmd_opcode, C::OPCODE);
+        C::Return::from_hci_bytes(&self.return_param_bytes).and_then(|(params, rest)| {
+            if rest.is_empty() {
+                Ok(params)
+            } else {
+                Err(FromHciBytesError::InvalidSize)
+            }
+        })
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.15
+    struct CommandStatus(0x0f) {
+        status: Status,
+        num_hci_cmd_pkts: u8,
+        cmd_opcode: Opcode,
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.16
+    struct HardwareError(0x10) {
+        hardware_code: u8,
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.19
+    struct NumberOfCompletedPackets<'a>(0x13) {
+        completed_packets: &'a [ConnHandleCompletedPackets],
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.26
+    struct DataBufferOverflow(0x1a) {
+        link_type: LinkType,
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.39
+    struct EncryptionKeyRefreshComplete(0x30) {
+        status: Status,
+        handle: ConnHandle,
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.75
+    struct AuthenticatedPayloadTimeoutExpired(0x57) {
+        handle: ConnHandle,
+    }
+}
+
+event! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65
+    struct LeMeta<'a>(0x3e) {
+        subevent_code: u8,
+        subevent: RemainingBytes<'a>,
+    }
+}
+
+// 7.7.65.1 LeConnectionComplete
+// 7.7.65.2 LeAdvertisingReport
+// 7.7.65.3 LeConnectionUpdateComplete
+// 7.7.65.4 LeReadRemoteFeaturesComplete
+// 7.7.65.5 LeLongTermKeyRequest
+// 7.7.65.6 LeRemoteConnectionParameterRequest
+// 7.7.65.7 LeDataLengthChange
+// 7.7.65.8 LeReadLocalP256PublicKeyComplete
+// 7.7.65.9 LeGenerateDhkeyComplete
+// 7.7.65.10 LeEnhancedConnectionComplete
+// 7.7.65.11 LeDirectedAdvertisingReport
+// 7.7.65.12 LePhyUpdateComplete
+// 7.7.65.13 LeExtendedAdvertisingReport
+// 7.7.65.14 LePeriodicAdvertisingSyncEstablished
+// 7.7.65.15 LePeriodicAdvertisingReport
+// 7.7.65.16 LePeriodicAdvertisingSyncLost
+// 7.7.65.17 LeScanTimeout
+// 7.7.65.18 LeAdvertisingSetTerminated
+// 7.7.65.19 LeScanRequestReceived
+// 7.7.65.20 LeChannelSelectionAlgorithm
+// 7.7.65.21 LeConnectionlessIqReport
+// 7.7.65.22 LeConnectionIqReport
+// 7.7.65.23 LeCteRequestFailed
+// 7.7.65.24 LePeriodicAdvertisingSyncTransferReceived
+// 7.7.65.25 LeCisEstablished
+// 7.7.65.26 LeCisRequest
+// 7.7.65.27 LeCreateBigComplete
+// 7.7.65.28 LeTerminateBigComplete
+// 7.7.65.29 LeBigSyncEstablished
+// 7.7.65.30 LeBigSyncLost
+// 7.7.65.31 LeRequestPeerScaComplete
+// 7.7.65.32 LePathLossThreshold
+// 7.7.65.33 LeTransmitPowerReporting
+// 7.7.65.34 LeBiginfoAdvertisingReport
+// 7.7.65.35 LeSubrateChange

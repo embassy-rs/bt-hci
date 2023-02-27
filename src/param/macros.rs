@@ -81,18 +81,11 @@ impl_param_tuple! {}
 impl_param_tuple! { A B }
 
 macro_rules! param {
-    (struct $name:ident($wrapped:ty)) => {
-        $crate::param::param! {
-            #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-            struct $name($wrapped);
-        }
-    };
     (
-        #[derive($($derive:ty),*)]
-        struct $name:ident($wrapped:ty);
+        struct $name:ident($wrapped:ty)
     ) => {
         #[repr(transparent)]
-        #[derive($($derive,)*)]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name($wrapped);
 
@@ -129,7 +122,7 @@ macro_rules! param {
         $(,)?
     }) => {
         $crate::param::param! {
-            #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+            #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
             struct $name {
                 $($field: $ty,)*
             }
@@ -245,7 +238,7 @@ macro_rules! param {
         }
     ) => {
         $crate::param::param! {
-            #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+            #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
             bitfield $name[$octets] {
                 $(($bit, $get, $set);)+
             }

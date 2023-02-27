@@ -1,10 +1,35 @@
 use core::num::NonZeroU8;
 
-use super::param;
+use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
-param! {
-    #[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-    struct Status(u8);
+#[repr(transparent)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Status(u8);
+
+impl Status {
+    pub fn into_inner(self) -> u8 {
+        self.0
+    }
+}
+
+impl WriteHci for Status {
+    fn size(&self) -> usize {
+        WriteHci::size(&self.0)
+    }
+    fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+        <u8 as WriteHci>::write_hci(&self.0, writer)
+    }
+    #[cfg(feature = "async")]
+    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+        <u8 as WriteHci>::write_hci_async(&self.0, writer).await
+    }
+}
+
+impl<'de> FromHciBytes<'de> for Status {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        <u8 as FromHciBytes>::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
+    }
 }
 
 impl Status {
