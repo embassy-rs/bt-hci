@@ -41,6 +41,39 @@ impl<'a> WriteHci for &'a [u8] {
     }
 }
 
+impl<'de> FromHciBytes<'de> for &'de [u8] {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        match data.split_first() {
+            Some((&len, data)) => {
+                let len = usize::from(len);
+                if data.len() >= len {
+                    Ok(data.split_at(len))
+                } else {
+                    Err(FromHciBytesError::InvalidSize)
+                }
+            }
+            None => Err(FromHciBytesError::InvalidSize),
+        }
+    }
+}
+
+impl<'de, T: FromHciBytes<'de>, const N: usize> FromHciBytes<'de> for heapless::Vec<T, N> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        match data.split_first() {
+            Some((&len, mut data)) => {
+                let mut vec = heapless::Vec::new();
+                for _ in 0..len {
+                    let (val, rest) = T::from_hci_bytes(data)?;
+                    vec.push(val).or(Err(FromHciBytesError::InvalidValue))?;
+                    data = rest;
+                }
+                Ok((vec, data))
+            }
+            None => Err(FromHciBytesError::InvalidSize),
+        }
+    }
+}
+
 impl<const N: usize> WriteHci for [u8; N] {
     fn size(&self) -> usize {
         N
@@ -63,6 +96,36 @@ impl<'de, const N: usize> FromHciBytes<'de> for [u8; N] {
             Ok((unsafe { data.try_into().unwrap_unchecked() }, rest))
         } else {
             Err(FromHciBytesError::InvalidSize)
+        }
+    }
+}
+
+impl<T: WriteHci> WriteHci for Option<T> {
+    fn size(&self) -> usize {
+        self.as_ref().map(|x| x.size()).unwrap_or_default()
+    }
+
+    fn write_hci<W: embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+        match self {
+            Some(val) => val.write_hci(writer),
+            None => Ok(()),
+        }
+    }
+
+    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+        match self {
+            Some(val) => val.write_hci_async(writer).await,
+            None => Ok(()),
+        }
+    }
+}
+
+impl<'de, T: FromHciBytes<'de>> FromHciBytes<'de> for Option<T> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        if data.is_empty() {
+            Ok((None, data))
+        } else {
+            T::from_hci_bytes(data).map(|(x, y)| (Some(x), y))
         }
     }
 }

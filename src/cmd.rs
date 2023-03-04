@@ -1,4 +1,4 @@
-use crate::param::param;
+use crate::param::{param, ConnHandle};
 use crate::{FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
@@ -62,9 +62,45 @@ impl<T: Cmd> HostToControllerPacket for T {
 
 pub trait SyncCmd: Cmd {
     type Return<'de>: FromHciBytes<'de>;
+
+    fn return_handle(_data: &[u8]) -> Option<ConnHandle> {
+        None
+    }
 }
 
 macro_rules! cmd {
+    (
+        $name:ident($group:ident, $cmd:expr) {
+            Params$(<$life:lifetime>)? {
+                $($param_name:ident: $param_ty:ty,)*
+            }
+            $ret:ident {
+                handle: ConnHandle,
+                $($ret_name:ident: $ret_ty:ty,)+
+            }
+        }
+    ) => {
+        $crate::cmd::cmd! {
+            $name($group, $cmd) {
+                Params$(<$life:lifetime>)? { $($param_name: $param_ty,)* }
+            }
+        }
+
+        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
+            type Return<'ret> = $ret;
+
+            fn return_handle(data: &[u8]) -> Option<$crate::param::ConnHandle> {
+                <$crate::param::ConnHandle as $crate::FromHciBytes>::from_hci_bytes(data).ok().map(|(x, _)| x)
+            }
+        }
+
+        $crate::param::param! {
+            struct $ret {
+                handle: ConnHandle,
+                $($ret_name: $ret_ty,)*
+            }
+        }
+    };
     (
         $name:ident($group:ident, $cmd:expr) {
             Params$(<$life:lifetime>)? {
@@ -83,9 +119,30 @@ macro_rules! cmd {
         }
 
         $crate::param::param! {
-            #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
             struct $ret {
                 $($ret_name: $ret_ty,)*
+            }
+        }
+    };
+    (
+        $name:ident($group:ident, $cmd:expr) {
+            Params$(<$life:lifetime>)? {
+                $($param_name:ident: $param_ty:ty,)*
+            }
+            Return = ConnHandle;
+        }
+    ) => {
+        $crate::cmd::cmd! {
+            $name($group, $cmd) {
+                Params$(<$life>)? { $($param_name: $param_ty,)* }
+            }
+        }
+
+        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
+            type Return<'ret> = ConnHandle;
+
+            fn return_handle(data: &[u8]) -> Option<$crate::param::ConnHandle> {
+                <$crate::param::ConnHandle as $crate::FromHciBytes>::from_hci_bytes(data).ok().map(|(x, _)| x)
             }
         }
     };

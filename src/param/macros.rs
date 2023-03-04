@@ -34,7 +34,7 @@ macro_rules! impl_param_int {
     };
 }
 
-impl_param_int!(u8, i8, u16, i16, u32);
+impl_param_int!(u8, i8, u16, i16, u32, u64, u128);
 
 macro_rules! impl_param_tuple {
     ($($a:ident)*) => {
@@ -117,31 +117,19 @@ macro_rules! param {
         }
     };
 
-    (struct $name:ident {
-        $($field:ident: $ty:ty),*
-        $(,)?
-    }) => {
-        $crate::param::param! {
-            #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-            struct $name {
-                $($field: $ty,)*
-            }
-        }
-    };
     (
-        #[derive($($derive:ty),*)]
-        struct $name:ident {
+        struct $name:ident$(<$life:lifetime>)? {
             $($field:ident: $ty:ty),*
             $(,)?
         }
     ) => {
-        #[derive($($derive,)*)]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        pub struct $name {
-            pub $($field: $ty,)*
+        pub struct $name$(<$life>)? {
+            $(pub $field: $ty,)*
         }
 
-        impl $crate::WriteHci for $name {
+        impl$(<$life>)? $crate::WriteHci for $name$(<$life>)? {
             fn size(&self) -> usize {
                 $(<$ty as $crate::WriteHci>::size(&self.$field) +)* 0
             }
@@ -158,7 +146,7 @@ macro_rules! param {
             }
         }
 
-        impl<'de> $crate::FromHciBytes<'de> for $name {
+        impl<$($life, )?'de> $crate::FromHciBytes<'de> for $name$(<$life> where 'de: $life, $life: 'de)? {
             #[allow(unused_variables)]
             fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
                 let total = 0;
@@ -179,23 +167,8 @@ macro_rules! param {
             )+
         }
     ) => {
-        $crate::param::param! {
-            #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-            enum $name {
-                $($variant = $value,)+
-            }
-        }
-    };
-    (
-        #[derive($($derive:ty),* $(,)?)]
-        enum $name:ident {
-            $(
-                $variant:ident = $value:expr,
-            )+
-        }
-    ) => {
         #[repr(u8)]
-        #[derive($($derive,)*)]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum $name {
             $(
@@ -233,25 +206,12 @@ macro_rules! param {
     };
 
     (
-        bitfield $name:ident[$octets:expr] {
-            $(($bit:expr, $get:ident, $set:ident);)+
-        }
-    ) => {
-        $crate::param::param! {
-            #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-            bitfield $name[$octets] {
-                $(($bit, $get, $set);)+
-            }
-        }
-    };
-    (
-        #[derive($($derive:ty),*)]
         bitfield $name:ident[1] {
             $(($bit:expr, $get:ident, $set:ident);)+
         }
     ) => {
         #[repr(transparent)]
-        #[derive($($derive,)*)]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name(u8);
 
@@ -286,15 +246,20 @@ macro_rules! param {
                 <u8 as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
+
+        impl<'de> $crate::FromHciBytes<'de> for $name {
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
+                <u8 as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x,y)| (Self(x), y))
+            }
+        }
     };
     (
-        #[derive($($derive:ty),*)]
         bitfield $name:ident[$octets:expr] {
             $(($bit:expr, $get:ident, $set:ident);)+
         }
     ) => {
         #[repr(transparent)]
-        #[derive($($derive,)*)]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name([u8; $octets]);
 
@@ -363,6 +328,46 @@ macro_rules! param {
                     <$el as $crate::WriteHci>::write_hci_async(x, &mut writer).await?;
                 }
                 Ok(())
+            }
+        }
+    };
+
+    (
+        [$name:ident; $octets:expr] {
+            $($field:ident[$off:expr]: $ty:ty),*
+            $(,)?
+        }
+    ) => {
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        pub struct $name([u8; $octets]);
+
+        impl $name {
+            $(
+                pub fn $field(&self) -> Result<$ty, $crate::FromHciBytesError> {
+                    <$ty as $crate::FromHciBytes>::from_hci_bytes(&self.0[$off..]).map(|(x, _)| x)
+                }
+            )+
+        }
+
+        impl<'a, 'de: 'a> $crate::FromHciBytes<'de> for &'a [$name] {
+            #[allow(unused_variables)]
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+                match data.split_first() {
+                    Some((&len, data)) => {
+                        let len = usize::from(len);
+                        let size = $octets * len;
+                        if data.len() >= size {
+                            let (data, rest) = data.split_at(size);
+                            // Safety: $name has align of 1, no padding, and all bit patterns are valid
+                            let slice = unsafe { core::slice::from_raw_parts(data.as_ptr() as *const _, len) };
+                            Ok((slice, rest))
+                        } else {
+                            Err(FromHciBytesError::InvalidSize)
+                        }
+                    }
+                    None => Err(FromHciBytesError::InvalidSize),
+                }
             }
         }
     };

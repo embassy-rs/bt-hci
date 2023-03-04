@@ -4,7 +4,6 @@
 #![cfg_attr(feature = "async", allow(incomplete_features))]
 
 use embedded_io::blocking::ReadExactError;
-use event::EventPacket;
 
 mod fmt;
 
@@ -20,6 +19,15 @@ pub enum FromHciBytesError {
 
 pub trait FromHciBytes<'de>: Sized {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError>;
+
+    fn from_hci_bytes_complete(data: &'de [u8]) -> Result<Self, FromHciBytesError> {
+        let (val, buf) = Self::from_hci_bytes(data)?;
+        if buf.is_empty() {
+            Ok(val)
+        } else {
+            Err(FromHciBytesError::InvalidSize)
+        }
+    }
 }
 
 pub enum ReadHciError<E: embedded_io::Error> {
@@ -114,7 +122,7 @@ impl WriteHci for PacketKind {
 pub enum ControllerToHostPacket<'a> {
     Acl(data::AclPacket<'a>),
     Sync(data::SyncPacket<'a>),
-    Event(EventPacket<'a>),
+    Event(event::Event<'a>),
     Iso(data::IsoPacket<'a>),
 }
 
@@ -181,6 +189,10 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
     }
 }
 
+/// Wrapper for a [`HostToControllerPacket`] that will write the [`PacketKind`] indicator byte before the packet itself
+/// when serialized with [`WriteHci`].
+///
+/// This is used for transports where all packets are sent over a common channel, such as the UART transport.
 pub struct WithIndicator<T: HostToControllerPacket>(T);
 
 impl<T: HostToControllerPacket> WithIndicator<T> {
@@ -211,15 +223,18 @@ impl<T: HostToControllerPacket> WriteHci for WithIndicator<T> {
 }
 
 /// Abbreviations:
-/// - command -> cmd
-/// - properties -> props
-/// - advertising -> adv
-/// - advertiser -> adv
 /// - address -> addr
+/// - advertiser -> adv
+/// - advertising -> adv
+/// - command -> cmd
 /// - connection -> conn
+/// - event -> evt
 /// - extended -> ext
 /// - extension -> ext
 /// - identifier -> id
 /// - packet -> pkt
+/// - properties -> props
+/// - receive -> rx
+/// - transmit -> tx
 /// - type -> kind
 const _FOO: () = ();

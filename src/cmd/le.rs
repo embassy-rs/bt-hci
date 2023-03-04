@@ -45,8 +45,8 @@ cmd! {
 cmd! {
     LeSetAdvParams(LE, 0x0006) {
         Params {
-            adv_interval_min: Duration<1>,
-            adv_interval_max: Duration<1>,
+            adv_interval_min: Duration<625>,
+            adv_interval_max: Duration<625>,
             adv_kind: AdvKind,
             own_addr_kind: AddrKind,
             peer_addr_kind: AddrKind,
@@ -97,8 +97,8 @@ cmd! {
     LeSetScanParams(LE, 0x000b) {
         Params {
             le_scan_kind: LeScanKind,
-            le_scan_interval: Duration<16>,
-            le_scan_window: Duration<16>,
+            le_scan_interval: Duration<10_000>,
+            le_scan_window: Duration<10_000>,
             own_addr_kind: AddrKind,
             scanning_filter_policy: ScanningFilterPolicy,
         }
@@ -119,18 +119,18 @@ cmd! {
 cmd! {
     LeCreateConn(LE, 0x000d) {
         Params {
-            le_scan_interval: Duration<16>,
-            le_scan_window: Duration<16>,
+            le_scan_interval: Duration<10_000>,
+            le_scan_window: Duration<10_000>,
             use_filter_accept_list: bool,
             peer_addr_kind: AddrKind,
             peer_addr: BdAddr,
             own_addr_kind: AddrKind,
-            conn_interval_min: Duration<2>,
-            conn_interval_max: Duration<2>,
+            conn_interval_min: Duration<1_250>,
+            conn_interval_max: Duration<1_250>,
             max_latency: u16,
-            supervision_timeout: Duration<16>,
-            min_ce_length: Duration<1>,
-            max_ce_length: Duration<1>,
+            supervision_timeout: Duration<10_000>,
+            min_ce_length: Duration<625>,
+            max_ce_length: Duration<625>,
         }
     }
 }
@@ -180,12 +180,12 @@ cmd! {
     LeConnUpdate(LE, 0x0013) {
         Params {
             handle: ConnHandle,
-            conn_interval_min: Duration<2>,
-            conn_interval_max: Duration<2>,
+            conn_interval_min: Duration<1_250>,
+            conn_interval_max: Duration<1_250>,
             max_latency: u16,
-            supervision_timeout: Duration<16>,
-            min_ce_length: Duration<1>,
-            max_ce_length: Duration<1>,
+            supervision_timeout: Duration<10_000>,
+            min_ce_length: Duration<625>,
+            max_ce_length: Duration<625>,
         }
     }
 }
@@ -359,7 +359,7 @@ cmd! {
 cmd! {
     LeSetResolvablePrivateAddrTimeout(LE, 0x002e) {
         Params {
-            rpa_timeout: Duration<1600>,
+            rpa_timeout: Duration<1_000_000>,
         }
         Return = ();
     }
@@ -428,8 +428,8 @@ cmd! {
         Params {
                 adv_handle: AdvHandle,
                 adv_event_props: AdvEventProps,
-                primary_adv_interval_min: Duration<1>,
-                primary_adv_interval_max: Duration<1>,
+                primary_adv_interval_min: Duration<625>,
+                primary_adv_interval_max: Duration<625>,
                 primary_adv_channel_map: AdvChannelMap,
                 own_addr_kind: AddrKind,
                 peer_addr_kind: AddrKind,
@@ -514,8 +514,8 @@ cmd! {
     LeSetPeriodicAdvParams(LE, 0x003e) {
         Params {
             adv_handle: AdvHandle,
-            periodic_adv_interval_min: Duration<4>,
-            periodic_adv_interval_max: Duration<4>,
+            periodic_adv_interval_min: Duration<1_250>,
+            periodic_adv_interval_max: Duration<1_250>,
             periodic_adv_props: PeriodicAdvProps,
         }
         Return = ();
@@ -556,8 +556,8 @@ cmd! {
         Params {
             enable: bool,
             filter_duplicates: FilterDuplicates,
-            duration: Duration<16>,
-            period: Duration<2048>,
+            duration: Duration<10_000>,
+            period: Duration<1_280_000>,
         }
         Return = ();
     }
@@ -584,7 +584,7 @@ cmd! {
             adv_addr_kind: AddrKind,
             adv_addr: BdAddr,
             skip: u16,
-            sync_timeout: Duration<16>,
+            sync_timeout: Duration<10_000>,
             sync_cte_kind: CteMask,
         }
     }
@@ -770,7 +770,7 @@ cmd! {
             handle: ConnHandle,
             mode: LePeriodicAdvSyncTransferMode,
             skip: u16,
-            sync_timeout: Duration<16>,
+            sync_timeout: Duration<10_000>,
             cte_kind: CteMask,
         }
         Return = ();
@@ -782,7 +782,7 @@ cmd! {
         Params {
             mode: LePeriodicAdvSyncTransferMode,
             skip: u16,
-            sync_timeout: Duration<16>,
+            sync_timeout: Duration<10_000>,
             cte_kind: CteMask,
         }
         Return = ();

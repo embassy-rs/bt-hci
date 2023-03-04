@@ -1,4 +1,7 @@
-use super::{param, Duration};
+use core::iter::FusedIterator;
+
+use super::{param, BdAddr, ConnHandle, Duration, RemainingBytes};
+use crate::{FromHciBytes, FromHciBytesError};
 
 param!(struct AddrKind(u8));
 
@@ -11,7 +14,6 @@ impl AddrKind {
 }
 
 param! {
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     bitfield AdvChannelMap[1] {
         (0, is_channel_37_enabled, enable_channel_37);
         (1, is_channel_38_enabled, enable_channel_38);
@@ -87,7 +89,7 @@ param! {
     enum PhyKind {
         Le1M = 1,
         Le2M = 2,
-        LeCodedS8 = 3,
+        LeCoded = 3,
         LeCodedS2 = 4,
     }
 }
@@ -142,7 +144,7 @@ param! {
 param! {
     struct AdvSet {
         adv_handle: AdvHandle,
-        duration: Duration<16>,
+        duration: Duration<10_000>,
         max_ext_adv_events: u8,
     }
 }
@@ -182,6 +184,8 @@ param! {
 }
 
 param!(struct SyncHandle(u16));
+
+param!(struct BigHandle(u16));
 
 param! {
     enum PrivacyMode {
@@ -228,3 +232,245 @@ param! {
         (1, change_on_scan_repsonse_data_change, set_change_addr_on_scan_response_data_changes);
     }
 }
+
+param! {
+    enum LeConnRole {
+        Central = 0,
+        Peripheral = 1,
+    }
+}
+
+param! {
+    enum ClockAccuracy {
+        Ppm500 = 0,
+        Ppm250 = 1,
+        Ppm150 = 2,
+        Ppm100 = 3,
+        Ppm75 = 4,
+        Ppm50 = 5,
+        Ppm30 = 6,
+        Ppm20 = 7,
+    }
+}
+
+param! {
+    struct LeAdvertisingReportParam<'a> {
+        event_type: u8,
+        addr_kind: AddrKind,
+        addr: BdAddr,
+        data: &'a [u8],
+        rssi: i8,
+    }
+}
+
+param! {
+    [LeDirectedAdvertisingReportParam; 16] {
+        event_type[0]: u8,
+        addr_kind[1]: AddrKind,
+        addr[2]: BdAddr,
+        direct_addr_kind[8]: AddrKind,
+        direct_addr[9]: BdAddr,
+        rssi[15]: i8,
+    }
+}
+
+param! {
+    [LeIQSample; 2] {
+        i_sample[0]: i8,
+        q_sample[1]: i8,
+    }
+}
+
+param! {
+    [BisConnHandle; 2] {
+        handle[0]: ConnHandle,
+    }
+}
+
+param! {
+    enum DataStatus {
+        Complete = 0,
+        Incomplete = 1,
+    }
+}
+
+param! {
+    enum PacketStatus {
+        CrcCorrect = 0,
+        CrcIncorrectUsedLength = 1,
+        CrcIncorrectUsedOther = 2,
+        InsufficientResources = 0xff,
+    }
+}
+
+param! {
+    enum ZoneEntered {
+        Low = 0,
+        Middle = 1,
+        High = 2,
+    }
+}
+
+param! {
+    enum LeTxPowerReportingReason {
+        LocalTxPowerChanged = 0,
+        RemoteTxPowerChanged = 1,
+        LeReadRemoteTxPowerLevelCompleted = 2,
+    }
+}
+
+param! {
+    enum LeAdvEventKind {
+        AdvInd = 0,
+        AdvDirectInd = 1,
+        AdvScanInd = 2,
+        AdvNonconnInd = 3,
+        ScanRsp = 4,
+    }
+}
+
+param! {
+    struct LeAdvReport<'a> {
+        event_kind: LeAdvEventKind,
+        addr_kind: AddrKind,
+        addr: BdAddr,
+        data: &'a [u8],
+        rssi: i8,
+    }
+}
+
+param! {
+    struct LeAdvReports<'a> {
+        num_reports: u8,
+        bytes: RemainingBytes<'a>,
+    }
+}
+
+impl<'a> LeAdvReports<'a> {
+    pub fn is_empty(&self) -> bool {
+        self.num_reports == 0
+    }
+
+    pub fn len(&self) -> usize {
+        usize::from(self.num_reports)
+    }
+
+    pub fn iter(&self) -> LeAdvReportsIter<'_> {
+        LeAdvReportsIter {
+            len: self.len(),
+            bytes: &self.bytes,
+        }
+    }
+}
+
+pub struct LeAdvReportsIter<'a> {
+    len: usize,
+    bytes: &'a [u8],
+}
+
+impl<'a> Iterator for LeAdvReportsIter<'a> {
+    type Item = Result<LeAdvReport<'a>, FromHciBytesError>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.len == 0 {
+            None
+        } else {
+            match LeAdvReport::from_hci_bytes(self.bytes) {
+                Ok((report, rest)) => {
+                    self.bytes = rest;
+                    self.len -= 1;
+                    Some(Ok(report))
+                }
+                Err(err) => {
+                    self.len = 0;
+                    Some(Err(err))
+                }
+            }
+        }
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (self.len, Some(self.len))
+    }
+}
+
+impl<'a> ExactSizeIterator for LeAdvReportsIter<'a> {
+    fn len(&self) -> usize {
+        self.len
+    }
+}
+
+impl<'a> FusedIterator for LeAdvReportsIter<'a> {}
+
+param! {
+    struct LeExtAdvReport<'a> {
+        event_kind: LeAdvEventKind,
+        addr_kind: AddrKind,
+        addr: BdAddr,
+        data: &'a [u8],
+        rssi: i8,
+    }
+}
+
+param! {
+    struct LeExtAdvReports<'a> {
+        num_reports: u8,
+        bytes: RemainingBytes<'a>,
+    }
+}
+
+impl<'a> LeExtAdvReports<'a> {
+    pub fn is_empty(&self) -> bool {
+        self.num_reports == 0
+    }
+
+    pub fn len(&self) -> usize {
+        usize::from(self.num_reports)
+    }
+
+    pub fn iter(&self) -> LeExtAdvReportsIter<'_> {
+        LeExtAdvReportsIter {
+            len: self.len(),
+            bytes: &self.bytes,
+        }
+    }
+}
+
+pub struct LeExtAdvReportsIter<'a> {
+    len: usize,
+    bytes: &'a [u8],
+}
+
+impl<'a> Iterator for LeExtAdvReportsIter<'a> {
+    type Item = Result<LeExtAdvReport<'a>, FromHciBytesError>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.len == 0 {
+            None
+        } else {
+            match LeExtAdvReport::from_hci_bytes(self.bytes) {
+                Ok((report, rest)) => {
+                    self.bytes = rest;
+                    self.len -= 1;
+                    Some(Ok(report))
+                }
+                Err(err) => {
+                    self.len = 0;
+                    Some(Err(err))
+                }
+            }
+        }
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (self.len, Some(self.len))
+    }
+}
+
+impl<'a> ExactSizeIterator for LeExtAdvReportsIter<'a> {
+    fn len(&self) -> usize {
+        self.len
+    }
+}
+
+impl<'a> FusedIterator for LeExtAdvReportsIter<'a> {}

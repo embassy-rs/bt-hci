@@ -67,7 +67,7 @@ cmd! {
         }
         ReadAuthenticatedPayloadTimeoutReturn {
             handle: ConnHandle,
-            timeout: Duration<16>,
+            timeout: Duration<10_000>,
         }
     }
 }
@@ -76,7 +76,7 @@ cmd! {
     WriteAuthenticatedPayloadTimeout(CONTROL_BASEBAND, 0x007c) {
         Params {
             handle: ConnHandle,
-            timeout: Duration<16>,
+            timeout: Duration<10_000>,
         }
         Return = ConnHandle;
     }
