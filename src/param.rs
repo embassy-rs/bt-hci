@@ -65,6 +65,7 @@ impl ConnHandle {
     }
 }
 
+/// A 16-bit duration. The `US` generic paramter indicates the timebase in µs.
 #[repr(transparent)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -98,15 +99,15 @@ impl<const US: u32> Duration<US> {
     }
 
     pub fn from_micros(val: u64) -> Self {
-        Self::from_u16((val / u64::from(US)) as u16)
+        Self::from_u16(unwrap!((val / u64::from(US)).try_into()))
     }
 
-    pub fn from_millis(val: u64) -> Self {
-        Self::from_micros(unwrap!(val.checked_mul(1000)))
+    pub fn from_millis(val: u32) -> Self {
+        Self::from_micros(u64::from(val) * 1000)
     }
 
-    pub fn from_secs(val: u64) -> Self {
-        Self::from_micros(unwrap!(val.checked_mul(1_000_000)))
+    pub fn from_secs(val: u32) -> Self {
+        Self::from_micros(u64::from(val) * 1_000_000)
     }
 
     pub fn as_u16(&self) -> u16 {
@@ -117,12 +118,13 @@ impl<const US: u32> Duration<US> {
         u64::from(self.as_u16()) * u64::from(US)
     }
 
-    pub fn as_millis(&self) -> u64 {
-        self.as_micros() / 1000
+    pub fn as_millis(&self) -> u32 {
+        unwrap!((self.as_micros() / 1000).try_into())
     }
 
-    pub fn as_secs(&self) -> u64 {
-        self.as_micros() / 1_000_000
+    pub fn as_secs(&self) -> u32 {
+        // (u16::MAX * u32::MAX / 1_000_000) < u32::MAX so this is safe
+        (self.as_micros() / 1_000_000) as u32
     }
 }
 

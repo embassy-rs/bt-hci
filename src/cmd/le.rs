@@ -1,10 +1,10 @@
 use super::cmd;
 use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr, ChannelMap,
-    ConnHandle, CteKind, CteMask, Duration, FilterDuplicates, LeDataRelatedAddrChangeReasons, LeEventMask,
-    LeFeatureMask, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSyncTransferMode,
-    LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PrivacyMode, ScanningFilterPolicy,
-    SwitchingSamplingRates, SyncHandle,
+    ConnHandle, CteKind, CteMask, Duration, FilterDuplicates, InitiatingPhy, LeDataRelatedAddrChangeReasons,
+    LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable,
+    LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
+    PrivacyMode, ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates, SyncHandle,
 };
 
 cmd! {
@@ -543,10 +543,13 @@ cmd! {
     }
 }
 
-// TODO!
 cmd! {
     LeSetExtScanParams(LE, 0x0041) {
-        Params {}
+        Params {
+            own_addr_kind: AddrKind,
+            scanning_filter_policy: ScanningFilterPolicy,
+            scanning_phys: PhyParams<ScanningPhy>,
+        }
         Return = ();
     }
 }
@@ -563,7 +566,6 @@ cmd! {
     }
 }
 
-// TODO!
 cmd! {
     LeExtCreateConn(LE, 0x0043) {
         Params {
@@ -571,7 +573,7 @@ cmd! {
             own_addr_kind: AddrKind,
             peer_addr_kind: AddrKind,
             peer_addr: BdAddr,
-            initiating_phys: PhyMask,
+            initiating_phys: PhyParams<InitiatingPhy>,
         }
     }
 }

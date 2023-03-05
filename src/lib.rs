@@ -232,6 +232,7 @@ impl<T: HostToControllerPacket> WriteHci for WithIndicator<T> {
 /// - extended -> ext
 /// - extension -> ext
 /// - identifier -> id
+/// - length -> len
 /// - packet -> pkt
 /// - properties -> props
 /// - receive -> rx

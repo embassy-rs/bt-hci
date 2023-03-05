@@ -211,11 +211,15 @@ macro_rules! param {
         }
     ) => {
         #[repr(transparent)]
-        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name(u8);
 
         impl $name {
+            pub fn new() -> Self {
+                Self::default()
+            }
+
             pub fn into_inner(self) -> u8 {
                 self.0
             }
@@ -259,11 +263,15 @@ macro_rules! param {
         }
     ) => {
         #[repr(transparent)]
-        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name([u8; $octets]);
 
         impl $name {
+            pub fn new() -> Self {
+                Self::default()
+            }
+
             pub fn into_inner(self) -> [u8; $octets] {
                 self.0
             }

@@ -1,7 +1,7 @@
 use core::iter::FusedIterator;
 
 use super::{param, BdAddr, ConnHandle, Duration, RemainingBytes};
-use crate::{FromHciBytes, FromHciBytesError};
+use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
 param!(struct AddrKind(u8));
 
@@ -26,12 +26,6 @@ impl AdvChannelMap {
     pub const CHANNEL_37: AdvChannelMap = AdvChannelMap(0x01);
     pub const CHANNEL_38: AdvChannelMap = AdvChannelMap(0x02);
     pub const CHANNEL_39: AdvChannelMap = AdvChannelMap(0x04);
-}
-
-impl Default for AdvChannelMap {
-    fn default() -> Self {
-        Self::ALL
-    }
 }
 
 param!(struct ChannelMap([u8; 5]));
@@ -114,6 +108,67 @@ param! {
         NoPreferredCoding = 0,
         S2CodingPreferred = 1,
         S8CodingPreferred = 2,
+    }
+}
+
+param! {
+    struct ScanningPhy {
+        active_scan: bool,
+        scan_interval: Duration<625>,
+        scan_window: Duration<625>,
+    }
+}
+
+param! {
+    struct InitiatingPhy {
+        scan_interval: Duration<625>,
+        scan_window: Duration<625>,
+        conn_interval_min: Duration<1_250>,
+        conn_interval_max: Duration<1_250>,
+        max_latency: u16,
+        supervision_timeout: Duration<10_000>,
+        min_ce_len: Duration<625>,
+        max_ce_len: Duration<625>,
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct PhyParams<T> {
+    pub le_1m_phy: Option<T>,
+    pub le_2m_phy: Option<T>,
+    pub le_coded_phy: Option<T>,
+}
+
+impl<T> PhyParams<T> {
+    pub fn scanning_phys(&self) -> PhyMask {
+        PhyMask::new()
+            .set_le_1m_preferred(self.le_1m_phy.is_some())
+            .set_le_2m_preferred(self.le_2m_phy.is_some())
+            .set_le_coded_preferred(self.le_coded_phy.is_some())
+    }
+}
+
+impl<T: WriteHci> WriteHci for PhyParams<T> {
+    fn size(&self) -> usize {
+        1 + self.le_1m_phy.size() + self.le_2m_phy.size() + self.le_coded_phy.size()
+    }
+
+    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.scanning_phys().write_hci(&mut writer)?;
+        self.le_1m_phy.write_hci(&mut writer)?;
+        self.le_2m_phy.write_hci(&mut writer)?;
+        self.le_coded_phy.write_hci(&mut writer)?;
+        Ok(())
+    }
+
+    #[cfg(feature = "async")]
+    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.scanning_phys().write_hci_async(&mut writer).await?;
+        self.le_1m_phy.write_hci_async(&mut writer).await?;
+        self.le_2m_phy.write_hci_async(&mut writer).await?;
+        self.le_coded_phy.write_hci_async(&mut writer).await?;
+        Ok(())
     }
 }
 
