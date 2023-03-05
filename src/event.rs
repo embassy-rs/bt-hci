@@ -1,3 +1,7 @@
+//! Bluetooth HCI event packets.
+//!
+//! See Bluetooth Core Specification Vol 4, Part E, §7.7.
+
 use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
     param, ConnHandle, ConnHandleCompletedPackets, CoreSpecificationVersion, DisconnectReason, Error, LinkType,
@@ -9,11 +13,14 @@ pub mod le;
 
 use le::LeEvent;
 
+/// A trait for objects which contain the parameters for a specific HCI event
 pub trait EventParams<'a>: FromHciBytes<'a> {
+    /// The event code these parameters are for
     const EVENT_CODE: u8;
 }
 
 param! {
+    /// The header of an HCI event packet.
     struct EventPacketHeader {
         code: u8,
         params_len: u8,
@@ -25,16 +32,31 @@ macro_rules! events {
         $(
             $(#[$attrs:meta])*
             struct $name:ident$(<$life:lifetime>)?($code:expr) {
-                $($field:ident: $ty:ty),*
+                $(
+                    $(#[$field_attrs:meta])*
+                    $field:ident: $ty:ty
+                ),*
                 $(,)?
             }
         )+
     ) => {
+        /// An Event HCI packet
         #[derive(Debug, Clone, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum Event<'a> {
-            $($name($name$(<$life>)?),)+
+            $(
+                #[allow(missing_docs)]
+                $name($name$(<$life>)?),
+            )+
+            #[allow(missing_docs)]
             Le(LeEvent<'a>),
+            /// An event with an unknown code value
+            Unknown {
+                /// The event code
+                code: u8,
+                /// The bytes of the event parameters
+                params: &'a [u8]
+            },
         }
 
         impl<'a> Event<'a> {
@@ -42,7 +64,7 @@ macro_rules! events {
                 match header.code {
                     $($code => $name::from_hci_bytes_complete(data).map(Self::$name),)+
                     0x3e => LeEvent::from_hci_bytes_complete(data).map(Self::Le),
-                    _ => Err(FromHciBytesError::InvalidValue),
+                    _ => Ok(Self::Unknown { code: header.code, params: data }),
                 }
             }
         }
@@ -52,7 +74,10 @@ macro_rules! events {
             #[derive(Debug, Clone, Copy, Hash)]
             #[cfg_attr(feature = "defmt", derive(defmt::Format))]
             pub struct $name$(<$life>)? {
-                $(pub $field: $ty,)*
+                $(
+                    $(#[$field_attrs])*
+                    pub $field: $ty,
+                )*
             }
 
             #[automatically_derived]

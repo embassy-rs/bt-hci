@@ -1,3 +1,7 @@
+//! Bluetooth LE events.
+//!
+//! This module contains the sub-events of the LE Meta event (see Bluetooth Core Specification Vol 4, Part E, §7.7.65).
+
 use crate::param::{
     AddrKind, AdvHandle, BdAddr, BigHandle, BisConnHandle, ClockAccuracy, ConnHandle, CteKind, DataStatus, Duration,
     IsoDuration, LeAdvReports, LeConnRole, LeDirectedAdvertisingReportParam, LeExtAdvReports, LeFeatureMask,
@@ -5,7 +9,9 @@ use crate::param::{
 };
 use crate::{FromHciBytes, FromHciBytesError};
 
+/// A trait for objects which contain the parameters for a specific HCI LE event
 pub trait LeEventParams<'a>: FromHciBytes<'a> {
+    /// The LE meta event subevent code these parameters are for
     const SUBEVENT_CODE: u8;
 }
 
@@ -23,7 +29,10 @@ macro_rules! le_events {
         #[derive(Debug, Clone, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum LeEvent<'a> {
-            $($name($name$(<$life>)?),)+
+            $(
+                #[allow(missing_docs)]
+                $name($name$(<$life>)?),
+            )+
         }
 
         impl<'a> $crate::FromHciBytes<'a> for LeEvent<'a> {
@@ -41,7 +50,10 @@ macro_rules! le_events {
             #[derive(Debug, Clone, Hash)]
             #[cfg_attr(feature = "defmt", derive(defmt::Format))]
             pub struct $name$(<$life>)? {
-                $(pub $field: $ty,)*
+                $(
+                    #[allow(missing_docs)]
+                    pub $field: $ty,
+                )*
             }
 
             #[automatically_derived]
@@ -108,7 +120,7 @@ le_events! {
         encrypted_diversifier: u16,
     }
 
-    // /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.6
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.6
     struct LeRemoteConnectionParameterRequest(6) {
         handle: ConnHandle,
         interval_min: Duration<1_250>,
@@ -223,7 +235,7 @@ le_events! {
         channel_selection_algorithm: u8,
     }
 
-    // /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.21
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.21
     struct LeConnectionlessIqReport<'a>(21) {
         sync_handle: SyncHandle,
         channel_index: u8,
@@ -236,7 +248,7 @@ le_events! {
         iq_samples: &'a [LeIQSample],
     }
 
-    // /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.22
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.22
     struct LeConnectionIqReport<'a>(22) {
         handle: ConnHandle,
         rx_phy: PhyKind,
@@ -250,13 +262,13 @@ le_events! {
         iq_samples: &'a [LeIQSample],
     }
 
-    // /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.23
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.23
     struct LeCteRequestFailed(23) {
         status: Status,
         handle: ConnHandle,
     }
 
-    // /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.24
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.24
     struct LePeriodicAdvertisingSyncTransferReceived(24) {
         status: Status,
         handle: ConnHandle,
@@ -270,7 +282,7 @@ le_events! {
         adv_clock_accuracy: ClockAccuracy,
     }
 
-    // /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.25
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.25
     struct LeCisEstablished(25) {
         status: Status,
         handle: ConnHandle,
@@ -290,7 +302,7 @@ le_events! {
         iso_interval: Duration<1_250>,
     }
 
-    // /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.26
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.26
     struct LeCisRequest(26) {
         acl_handle: ConnHandle,
         cis_handle: ConnHandle,
@@ -298,7 +310,7 @@ le_events! {
         cis_id: u8,
     }
 
-    // /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.27
+    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.27
     struct LeCreateBigComplete<'a>(27) {
         status: Status,
         big_handle: BigHandle,

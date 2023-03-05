@@ -1,24 +1,41 @@
+//! Bluetooth HCI data packets.
+
 use crate::param::{param, ConnHandle};
 use crate::{FromHciBytes, FromHciBytesError, HostToControllerPacket, PacketKind, ReadHci, ReadHciError, WriteHci};
 
+/// HCI ACL Data packet `Packet_Boundary_Flag`
+///
+/// See Bluetooth Core Specification Vol 4, Part E, §5.4.2
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum AclPacketBoundary {
+    /// First non-automatically-flushable packet of a higher layer message (start of a non-automatically-flushable
+    /// L2CAP PDU) from Host to Controller.
     FirstNonFlushable,
+    /// Continuing fragment of a higher layer message
     Continuing,
+    /// First automatically flushable packet of a higher layer message (start of an automatically-flushable L2CAP PDU).
     FirstFlushable,
+    /// A complete L2CAP PDU. Automatically flushable.
     Complete,
 }
 
+/// HCI ACL Data packet `Broadcast_Flag`
+///
+/// See Bluetooth Core Specification Vol 4, Part E, §5.4.2
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum AclBroadcastFlag {
+    /// Point-to-point (ACL-U or LE-U)
     PointToPoint,
+    /// BR/EDR broadcast (APB-U)
     BrEdrBroadcast,
+    /// Reserved for future use.
     Reserved,
 }
 
 param! {
+    /// Bluetooth Core Specification Vol 4, Part E, §5.4.2 (figure 5.2)
     struct AclPacketHeader {
         handle: u16,
         data_len: u16,
@@ -26,10 +43,12 @@ param! {
 }
 
 impl AclPacketHeader {
+    /// `Connection_Handle` to be used for transmitting a data packet or segment over a Controller.
     pub fn handle(&self) -> ConnHandle {
         ConnHandle::new(self.handle & 0xeff)
     }
 
+    /// The `Packet_Boundary_Flag` of the packet
     pub fn boundary_flag(&self) -> AclPacketBoundary {
         match (self.handle >> 12) & 0x03 {
             0 => AclPacketBoundary::FirstNonFlushable,
@@ -40,6 +59,7 @@ impl AclPacketHeader {
         }
     }
 
+    /// The `Broadcast_Flag` of the packet
     pub fn broadcast_flag(&self) -> AclBroadcastFlag {
         match (self.handle >> 14) & 0x03 {
             0 => AclBroadcastFlag::PointToPoint,
@@ -50,11 +70,15 @@ impl AclPacketHeader {
         }
     }
 
+    /// The length of the data field of the packet
     pub fn data_len(&self) -> usize {
         usize::from(self.data_len)
     }
 }
 
+/// HCI ACL Data packet
+///
+/// See Bluetooth Core Specification Vol 4, Part E, §5.4.2
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct AclPacket<'a> {
@@ -63,6 +87,7 @@ pub struct AclPacket<'a> {
 }
 
 impl<'a> AclPacket<'a> {
+    /// Create an `AclPacket` from `header` and `data`
     pub fn from_header_hci_bytes(header: AclPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
         let data_len = usize::from(header.data_len);
         if data.len() != data_len {
@@ -75,10 +100,12 @@ impl<'a> AclPacket<'a> {
         }
     }
 
+    /// `Connection_Handle` to be used for transmitting a data packet or segment over a Controller.
     pub fn handle(&self) -> ConnHandle {
         ConnHandle::new(self.handle & 0xeff)
     }
 
+    /// The `Packet_Boundary_Flag` of the packet
     pub fn boundary_flag(&self) -> AclPacketBoundary {
         match (self.handle >> 12) & 0x03 {
             0 => AclPacketBoundary::FirstNonFlushable,
@@ -89,6 +116,7 @@ impl<'a> AclPacket<'a> {
         }
     }
 
+    /// The `Broadcast_Flag` of the packet
     pub fn broadcast_flag(&self) -> AclBroadcastFlag {
         match (self.handle >> 14) & 0x03 {
             0 => AclBroadcastFlag::PointToPoint,
@@ -99,6 +127,7 @@ impl<'a> AclPacket<'a> {
         }
     }
 
+    /// The data of the packet
     pub fn data(&self) -> &[u8] {
         self.data
     }
@@ -177,16 +206,31 @@ impl<'a> HostToControllerPacket for AclPacket<'a> {
     const KIND: PacketKind = PacketKind::AclData;
 }
 
+/// HCI Synchronous Data packet `Packet_Status_Flag`
+///
+/// See Bluetooth Core Specification Vol 4, Part E, §5.4.3
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum SyncPacketStatus {
+    /// Correctly received data. The payload data belongs to received eSCO or SCO packets that the Baseband marked as
+    /// “good data”.
     Correct,
+    /// Possibly invalid data. At least one eSCO packet has been marked by the Baseband as “data with possible errors”
+    /// and all others have been marked as “good data” in the eSCO interval(s) corresponding to the HCI Synchronous
+    /// Data packet.
     PossiblyInvalid,
+    /// No data received. All data from the Baseband received during the (e)SCO interval(s) corresponding to the HCI
+    /// Synchronous Data packet have been marked as "lost data" by the Baseband. The Payload data octets shall be set
+    /// to 0.
     NoData,
+    /// Data partially lost. Not all, but at least one (e)SCO packet has been marked as “lost data” by the Baseband in
+    /// the (e)SCO intervals corresponding to the HCI Synchronous Data packet. The payload data octets corresponding to
+    /// the missing (e)SCO packets shall be set to 0.
     PartiallyLost,
 }
 
 param! {
+    /// Bluetooth Core Specification Vol 4, Part E, §5.4.3 (figure 5.3)
     struct SyncPacketHeader {
         handle: u16,
         data_len: u8,
@@ -194,10 +238,12 @@ param! {
 }
 
 impl SyncPacketHeader {
+    /// `Connection_Handle` to be used to for transmitting a synchronous data packet or segment.
     pub fn handle(&self) -> ConnHandle {
         ConnHandle::new(self.handle & 0xeff)
     }
 
+    /// The `Packet_Status_Flag` of the packet
     pub fn status(&self) -> SyncPacketStatus {
         match (self.handle >> 12) & 0x03 {
             0 => SyncPacketStatus::Correct,
@@ -208,11 +254,15 @@ impl SyncPacketHeader {
         }
     }
 
+    /// The length of the data field of the packet
     pub fn data_len(&self) -> usize {
         usize::from(self.data_len)
     }
 }
 
+/// HCI Synchronous Data packet
+///
+/// See Bluetooth Core Specification Vol 4, Part E, §5.4.3
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct SyncPacket<'a> {
@@ -221,6 +271,7 @@ pub struct SyncPacket<'a> {
 }
 
 impl<'a> SyncPacket<'a> {
+    /// Create a `SyncPacket` from `header` and `data`
     pub fn from_header_hci_bytes(header: SyncPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
         let data_len = usize::from(header.data_len);
         if data.len() != data_len {
@@ -233,10 +284,12 @@ impl<'a> SyncPacket<'a> {
         }
     }
 
+    /// `Connection_Handle` to be used to for transmitting a synchronous data packet or segment.
     pub fn handle(&self) -> ConnHandle {
         ConnHandle::new(self.handle & 0xeff)
     }
 
+    /// The `Packet_Status_Flag` of the packet
     pub fn status(&self) -> SyncPacketStatus {
         match (self.handle >> 12) & 0x03 {
             0 => SyncPacketStatus::Correct,
@@ -247,6 +300,7 @@ impl<'a> SyncPacket<'a> {
         }
     }
 
+    /// The data of the packet
     pub fn data(&self) -> &[u8] {
         self.data
     }
@@ -325,24 +379,39 @@ impl<'a> HostToControllerPacket for SyncPacket<'a> {
     const KIND: PacketKind = PacketKind::SyncData;
 }
 
+/// HCI ISO Data packet `PB_Flag`
+///
+/// See Bluetooth Core Specification Vol 4, Part E, §5.4.5
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum IsoPacketBoundary {
+    /// The `ISO_Data_Load` field contains a header and the first fragment of a fragmented SDU.
     FirstFragment,
+    /// The `ISO_Data_Load` field contains a continuation fragment of an SDU.
     ContinuationFragment,
+    /// The `ISO_Data_Load` field contains a header and a complete SDU.
     Complete,
+    /// The `ISO_Data_Load` field contains the last fragment of an SDU.
     LastFragment,
 }
 
+/// HCI ISO Data packet `Packet_Status_Flag`
+///
+/// See Bluetooth Core Specification Vol 4, Part E, §5.4.5
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum IsoPacketStatus {
+    /// Valid data. The complete SDU was received correctly.
     Correct,
+    /// Possibly invalid data. The contents of the ISO_SDU_Fragment may contain errors or part of the SDU may be
+    /// missing. This is reported as "data with possible errors".
     PossiblyInvalid,
+    /// Part(s) of the SDU were not received correctly. This is reported as "lost data".
     PartiallyLost,
 }
 
 param! {
+    /// Bluetooth Core Specification Vol 4, Part E, §5.4.5 (figure 5.5)
     struct IsoPacketHeader {
         handle: u16,
         data_load_len: u16,
@@ -350,10 +419,12 @@ param! {
 }
 
 impl IsoPacketHeader {
+    /// The identifier of the logical channel between the Host and the Controller.
     pub fn handle(&self) -> ConnHandle {
         ConnHandle::new(self.handle & 0xeff)
     }
 
+    /// The `PB_Flag` of the packet
     pub fn boundary_flag(&self) -> IsoPacketBoundary {
         match (self.handle >> 12) & 0x03 {
             0 => IsoPacketBoundary::FirstFragment,
@@ -364,24 +435,41 @@ impl IsoPacketHeader {
         }
     }
 
+    /// Indicates if the `ISO_Data_Load` field contains a `Time_Stamp` field.
     pub fn has_timestamp(&self) -> bool {
         ((self.handle >> 14) & 1) != 0
     }
 
+    /// The length of the `ISO_Data_Load` field in octets.
+    ///
+    ///  In the Host to Controller direction, `ISO_Data_Load_Length` shall be less than or equal to the size of the
+    /// buffer supported by the Controller (which is returned using the `ISO_Data_Packet_Length` return parameter of
+    /// the LE Read Buffer Size command).
     pub fn data_load_len(&self) -> usize {
         usize::from(self.data_load_len)
     }
 }
 
+/// Bluetooth Core Specification Vol 4, Part E, §5.4.5 (figure 5.6)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IsoDataLoadHeader {
+    /// A time in microseconds.
+    ///
+    /// See Bluetooth Core Specification Vol 6, Part G, §3
     pub timestamp: Option<u32>,
+    /// The sequence number of the SDU.
+    ///
+    /// See Bluetooth Core Specification Vol 6, Part G, §1
     pub sequence_num: u16,
+    /// The total length of the SDU (and not of any individual fragments), in octets.
     pub iso_sdu_len: u16,
 }
 
 impl IsoDataLoadHeader {
+    /// Create an `IsoDataLoadHeader` from `data`.
+    ///
+    /// `timestamp` indicates whether the data load header includes a timestamp field.
     pub fn from_hci_bytes(timestamp: bool, data: &[u8]) -> Result<(Self, &[u8]), FromHciBytesError> {
         let (timestamp, data) = if timestamp {
             u32::from_hci_bytes(data).map(|(x, y)| (Some(x), y))?
@@ -430,6 +518,9 @@ impl WriteHci for IsoDataLoadHeader {
     }
 }
 
+/// HCI ISO Data packet
+///
+/// See Bluetooth Core Specification Vol 4, Part E, §5.4.5
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IsoPacket<'a> {
@@ -439,6 +530,7 @@ pub struct IsoPacket<'a> {
 }
 
 impl<'a> IsoPacket<'a> {
+    /// Create an `IsoPacket` from `header` and `data`
     pub fn from_header_hci_bytes(header: IsoPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
         let data_load_len = usize::from(header.data_load_len);
         if data.len() != data_load_len {
@@ -459,10 +551,12 @@ impl<'a> IsoPacket<'a> {
         }
     }
 
+    /// The identifier of the logical channel between the Host and the Controller.
     pub fn handle(&self) -> ConnHandle {
         ConnHandle::new(self.handle & 0xeff)
     }
 
+    /// The `PB_Flag` of the packet
     pub fn boundary_flag(&self) -> IsoPacketBoundary {
         match (self.handle >> 12) & 0x03 {
             0 => IsoPacketBoundary::FirstFragment,
@@ -473,18 +567,17 @@ impl<'a> IsoPacket<'a> {
         }
     }
 
-    pub fn has_timestamp(&self) -> bool {
-        ((self.handle >> 14) & 1) != 0
-    }
-
+    /// Gets the [`IsoDataLoadHeader`] for this packet, if present.
     pub fn data_load_header(&self) -> Option<IsoDataLoadHeader> {
         self.data_load_header
     }
 
+    /// Gets the size of the data section of this packet, including the [`IsoDataLoadHeader`] (if present).
     pub fn data_load_len(&self) -> usize {
-        self.data_load_header.as_ref().map(|x| x.size()).unwrap_or(0) + self.data.len()
+        self.data_load_header.as_ref().map(|x| x.size()).unwrap_or_default() + self.data.len()
     }
 
+    /// Gets the data for this packet
     pub fn data(&self) -> &[u8] {
         self.data
     }

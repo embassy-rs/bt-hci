@@ -82,8 +82,10 @@ impl_param_tuple! { A B }
 
 macro_rules! param {
     (
+        $(#[$attrs:meta])*
         struct $name:ident($wrapped:ty)
     ) => {
+        $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -118,11 +120,13 @@ macro_rules! param {
     };
 
     (
+        $(#[$attrs:meta])*
         struct $name:ident$(<$life:lifetime>)? {
             $($field:ident: $ty:ty),*
             $(,)?
         }
     ) => {
+        $(#[$attrs])*
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name$(<$life>)? {
@@ -161,12 +165,14 @@ macro_rules! param {
     };
 
     (
+        $(#[$attrs:meta])*
         enum $name:ident {
             $(
                 $variant:ident = $value:expr,
             )+
         }
     ) => {
+        $(#[$attrs])*
         #[repr(u8)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -206,10 +212,12 @@ macro_rules! param {
     };
 
     (
+        $(#[$attrs:meta])*
         bitfield $name:ident[1] {
             $(($bit:expr, $get:ident, $set:ident);)+
         }
     ) => {
+        $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -258,10 +266,12 @@ macro_rules! param {
         }
     };
     (
+        $(#[$attrs:meta])*
         bitfield $name:ident[$octets:expr] {
             $(($bit:expr, $get:ident, $set:ident);)+
         }
     ) => {
+        $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -341,11 +351,13 @@ macro_rules! param {
     };
 
     (
+        $(#[$attrs:meta])*
         [$name:ident; $octets:expr] {
             $($field:ident[$off:expr]: $ty:ty),*
             $(,)?
         }
     ) => {
+        $(#[$attrs])*
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name([u8; $octets]);
