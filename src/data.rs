@@ -141,10 +141,7 @@ impl<'de> FromHciBytes<'de> for AclPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for AclPacket<'de> {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 4];
         reader.read_exact(&mut header)?;
         let (header, _) = AclPacketHeader::from_hci_bytes(&header)?;
@@ -158,8 +155,7 @@ impl<'de> ReadHci<'de> for AclPacket<'de> {
         }
     }
 
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
+    async fn read_hci_async<R: embedded_io_async::Read>(
         mut reader: R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
@@ -182,7 +178,7 @@ impl<'a> WriteHci for AclPacket<'a> {
         4 + self.data.len()
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         let header = AclPacketHeader {
             handle: self.handle,
             data_len: self.data.len() as u16,
@@ -191,8 +187,7 @@ impl<'a> WriteHci for AclPacket<'a> {
         writer.write_all(self.data)
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         let header = AclPacketHeader {
             handle: self.handle,
             data_len: self.data.len() as u16,
@@ -314,10 +309,7 @@ impl<'de> FromHciBytes<'de> for SyncPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for SyncPacket<'de> {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 3];
         reader.read_exact(&mut header)?;
         let (header, _) = SyncPacketHeader::from_hci_bytes(&header)?;
@@ -331,8 +323,7 @@ impl<'de> ReadHci<'de> for SyncPacket<'de> {
         }
     }
 
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
+    async fn read_hci_async<R: embedded_io_async::Read>(
         mut reader: R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
@@ -355,7 +346,7 @@ impl<'a> WriteHci for SyncPacket<'a> {
         4 + self.data.len()
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         let header = SyncPacketHeader {
             handle: self.handle,
             data_len: self.data.len() as u8,
@@ -364,8 +355,7 @@ impl<'a> WriteHci for SyncPacket<'a> {
         writer.write_all(self.data)
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         let header = SyncPacketHeader {
             handle: self.handle,
             data_len: self.data.len() as u8,
@@ -500,7 +490,7 @@ impl WriteHci for IsoDataLoadHeader {
         }
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         if let Some(timestamp) = self.timestamp {
             timestamp.write_hci(&mut writer)?;
         }
@@ -508,8 +498,7 @@ impl WriteHci for IsoDataLoadHeader {
         self.iso_sdu_len.write_hci(writer)
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         if let Some(timestamp) = self.timestamp {
             timestamp.write_hci_async(&mut writer).await?;
         }
@@ -591,10 +580,7 @@ impl<'de> FromHciBytes<'de> for IsoPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for IsoPacket<'de> {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 4];
         reader.read_exact(&mut header)?;
         let (header, _) = IsoPacketHeader::from_hci_bytes(&header)?;
@@ -608,8 +594,7 @@ impl<'de> ReadHci<'de> for IsoPacket<'de> {
         }
     }
 
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
+    async fn read_hci_async<R: embedded_io_async::Read>(
         mut reader: R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
@@ -632,7 +617,7 @@ impl<'a> WriteHci for IsoPacket<'a> {
         4 + self.data_load_len()
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         let header = IsoPacketHeader {
             handle: self.handle,
             data_load_len: self.data_load_len() as u16,
@@ -644,8 +629,7 @@ impl<'a> WriteHci for IsoPacket<'a> {
         writer.write_all(self.data)
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         let header = IsoPacketHeader {
             handle: self.handle,
             data_load_len: self.data_load_len() as u16,

@@ -238,7 +238,7 @@ macro_rules! cmd {
                 $(core::mem::size_of::<$param_ty>() +)* 3
             }
 
-            fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 use $crate::cmd::Cmd;
                 writer.write_all(&self.header())?;
                 $(
@@ -247,8 +247,7 @@ macro_rules! cmd {
                 Ok(())
             }
 
-            #[cfg(feature = "async")]
-            async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 use $crate::cmd::Cmd;
                 writer.write_all(&self.header()).await?;
                 $(

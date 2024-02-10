@@ -4,11 +4,10 @@ impl WriteHci for bool {
     fn size(&self) -> usize {
         ::core::mem::size_of::<Self>()
     }
-    fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes())
     }
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes()).await
     }
 }
@@ -29,13 +28,12 @@ impl<'a> WriteHci for &'a [u8] {
         self.len()
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&[self.size() as u8])?;
         writer.write_all(self)
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&[self.size() as u8]).await?;
         writer.write_all(self).await
     }
@@ -79,12 +77,11 @@ impl<const N: usize> WriteHci for [u8; N] {
         N
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self)
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self).await
     }
 }
@@ -105,14 +102,14 @@ impl<T: WriteHci> WriteHci for Option<T> {
         self.as_ref().map(|x| x.size()).unwrap_or_default()
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
         match self {
             Some(val) => val.write_hci(writer),
             None => Ok(()),
         }
     }
 
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
         match self {
             Some(val) => val.write_hci_async(writer).await,
             None => Ok(()),

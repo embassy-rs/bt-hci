@@ -17,11 +17,10 @@ impl WriteHci for Status {
     fn size(&self) -> usize {
         WriteHci::size(&self.0)
     }
-    fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
         <u8 as WriteHci>::write_hci(&self.0, writer)
     }
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
         <u8 as WriteHci>::write_hci_async(&self.0, writer).await
     }
 }

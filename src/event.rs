@@ -189,10 +189,7 @@ impl<'de> FromHciBytes<'de> for Event<'de> {
 }
 
 impl<'de> ReadHci<'de> for Event<'de> {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 4];
         reader.read_exact(&mut header)?;
         let (header, _) = EventPacketHeader::from_hci_bytes(&header)?;
@@ -206,8 +203,7 @@ impl<'de> ReadHci<'de> for Event<'de> {
         }
     }
 
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
+    async fn read_hci_async<R: embedded_io_async::Read>(
         mut reader: R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {

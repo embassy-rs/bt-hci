@@ -8,12 +8,11 @@ macro_rules! impl_param_int {
                     ::core::mem::size_of::<Self>()
                 }
 
-                fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                     writer.write_all(&self.to_le_bytes())
                 }
 
-                #[cfg(feature = "async")]
-                async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                     writer.write_all(&self.to_le_bytes()).await
                 }
             }
@@ -47,15 +46,14 @@ macro_rules! impl_param_tuple {
             }
 
             #[allow(unused_mut, unused_variables)]
-            fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 let ($(ref $a,)*) = *self;
                 $($a.write_hci(&mut writer)?;)*
                 Ok(())
             }
 
-            #[cfg(feature = "async")]
             #[allow(unused_mut, unused_variables)]
-            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 let ($(ref $a,)*) = *self;
                 $($a.write_hci_async(&mut writer).await?;)*
                 Ok(())
@@ -102,12 +100,11 @@ macro_rules! param {
                 $crate::WriteHci::size(&self.0)
             }
 
-            fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <$wrapped as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
-            #[cfg(feature = "async")]
-            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <$wrapped as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
@@ -138,13 +135,12 @@ macro_rules! param {
                 $(<$ty as $crate::WriteHci>::size(&self.$field) +)* 0
             }
 
-            fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 $(<$ty as $crate::WriteHci>::write_hci(&self.$field, &mut writer)?;)*
                 Ok(())
             }
 
-            #[cfg(feature = "async")]
-            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 $(<$ty as $crate::WriteHci>::write_hci_async(&self.$field, &mut writer).await?;)*
                 Ok(())
             }
@@ -187,12 +183,11 @@ macro_rules! param {
                 1
             }
 
-            fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <u8 as $crate::WriteHci>::write_hci(&(*self as u8), writer)
             }
 
-            #[cfg(feature = "async")]
-            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <u8 as $crate::WriteHci>::write_hci_async(&(*self as u8), writer).await
             }
         }
@@ -248,13 +243,12 @@ macro_rules! param {
                 1
             }
 
-            fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <u8 as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
-            #[cfg(feature = "async")]
             #[allow(unused_mut)]
-            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 <u8 as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
@@ -307,13 +301,12 @@ macro_rules! param {
                 $octets
             }
 
-            fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <[u8; $octets] as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
-            #[cfg(feature = "async")]
             #[allow(unused_mut)]
-            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 <[u8; $octets] as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
@@ -331,7 +324,7 @@ macro_rules! param {
                 1 + self.iter().map($crate::WriteHci::size).sum::<usize>()
             }
 
-            fn write_hci<W: ::embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 writer.write_all(&[self.len() as u8])?;
                 for x in self.iter() {
                     <$el as $crate::WriteHci>::write_hci(x, &mut writer)?;
@@ -339,8 +332,7 @@ macro_rules! param {
                 Ok(())
             }
 
-            #[cfg(feature = "async")]
-            async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 writer.write_all(&[self.len() as u8]).await?;
                 for x in self.iter() {
                     <$el as $crate::WriteHci>::write_hci_async(x, &mut writer).await?;

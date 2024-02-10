@@ -154,7 +154,7 @@ impl<T: WriteHci> WriteHci for PhyParams<T> {
         1 + self.le_1m_phy.size() + self.le_2m_phy.size() + self.le_coded_phy.size()
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         self.scanning_phys().write_hci(&mut writer)?;
         self.le_1m_phy.write_hci(&mut writer)?;
         self.le_2m_phy.write_hci(&mut writer)?;
@@ -162,8 +162,7 @@ impl<T: WriteHci> WriteHci for PhyParams<T> {
         Ok(())
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         self.scanning_phys().write_hci_async(&mut writer).await?;
         self.le_1m_phy.write_hci_async(&mut writer).await?;
         self.le_2m_phy.write_hci_async(&mut writer).await?;

@@ -1,3 +1,5 @@
+//! Parameter types for Bluetooth HCI command and event packets.
+
 use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
 mod cmd_mask;
@@ -33,11 +35,11 @@ impl<'a> WriteHci for RemainingBytes<'a> {
         self.0.len()
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self.0)
     }
 
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self.0).await
     }
 }
@@ -76,13 +78,12 @@ impl<const US: u32> WriteHci for Duration<US> {
         WriteHci::size(&self.0)
     }
 
-    fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
         self.0.write_hci(writer)
     }
 
-    #[cfg(feature = "async")]
     #[allow(unused_mut)]
-    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
         self.0.write_hci_async(writer).await
     }
 }
@@ -138,14 +139,13 @@ impl WriteHci for IsoDuration {
         3
     }
 
-    fn write_hci<W: ::embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
         let bytes: [u8; 3] = unsafe { self.0.to_le_bytes()[..3].try_into().unwrap_unchecked() };
         bytes.write_hci(writer)
     }
 
-    #[cfg(feature = "async")]
     #[allow(unused_mut)]
-    async fn write_hci_async<W: ::embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
         let bytes: [u8; 3] = unsafe { self.0.to_le_bytes()[..3].try_into().unwrap_unchecked() };
         bytes.write_hci_async(writer).await
     }

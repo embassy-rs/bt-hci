@@ -1,9 +1,8 @@
 #![no_std]
-#![cfg_attr(feature = "async", feature(async_fn_in_trait))]
-#![cfg_attr(feature = "async", feature(impl_trait_projections))]
-#![cfg_attr(feature = "async", allow(incomplete_features))]
 
-use embedded_io::blocking::ReadExactError;
+use core::future::Future;
+
+use embedded_io::ReadExactError;
 
 mod fmt;
 
@@ -52,23 +51,21 @@ impl<E: embedded_io::Error> From<FromHciBytesError> for ReadHciError<E> {
 }
 
 pub trait ReadHci<'de>: FromHciBytes<'de> {
-    fn read_hci<R: embedded_io::blocking::Read>(reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>>;
+    fn read_hci<R: embedded_io::Read>(reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>>;
 
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
+    fn read_hci_async<R: embedded_io_async::Read>(
         reader: R,
         buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>>;
+    ) -> impl Future<Output = Result<Self, ReadHciError<R::Error>>>;
 }
 
 pub trait WriteHci {
     /// The number of bytes this value will write
     fn size(&self) -> usize;
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, writer: W) -> Result<(), W::Error>;
+    fn write_hci<W: embedded_io::Write>(&self, writer: W) -> Result<(), W::Error>;
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, writer: W) -> Result<(), W::Error>;
+    fn write_hci_async<W: embedded_io_async::Write>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>>;
 }
 
 pub trait HostToControllerPacket: WriteHci {
@@ -109,12 +106,11 @@ impl WriteHci for PacketKind {
         1
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes())
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes()).await
     }
 }
@@ -157,10 +153,7 @@ impl<'de> FromHciBytes<'de> for ControllerToHostPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
-    fn read_hci<R: embedded_io::blocking::Read>(
-        mut reader: R,
-        buf: &'de mut [u8],
-    ) -> Result<Self, ReadHciError<R::Error>> {
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut kind = [0];
         reader.read_exact(&mut kind)?;
         match PacketKind::from_hci_bytes(&kind)?.0 {
@@ -172,8 +165,7 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
         }
     }
 
-    #[cfg(feature = "async")]
-    async fn read_hci_async<R: embedded_io::asynch::Read>(
+    async fn read_hci_async<R: embedded_io_async::Read>(
         mut reader: R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
@@ -210,13 +202,12 @@ impl<T: HostToControllerPacket> WriteHci for WithIndicator<T> {
         1 + self.0.size()
     }
 
-    fn write_hci<W: embedded_io::blocking::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         T::KIND.write_hci(&mut writer)?;
         self.0.write_hci(writer)
     }
 
-    #[cfg(feature = "async")]
-    async fn write_hci_async<W: embedded_io::asynch::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         T::KIND.write_hci_async(&mut writer).await?;
         self.0.write_hci_async(writer).await
     }
