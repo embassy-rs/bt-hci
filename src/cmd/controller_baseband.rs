@@ -1,7 +1,11 @@
 //! Bluetooth Core Specification Vol 4, Part E, §7.3
 
-use super::cmd;
-use crate::param::{ConnHandle, ControllerToHostFlowControl, Duration, EventMask, EventMaskPage2, PowerLevelKind};
+use super::{cmd, Cmd, Opcode};
+use crate::{
+    cmd::OpcodeGroup,
+    param::{ConnHandle, ControllerToHostFlowControl, Duration, EventMask, EventMaskPage2, PowerLevelKind},
+    WriteHci,
+};
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.1
@@ -57,6 +61,50 @@ cmd! {
         }
         Return = ();
     }
+}
+
+/// Bluetooth Core Specification Vol 4, Part E, §7.3.40
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct HostNumberOfCompletedPackets<'a> {
+    pub connection_completed_packets: &'a [(ConnHandle, u16)],
+}
+
+impl<'a> Cmd for HostNumberOfCompletedPackets<'a> {
+    const OPCODE: Opcode = Opcode::new(OpcodeGroup::CONTROL_BASEBAND, 0x0035);
+
+    #[inline(always)]
+    fn params_size(&self) -> usize {
+        1 + 4 * self.connection_completed_packets.len()
+    }
+
+    fn write_params<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        let len = self.connection_completed_packets.len() as u8;
+        len.write_hci(&mut writer)?;
+        for (handle, _) in self.connection_completed_packets {
+            handle.write_hci(&mut writer)?;
+        }
+        for (_, packets) in self.connection_completed_packets {
+            packets.write_hci(&mut writer)?;
+        }
+        Ok(())
+    }
+
+    async fn write_params_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        let len = self.connection_completed_packets.len() as u8;
+        len.write_hci_async(&mut writer).await?;
+        for (handle, _) in self.connection_completed_packets {
+            handle.write_hci_async(&mut writer).await?;
+        }
+        for (_, packets) in self.connection_completed_packets {
+            packets.write_hci_async(&mut writer).await?;
+        }
+        Ok(())
+    }
+}
+
+impl<'a> crate::cmd::SyncCmd for HostNumberOfCompletedPackets<'a> {
+    type Return<'ret> = ();
 }
 
 cmd! {
