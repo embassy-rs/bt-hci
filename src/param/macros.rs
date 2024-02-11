@@ -4,14 +4,17 @@ macro_rules! impl_param_int {
     ($($ty:ty),+) => {
         $(
             impl WriteHci for $ty {
+                #[inline(always)]
                 fn size(&self) -> usize {
                     ::core::mem::size_of::<Self>()
                 }
 
+                #[inline(always)]
                 fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                     writer.write_all(&self.to_le_bytes())
                 }
 
+                #[inline(always)]
                 async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                     writer.write_all(&self.to_le_bytes()).await
                 }
@@ -40,11 +43,13 @@ macro_rules! impl_param_tuple {
         #[automatically_derived]
         #[allow(non_snake_case)]
         impl<$($a: WriteHci,)*> WriteHci for ($($a,)*) {
+            #[inline(always)]
             fn size(&self) -> usize {
                 let ($(ref $a,)*) = *self;
                 $($a.size() +)* 0
             }
 
+            #[inline(always)]
             #[allow(unused_mut, unused_variables)]
             fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 let ($(ref $a,)*) = *self;
@@ -52,6 +57,7 @@ macro_rules! impl_param_tuple {
                 Ok(())
             }
 
+            #[inline(always)]
             #[allow(unused_mut, unused_variables)]
             async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 let ($(ref $a,)*) = *self;
@@ -96,14 +102,17 @@ macro_rules! param {
         }
 
         impl $crate::WriteHci for $name {
+            #[inline(always)]
             fn size(&self) -> usize {
                 $crate::WriteHci::size(&self.0)
             }
 
+            #[inline(always)]
             fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <$wrapped as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
+            #[inline(always)]
             async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <$wrapped as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
@@ -131,15 +140,18 @@ macro_rules! param {
         }
 
         impl$(<$life>)? $crate::WriteHci for $name$(<$life>)? {
+            #[inline(always)]
             fn size(&self) -> usize {
                 $(<$ty as $crate::WriteHci>::size(&self.$field) +)* 0
             }
 
+            #[inline(always)]
             fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 $(<$ty as $crate::WriteHci>::write_hci(&self.$field, &mut writer)?;)*
                 Ok(())
             }
 
+            #[inline(always)]
             async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 $(<$ty as $crate::WriteHci>::write_hci_async(&self.$field, &mut writer).await?;)*
                 Ok(())
@@ -179,14 +191,17 @@ macro_rules! param {
         }
 
         impl $crate::WriteHci for $name {
+            #[inline(always)]
             fn size(&self) -> usize {
                 1
             }
 
+            #[inline(always)]
             fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <u8 as $crate::WriteHci>::write_hci(&(*self as u8), writer)
             }
 
+            #[inline(always)]
             async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <u8 as $crate::WriteHci>::write_hci_async(&(*self as u8), writer).await
             }
@@ -239,14 +254,17 @@ macro_rules! param {
         }
 
         impl $crate::WriteHci for $name {
+            #[inline(always)]
             fn size(&self) -> usize {
                 1
             }
 
+            #[inline(always)]
             fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <u8 as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
+            #[inline(always)]
             #[allow(unused_mut)]
             async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 <u8 as $crate::WriteHci>::write_hci_async(&self.0, writer).await
@@ -297,14 +315,17 @@ macro_rules! param {
         }
 
         impl $crate::WriteHci for $name {
+            #[inline(always)]
             fn size(&self) -> usize {
                 $octets
             }
 
+            #[inline(always)]
             fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <[u8; $octets] as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
+            #[inline(always)]
             #[allow(unused_mut)]
             async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 <[u8; $octets] as $crate::WriteHci>::write_hci_async(&self.0, writer).await
@@ -320,10 +341,12 @@ macro_rules! param {
 
     (&$life:lifetime [$el:ty]) => {
         impl<$life> $crate::WriteHci for &$life [$el] {
+            #[inline(always)]
             fn size(&self) -> usize {
                 1 + self.iter().map($crate::WriteHci::size).sum::<usize>()
             }
 
+            #[inline(always)]
             fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 writer.write_all(&[self.len() as u8])?;
                 for x in self.iter() {
@@ -332,6 +355,7 @@ macro_rules! param {
                 Ok(())
             }
 
+            #[inline(always)]
             async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 writer.write_all(&[self.len() as u8]).await?;
                 for x in self.iter() {

@@ -32,14 +32,17 @@ impl<'a> core::ops::Deref for RemainingBytes<'a> {
 }
 
 impl<'a> WriteHci for RemainingBytes<'a> {
+    #[inline(always)]
     fn size(&self) -> usize {
         self.0.len()
     }
 
+    #[inline(always)]
     fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self.0)
     }
 
+    #[inline(always)]
     async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self.0).await
     }
@@ -75,14 +78,17 @@ impl ConnHandle {
 pub struct Duration<const US: u32 = 625>(u16);
 
 impl<const US: u32> WriteHci for Duration<US> {
+    #[inline(always)]
     fn size(&self) -> usize {
         WriteHci::size(&self.0)
     }
 
+    #[inline(always)]
     fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
         self.0.write_hci(writer)
     }
 
+    #[inline(always)]
     #[allow(unused_mut)]
     async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
         self.0.write_hci_async(writer).await
@@ -90,40 +96,49 @@ impl<const US: u32> WriteHci for Duration<US> {
 }
 
 impl<'de, const US: u32> FromHciBytes<'de> for Duration<US> {
+    #[inline(always)]
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
         u16::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
     }
 }
 
 impl<const US: u32> Duration<US> {
+    #[inline(always)]
     pub fn from_u16(val: u16) -> Self {
         Self(val)
     }
 
+    #[inline(always)]
     pub fn from_micros(val: u64) -> Self {
         Self::from_u16(unwrap!((val / u64::from(US)).try_into()))
     }
 
+    #[inline(always)]
     pub fn from_millis(val: u32) -> Self {
         Self::from_micros(u64::from(val) * 1000)
     }
 
+    #[inline(always)]
     pub fn from_secs(val: u32) -> Self {
         Self::from_micros(u64::from(val) * 1_000_000)
     }
 
+    #[inline(always)]
     pub fn as_u16(&self) -> u16 {
         self.0
     }
 
+    #[inline(always)]
     pub fn as_micros(&self) -> u64 {
         u64::from(self.as_u16()) * u64::from(US)
     }
 
+    #[inline(always)]
     pub fn as_millis(&self) -> u32 {
         unwrap!((self.as_micros() / 1000).try_into())
     }
 
+    #[inline(always)]
     pub fn as_secs(&self) -> u32 {
         // (u16::MAX * u32::MAX / 1_000_000) < u32::MAX so this is safe
         (self.as_micros() / 1_000_000) as u32
@@ -136,15 +151,18 @@ impl<const US: u32> Duration<US> {
 pub struct IsoDuration(u32);
 
 impl WriteHci for IsoDuration {
+    #[inline(always)]
     fn size(&self) -> usize {
         3
     }
 
+    #[inline(always)]
     fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
         let bytes: [u8; 3] = unsafe { self.0.to_le_bytes()[..3].try_into().unwrap_unchecked() };
         bytes.write_hci(writer)
     }
 
+    #[inline(always)]
     #[allow(unused_mut)]
     async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
         let bytes: [u8; 3] = unsafe { self.0.to_le_bytes()[..3].try_into().unwrap_unchecked() };
@@ -161,26 +179,32 @@ impl<'de> FromHciBytes<'de> for IsoDuration {
 }
 
 impl IsoDuration {
+    #[inline(always)]
     pub fn from_micros(val: u32) -> Self {
         Self(val)
     }
 
+    #[inline(always)]
     pub fn from_millis(val: u32) -> Self {
         Self(unwrap!(val.checked_mul(1000)))
     }
 
+    #[inline(always)]
     pub fn from_secs(val: u32) -> Self {
         Self(unwrap!(val.checked_mul(1_000_000)))
     }
 
+    #[inline(always)]
     pub fn as_micros(&self) -> u32 {
         self.0
     }
 
+    #[inline(always)]
     pub fn as_millis(&self) -> u32 {
         self.as_micros() / 1000
     }
 
+    #[inline(always)]
     pub fn as_secs(&self) -> u32 {
         self.as_micros() / 1_000_000
     }

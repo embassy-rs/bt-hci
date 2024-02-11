@@ -93,6 +93,7 @@ pub trait Cmd {
 }
 
 impl<T: Cmd> WriteHci for T {
+    #[inline(always)]
     fn size(&self) -> usize {
         self.params_size() + 3
     }
@@ -261,8 +262,9 @@ macro_rules! cmd {
         impl$(<$life>)? $crate::cmd::Cmd for $name$(<$life>)? {
             const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
 
+            #[inline(always)]
             fn params_size(&self) -> usize {
-                $(core::mem::size_of::<$param_ty>() +)* 0
+                $(<$param_ty as $crate::WriteHci>::size(&self.$param_name) +)* 0
             }
 
             fn write_params<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {

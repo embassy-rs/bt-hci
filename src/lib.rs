@@ -102,14 +102,17 @@ impl<'de> FromHciBytes<'de> for PacketKind {
 }
 
 impl WriteHci for PacketKind {
+    #[inline(always)]
     fn size(&self) -> usize {
         1
     }
 
+    #[inline(always)]
     fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes())
     }
 
+    #[inline(always)]
     async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes()).await
     }
@@ -192,15 +195,18 @@ impl<T: HostToControllerPacket> WithIndicator<T> {
 }
 
 impl<T: HostToControllerPacket> WriteHci for WithIndicator<T> {
+    #[inline(always)]
     fn size(&self) -> usize {
         1 + self.0.size()
     }
 
+    #[inline(always)]
     fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         T::KIND.write_hci(&mut writer)?;
         self.0.write_hci(writer)
     }
 
+    #[inline(always)]
     async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         T::KIND.write_hci_async(&mut writer).await?;
         self.0.write_hci_async(writer).await

@@ -1,12 +1,17 @@
 use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
 impl WriteHci for bool {
+    #[inline(always)]
     fn size(&self) -> usize {
-        ::core::mem::size_of::<Self>()
+        1
     }
+
+    #[inline(always)]
     fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes())
     }
+
+    #[inline(always)]
     async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&(*self as u8).to_le_bytes()).await
     }
@@ -24,15 +29,18 @@ impl<'de> FromHciBytes<'de> for bool {
 }
 
 impl<'a> WriteHci for &'a [u8] {
+    #[inline(always)]
     fn size(&self) -> usize {
         self.len()
     }
 
+    #[inline(always)]
     fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&[self.size() as u8])?;
         writer.write_all(self)
     }
 
+    #[inline(always)]
     async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&[self.size() as u8]).await?;
         writer.write_all(self).await
@@ -56,14 +64,17 @@ impl<'de> FromHciBytes<'de> for &'de [u8] {
 }
 
 impl<const N: usize> WriteHci for [u8; N] {
+    #[inline(always)]
     fn size(&self) -> usize {
         N
     }
 
+    #[inline(always)]
     fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self)
     }
 
+    #[inline(always)]
     async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self).await
     }
@@ -81,10 +92,12 @@ impl<'de, const N: usize> FromHciBytes<'de> for [u8; N] {
 }
 
 impl<T: WriteHci> WriteHci for Option<T> {
+    #[inline(always)]
     fn size(&self) -> usize {
         self.as_ref().map(|x| x.size()).unwrap_or_default()
     }
 
+    #[inline(always)]
     fn write_hci<W: embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
         match self {
             Some(val) => val.write_hci(writer),
@@ -92,6 +105,7 @@ impl<T: WriteHci> WriteHci for Option<T> {
         }
     }
 
+    #[inline(always)]
     async fn write_hci_async<W: embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
         match self {
             Some(val) => val.write_hci_async(writer).await,
