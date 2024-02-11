@@ -2,6 +2,8 @@
 //!
 //! See Bluetooth Core Specification Vol 4, Part E, §7.
 
+use core::future::Future;
+
 use crate::param::{param, ConnHandle};
 use crate::{FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
@@ -72,14 +74,37 @@ impl Opcode {
 }
 
 /// A trait for objects representing an HCI Command packet
-pub trait Cmd: WriteHci {
+pub trait Cmd {
     /// The opcode identifying this kind of HCI Command
     const OPCODE: Opcode;
 
     /// The command packet header for this command
     fn header(&self) -> [u8; 3] {
         let opcode_bytes = Self::OPCODE.0.to_le_bytes();
-        [opcode_bytes[0], opcode_bytes[1], (self.size() - 3) as u8]
+        [opcode_bytes[0], opcode_bytes[1], self.params_size() as u8]
+    }
+
+    /// The number of bytes the parameters for this command will write
+    fn params_size(&self) -> usize;
+
+    fn write_params<W: embedded_io::Write>(&self, writer: W) -> Result<(), W::Error>;
+
+    fn write_params_async<W: embedded_io_async::Write>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>>;
+}
+
+impl<T: Cmd> WriteHci for T {
+    fn size(&self) -> usize {
+        self.params_size() + 3
+    }
+
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        writer.write_all(&self.header())?;
+        self.write_params(writer)
+    }
+
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        writer.write_all(&self.header()).await?;
+        self.write_params_async(writer).await
     }
 }
 
@@ -233,34 +258,28 @@ macro_rules! cmd {
 
         #[automatically_derived]
         #[allow(unused_mut, unused_variables, unused_imports)]
-        impl$(<$life>)? $crate::WriteHci for $name$(<$life>)? {
-            fn size(&self) -> usize {
-                $(core::mem::size_of::<$param_ty>() +)* 3
+        impl$(<$life>)? $crate::cmd::Cmd for $name$(<$life>)? {
+            const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
+
+            fn params_size(&self) -> usize {
+                $(core::mem::size_of::<$param_ty>() +)* 0
             }
 
-            fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_params<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 use $crate::cmd::Cmd;
-                writer.write_all(&self.header())?;
                 $(
                     <$param_ty as $crate::WriteHci>::write_hci(&self.$param_name, &mut writer)?;
                 )*
                 Ok(())
             }
 
-            async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_params_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 use $crate::cmd::Cmd;
-                writer.write_all(&self.header()).await?;
                 $(
                     <$param_ty as $crate::WriteHci>::write_hci_async(&self.$param_name, &mut writer).await?;
                 )*
                 Ok(())
             }
-        }
-
-        #[automatically_derived]
-        #[allow(unused_mut, unused_variables, unused_imports)]
-        impl$(<$life>)? $crate::cmd::Cmd for $name$(<$life>)? {
-            const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
         }
     };
 }
