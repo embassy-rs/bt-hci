@@ -20,6 +20,7 @@ pub use status::*;
 /// A special parameter which takes all remaining bytes in the buffer
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct RemainingBytes<'a>(&'a [u8]);
 
 impl<'a> core::ops::Deref for RemainingBytes<'a> {

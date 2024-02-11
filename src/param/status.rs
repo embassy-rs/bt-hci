@@ -4,7 +4,6 @@ use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
 #[repr(transparent)]
 #[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct Status(u8);
 
 impl Status {
