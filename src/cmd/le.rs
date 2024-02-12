@@ -58,6 +58,7 @@ cmd! {
             adv_kind: AdvKind,
             own_addr_kind: AddrKind,
             peer_addr_kind: AddrKind,
+            peer_addr: BdAddr,
             adv_channel_map: AdvChannelMap,
             adv_filter_policy: AdvFilterPolicy,
         }
