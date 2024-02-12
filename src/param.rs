@@ -14,7 +14,7 @@ pub use cmd_mask::*;
 pub use event_masks::*;
 pub use feature_masks::*;
 pub use le::*;
-pub(crate) use macros::param;
+pub(crate) use macros::{param, param_slice};
 pub use status::*;
 
 /// A special parameter which takes all remaining bytes in the buffer
@@ -270,7 +270,7 @@ param! {
     }
 }
 
-param! {
+param_slice! {
     [ConnHandleCompletedPackets; 4] {
         handle[0]: ConnHandle,
         num_completed_packets[2]: u16,

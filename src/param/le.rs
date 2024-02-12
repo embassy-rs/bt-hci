@@ -1,6 +1,6 @@
 use core::iter::FusedIterator;
 
-use super::{param, BdAddr, ConnHandle, Duration, RemainingBytes};
+use super::{param, param_slice, BdAddr, ConnHandle, Duration, RemainingBytes};
 use crate::{FromHciBytes, FromHciBytesError, WriteHci};
 
 param!(struct AddrKind(u8));
@@ -220,7 +220,7 @@ param! {
     }
 }
 
-param!(&'a [AdvSet]);
+param_slice!(&'a [AdvSet]);
 
 param! {
     bitfield PeriodicAdvProps[2] {
@@ -346,7 +346,7 @@ param! {
     }
 }
 
-param! {
+param_slice! {
     [LeDirectedAdvertisingReportParam; 16] {
         event_type[0]: u8,
         addr_kind[1]: AddrKind,
@@ -357,14 +357,14 @@ param! {
     }
 }
 
-param! {
+param_slice! {
     [LeIQSample; 2] {
         i_sample[0]: i8,
         q_sample[1]: i8,
     }
 }
 
-param! {
+param_slice! {
     [BisConnHandle; 2] {
         handle[0]: ConnHandle,
     }

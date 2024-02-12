@@ -341,7 +341,9 @@ macro_rules! param {
             }
         }
     };
+}
 
+macro_rules! param_slice {
     (&$life:lifetime [$el:ty]) => {
         impl<$life> $crate::WriteHci for &$life [$el] {
             #[inline(always)]
@@ -416,7 +418,7 @@ macro_rules! param {
 
         impl<'a, 'de: 'a> $crate::FromHciBytes<'de> for &'a [$name] {
             #[allow(unused_variables)]
-            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
                 match data.split_first() {
                     Some((&len, data)) => {
                         let len = usize::from(len);
@@ -427,10 +429,10 @@ macro_rules! param {
                             let slice = unsafe { core::slice::from_raw_parts(data.as_ptr() as *const _, len) };
                             Ok((slice, rest))
                         } else {
-                            Err(FromHciBytesError::InvalidSize)
+                            Err($crate::FromHciBytesError::InvalidSize)
                         }
                     }
-                    None => Err(FromHciBytesError::InvalidSize),
+                    None => Err($crate::FromHciBytesError::InvalidSize),
                 }
             }
         }
@@ -438,3 +440,4 @@ macro_rules! param {
 }
 
 pub use param;
+pub(crate) use param_slice;
