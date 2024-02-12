@@ -387,6 +387,31 @@ macro_rules! param {
             )+
         }
 
+        impl<'a> $crate::WriteHci for &'a [$name] {
+            #[inline(always)]
+            fn size(&self) -> usize {
+                1 + self.len() * $octets
+            }
+
+            #[inline(always)]
+            fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                writer.write_all(&[self.len() as u8])?;
+                for x in self.iter() {
+                    <[u8; $octets] as $crate::WriteHci>::write_hci(&x.0, &mut writer)?;
+                }
+                Ok(())
+            }
+
+            #[inline(always)]
+            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+                writer.write_all(&[self.len() as u8]).await?;
+                for x in self.iter() {
+                    <[u8; $octets] as $crate::WriteHci>::write_hci_async(&x.0, &mut writer).await?;
+                }
+                Ok(())
+            }
+        }
+
         impl<'a, 'de: 'a> $crate::FromHciBytes<'de> for &'a [$name] {
             #[allow(unused_variables)]
             fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
