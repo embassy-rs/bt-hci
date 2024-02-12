@@ -859,7 +859,7 @@ cmd! {
             sync_timeout: Duration<10_000>,
             cte_kind: CteMask,
         }
-        Return = ();
+        Return = ConnHandle;
     }
 }
 
