@@ -1,10 +1,42 @@
-use super::param;
+use crate::WriteHci;
 
-param!(struct CmdMask([u8; 64]));
+#[repr(transparent)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct CmdMask([u8; 64]);
 
 impl Default for CmdMask {
     fn default() -> Self {
         Self([0; 64])
+    }
+}
+
+impl CmdMask {
+    pub fn into_inner(self) -> [u8; 64] {
+        self.0
+    }
+}
+
+impl WriteHci for CmdMask {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        WriteHci::size(&self.0)
+    }
+
+    #[inline(always)]
+    fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
+        self.0.write_hci(writer)
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
+        self.0.write_hci_async(writer).await
+    }
+}
+
+impl<'de> crate::FromHciBytes<'de> for CmdMask {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <[u8; 64] as crate::FromHciBytes>::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
     }
 }
 

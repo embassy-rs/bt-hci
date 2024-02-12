@@ -45,7 +45,9 @@ impl ChannelMap {
 }
 
 param! {
+    #[derive(Default)]
     enum AdvKind {
+        #[default]
         AdvInd = 0,
         AdvDirectIndHigh = 1,
         AdvScanInd = 2,
@@ -55,7 +57,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum AdvFilterPolicy {
+        #[default]
         Unfiltered = 0,
         FilterScan = 1,
         FilterConn = 2,
@@ -64,14 +68,18 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum LeScanKind {
+        #[default]
         Passive = 0,
         Active = 1,
     }
 }
 
 param! {
+    #[derive(Default)]
     enum ScanningFilterPolicy {
+        #[default]
         BasicUnfiltered = 0,
         BasicFiltered = 1,
         ExtUnfiltered = 2,
@@ -80,7 +88,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum PhyKind {
+        #[default]
         Le1M = 1,
         Le2M = 2,
         LeCoded = 3,
@@ -104,7 +114,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum PhyOptions {
+        #[default]
         NoPreferredCoding = 0,
         S2CodingPreferred = 1,
         S8CodingPreferred = 2,
@@ -189,7 +201,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum Operation {
+        #[default]
         IntermediateFragment = 0,
         FirstFragment = 1,
         LastFragment = 2,
@@ -215,7 +229,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum FilterDuplicates {
+        #[default]
         Disabled = 0,
         Enabled = 1,
         EnabledPerScanPeriod = 2,
@@ -245,14 +261,18 @@ param!(struct SyncHandle(u16));
 param!(struct BigHandle(u16));
 
 param! {
+    #[derive(Default)]
     enum PrivacyMode {
+        #[default]
         Network = 0,
         Device = 1,
     }
 }
 
 param! {
+    #[derive(Default)]
     enum CteKind {
+        #[default]
         AoA = 0,
         AoD1Us = 1,
         AoD2Us = 2,
@@ -275,7 +295,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum LePeriodicAdvSyncTransferMode {
+        #[default]
         NoSync = 0,
         SyncRx = 1,
         SyncRxReport = 2,
@@ -291,14 +313,18 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum LeConnRole {
+        #[default]
         Central = 0,
         Peripheral = 1,
     }
 }
 
 param! {
+    #[derive(Default)]
     enum ClockAccuracy {
+        #[default]
         Ppm500 = 0,
         Ppm250 = 1,
         Ppm150 = 2,
@@ -345,14 +371,18 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum DataStatus {
+        #[default]
         Complete = 0,
         Incomplete = 1,
     }
 }
 
 param! {
+    #[derive(Default)]
     enum PacketStatus {
+        #[default]
         CrcCorrect = 0,
         CrcIncorrectUsedLength = 1,
         CrcIncorrectUsedOther = 2,
@@ -361,7 +391,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum ZoneEntered {
+        #[default]
         Low = 0,
         Middle = 1,
         High = 2,
@@ -369,7 +401,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum LeTxPowerReportingReason {
+        #[default]
         LocalTxPowerChanged = 0,
         RemoteTxPowerChanged = 1,
         LeReadRemoteTxPowerLevelCompleted = 2,
@@ -377,7 +411,9 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
     enum LeAdvEventKind {
+        #[default]
         AdvInd = 0,
         AdvDirectInd = 1,
         AdvScanInd = 2,

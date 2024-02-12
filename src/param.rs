@@ -19,7 +19,7 @@ pub use status::*;
 
 /// A special parameter which takes all remaining bytes in the buffer
 #[repr(transparent)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct RemainingBytes<'a>(&'a [u8]);
 
@@ -223,14 +223,18 @@ param!(
 );
 
 param! {
+    #[derive(Default)]
     enum PowerLevelKind {
+        #[default]
         Current = 0,
         Maximum = 1,
     }
 }
 
 param! {
+    #[derive(Default)]
     enum ControllerToHostFlowControl {
+        #[default]
         Off = 0,
         AclOnSyncOff = 1,
         AclOffSyncOn = 2,
@@ -257,7 +261,9 @@ impl CoreSpecificationVersion {
 }
 
 param! {
+    #[derive(Default)]
     enum LinkType {
+        #[default]
         SyncData = 0,
         AclData = 1,
         IsoData = 2,

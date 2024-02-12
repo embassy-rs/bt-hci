@@ -92,7 +92,7 @@ macro_rules! param {
     ) => {
         $(#[$attrs])*
         #[repr(transparent)]
-        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name($wrapped);
 
@@ -134,7 +134,7 @@ macro_rules! param {
         }
     ) => {
         $(#[$attrs])*
-        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name$(<$life>)? {
             $(pub $field: $ty,)*
@@ -177,6 +177,7 @@ macro_rules! param {
         $(#[$attrs:meta])*
         enum $name:ident {
             $(
+                $(#[$variant_attrs:meta])*
                 $variant:ident = $value:expr,
             )+
         }
@@ -187,6 +188,7 @@ macro_rules! param {
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum $name {
             $(
+                $(#[$variant_attrs])*
                 $variant = $value,
             )+
         }
@@ -375,7 +377,7 @@ macro_rules! param {
         }
     ) => {
         $(#[$attrs])*
-        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name([u8; $octets]);
 
