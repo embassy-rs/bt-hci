@@ -84,6 +84,7 @@ macro_rules! impl_param_tuple {
 impl_param_tuple! {}
 impl_param_tuple! { A B }
 
+#[macro_export]
 macro_rules! param {
     (
         $(#[$attrs:meta])*
@@ -409,4 +410,4 @@ macro_rules! param {
     };
 }
 
-pub(crate) use param;
+pub use param;

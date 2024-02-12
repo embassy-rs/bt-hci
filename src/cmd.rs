@@ -132,6 +132,7 @@ pub trait SyncCmd: Cmd {
     }
 }
 
+#[macro_export]
 macro_rules! cmd {
     (
         $(#[$attrs:meta])*
@@ -146,7 +147,7 @@ macro_rules! cmd {
             }
         }
     ) => {
-        $crate::cmd::cmd! {
+        $crate::cmd! {
             $(#[$attrs])*
             $name($group, $cmd) {
                 Params$(<$life:lifetime>)? { $($param_name: $param_ty,)* }
@@ -161,7 +162,7 @@ macro_rules! cmd {
             }
         }
 
-        $crate::param::param! {
+        $crate::param! {
             $(#[$ret_attrs])*
             struct $ret {
                 handle: ConnHandle,
@@ -181,7 +182,7 @@ macro_rules! cmd {
             }
         }
     ) => {
-        $crate::cmd::cmd! {
+        $crate::cmd! {
             $(#[$attrs])*
             $name($group, $cmd) {
                 Params$(<$life:lifetime>)? { $($param_name: $param_ty,)* }
@@ -189,7 +190,7 @@ macro_rules! cmd {
             }
         }
 
-        $crate::param::param! {
+        $crate::param! {
             $(#[$ret_attrs])*
             struct $ret {
                 $($ret_name: $ret_ty,)*
@@ -205,7 +206,7 @@ macro_rules! cmd {
             Return = ConnHandle;
         }
     ) => {
-        $crate::cmd::cmd! {
+        $crate::cmd! {
             $(#[$attrs])*
             $name($group, $cmd) {
                 Params$(<$life>)? { $($param_name: $param_ty,)* }
@@ -229,7 +230,7 @@ macro_rules! cmd {
             Return = $ret_ty:ty;
         }
     ) => {
-        $crate::cmd::cmd! {
+        $crate::cmd! {
             $(#[$attrs])*
             $name($group, $cmd) {
                 Params$(<$life>)? { $($param_name: $param_ty,)* }
@@ -286,4 +287,4 @@ macro_rules! cmd {
     };
 }
 
-pub(crate) use cmd;
+pub use cmd;
