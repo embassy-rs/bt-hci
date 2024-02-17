@@ -1,4 +1,4 @@
-use crate::WriteHci;
+use crate::FixedSizeValue;
 
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -17,26 +17,10 @@ impl CmdMask {
     }
 }
 
-impl WriteHci for CmdMask {
+unsafe impl FixedSizeValue for CmdMask {
     #[inline(always)]
-    fn size(&self) -> usize {
-        WriteHci::size(&self.0)
-    }
-
-    #[inline(always)]
-    fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
-        self.0.write_hci(writer)
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
-        self.0.write_hci_async(writer).await
-    }
-}
-
-impl<'de> crate::FromHciBytes<'de> for CmdMask {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
-        <[u8; 64] as crate::FromHciBytes>::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
+    fn is_valid(_data: &[u8]) -> bool {
+        true
     }
 }
 

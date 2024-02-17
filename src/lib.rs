@@ -16,6 +16,10 @@ pub enum FromHciBytesError {
     InvalidValue,
 }
 
+pub trait AsHciBytes {
+    fn as_hci_bytes(&self) -> &[u8];
+}
+
 pub trait FromHciBytes<'de>: Sized {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError>;
 
@@ -70,6 +74,78 @@ pub trait WriteHci {
 
 pub trait HostToControllerPacket: WriteHci {
     const KIND: PacketKind;
+}
+
+/// # Safety
+/// - Must not contain any padding (uninitialized) bytes (recursively)
+/// - structs must be `#[repr(C)]` or `#[repr(transparent)]`
+/// - enums must be `#[repr(<int>)]`
+/// - Must not contain any references, pointers, atomics, or interior mutability
+/// - `is_valid()` must return true only if `data` is a valid bit representation of `Self`
+pub unsafe trait FixedSizeValue: Copy {
+    /// Checks if the bit representation in data is valid for Self.
+    ///
+    /// May panic if `data.len() != core::mem::size_of::<Self>()`
+    fn is_valid(data: &[u8]) -> bool;
+}
+
+impl<T: FixedSizeValue> AsHciBytes for T {
+    fn as_hci_bytes(&self) -> &[u8] {
+        unsafe { core::slice::from_raw_parts(self as *const _ as *const u8, core::mem::size_of::<Self>()) }
+    }
+}
+
+impl<'de, T: FixedSizeValue> FromHciBytes<'de> for T {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        if data.len() < core::mem::size_of::<Self>() {
+            Err(FromHciBytesError::InvalidSize)
+        } else if !Self::is_valid(data) {
+            Err(FromHciBytesError::InvalidValue)
+        } else {
+            let (data, rest) = data.split_at(core::mem::size_of::<Self>());
+            Ok((unsafe { core::ptr::read_unaligned(data.as_ptr() as *const Self) }, rest))
+        }
+    }
+}
+
+impl<'de, T: FixedSizeValue> ReadHci<'de> for T {
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
+        if buf.len() < core::mem::size_of::<Self>() {
+            Err(ReadHciError::BufferTooSmall)
+        } else {
+            let (buf, _) = buf.split_at_mut(core::mem::size_of::<Self>());
+            reader.read_exact(buf)?;
+            Self::from_hci_bytes(buf).map(|(x, _)| x).map_err(Into::into)
+        }
+    }
+
+    async fn read_hci_async<R: embedded_io_async::Read>(
+        mut reader: R,
+        buf: &'de mut [u8],
+    ) -> Result<Self, ReadHciError<R::Error>> {
+        if buf.len() < core::mem::size_of::<Self>() {
+            Err(ReadHciError::BufferTooSmall)
+        } else {
+            let (buf, _) = buf.split_at_mut(core::mem::size_of::<Self>());
+            reader.read_exact(buf).await?;
+            Self::from_hci_bytes(buf).map(|(x, _)| x).map_err(Into::into)
+        }
+    }
+}
+
+impl<T: FixedSizeValue> WriteHci for T {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        core::mem::size_of::<Self>()
+    }
+
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        writer.write_all(self.as_hci_bytes())
+    }
+
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        writer.write_all(self.as_hci_bytes()).await
+    }
 }
 
 #[repr(u8)]

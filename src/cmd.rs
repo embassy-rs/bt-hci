@@ -2,8 +2,6 @@
 //!
 //! See Bluetooth Core Specification Vol 4, Part E, §7.
 
-use core::future::Future;
-
 use crate::param::{param, ConnHandle};
 use crate::{FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
@@ -73,49 +71,53 @@ impl Opcode {
     }
 }
 
-/// A trait for objects representing an HCI Command packet
-pub trait Cmd {
+/// A trait for objects representing the parameters of an HCI Command packet
+pub trait CmdParams: WriteHci {
     /// The opcode identifying this kind of HCI Command
     const OPCODE: Opcode;
-
-    /// The command packet header for this command
-    fn header(&self) -> [u8; 3] {
-        let opcode_bytes = Self::OPCODE.0.to_le_bytes();
-        [opcode_bytes[0], opcode_bytes[1], self.params_size() as u8]
-    }
-
-    /// The number of bytes the parameters for this command will write
-    fn params_size(&self) -> usize;
-
-    fn write_params<W: embedded_io::Write>(&self, writer: W) -> Result<(), W::Error>;
-
-    fn write_params_async<W: embedded_io_async::Write>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>>;
 }
 
-impl<T: Cmd> WriteHci for T {
+/// An object representing an HCI Command
+pub struct Cmd<P: WriteHci> {
+    params: P,
+}
+
+impl<P: CmdParams> Cmd<P> {
+    pub const fn opcode() -> Opcode {
+        P::OPCODE
+    }
+
+    /// The command packet header for this command
+    pub fn header(&self) -> [u8; 3] {
+        let opcode_bytes = P::OPCODE.0.to_le_bytes();
+        [opcode_bytes[0], opcode_bytes[1], self.params.size() as u8]
+    }
+}
+
+impl<P: CmdParams> WriteHci for Cmd<P> {
     #[inline(always)]
     fn size(&self) -> usize {
-        self.params_size() + 3
+        self.params.size() + 3
     }
 
     fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&self.header())?;
-        self.write_params(writer)
+        self.params.write_hci(writer)
     }
 
     async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(&self.header()).await?;
-        self.write_params_async(writer).await
+        self.params.write_hci_async(writer).await
     }
 }
 
-impl<T: Cmd> HostToControllerPacket for T {
+impl<P: CmdParams> HostToControllerPacket for Cmd<P> {
     const KIND: PacketKind = PacketKind::Cmd;
 }
 
 /// A trait for objects representing HCI Commands that generate [`CommandComplete`](crate::event::CommandComplete)
 /// events
-pub trait SyncCmd: Cmd {
+pub trait SyncCmd {
     /// The type of the parameters for the [`CommandComplete`](crate::event::CommandComplete) event
     type Return<'de>: FromHciBytes<'de>;
 
@@ -154,7 +156,7 @@ macro_rules! cmd {
             }
         }
 
-        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
+        impl$(<$life>)? $crate::cmd::SyncCmd for $crate::cmd::Cmd<$name$(<$life>)?> {
             type Return<'ret> = $ret;
 
             fn return_handle(data: &[u8]) -> Option<$crate::param::ConnHandle> {
@@ -213,7 +215,7 @@ macro_rules! cmd {
             }
         }
 
-        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
+        impl$(<$life>)? $crate::cmd::SyncCmd for $crate::cmd::Cmd<$name$(<$life>)?> {
             type Return<'ret> = ConnHandle;
 
             fn return_handle(data: &[u8]) -> Option<$crate::param::ConnHandle> {
@@ -237,22 +239,23 @@ macro_rules! cmd {
             }
         }
 
-        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
+        impl$(<$life>)? $crate::cmd::SyncCmd for $crate::cmd::Cmd<$name$(<$life>)?> {
             type Return<'ret> = $ret_ty;
         }
     };
     (
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
-            Params$(<$life:lifetime>)? {
+            Params {
                 $($param_name:ident: $param_ty:ty,)*
             }
         }
     ) => {
         $(#[$attrs])*
+        #[repr(C, packed)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        pub struct $name$(<$life>)? {
+        pub struct $name {
             $(
                 pub $param_name: $param_ty,
             )*
@@ -260,15 +263,52 @@ macro_rules! cmd {
 
         #[automatically_derived]
         #[allow(unused_mut, unused_variables, unused_imports)]
-        impl$(<$life>)? $crate::cmd::Cmd for $name$(<$life>)? {
+        impl $crate::cmd::CmdParams for $name {
             const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
+        }
 
+        unsafe impl $crate::FixedSizeValue for $name {
             #[inline(always)]
-            fn params_size(&self) -> usize {
+            #[allow(unused)]
+            fn is_valid(data: &[u8]) -> bool {
+                $(
+                    <$param_ty as $crate::FixedSizeValue>::is_valid(&data[core::mem::offset_of!(Self, $param_name)..]) &&
+                )* true
+            }
+        }
+    };
+    (
+        $(#[$attrs:meta])*
+        $name:ident($group:ident, $cmd:expr) {
+            Params<$life:lifetime> {
+                $($param_name:ident: $param_ty:ty,)*
+            }
+        }
+    ) => {
+        $(#[$attrs])*
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        pub struct $name<$life> {
+            $(
+                pub $param_name: $param_ty,
+            )*
+        }
+
+        #[automatically_derived]
+        #[allow(unused_mut, unused_variables, unused_imports)]
+        impl<$life> $crate::cmd::CmdParams for $name<$life> {
+            const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
+        }
+
+        #[automatically_derived]
+        #[allow(unused_mut, unused_variables, unused_imports)]
+        impl<$life> $crate::WriteHci for $name<$life> {
+            #[inline(always)]
+            fn size(&self) -> usize {
                 $(<$param_ty as $crate::WriteHci>::size(&self.$param_name) +)* 0
             }
 
-            fn write_params<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 use $crate::cmd::Cmd;
                 $(
                     <$param_ty as $crate::WriteHci>::write_hci(&self.$param_name, &mut writer)?;
@@ -276,7 +316,7 @@ macro_rules! cmd {
                 Ok(())
             }
 
-            async fn write_params_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 use $crate::cmd::Cmd;
                 $(
                     <$param_ty as $crate::WriteHci>::write_hci_async(&self.$param_name, &mut writer).await?;

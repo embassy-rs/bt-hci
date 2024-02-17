@@ -1,6 +1,6 @@
 //! Parameter types for Bluetooth HCI command and event packets.
 
-use crate::{FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{AsHciBytes, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
 
 mod cmd_mask;
 mod event_masks;
@@ -48,6 +48,12 @@ impl<'a> WriteHci for RemainingBytes<'a> {
     }
 }
 
+impl<'a> AsHciBytes for RemainingBytes<'a> {
+    fn as_hci_bytes(&self) -> &[u8] {
+        self.0
+    }
+}
+
 impl<'a> FromHciBytes<'a> for RemainingBytes<'a> {
     fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
         Ok((RemainingBytes(data), &[]))
@@ -77,28 +83,10 @@ impl ConnHandle {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct Duration<const US: u32 = 625>(u16);
 
-impl<const US: u32> WriteHci for Duration<US> {
+unsafe impl<const US: u32> FixedSizeValue for Duration<US> {
     #[inline(always)]
-    fn size(&self) -> usize {
-        WriteHci::size(&self.0)
-    }
-
-    #[inline(always)]
-    fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
-        self.0.write_hci(writer)
-    }
-
-    #[inline(always)]
-    #[allow(unused_mut)]
-    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
-        self.0.write_hci_async(writer).await
-    }
-}
-
-impl<'de, const US: u32> FromHciBytes<'de> for Duration<US> {
-    #[inline(always)]
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        u16::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
+    fn is_valid(_data: &[u8]) -> bool {
+        true
     }
 }
 
@@ -146,57 +134,37 @@ impl<const US: u32> Duration<US> {
 }
 
 /// A 24-bit isochronous duration (in microseconds)
+#[repr(transparent)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct IsoDuration(u32);
+pub struct IsoDuration([u8; 3]);
 
-impl WriteHci for IsoDuration {
+unsafe impl FixedSizeValue for IsoDuration {
     #[inline(always)]
-    fn size(&self) -> usize {
-        3
-    }
-
-    #[inline(always)]
-    fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
-        let bytes: [u8; 3] = unsafe { self.0.to_le_bytes()[..3].try_into().unwrap_unchecked() };
-        bytes.write_hci(writer)
-    }
-
-    #[inline(always)]
-    #[allow(unused_mut)]
-    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
-        let bytes: [u8; 3] = unsafe { self.0.to_le_bytes()[..3].try_into().unwrap_unchecked() };
-        bytes.write_hci_async(writer).await
-    }
-}
-
-impl<'de> FromHciBytes<'de> for IsoDuration {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        let (bytes, rest) = <[u8; 3]>::from_hci_bytes(data)?;
-        let bytes = [bytes[0], bytes[1], bytes[2], 0];
-        Ok((Self(u32::from_le_bytes(bytes)), rest))
+    fn is_valid(_data: &[u8]) -> bool {
+        true
     }
 }
 
 impl IsoDuration {
     #[inline(always)]
     pub fn from_micros(val: u32) -> Self {
-        Self(val)
+        Self(*unwrap!(val.to_le_bytes().first_chunk()))
     }
 
     #[inline(always)]
     pub fn from_millis(val: u32) -> Self {
-        Self(unwrap!(val.checked_mul(1000)))
+        Self::from_micros(unwrap!(val.checked_mul(1000)))
     }
 
     #[inline(always)]
     pub fn from_secs(val: u32) -> Self {
-        Self(unwrap!(val.checked_mul(1_000_000)))
+        Self::from_micros(unwrap!(val.checked_mul(1_000_000)))
     }
 
     #[inline(always)]
     pub fn as_micros(&self) -> u32 {
-        self.0
+        u32::from_le_bytes([self.0[0], self.0[1], self.0[2], 0])
     }
 
     #[inline(always)]

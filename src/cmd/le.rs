@@ -1,12 +1,17 @@
 //! Bluetooth Core Specification Vol 4, Part E, §7.8
 
-use super::cmd;
-use crate::param::{
-    AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr, ChannelMap,
-    ConnHandle, CteKind, CteMask, Duration, FilterDuplicates, InitiatingPhy, LeDataRelatedAddrChangeReasons,
-    LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable,
-    LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
-    PrivacyMode, ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates, SyncHandle,
+use super::{cmd, Cmd};
+use crate::{
+    cmd::{CmdParams, Opcode, OpcodeGroup, SyncCmd},
+    param::{
+        AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr,
+        ChannelMap, ConnHandle, CteKind, CteMask, Duration, FilterDuplicates, InitiatingPhy,
+        LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions,
+        LePeriodicAdvReceiveEnable, LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind,
+        PhyMask, PhyOptions, PhyParams, PrivacyMode, ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates,
+        SyncHandle,
+    },
+    WriteHci,
 };
 
 cmd! {
@@ -604,15 +609,39 @@ cmd! {
     }
 }
 
-cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.64
-    LeSetExtScanParams(LE, 0x0041) {
-        Params {
-            own_addr_kind: AddrKind,
-            scanning_filter_policy: ScanningFilterPolicy,
-            scanning_phys: PhyParams<ScanningPhy>,
-        }
-        Return = ();
+/// Bluetooth Core Specification Vol 4, Part E, §7.8.64
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeSetExtScanParams {
+    pub own_addr_kind: AddrKind,
+    pub scanning_filter_policy: ScanningFilterPolicy,
+    pub scanning_phys: PhyParams<ScanningPhy>,
+}
+
+impl CmdParams for LeSetExtScanParams {
+    const OPCODE: Opcode = Opcode::new(OpcodeGroup::LE, 0x0041);
+}
+
+impl SyncCmd for Cmd<LeSetExtScanParams> {
+    type Return<'ret> = ();
+}
+
+impl WriteHci for LeSetExtScanParams {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        self.own_addr_kind.size() + self.scanning_filter_policy.size() + self.scanning_phys.size()
+    }
+
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.own_addr_kind.write_hci(&mut writer)?;
+        self.scanning_filter_policy.write_hci(&mut writer)?;
+        self.scanning_phys.write_hci(writer)
+    }
+
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.own_addr_kind.write_hci_async(&mut writer).await?;
+        self.scanning_filter_policy.write_hci_async(&mut writer).await?;
+        self.scanning_phys.write_hci_async(writer).await
     }
 }
 
@@ -629,16 +658,45 @@ cmd! {
     }
 }
 
-cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.66
-    LeExtCreateConn(LE, 0x0043) {
-        Params {
-            initiator_filter_policy: bool,
-            own_addr_kind: AddrKind,
-            peer_addr_kind: AddrKind,
-            peer_addr: BdAddr,
-            initiating_phys: PhyParams<InitiatingPhy>,
-        }
+/// Bluetooth Core Specification Vol 4, Part E, §7.8.66
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeExtCreateConn {
+    pub initiator_filter_policy: bool,
+    pub own_addr_kind: AddrKind,
+    pub peer_addr_kind: AddrKind,
+    pub peer_addr: BdAddr,
+    pub initiating_phys: PhyParams<InitiatingPhy>,
+}
+
+impl crate::cmd::CmdParams for LeExtCreateConn {
+    const OPCODE: crate::cmd::Opcode = crate::cmd::Opcode::new(crate::cmd::OpcodeGroup::LE, 0x0043);
+}
+
+impl WriteHci for LeExtCreateConn {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        self.initiator_filter_policy.size()
+            + self.own_addr_kind.size()
+            + self.peer_addr_kind.size()
+            + self.peer_addr.size()
+            + self.initiating_phys.size()
+    }
+
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.initiator_filter_policy.write_hci(&mut writer)?;
+        self.own_addr_kind.write_hci(&mut writer)?;
+        self.peer_addr_kind.write_hci(&mut writer)?;
+        self.peer_addr.write_hci(&mut writer)?;
+        self.initiating_phys.write_hci(writer)
+    }
+
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.initiator_filter_policy.write_hci_async(&mut writer).await?;
+        self.own_addr_kind.write_hci_async(&mut writer).await?;
+        self.peer_addr_kind.write_hci_async(&mut writer).await?;
+        self.peer_addr.write_hci_async(&mut writer).await?;
+        self.initiating_phys.write_hci_async(writer).await
     }
 }
 
@@ -718,7 +776,10 @@ cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.74
     LeReadTransmitPower(LE, 0x004b) {
         Params {}
-        Return = (i8, i8);
+        LeReadTransmitPowerReturn {
+            min_tx_power: i8,
+            max_tx_power: i8,
+        }
     }
 }
 
@@ -726,7 +787,10 @@ cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.75
     LeReadRfPathCompensation(LE, 0x004c) {
         Params {}
-        Return = (i16, i16);
+        LeReadRfPathCompensationReturn {
+            rf_tx_path_compensation_value: i16,
+            rf_rx_path_compenstaion_value: i16,
+        }
     }
 }
 

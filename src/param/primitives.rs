@@ -1,30 +1,36 @@
-use crate::{FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{AsHciBytes, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
 
-impl WriteHci for bool {
-    #[inline(always)]
-    fn size(&self) -> usize {
-        1
-    }
-
-    #[inline(always)]
-    fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&(*self as u8).to_le_bytes())
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&(*self as u8).to_le_bytes()).await
+impl AsHciBytes for () {
+    fn as_hci_bytes(&self) -> &[u8] {
+        &[]
     }
 }
 
-impl<'de> FromHciBytes<'de> for bool {
+impl<'de> FromHciBytes<'de> for () {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        match data.split_first() {
-            Some((0, data)) => Ok((false, data)),
-            Some((1, data)) => Ok((true, data)),
-            Some(_) => Err(FromHciBytesError::InvalidValue),
-            None => Err(FromHciBytesError::InvalidSize),
-        }
+        Ok(((), data))
+    }
+}
+
+impl WriteHci for () {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        0
+    }
+
+    fn write_hci<W: embedded_io::Write>(&self, _writer: W) -> Result<(), W::Error> {
+        Ok(())
+    }
+
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, _writer: W) -> Result<(), W::Error> {
+        Ok(())
+    }
+}
+
+unsafe impl FixedSizeValue for bool {
+    #[inline(always)]
+    fn is_valid(data: &[u8]) -> bool {
+        data.len() == 1 && data[0] < 2
     }
 }
 
@@ -63,31 +69,10 @@ impl<'de> FromHciBytes<'de> for &'de [u8] {
     }
 }
 
-impl<const N: usize> WriteHci for [u8; N] {
+unsafe impl<const N: usize> FixedSizeValue for [u8; N] {
     #[inline(always)]
-    fn size(&self) -> usize {
-        N
-    }
-
-    #[inline(always)]
-    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(self)
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(self).await
-    }
-}
-
-impl<'de, const N: usize> FromHciBytes<'de> for [u8; N] {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        if data.len() >= N {
-            let (data, rest) = data.split_at(N);
-            Ok((unsafe { data.try_into().unwrap_unchecked() }, rest))
-        } else {
-            Err(FromHciBytesError::InvalidSize)
-        }
+    fn is_valid(_data: &[u8]) -> bool {
+        true
     }
 }
 

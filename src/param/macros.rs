@@ -1,88 +1,22 @@
-use crate::{FromHciBytes, FromHciBytesError, WriteHci};
+use crate::FixedSizeValue;
 
 macro_rules! impl_param_int {
     ($($ty:ty),+) => {
         $(
-            impl WriteHci for $ty {
+            #[automatically_derived]
+            unsafe impl FixedSizeValue for $ty {
                 #[inline(always)]
-                fn size(&self) -> usize {
-                    ::core::mem::size_of::<Self>()
-                }
-
-                #[inline(always)]
-                fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                    writer.write_all(&self.to_le_bytes())
-                }
-
-                #[inline(always)]
-                async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                    writer.write_all(&self.to_le_bytes()).await
-                }
-            }
-
-            impl<'de> FromHciBytes<'de> for $ty {
-                fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-                    let size = ::core::mem::size_of::<Self>();
-                    if data.len() >= size {
-                        let (data, rest) = data.split_at(size);
-                        Ok((Self::from_le_bytes(unsafe { data.try_into().unwrap_unchecked() }), rest))
-                    } else {
-                        Err($crate::FromHciBytesError::InvalidSize)
-                    }
-
+                fn is_valid(data: &[u8]) -> bool {
+                    true
                 }
             }
         )+
     };
 }
 
+const _IS_LITTLE_ENDIAN: [u8; 0] = [0; (u32::from_le_bytes(0x01020304u32.to_ne_bytes()) != 0x01020304u32) as usize];
+
 impl_param_int!(u8, i8, u16, i16, u32, u64, u128);
-
-macro_rules! impl_param_tuple {
-    ($($a:ident)*) => {
-        #[automatically_derived]
-        #[allow(non_snake_case)]
-        impl<$($a: WriteHci,)*> WriteHci for ($($a,)*) {
-            #[inline(always)]
-            fn size(&self) -> usize {
-                let ($(ref $a,)*) = *self;
-                $($a.size() +)* 0
-            }
-
-            #[inline(always)]
-            #[allow(unused_mut, unused_variables)]
-            fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                let ($(ref $a,)*) = *self;
-                $($a.write_hci(&mut writer)?;)*
-                Ok(())
-            }
-
-            #[inline(always)]
-            #[allow(unused_mut, unused_variables)]
-            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                let ($(ref $a,)*) = *self;
-                $($a.write_hci_async(&mut writer).await?;)*
-                Ok(())
-            }
-        }
-
-        #[automatically_derived]
-        #[allow(non_snake_case)]
-        impl<'de, $($a: FromHciBytes<'de>,)*> FromHciBytes<'de> for ($($a,)*) {
-            #[allow(unused_mut, unused_variables)]
-            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-                let total = 0;
-                $(
-                    let ($a, data) = $a::from_hci_bytes(data)?;
-                )*
-                Ok((($($a,)*), data))
-            }
-        }
-    };
-}
-
-impl_param_tuple! {}
-impl_param_tuple! { A B }
 
 #[macro_export]
 macro_rules! param {
@@ -102,26 +36,36 @@ macro_rules! param {
             }
         }
 
-        impl $crate::WriteHci for $name {
+        unsafe impl $crate::FixedSizeValue for $name {
             #[inline(always)]
-            fn size(&self) -> usize {
-                $crate::WriteHci::size(&self.0)
-            }
-
-            #[inline(always)]
-            fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <$wrapped as $crate::WriteHci>::write_hci(&self.0, writer)
-            }
-
-            #[inline(always)]
-            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <$wrapped as $crate::WriteHci>::write_hci_async(&self.0, writer).await
+            fn is_valid(data: &[u8]) -> bool {
+                <$wrapped as $crate::FixedSizeValue>::is_valid(data)
             }
         }
+    };
 
-        impl<'de> $crate::FromHciBytes<'de> for $name {
-            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
-                <$wrapped as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
+    (
+        $(#[$attrs:meta])*
+        struct $name:ident {
+            $($field:ident: $ty:ty),*
+            $(,)?
+        }
+    ) => {
+        $(#[$attrs])*
+        #[repr(C, packed)]
+        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        pub struct $name {
+            $(pub $field: $ty,)*
+        }
+
+        unsafe impl $crate::FixedSizeValue for $name {
+            #[inline(always)]
+            fn is_valid(data: &[u8]) -> bool {
+                true
+                $(
+                    && <$ty as $crate::FixedSizeValue>::is_valid(&data[core::mem::offset_of!(Self, $field)..(core::mem::offset_of!(Self, $field) + core::mem::size_of::<$ty>())])
+                )*
             }
         }
     };
@@ -193,33 +137,10 @@ macro_rules! param {
             )+
         }
 
-        impl $crate::WriteHci for $name {
+        unsafe impl $crate::FixedSizeValue for $name {
             #[inline(always)]
-            fn size(&self) -> usize {
-                1
-            }
-
-            #[inline(always)]
-            fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <u8 as $crate::WriteHci>::write_hci(&(*self as u8), writer)
-            }
-
-            #[inline(always)]
-            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <u8 as $crate::WriteHci>::write_hci_async(&(*self as u8), writer).await
-            }
-        }
-
-        impl<'de> $crate::FromHciBytes<'de> for $name {
-            #[allow(unused_variables)]
-            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
-                match data.split_first() {
-                    Some((byte, data)) => match byte {
-                        $($value => Ok((Self::$variant, data)),)+
-                        _ => Err($crate::FromHciBytesError::InvalidValue),
-                    }
-                    None => Err($crate::FromHciBytesError::InvalidSize),
-                }
+            fn is_valid(data: &[u8]) -> bool {
+                $(data[0] == $value ||)* false
             }
         }
     };
@@ -256,27 +177,10 @@ macro_rules! param {
             )+
         }
 
-        impl $crate::WriteHci for $name {
+        unsafe impl $crate::FixedSizeValue for $name {
             #[inline(always)]
-            fn size(&self) -> usize {
-                1
-            }
-
-            #[inline(always)]
-            fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <u8 as $crate::WriteHci>::write_hci(&self.0, writer)
-            }
-
-            #[inline(always)]
-            #[allow(unused_mut)]
-            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                <u8 as $crate::WriteHci>::write_hci_async(&self.0, writer).await
-            }
-        }
-
-        impl<'de> $crate::FromHciBytes<'de> for $name {
-            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
-                <u8 as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x,y)| (Self(x), y))
+            fn is_valid(_data: &[u8]) -> bool {
+                true
             }
         }
     };
@@ -317,27 +221,10 @@ macro_rules! param {
             )+
         }
 
-        impl $crate::WriteHci for $name {
+        unsafe impl $crate::FixedSizeValue for $name {
             #[inline(always)]
-            fn size(&self) -> usize {
-                $octets
-            }
-
-            #[inline(always)]
-            fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
-                <[u8; $octets] as $crate::WriteHci>::write_hci(&self.0, writer)
-            }
-
-            #[inline(always)]
-            #[allow(unused_mut)]
-            async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-                <[u8; $octets] as $crate::WriteHci>::write_hci_async(&self.0, writer).await
-            }
-        }
-
-        impl<'de> $crate::FromHciBytes<'de> for $name {
-            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
-                <[u8; $octets] as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x,y)| (Self(x), y))
+            fn is_valid(_data: &[u8]) -> bool {
+                true
             }
         }
     };

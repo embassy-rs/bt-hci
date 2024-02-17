@@ -1,6 +1,6 @@
 use core::num::NonZeroU8;
 
-use crate::{FromHciBytes, FromHciBytesError, WriteHci};
+use crate::FixedSizeValue;
 
 #[repr(transparent)]
 #[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -12,26 +12,10 @@ impl Status {
     }
 }
 
-impl WriteHci for Status {
+unsafe impl FixedSizeValue for Status {
     #[inline(always)]
-    fn size(&self) -> usize {
-        WriteHci::size(&self.0)
-    }
-
-    #[inline(always)]
-    fn write_hci<W: ::embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
-        <u8 as WriteHci>::write_hci(&self.0, writer)
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
-        <u8 as WriteHci>::write_hci_async(&self.0, writer).await
-    }
-}
-
-impl<'de> FromHciBytes<'de> for Status {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        <u8 as FromHciBytes>::from_hci_bytes(data).map(|(x, y)| (Self(x), y))
+    fn is_valid(_data: &[u8]) -> bool {
+        true
     }
 }
 
