@@ -1,8 +1,7 @@
 //! Bluetooth Core Specification Vol 4, Part E, §7.8
 
-use super::{cmd, Cmd};
+use crate::{cmd, param};
 use crate::{
-    cmd::{CmdParams, Opcode, OpcodeGroup, SyncCmd},
     param::{
         AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr,
         ChannelMap, ConnHandle, CteKind, CteMask, Duration, FilterDuplicates, InitiatingPhy,
@@ -17,9 +16,7 @@ use crate::{
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.1
     LeSetEventMask(LE, 0x0001) {
-        Params {
-            mask: LeEventMask,
-        }
+        Params = LeEventMask;
         Return = ();
     }
 }
@@ -27,7 +24,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.2
     LeReadBufferSize(LE, 0x0002) {
-        Params {}
+        Params = ();
         /// Bluetooth Core Specification Vol 4, Part E, §7.8.2
         LeReadBufferSizeReturn {
             le_acl_data_packet_length: u16,
@@ -39,7 +36,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.3
     LeReadLocalSupportedFeatures(LE, 0x0003) {
-        Params {}
+        Params = ();
         Return = LeFeatureMask;
     }
 }
@@ -47,9 +44,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.4
     LeSetRandomAddr(LE, 0x0005) {
-        Params {
-            random_addr: BdAddr,
-        }
+        Params = BdAddr;
         Return = ();
     }
 }
@@ -57,24 +52,28 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.5
     LeSetAdvParams(LE, 0x0006) {
-        Params {
-            adv_interval_min: Duration<625>,
-            adv_interval_max: Duration<625>,
-            adv_kind: AdvKind,
-            own_addr_kind: AddrKind,
-            peer_addr_kind: AddrKind,
-            peer_addr: BdAddr,
-            adv_channel_map: AdvChannelMap,
-            adv_filter_policy: AdvFilterPolicy,
-        }
+        Params = LeSetAdvParamsParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetAdvParamsParams {
+        adv_interval_min: Duration<625>,
+        adv_interval_max: Duration<625>,
+        adv_kind: AdvKind,
+        own_addr_kind: AddrKind,
+        peer_addr_kind: AddrKind,
+        peer_addr: BdAddr,
+        adv_channel_map: AdvChannelMap,
+        adv_filter_policy: AdvFilterPolicy,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.6
     LeReadAdvPhysicalChannelTxPower(LE, 0x0007) {
-        Params {}
+        Params = ();
         Return = i8;
     }
 }
@@ -82,31 +81,37 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.7
     LeSetAdvData(LE, 0x0008) {
-        Params {
-            data_len: u8,
-            data: [u8; 31],
-        }
+        Params = LeSetAdvDataParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetAdvDataParams {
+        data_len: u8,
+        data: [u8; 31],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.8
     LeSetScanResponseData(LE, 0x0009) {
-        Params {
-            data_len: u8,
-            data: [u8; 31],
-        }
+        Params = LeSetScanResponseDataParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetScanResponseDataParams {
+        data_len: u8,
+        data: [u8; 31],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.9
     LeSetAdvEnable(LE, 0x000a) {
-        Params {
-            enable: bool,
-        }
+        Params = bool;
         Return = ();
     }
 }
@@ -114,52 +119,64 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.10
     LeSetScanParams(LE, 0x000b) {
-        Params {
-            le_scan_kind: LeScanKind,
-            le_scan_interval: Duration<10_000>,
-            le_scan_window: Duration<10_000>,
-            own_addr_kind: AddrKind,
-            scanning_filter_policy: ScanningFilterPolicy,
-        }
+        Params = LeSetScanParamsParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetScanParamsParams {
+        le_scan_kind: LeScanKind,
+        le_scan_interval: Duration<10_000>,
+        le_scan_window: Duration<10_000>,
+        own_addr_kind: AddrKind,
+        scanning_filter_policy: ScanningFilterPolicy,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.11
     LeSetScanEnable(LE, 0x000c) {
-        Params {
-            enable: bool,
-            filter_duplicates: bool,
-        }
+        Params = LeSetScanEnableParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetScanEnableParams {
+        enable: bool,
+        filter_duplicates: bool,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.12
     LeCreateConn(LE, 0x000d) {
-        Params {
-            le_scan_interval: Duration<10_000>,
-            le_scan_window: Duration<10_000>,
-            use_filter_accept_list: bool,
-            peer_addr_kind: AddrKind,
-            peer_addr: BdAddr,
-            own_addr_kind: AddrKind,
-            conn_interval_min: Duration<1_250>,
-            conn_interval_max: Duration<1_250>,
-            max_latency: u16,
-            supervision_timeout: Duration<10_000>,
-            min_ce_length: Duration<625>,
-            max_ce_length: Duration<625>,
-        }
+        Params = LeCreateConnParams;
+    }
+}
+
+param! {
+    struct LeCreateConnParams {
+        le_scan_interval: Duration<10_000>,
+        le_scan_window: Duration<10_000>,
+        use_filter_accept_list: bool,
+        peer_addr_kind: AddrKind,
+        peer_addr: BdAddr,
+        own_addr_kind: AddrKind,
+        conn_interval_min: Duration<1_250>,
+        conn_interval_max: Duration<1_250>,
+        max_latency: u16,
+        supervision_timeout: Duration<10_000>,
+        min_ce_length: Duration<625>,
+        max_ce_length: Duration<625>,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.13
     LeCreateConnCancel(LE, 0x000e) {
-        Params {}
+        Params = ();
         Return = ();
     }
 }
@@ -167,7 +184,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.14
     LeReadFilterAcceptListSize(LE, 0x000f) {
-        Params {}
+        Params = ();
         Return = u8;
     }
 }
@@ -175,7 +192,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.15
     LeClearFilterAcceptList(LE, 0x0010) {
-        Params {}
+        Params = ();
         Return = ();
     }
 }
@@ -183,46 +200,56 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.16
     LeAddDeviceToFilterAcceptList(LE, 0x0011) {
-        Params {
-            addr_kind: AddrKind,
-            addr: BdAddr,
-        }
+        Params = LeAddDeviceToFilterAcceptListParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeAddDeviceToFilterAcceptListParams {
+        addr_kind: AddrKind,
+        addr: BdAddr,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.17
     LeRemoveDeviceFromFilterAcceptList(LE, 0x0012) {
-        Params {
-            addr_kind: AddrKind,
-            addr: BdAddr,
-        }
+        Params = LeRemoveDeviceFromFilterAcceptListParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeRemoveDeviceFromFilterAcceptListParams {
+        addr_kind: AddrKind,
+        addr: BdAddr,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.18
     LeConnUpdate(LE, 0x0013) {
-        Params {
-            handle: ConnHandle,
-            conn_interval_min: Duration<1_250>,
-            conn_interval_max: Duration<1_250>,
-            max_latency: u16,
-            supervision_timeout: Duration<10_000>,
-            min_ce_length: Duration<625>,
-            max_ce_length: Duration<625>,
-        }
+        Params = LeConnUpdateParams;
+    }
+}
+
+param! {
+    struct LeConnUpdateParams {
+        handle: ConnHandle,
+        conn_interval_min: Duration<1_250>,
+        conn_interval_max: Duration<1_250>,
+        max_latency: u16,
+        supervision_timeout: Duration<10_000>,
+        min_ce_length: Duration<625>,
+        max_ce_length: Duration<625>,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.19
     LeSetHostChannelClassification(LE, 0x0014) {
-        Params {
-            channel_map: ChannelMap,
-        }
+        Params = ChannelMap;
         Return = ();
     }
 }
@@ -230,9 +257,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.20
     LeReadChannelMap(LE, 0x0015) {
-        Params {
-            handle: ConnHandle,
-        }
+        Params = ConnHandle;
         /// Bluetooth Core Specification Vol 4, Part E, §7.8.20
         LeReadChannelMapReturn {
             handle: ConnHandle,
@@ -244,27 +269,29 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.21
     LeReadRemoteFeatures(LE, 0x0016) {
-        Params {
-            handle: ConnHandle,
-        }
+        Params = ConnHandle;
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.22
     LeEncrypt(LE, 0x0017) {
-        Params {
-            key: [u8; 16],
-            plaintext: [u8; 16],
-        }
+        Params = LeEncryptParams;
         Return = [u8; 16];
+    }
+}
+
+param! {
+    struct LeEncryptParams {
+        key: [u8; 16],
+        plaintext: [u8; 16],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.23
     LeRand(LE, 0x0018) {
-        Params {}
+        Params = ();
         Return = [u8; 8];
     }
 }
@@ -272,32 +299,38 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.24
     LeEnableEncryption(LE, 0x0019) {
-        Params {
-            handle: ConnHandle,
-            random: [u8; 8],
-            encrypted_diversifier: u16,
-            long_term_key: [u8; 16],
-        }
+        Params = LeEnableEncryptionParams;
+    }
+}
+
+param! {
+    struct LeEnableEncryptionParams {
+        handle: ConnHandle,
+        random: [u8; 8],
+        encrypted_diversifier: u16,
+        long_term_key: [u8; 16],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.25
     LeLongTermKeyRequestReply(LE, 0x001a) {
-        Params {
-            handle: ConnHandle,
-            long_term_key: [u8; 16],
-        }
+        Params = LeLongTermKeyRequestReplyParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LeLongTermKeyRequestReplyParams {
+        handle: ConnHandle,
+        long_term_key: [u8; 16],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.26
     LeLongTermKeyRequestNegativeReply(LE, 0x001b) {
-        Params {
-            handle: ConnHandle,
-        }
+        Params = ConnHandle;
         Return = ConnHandle;
     }
 }
@@ -305,7 +338,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.27
     LeReadSupportedStates(LE, 0x001c) {
-        Params {}
+        Params = ();
         Return = [u8; 8];
     }
 }
@@ -313,7 +346,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.30
     LeTestEnd(LE, 0x001f) {
-        Params {}
+        Params = ();
         Return = u16;
     }
 }
@@ -321,19 +354,23 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.33
     LeSetDataLength(LE, 0x0022) {
-        Params {
-            handle: ConnHandle,
-            tx_octets: u16,
-            tx_time: u16,
-        }
+        Params = LeSetDataLengthParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LeSetDataLengthParams {
+        handle: ConnHandle,
+        tx_octets: u16,
+        tx_time: u16,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.34
     LeReadSuggestedDefaultDataLength(LE, 0x0023) {
-        Params {}
+        Params = ();
         /// Bluetooth Core Specification Vol 4, Part E, §7.8.34
         LeReadSuggestedDefaultDataLengthReturn {
             suggested_max_tx_octets: u16,
@@ -345,42 +382,54 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.35
     LeWriteSuggestedDefaultDataLength(LE, 0x0024) {
-        Params {
-            suggested_max_tx_octets: u16,
-            suggested_max_tx_time: u16,
-        }
+        Params = LeWriteSuggestedDefaultDataLengthParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeWriteSuggestedDefaultDataLengthParams {
+        suggested_max_tx_octets: u16,
+        suggested_max_tx_time: u16,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.38
     LeAddDeviceToResolvingList(LE, 0x0027) {
-        Params {
-            peer_id_addr_kind: AddrKind,
-            peer_id_addr: BdAddr,
-            peer_irk: [u8; 16],
-            local_irk: [u8; 16],
-        }
+        Params = LeAddDeviceToResolvingListParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeAddDeviceToResolvingListParams {
+        peer_id_addr_kind: AddrKind,
+        peer_id_addr: BdAddr,
+        peer_irk: [u8; 16],
+        local_irk: [u8; 16],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.39
     LeRemoveDeviceFromResolvingList(LE, 0x0028) {
-        Params {
-            peer_id_addr_kind: AddrKind,
-            peer_id_addr: BdAddr,
-        }
+        Params = LeRemoveDeviceFromResolvingListParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeRemoveDeviceFromResolvingListParams {
+        peer_id_addr_kind: AddrKind,
+        peer_id_addr: BdAddr,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.40
     LeClearResolvingList(LE, 0x0029) {
-        Params {}
+        Params = ();
         Return = ();
     }
 }
@@ -388,7 +437,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.41
     LeReadResolvingListSize(LE, 0x002a) {
-        Params {}
+        Params = ();
         Return = u8;
     }
 }
@@ -396,9 +445,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.44
     LeSetAddrResolutionEnable(LE, 0x002d) {
-        Params {
-            enable: bool,
-        }
+        Params = bool;
         Return = ();
     }
 }
@@ -406,9 +453,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.45
     LeSetResolvablePrivateAddrTimeout(LE, 0x002e) {
-        Params {
-            rpa_timeout: Duration<1_000_000>,
-        }
+        Params = Duration<1_000_000>;
         Return = ();
     }
 }
@@ -416,7 +461,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.46
     LeReadMaxDataLength(LE, 0x002f) {
-        Params {}
+        Params = ();
         /// Bluetooth Core Specification Vol 4, Part E, §7.8.46
         LeReadMaxDataLengthReturn {
             supported_max_tx_octets: u16,
@@ -430,9 +475,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.47
     LeReadPhy(LE, 0x0030) {
-        Params {
-                handle: ConnHandle,
-        }
+        Params = ConnHandle;
         /// Bluetooth Core Specification Vol 4, Part E, §7.8.47
         LeReadPhyReturn {
                 handle: ConnHandle,
@@ -445,104 +488,132 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.48
     LeSetDefaultPhy(LE, 0x0031) {
-        Params {
-            all_phys: AllPhys,
-            tx_phys: PhyMask,
-            rx_phys: PhyMask,
-        }
+        Params = LeSetDefaultPhyParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetDefaultPhyParams {
+        all_phys: AllPhys,
+        tx_phys: PhyMask,
+        rx_phys: PhyMask,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.49
     LeSetPhy(LE, 0x0032) {
-        Params {
-            handle: ConnHandle,
-            all_phys: AllPhys,
-            tx_phys: PhyMask,
-            rx_phys: PhyMask,
-            phy_options: PhyOptions,
-        }
+        Params = LeSetPhyParams;
+    }
+}
+
+param! {
+    struct LeSetPhyParams {
+        handle: ConnHandle,
+        all_phys: AllPhys,
+        tx_phys: PhyMask,
+        rx_phys: PhyMask,
+        phy_options: PhyOptions,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.52
     LeSetAdvSetRandomAddr(LE, 0x0035) {
-        Params {
-            adv_handle: AdvHandle,
-            random_addr: BdAddr,
-        }
+        Params = LeSetAdvSetRandomAddrParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetAdvSetRandomAddrParams {
+        adv_handle: AdvHandle,
+        random_addr: BdAddr,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.53
     LeSetExtAdvParams(LE, 0x0036) {
-        Params {
-                adv_handle: AdvHandle,
-                adv_event_props: AdvEventProps,
-                primary_adv_interval_min: Duration<625>,
-                primary_adv_interval_max: Duration<625>,
-                primary_adv_channel_map: AdvChannelMap,
-                own_addr_kind: AddrKind,
-                peer_addr_kind: AddrKind,
-                peer_addr: BdAddr,
-                adv_filter_policy: AdvFilterPolicy,
-                adv_tx_power: i8,
-                primary_adv_phy: PhyKind,
-                secondary_adv_max_skip: u8,
-                secondary_adv_phy: PhyKind,
-                adv_sid: u8,
-                scan_request_notification_enable: bool,
-        }
+        Params = LeSetExtAdvParamsParams;
         Return = i8;
+    }
+}
+
+param! {
+    struct LeSetExtAdvParamsParams {
+        adv_handle: AdvHandle,
+        adv_event_props: AdvEventProps,
+        primary_adv_interval_min: Duration<625>,
+        primary_adv_interval_max: Duration<625>,
+        primary_adv_channel_map: AdvChannelMap,
+        own_addr_kind: AddrKind,
+        peer_addr_kind: AddrKind,
+        peer_addr: BdAddr,
+        adv_filter_policy: AdvFilterPolicy,
+        adv_tx_power: i8,
+        primary_adv_phy: PhyKind,
+        secondary_adv_max_skip: u8,
+        secondary_adv_phy: PhyKind,
+        adv_sid: u8,
+        scan_request_notification_enable: bool,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.54
     LeSetExtAdvData(LE, 0x0037) {
-        Params<'d> {
-            adv_handle: AdvHandle,
-            operation: Operation,
-            fragment_preference: bool,
-            adv_data: &'d [u8],
-        }
+        Params<'d> = LeSetExtAdvDataParams<'d>;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetExtAdvDataParams<'d> {
+        adv_handle: AdvHandle,
+        operation: Operation,
+        fragment_preference: bool,
+        adv_data: &'d [u8],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.55
     LeSetExtScanResponseData(LE, 0x0038) {
-        Params<'d> {
-            adv_handle: AdvHandle,
-            operation: Operation,
-            fragment_preference: bool,
-            scan_response_data: &'d [u8],
-        }
+        Params<'d> = LeSetExtScanResponseDataParams<'d>;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetExtScanResponseDataParams<'d> {
+        adv_handle: AdvHandle,
+        operation: Operation,
+        fragment_preference: bool,
+        scan_response_data: &'d [u8],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.56
     LeSetExtAdvEnable(LE, 0x0039) {
-        Params<'a> {
-            enable: bool,
-            sets: &'a [AdvSet],
-        }
+        Params<'a> = LeSetExtAdvEnableParams<'a>;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetExtAdvEnableParams<'a> {
+        enable: bool,
+        sets: &'a [AdvSet],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.57
     LeReadMaxAdvDataLength(LE, 0x003a) {
-        Params {}
+        Params = ();
         Return = u16;
     }
 }
@@ -550,7 +621,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.58
     LeReadNumberOfSupportedAdvSets(LE, 0x003b) {
-        Params {}
+        Params = ();
         Return = u8;
     }
 }
@@ -558,9 +629,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.59
     LeRemoveAdvSet(LE, 0x003c) {
-        Params {
-            adv_handle: AdvHandle,
-        }
+        Params = AdvHandle;
         Return = ();
     }
 }
@@ -568,7 +637,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.60
     LeClearAdvSets(LE, 0x003d) {
-        Params {}
+        Params = ();
         Return = ();
     }
 }
@@ -576,57 +645,67 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.61
     LeSetPeriodicAdvParams(LE, 0x003e) {
-        Params {
-            adv_handle: AdvHandle,
-            periodic_adv_interval_min: Duration<1_250>,
-            periodic_adv_interval_max: Duration<1_250>,
-            periodic_adv_props: PeriodicAdvProps,
-        }
+        Params = LeSetPeriodicAdvParamsParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetPeriodicAdvParamsParams {
+        adv_handle: AdvHandle,
+        periodic_adv_interval_min: Duration<1_250>,
+        periodic_adv_interval_max: Duration<1_250>,
+        periodic_adv_props: PeriodicAdvProps,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.62
     LeSetPeriodicAdvData(LE, 0x003f) {
-        Params<'a> {
-            adv_handle: AdvHandle,
-            operation: Operation,
-            adv_data: &'a [u8],
-        }
+        Params<'a> = LeSetPeriodicAdvDataParams<'a>;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetPeriodicAdvDataParams<'a> {
+        adv_handle: AdvHandle,
+        operation: Operation,
+        adv_data: &'a [u8],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.63
     LeSetPeriodicAdvEnable(LE, 0x0040) {
-        Params {
-            enable: bool,
-            adv_handle: AdvHandle,
-        }
+        Params = LeSetPeriodicAdvEnableParams;
         Return = ();
     }
 }
 
-/// Bluetooth Core Specification Vol 4, Part E, §7.8.64
+param! {
+    struct LeSetPeriodicAdvEnableParams {
+        enable: bool,
+        adv_handle: AdvHandle,
+    }
+}
+
+cmd! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.8.64
+    LeSetExtScanParams(LE, 0x0041) {
+        Params = LeSetExtScanParamsParams;
+        Return = ();
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct LeSetExtScanParams {
+pub struct LeSetExtScanParamsParams {
     pub own_addr_kind: AddrKind,
     pub scanning_filter_policy: ScanningFilterPolicy,
     pub scanning_phys: PhyParams<ScanningPhy>,
 }
 
-impl CmdParams for LeSetExtScanParams {
-    const OPCODE: Opcode = Opcode::new(OpcodeGroup::LE, 0x0041);
-}
-
-impl SyncCmd for Cmd<LeSetExtScanParams> {
-    type Return<'ret> = ();
-}
-
-impl WriteHci for LeSetExtScanParams {
+impl WriteHci for LeSetExtScanParamsParams {
     #[inline(always)]
     fn size(&self) -> usize {
         self.own_addr_kind.size() + self.scanning_filter_policy.size() + self.scanning_phys.size()
@@ -648,20 +727,29 @@ impl WriteHci for LeSetExtScanParams {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.65
     LeSetExtScanEnable(LE, 0x0042) {
-        Params {
-            enable: bool,
-            filter_duplicates: FilterDuplicates,
-            duration: Duration<10_000>,
-            period: Duration<1_280_000>,
-        }
+        Params = LeSetExtScanEnableParams;
         Return = ();
     }
 }
 
-/// Bluetooth Core Specification Vol 4, Part E, §7.8.66
+param! {
+    struct LeSetExtScanEnableParams {
+        enable: bool,
+        filter_duplicates: FilterDuplicates,
+        duration: Duration<10_000>,
+        period: Duration<1_280_000>,
+    }
+}
+
+cmd! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.8.66
+    LeExtCreateConn(LE, 0x0043) {
+        Params = LeExtCreateConnParams;
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct LeExtCreateConn {
+pub struct LeExtCreateConnParams {
     pub initiator_filter_policy: bool,
     pub own_addr_kind: AddrKind,
     pub peer_addr_kind: AddrKind,
@@ -669,11 +757,7 @@ pub struct LeExtCreateConn {
     pub initiating_phys: PhyParams<InitiatingPhy>,
 }
 
-impl crate::cmd::CmdParams for LeExtCreateConn {
-    const OPCODE: crate::cmd::Opcode = crate::cmd::Opcode::new(crate::cmd::OpcodeGroup::LE, 0x0043);
-}
-
-impl WriteHci for LeExtCreateConn {
+impl WriteHci for LeExtCreateConnParams {
     #[inline(always)]
     fn size(&self) -> usize {
         self.initiator_filter_policy.size()
@@ -703,21 +787,25 @@ impl WriteHci for LeExtCreateConn {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.67
     LePeriodicAdvCreateSync(LE, 0x0044) {
-        Params {
-            options: LePeriodicAdvCreateSyncOptions,
-            adv_sid: u8,
-            adv_addr_kind: AddrKind,
-            adv_addr: BdAddr,
-            skip: u16,
-            sync_timeout: Duration<10_000>,
-            sync_cte_kind: CteMask,
-        }
+        Params = LePeriodicAdvCreateSyncParams;
+    }
+}
+
+param! {
+    struct LePeriodicAdvCreateSyncParams {
+        options: LePeriodicAdvCreateSyncOptions,
+        adv_sid: u8,
+        adv_addr_kind: AddrKind,
+        adv_addr: BdAddr,
+        skip: u16,
+        sync_timeout: Duration<10_000>,
+        sync_cte_kind: CteMask,
     }
 }
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.68
     LePeriodicAdvCreateSyncCancel(LE, 0x0045) {
-        Params {}
+        Params = ();
         Return = ();
     }
 }
@@ -725,9 +813,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.69
     LePeriodicAdvTerminateSync(LE, 0x0046) {
-        Params {
-            sync_handle: SyncHandle,
-        }
+        Params = SyncHandle;
         Return = ();
     }
 }
@@ -735,31 +821,39 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.70
     LeAddDeviceToPeriodicAdvList(LE, 0x0047) {
-        Params {
-            adv_addr_kind: AddrKind,
-            adv_addr: BdAddr,
-            adv_sid: u8,
-        }
+        Params = LeAddDeviceToPeriodicAdvListParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeAddDeviceToPeriodicAdvListParams {
+        adv_addr_kind: AddrKind,
+        adv_addr: BdAddr,
+        adv_sid: u8,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.71
     LeRemoveDeviceFromPeriodicAdvList(LE, 0x0048) {
-        Params {
-            adv_addr_kind: AddrKind,
-            adv_addr: BdAddr,
-            adv_sid: u8,
-        }
+        Params = LeRemoveDeviceFromPeriodicAdvListParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeRemoveDeviceFromPeriodicAdvListParams {
+        adv_addr_kind: AddrKind,
+        adv_addr: BdAddr,
+        adv_sid: u8,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.72
     LeClearPeriodicAdvList(LE, 0x0049) {
-        Params {}
+        Params = ();
         Return = ();
     }
 }
@@ -767,7 +861,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.73
     LeReadPeriodicAdvListSize(LE, 0x004a) {
-        Params {}
+        Params = ();
         Return = u8;
     }
 }
@@ -775,7 +869,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.74
     LeReadTransmitPower(LE, 0x004b) {
-        Params {}
+        Params = ();
         LeReadTransmitPowerReturn {
             min_tx_power: i8,
             max_tx_power: i8,
@@ -786,7 +880,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.75
     LeReadRfPathCompensation(LE, 0x004c) {
-        Params {}
+        Params = ();
         LeReadRfPathCompensationReturn {
             rf_tx_path_compensation_value: i16,
             rf_rx_path_compenstaion_value: i16,
@@ -797,78 +891,102 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.76
     LeWriteRfPathCompensation(LE, 0x004d) {
-        Params {
-            rf_tx_path_compensation_value: i16,
-            rf_rx_path_compensation_value: i16,
-        }
+        Params = LeWriteRfPathCompensationParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeWriteRfPathCompensationParams {
+        rf_tx_path_compensation_value: i16,
+        rf_rx_path_compensation_value: i16,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.77
     LeSetPrivacyMode(LE, 0x004e) {
-        Params {
-            peer_id_addr_kind: AddrKind,
-            peer_id_addr: BdAddr,
-            privacy_mode: PrivacyMode,
-        }
+        Params = LeSetPrivacyModeParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetPrivacyModeParams {
+        peer_id_addr_kind: AddrKind,
+        peer_id_addr: BdAddr,
+        privacy_mode: PrivacyMode,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.80
     LeSetConnectionlessCteTransmitParams(LE, 0x0051) {
-        Params<'a> {
-            adv_handle: AdvHandle,
-            cte_length: u8,
-            cte_kind: CteKind,
-            cte_count: u8,
-            switching_pattern: &'a [u8],
-        }
+        Params<'a> = LeSetConnectionlessCteTransmitParamsParams<'a>;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetConnectionlessCteTransmitParamsParams<'a> {
+        adv_handle: AdvHandle,
+        cte_length: u8,
+        cte_kind: CteKind,
+        cte_count: u8,
+        switching_pattern: &'a [u8],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.81
     LeSetConnectionlessCteTransmitEnable(LE, 0x0052) {
-        Params {
-            adv_handle: AdvHandle,
-            cte_enable: bool,
-        }
+        Params = LeSetConnectionlessCteTransmitEnableParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetConnectionlessCteTransmitEnableParams {
+        adv_handle: AdvHandle,
+        cte_enable: bool,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.84
     LeSetConnCteTransmitParams(LE, 0x0055) {
-        Params<'a> {
-            handle: ConnHandle,
-            cte_kinds: CteMask,
-            switching_pattern: &'a [u8],
-        }
+        Params<'a> = LeSetConnCteTransmitParamsParams<'a>;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LeSetConnCteTransmitParamsParams<'a> {
+        handle: ConnHandle,
+        cte_kinds: CteMask,
+        switching_pattern: &'a [u8],
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.86
     LeConnCteResponseEnable(LE, 0x0057) {
-        Params {
-            handle: ConnHandle,
-            enable: bool,
-        }
+        Params = LeConnCteResponseEnableParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LeConnCteResponseEnableParams {
+        handle: ConnHandle,
+        enable: bool,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.87
     LeReadAntennaInformation(LE, 0x0058) {
-        Params {}
+        Params = ();
         /// Bluetooth Core Specification Vol 4, Part E, §7.8.87
         LeReadAntennaInformationReturn {
             supported_switching_sampling_rates: SwitchingSamplingRates,
@@ -882,81 +1000,96 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.88
     LeSetPeriodicAdvReceiveEnable(LE, 0x0059) {
-        Params {
-            sync_handle: SyncHandle,
-            enable: LePeriodicAdvReceiveEnable,
-        }
+        Params = LeSetPeriodicAdvReceiveEnableParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetPeriodicAdvReceiveEnableParams {
+        sync_handle: SyncHandle,
+        enable: LePeriodicAdvReceiveEnable,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.89
     LePeriodicAdvSyncTransfer(LE, 0x005a) {
-        Params {
-            handle: ConnHandle,
-            service_data: u16,
-            sync_handle: SyncHandle,
-        }
+        Params = LePeriodicAdvSyncTransferParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LePeriodicAdvSyncTransferParams {
+        handle: ConnHandle,
+        service_data: u16,
+        sync_handle: SyncHandle,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.90
     LePeriodicAdvSetInfoTransfer(LE, 0x005b) {
-        Params {
-            handle: ConnHandle,
-            service_data: u16,
-            adv_handle: AdvHandle,
-        }
+        Params = LePeriodicAdvSetInfoTransferParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LePeriodicAdvSetInfoTransferParams {
+        handle: ConnHandle,
+        service_data: u16,
+        adv_handle: AdvHandle,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.91
     LeSetPeriodicAdvSyncTransferParams(LE, 0x005c) {
-        Params {
-            handle: ConnHandle,
-            mode: LePeriodicAdvSyncTransferMode,
-            skip: u16,
-            sync_timeout: Duration<10_000>,
-            cte_kind: CteMask,
-        }
+        Params = LeSetPeriodicAdvSyncTransferParamsParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LeSetPeriodicAdvSyncTransferParamsParams {
+        handle: ConnHandle,
+        mode: LePeriodicAdvSyncTransferMode,
+        skip: u16,
+        sync_timeout: Duration<10_000>,
+        cte_kind: CteMask,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.92
     LeSetDefaultPeriodicAdvSyncTransferParams(LE, 0x005d) {
-        Params {
-            mode: LePeriodicAdvSyncTransferMode,
-            skip: u16,
-            sync_timeout: Duration<10_000>,
-            cte_kind: CteMask,
-        }
+        Params = LeSetDefaultPeriodicAdvSyncTransferParamsParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetDefaultPeriodicAdvSyncTransferParamsParams {
+        mode: LePeriodicAdvSyncTransferMode,
+        skip: u16,
+        sync_timeout: Duration<10_000>,
+        cte_kind: CteMask,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.108
     LeRequestPeerSca(LE, 0x006d) {
-        Params {
-            handle: ConnHandle,
-        }
+        Params = ConnHandle;
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.117
     LeEnhancedReadTransmitPowerLevel(LE, 0x0076) {
-        Params {
-            handle: ConnHandle,
-            phy: PhyKind,
-        }
+        Params = LeEnhancedReadTransmitPowerLevelParams;
         /// Bluetooth Core Specification Vol 4, Part E, §7.8.117
         LeEnhancedReadTransmitPowerLevelReturn {
             handle: ConnHandle,
@@ -967,61 +1100,88 @@ cmd! {
     }
 }
 
+param! {
+    struct LeEnhancedReadTransmitPowerLevelParams {
+        handle: ConnHandle,
+        phy: PhyKind,
+    }
+}
+
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.118
     LeReadRemoteTransmitPowerLevel(LE, 0x0077) {
-        Params {
-            handle: ConnHandle,
-            phy: PhyKind,
-        }
+        Params = LeReadRemoteTransmitPowerLevelParams;
+    }
+}
+
+param! {
+    struct LeReadRemoteTransmitPowerLevelParams {
+        handle: ConnHandle,
+        phy: PhyKind,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.119
     LeSetPathLossReportingParams(LE, 0x0078) {
-        Params {
-            handle: ConnHandle,
-            high_threshold: i8,
-            high_hysteresis: i8,
-            low_threshold: i8,
-            low_hysteresis: i8,
-            min_time_spent: u16,
-        }
+        Params = LeSetPathLossReportingParamsParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LeSetPathLossReportingParamsParams {
+        handle: ConnHandle,
+        high_threshold: i8,
+        high_hysteresis: i8,
+        low_threshold: i8,
+        low_hysteresis: i8,
+        min_time_spent: u16,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.120
     LeSetPathLossReportingEnable(LE, 0x0079) {
-        Params {
-            handle: ConnHandle,
-            enable: bool,
-        }
+        Params = LeSetPathLossReportingEnableParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LeSetPathLossReportingEnableParams {
+        handle: ConnHandle,
+        enable: bool,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.121
     LeSetTransmitPowerReportingEnable(LE, 0x007a) {
-        Params {
-            handle: ConnHandle,
-            local_enable: bool,
-            remote_enable: bool,
-        }
+        Params = LeSetTransmitPowerReportingEnableParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct LeSetTransmitPowerReportingEnableParams {
+        handle: ConnHandle,
+        local_enable: bool,
+        remote_enable: bool,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.122
     LeSetDataRelatedAddrChanges(LE, 0x007c) {
-        Params {
-            adv_handle: AdvHandle,
-            change_reasons: LeDataRelatedAddrChangeReasons,
-        }
+        Params = LeSetDataRelatedAddrChangesParams;
         Return = ();
+    }
+}
+
+param! {
+    struct LeSetDataRelatedAddrChangesParams {
+        adv_handle: AdvHandle,
+        change_reasons: LeDataRelatedAddrChangeReasons,
     }
 }

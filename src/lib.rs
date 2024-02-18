@@ -11,6 +11,8 @@ pub mod data;
 pub mod event;
 pub mod param;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum FromHciBytesError {
     InvalidSize,
     InvalidValue,
@@ -33,6 +35,8 @@ pub trait FromHciBytes<'de>: Sized {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ReadHciError<E: embedded_io::Error> {
     BufferTooSmall,
     InvalidValue,

@@ -53,18 +53,19 @@ macro_rules! param {
     ) => {
         $(#[$attrs])*
         #[repr(C, packed)]
-        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name {
             $(pub $field: $ty,)*
         }
 
+        #[automatically_derived]
         unsafe impl $crate::FixedSizeValue for $name {
             #[inline(always)]
             fn is_valid(data: &[u8]) -> bool {
                 true
                 $(
-                    && <$ty as $crate::FixedSizeValue>::is_valid(&data[core::mem::offset_of!(Self, $field)..(core::mem::offset_of!(Self, $field) + core::mem::size_of::<$ty>())])
+                    && <$ty as $crate::FixedSizeValue>::is_valid(&data[core::mem::offset_of!(Self, $field)..])
                 )*
             }
         }
@@ -79,7 +80,7 @@ macro_rules! param {
     ) => {
         $(#[$attrs])*
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name$(<$life>)? {
             $(pub $field: $ty,)*
         }

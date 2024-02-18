@@ -1,17 +1,15 @@
 //! Bluetooth Core Specification Vol 4, Part E, §7.3
 
-use super::cmd;
 use crate::param::{
     ConnHandle, ConnHandleCompletedPackets, ControllerToHostFlowControl, Duration, EventMask, EventMaskPage2,
     PowerLevelKind,
 };
+use crate::{cmd, param};
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.1
     SetEventMask(CONTROL_BASEBAND, 0x0001) {
-        Params {
-            mask: EventMask,
-        }
+        Params = EventMask;
         Return = ();
     }
 }
@@ -19,7 +17,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.2
     Reset(CONTROL_BASEBAND, 0x0003) {
-        Params {}
+        Params = ();
         Return = ();
     }
 }
@@ -27,10 +25,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.35
     ReadTransmitPowerLevel(CONTROL_BASEBAND, 0x002d) {
-        Params {
-            handle: ConnHandle,
-            kind: PowerLevelKind,
-        }
+        Params = ReadTransmitPowerLevelParams;
         /// Bluetooth Core Specification Vol 4, Part E, §7.3.35
         ReadTransmitPowerLevelReturn {
             handle: ConnHandle,
@@ -39,12 +34,17 @@ cmd! {
     }
 }
 
+param! {
+    struct ReadTransmitPowerLevelParams {
+        handle: ConnHandle,
+        kind: PowerLevelKind,
+    }
+}
+
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.38
     SetControllerToHostFlowControl(CONTROL_BASEBAND, 0x0031) {
-        Params {
-            flow_control_enable: ControllerToHostFlowControl,
-        }
+        Params = ControllerToHostFlowControl;
         Return = ();
     }
 }
@@ -52,22 +52,24 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.39
     HostBufferSize(CONTROL_BASEBAND, 0x0033) {
-        Params {
-            host_acl_data_packet_len: u16,
-            host_sync_data_packet_len: u8,
-            host_total_acl_data_packets: u16,
-            host_total_sync_data_packets: u16,
-        }
+        Params = HostBufferSizeParams;
         Return = ();
+    }
+}
+
+param! {
+    struct HostBufferSizeParams {
+        host_acl_data_packet_len: u16,
+        host_sync_data_packet_len: u8,
+        host_total_acl_data_packets: u16,
+        host_total_sync_data_packets: u16,
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.40
-    HostNumberOfCompletedPackets(CONTROL_BASEBAND, 0x0035) {
-        Params<'a> {
-            connection_completed_packets: &'a [ConnHandleCompletedPackets],
-        }
+    HostNumberOfCompletedPackets(CONTROL_BASEBAND, 0x0035)  {
+        Params<'a> = &'a [ConnHandleCompletedPackets];
         Return = ();
     }
 }
@@ -75,9 +77,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.69
     SetEventMaskPage2(CONTROL_BASEBAND, 0x0063) {
-        Params {
-            mask: EventMaskPage2,
-        }
+        Params = EventMaskPage2;
         Return = ();
     }
 }
@@ -85,9 +85,7 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.93
     ReadAuthenticatedPayloadTimeout(CONTROL_BASEBAND, 0x007b) {
-        Params {
-            handle: ConnHandle,
-        }
+        Params = ConnHandle;
         /// Bluetooth Core Specification Vol 4, Part E, §7.3.93
         ReadAuthenticatedPayloadTimeoutReturn {
             handle: ConnHandle,
@@ -99,10 +97,14 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.94
     WriteAuthenticatedPayloadTimeout(CONTROL_BASEBAND, 0x007c) {
-        Params {
-            handle: ConnHandle,
-            timeout: Duration<10_000>,
-        }
+        Params = WriteAuthenticatedPayloadTimeoutParams;
         Return = ConnHandle;
+    }
+}
+
+param! {
+    struct WriteAuthenticatedPayloadTimeoutParams {
+        handle: ConnHandle,
+        timeout: Duration<10_000>,
     }
 }

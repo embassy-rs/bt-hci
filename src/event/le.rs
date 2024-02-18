@@ -27,7 +27,7 @@ macro_rules! le_events {
     ) => {
         /// Bluetooth Core Specification Vol 4, Part E, §7.7.65
         #[derive(Debug, Clone, Hash)]
-        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum LeEvent<'a> {
             $(
                 #[allow(missing_docs)]
@@ -48,7 +48,7 @@ macro_rules! le_events {
         $(
             $(#[$attrs])*
             #[derive(Debug, Clone, Hash)]
-            #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+            // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
             pub struct $name$(<$life>)? {
                 $(
                     #[allow(missing_docs)]

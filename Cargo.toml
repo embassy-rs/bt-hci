@@ -7,6 +7,9 @@ name = "bt-hci"
 repository = "https://github.com/alexmoon/bt-hci"
 version = "0.1.0"
 
+[features]
+defmt = ["dep:defmt", "embedded-io/defmt-03", "embedded-io-async/defmt-03"]
+
 [dependencies]
 defmt = { version = "0.3", optional = true }
 embedded-io = "0.6.0"

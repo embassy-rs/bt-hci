@@ -2,7 +2,7 @@
 //!
 //! See Bluetooth Core Specification Vol 4, Part E, §7.7.
 
-use crate::cmd::{Cmd, CmdParams, Opcode, SyncCmd};
+use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
     param, ConnHandle, ConnHandleCompletedPackets, CoreSpecificationVersion, DisconnectReason, Error, LinkType,
     RemainingBytes, Status,
@@ -42,7 +42,7 @@ macro_rules! events {
     ) => {
         /// An Event HCI packet
         #[derive(Debug, Clone, Hash)]
-        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum Event<'a> {
             $(
                 #[allow(missing_docs)]
@@ -236,13 +236,10 @@ impl<'a> CommandComplete<'a> {
     /// # Panics
     ///
     /// May panic if `C::OPCODE` is not equal to `self.cmd_opcode`.
-    pub fn to_result<P: CmdParams>(&self) -> Result<<Cmd<P> as SyncCmd>::Return<'_>, Error>
-    where
-        Cmd<P>: SyncCmd,
-    {
+    pub fn to_result<C: SyncCmd>(&self) -> Result<C::Return<'_>, Error> {
         self.status
             .to_result()
-            .and_then(|_| self.return_params::<P>().or(Err(Error::INVALID_HCI_PARAMETERS)))
+            .and_then(|_| self.return_params::<C>().or(Err(Error::INVALID_HCI_PARAMETERS)))
     }
 
     /// Parses the return parameters for `C` from this event. This may fail if `status`
@@ -251,12 +248,9 @@ impl<'a> CommandComplete<'a> {
     /// # Panics
     ///
     /// May panic if `C::OPCODE` is not equal to `self.cmd_opcode`.
-    pub fn return_params<P: CmdParams>(&self) -> Result<<Cmd<P> as SyncCmd>::Return<'_>, FromHciBytesError>
-    where
-        Cmd<P>: SyncCmd,
-    {
-        assert_eq!(self.cmd_opcode, Cmd::<P>::opcode());
-        <Cmd<P> as SyncCmd>::Return::from_hci_bytes(&self.return_param_bytes).and_then(|(params, rest)| {
+    pub fn return_params<C: SyncCmd>(&self) -> Result<C::Return<'_>, FromHciBytesError> {
+        assert_eq!(self.cmd_opcode, C::OPCODE);
+        C::Return::from_hci_bytes(&self.return_param_bytes).and_then(|(params, rest)| {
             if rest.is_empty() {
                 Ok(params)
             } else {

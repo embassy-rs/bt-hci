@@ -222,6 +222,27 @@ param! {
 
 param_slice!(&'a [AdvSet]);
 
+impl<'a> FromHciBytes<'a> for &'a [AdvSet] {
+    fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
+        let Some((len, data)) = data.split_first() else {
+            return Err(FromHciBytesError::InvalidSize);
+        };
+
+        let len = usize::from(*len);
+        let byte_len = len * core::mem::size_of::<AdvSet>();
+        if byte_len > data.len() {
+            return Err(FromHciBytesError::InvalidSize);
+        }
+
+        let (data, rest) = data.split_at(byte_len);
+
+        Ok((
+            unsafe { core::slice::from_raw_parts(data.as_ptr() as *const AdvSet, len) },
+            rest,
+        ))
+    }
+}
+
 param! {
     bitfield PeriodicAdvProps[2] {
         (6, is_tx_power_included, include_tx_power);
