@@ -220,7 +220,7 @@ macro_rules! cmd {
         $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name($params);
 
         #[automatically_derived]
@@ -247,7 +247,7 @@ macro_rules! cmd {
         $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name<$life>($params);
 
         #[automatically_derived]

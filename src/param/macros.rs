@@ -54,9 +54,20 @@ macro_rules! param {
         $(#[$attrs])*
         #[repr(C, packed)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name {
             $(pub $field: $ty,)*
+        }
+
+        #[cfg(feature = "defmt")]
+        impl defmt::Format for $name {
+            fn format(&self, f: defmt::Formatter) {
+                // Copy out the field values since we can't take references to packed fields
+                let Self { $($field),* } = *self;
+
+                defmt::write!(f, "{} {{ ", stringify!($name));
+                $(defmt::write!(f, "{}: {}, ", stringify!($field), $field);)*
+                defmt::write!(f, "}}");
+            }
         }
 
         #[automatically_derived]
@@ -80,7 +91,7 @@ macro_rules! param {
     ) => {
         $(#[$attrs])*
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name$(<$life>)? {
             $(pub $field: $ty,)*
         }

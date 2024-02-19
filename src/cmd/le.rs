@@ -699,6 +699,7 @@ cmd! {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeSetExtScanParamsParams {
     pub own_addr_kind: AddrKind,
     pub scanning_filter_policy: ScanningFilterPolicy,
@@ -749,6 +750,7 @@ cmd! {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeExtCreateConnParams {
     pub initiator_filter_policy: bool,
     pub own_addr_kind: AddrKind,

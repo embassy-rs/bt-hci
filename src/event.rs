@@ -42,7 +42,7 @@ macro_rules! events {
     ) => {
         /// An Event HCI packet
         #[derive(Debug, Clone, Hash)]
-        // #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum Event<'a> {
             $(
                 #[allow(missing_docs)]
