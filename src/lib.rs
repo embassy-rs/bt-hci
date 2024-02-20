@@ -214,6 +214,16 @@ impl<'a> ControllerToHostPacket<'a> {
             Self::Iso(_) => PacketKind::IsoData,
         }
     }
+
+    pub fn from_hci_bytes_with_kind(kind: PacketKind, data: &'a [u8]) -> Result<(ControllerToHostPacket<'a>, &'a [u8]), FromHciBytesError> {
+        match kind {
+            PacketKind::Cmd => Err(FromHciBytesError::InvalidValue),
+            PacketKind::AclData => data::AclPacket::from_hci_bytes(data).map(|(x, y)| (Self::Acl(x), y)),
+            PacketKind::SyncData => data::SyncPacket::from_hci_bytes(data).map(|(x, y)| (Self::Sync(x), y)),
+            PacketKind::Event => event::Event::from_hci_bytes(data).map(|(x, y)| (Self::Event(x), y)),
+            PacketKind::IsoData => data::IsoPacket::from_hci_bytes(data).map(|(x, y)| (Self::Iso(x), y)),
+        }
+    }
 }
 
 impl<'de> FromHciBytes<'de> for ControllerToHostPacket<'de> {
