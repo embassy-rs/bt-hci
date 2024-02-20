@@ -588,3 +588,35 @@ impl<'a> ExactSizeIterator for LeExtAdvReportsIter<'a> {
 }
 
 impl<'a> FusedIterator for LeExtAdvReportsIter<'a> {}
+
+param! {
+    struct LePeriodicAdvSubeventData<'a> {
+        subevent: u8,
+        response_slot_start: u8,
+        response_slot_count: u8,
+        subevent_data: &'a [u8],
+    }
+}
+
+impl<'a, 'b: 'a> WriteHci for &'a [LePeriodicAdvSubeventData<'b>] {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        1 + self.iter().map(WriteHci::size).sum::<usize>()
+    }
+    #[inline(always)]
+    fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        writer.write_all(&[self.len() as u8])?;
+        for x in self.iter() {
+            <LePeriodicAdvSubeventData as WriteHci>::write_hci(x, &mut writer)?;
+        }
+        Ok(())
+    }
+    #[inline(always)]
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        writer.write_all(&[self.len() as u8]).await?;
+        for x in self.iter() {
+            <LePeriodicAdvSubeventData as WriteHci>::write_hci_async(x, &mut writer).await?;
+        }
+        Ok(())
+    }
+}

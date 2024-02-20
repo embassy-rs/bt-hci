@@ -1,17 +1,13 @@
 //! Bluetooth Core Specification Vol 4, Part E, §7.8
 
-use crate::{cmd, param};
-use crate::{
-    param::{
-        AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr,
-        ChannelMap, ConnHandle, CteKind, CteMask, Duration, FilterDuplicates, InitiatingPhy,
-        LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions,
-        LePeriodicAdvReceiveEnable, LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind,
-        PhyMask, PhyOptions, PhyParams, PrivacyMode, ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates,
-        SyncHandle,
-    },
-    WriteHci,
+use crate::param::{
+    AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr, ChannelMap,
+    ConnHandle, CteKind, CteMask, Duration, FilterDuplicates, InitiatingPhy, LeDataRelatedAddrChangeReasons,
+    LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
+    LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
+    PrivacyMode, ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates, SyncHandle,
 };
+use crate::{cmd, param, WriteHci};
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.1
@@ -660,6 +656,28 @@ param! {
 }
 
 cmd! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.8.61
+    LeSetPeriodicAdvParamsV2(LE, 0x003e) {
+        Params = LeSetPeriodicAdvParamsV2Params;
+        Return = AdvHandle;
+    }
+}
+
+param! {
+    struct LeSetPeriodicAdvParamsV2Params {
+        adv_handle: AdvHandle,
+        periodic_adv_interval_min: Duration<1_250>,
+        periodic_adv_interval_max: Duration<1_250>,
+        periodic_adv_props: PeriodicAdvProps,
+        num_subevents: u8,
+        subevent_interval: u8, // * 1.25ms
+        response_slot_delay: u8, // * 1.25ms
+        response_slot_spacing: u8, // * 0.125ms
+        num_response_slots: u8,
+    }
+}
+
+cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.8.62
     LeSetPeriodicAdvData(LE, 0x003f) {
         Params<'a> = LeSetPeriodicAdvDataParams<'a>;
@@ -778,6 +796,58 @@ impl WriteHci for LeExtCreateConnParams {
     }
 
     async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.initiator_filter_policy.write_hci_async(&mut writer).await?;
+        self.own_addr_kind.write_hci_async(&mut writer).await?;
+        self.peer_addr_kind.write_hci_async(&mut writer).await?;
+        self.peer_addr.write_hci_async(&mut writer).await?;
+        self.initiating_phys.write_hci_async(writer).await
+    }
+}
+
+cmd! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.8.66
+    LeExtCreateConnV2(LE, 0x0085) {
+        Params = LeExtCreateConnV2Params;
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeExtCreateConnV2Params {
+    pub adv_handle: AdvHandle,
+    pub subevent: u8,
+    pub initiator_filter_policy: bool,
+    pub own_addr_kind: AddrKind,
+    pub peer_addr_kind: AddrKind,
+    pub peer_addr: BdAddr,
+    pub initiating_phys: PhyParams<InitiatingPhy>,
+}
+
+impl WriteHci for LeExtCreateConnV2Params {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        self.adv_handle.size()
+            + self.subevent.size()
+            + self.initiator_filter_policy.size()
+            + self.own_addr_kind.size()
+            + self.peer_addr_kind.size()
+            + self.peer_addr.size()
+            + self.initiating_phys.size()
+    }
+
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.adv_handle.write_hci(&mut writer)?;
+        self.subevent.write_hci(&mut writer)?;
+        self.initiator_filter_policy.write_hci(&mut writer)?;
+        self.own_addr_kind.write_hci(&mut writer)?;
+        self.peer_addr_kind.write_hci(&mut writer)?;
+        self.peer_addr.write_hci(&mut writer)?;
+        self.initiating_phys.write_hci(writer)
+    }
+
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.adv_handle.write_hci_async(&mut writer).await?;
+        self.subevent.write_hci_async(&mut writer).await?;
         self.initiator_filter_policy.write_hci_async(&mut writer).await?;
         self.own_addr_kind.write_hci_async(&mut writer).await?;
         self.peer_addr_kind.write_hci_async(&mut writer).await?;
@@ -1185,5 +1255,76 @@ param! {
     struct LeSetDataRelatedAddrChangesParams {
         adv_handle: AdvHandle,
         change_reasons: LeDataRelatedAddrChangeReasons,
+    }
+}
+
+cmd! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.8.125
+    LeSetPeriodicAdvSubeventData(LE, 0x0082) {
+        Params<'a> = LeSetPeriodicAdvSubeventDataParams<'a>;
+        Return = AdvHandle;
+    }
+}
+
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeSetPeriodicAdvSubeventDataParams<'a> {
+    pub adv_handle: AdvHandle,
+    pub subevent: &'a [LePeriodicAdvSubeventData<'a>],
+}
+
+impl<'a> WriteHci for LeSetPeriodicAdvSubeventDataParams<'a> {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        self.adv_handle.size() + self.subevent.size()
+    }
+
+    #[inline(always)]
+    fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.adv_handle.write_hci(&mut writer)?;
+        self.subevent.write_hci(&mut writer)?;
+        Ok(())
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.adv_handle.write_hci_async(&mut writer).await?;
+        self.subevent.write_hci_async(&mut writer).await?;
+        Ok(())
+    }
+}
+
+cmd! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.8.126
+    LeSetPeriodicAdvResponseData(LE, 0x007c) {
+        Params<'a> = LeSetPeriodicAdvResponseDataParams<'a>;
+        Return = SyncHandle;
+    }
+}
+
+param! {
+    struct LeSetPeriodicAdvResponseDataParams<'a> {
+        adv_handle: SyncHandle,
+        request_event: u16,
+        request_subevent: u8,
+        response_subevent: u8,
+        response_slot: u8,
+        response_data: &'a [u8],
+    }
+}
+
+cmd! {
+    /// Bluetooth Core Specification Vol 4, Part E, §7.8.127
+    LeSetPeriodicSyncSubevent(LE, 0x007c) {
+        Params<'a> = LeSetPeriodicSyncSubeventParams<'a>;
+        Return = SyncHandle;
+    }
+}
+
+param! {
+    struct LeSetPeriodicSyncSubeventParams<'a> {
+        adv_handle: SyncHandle,
+        periodic_adv_props: PeriodicAdvProps,
+        subevents: &'a [u8],
     }
 }
