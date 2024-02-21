@@ -95,7 +95,7 @@ impl<T: Cmd> HostToControllerPacket for T {
 /// events
 pub trait SyncCmd: Cmd {
     /// The type of the parameters for the [`CommandComplete`](crate::event::CommandComplete) event
-    type Return<'de>: FromHciBytes<'de>;
+    type Return: for<'a> FromHciBytes<'a> + Copy;
 
     /// Extracts the [`ConnHandle`] from the return parameters for commands that return a `ConnHandle`
     ///
@@ -131,7 +131,7 @@ macro_rules! cmd {
         }
 
         impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
-            type Return<'ret> = $ret;
+            type Return = $ret;
 
             fn return_handle(data: &[u8]) -> Option<$crate::param::ConnHandle> {
                 <$crate::param::ConnHandle as $crate::FromHciBytes>::from_hci_bytes(data).ok().map(|(x, _)| x)
@@ -186,7 +186,7 @@ macro_rules! cmd {
         }
 
         impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
-            type Return<'ret> = ConnHandle;
+            type Return = ConnHandle;
 
             fn return_handle(data: &[u8]) -> Option<$crate::param::ConnHandle> {
                 <$crate::param::ConnHandle as $crate::FromHciBytes>::from_hci_bytes(data).ok().map(|(x, _)| x)
@@ -208,7 +208,7 @@ macro_rules! cmd {
         }
 
         impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
-            type Return<'ret> = $ret_ty;
+            type Return = $ret_ty;
         }
     };
     (

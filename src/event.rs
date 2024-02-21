@@ -237,7 +237,7 @@ impl<'a> CommandComplete<'a> {
     /// # Panics
     ///
     /// May panic if `C::OPCODE` is not equal to `self.cmd_opcode`.
-    pub fn to_result<C: SyncCmd>(&self) -> Result<C::Return<'_>, Error> {
+    pub fn to_result<C: SyncCmd>(&self) -> Result<C::Return, Error> {
         self.status
             .to_result()
             .and_then(|_| self.return_params::<C>().or(Err(Error::INVALID_HCI_PARAMETERS)))
@@ -249,7 +249,7 @@ impl<'a> CommandComplete<'a> {
     /// # Panics
     ///
     /// May panic if `C::OPCODE` is not equal to `self.cmd_opcode`.
-    pub fn return_params<C: SyncCmd>(&self) -> Result<C::Return<'_>, FromHciBytesError> {
+    pub fn return_params<C: SyncCmd>(&self) -> Result<C::Return, FromHciBytesError> {
         assert_eq!(self.cmd_opcode, C::OPCODE);
         C::Return::from_hci_bytes(&self.return_param_bytes).and_then(|(params, rest)| {
             if rest.is_empty() {
