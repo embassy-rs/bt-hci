@@ -26,6 +26,7 @@ macro_rules! le_events {
         )+
     ) => {
         /// Bluetooth Core Specification Vol 4, Part E, §7.7.65
+        #[non_exhaustive]
         #[derive(Debug, Clone, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum LeEvent<'a> {

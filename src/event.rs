@@ -41,6 +41,7 @@ macro_rules! events {
         )+
     ) => {
         /// An Event HCI packet
+        #[non_exhaustive]
         #[derive(Debug, Clone, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum Event<'a> {
