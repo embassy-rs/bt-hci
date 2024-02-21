@@ -215,7 +215,10 @@ impl<'a> ControllerToHostPacket<'a> {
         }
     }
 
-    pub fn from_hci_bytes_with_kind(kind: PacketKind, data: &'a [u8]) -> Result<(ControllerToHostPacket<'a>, &'a [u8]), FromHciBytesError> {
+    pub fn from_hci_bytes_with_kind(
+        kind: PacketKind,
+        data: &'a [u8],
+    ) -> Result<(ControllerToHostPacket<'a>, &'a [u8]), FromHciBytesError> {
         match kind {
             PacketKind::Cmd => Err(FromHciBytesError::InvalidValue),
             PacketKind::AclData => data::AclPacket::from_hci_bytes(data).map(|(x, y)| (Self::Acl(x), y)),
@@ -272,19 +275,15 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
 /// when serialized with [`WriteHci`].
 ///
 /// This is used for transports where all packets are sent over a common channel, such as the UART transport.
-pub struct WithIndicator<T: HostToControllerPacket>(T);
+pub struct WithIndicator<'a, T: HostToControllerPacket>(&'a T);
 
-impl<T: HostToControllerPacket> WithIndicator<T> {
-    pub fn new(pkt: T) -> Self {
+impl<'a, T: HostToControllerPacket> WithIndicator<'a, T> {
+    pub fn new(pkt: &'a T) -> Self {
         Self(pkt)
-    }
-
-    pub fn into_inner(self) -> T {
-        self.0
     }
 }
 
-impl<T: HostToControllerPacket> WriteHci for WithIndicator<T> {
+impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
     #[inline(always)]
     fn size(&self) -> usize {
         1 + self.0.size()
@@ -303,20 +302,22 @@ impl<T: HostToControllerPacket> WriteHci for WithIndicator<T> {
     }
 }
 
-/// Abbreviations:
-/// - address -> addr
-/// - advertiser -> adv
-/// - advertising -> adv
-/// - command -> cmd
-/// - connection -> conn
-/// - event -> evt
-/// - extended -> ext
-/// - extension -> ext
-/// - identifier -> id
-/// - length -> len
-/// - packet -> pkt
-/// - properties -> props
-/// - receive -> rx
-/// - transmit -> tx
-/// - type -> kind
-const _FOO: () = ();
+pub trait Controller {
+    type Error;
+
+    fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
+    fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
+    fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>>;
+
+    fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
+}
+
+pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
+    /// Note: Some implementations may require [`Controller::recv()`] to be polled for this to return.
+    fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, param::Error>>;
+}
+
+pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
+    /// Note: Some implementations may require [`Controller::recv()`] to be polled for this to return.
+    fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), param::Error>>;
+}

@@ -2,8 +2,10 @@
 //!
 //! See Bluetooth Core Specification Vol 4, Part E, §7.
 
-use crate::param::{param, ConnHandle};
-use crate::{FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
+use core::future::Future;
+
+use crate::param::{self, param, ConnHandle};
+use crate::{ControllerCmdAsync, ControllerCmdSync, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
 pub mod info;
@@ -91,6 +93,14 @@ impl<T: Cmd> HostToControllerPacket for T {
     const KIND: PacketKind = PacketKind::Cmd;
 }
 
+/// A marker trait for objects representing HCI Commands that generate [`CommandStatus`](crate::event::CommandStatus)
+/// events
+pub trait AsyncCmd: Cmd {
+    fn exec<C: ControllerCmdAsync<Self>>(&self, controller: &C) -> impl Future<Output = Result<(), param::Error>> {
+        controller.exec(self)
+    }
+}
+
 /// A trait for objects representing HCI Commands that generate [`CommandComplete`](crate::event::CommandComplete)
 /// events
 pub trait SyncCmd: Cmd {
@@ -108,6 +118,13 @@ pub trait SyncCmd: Cmd {
     fn return_handle(_data: &[u8]) -> Option<ConnHandle> {
         None
     }
+
+    fn exec<C: ControllerCmdSync<Self>>(
+        &self,
+        controller: &C,
+    ) -> impl Future<Output = Result<Self::Return, param::Error>> {
+        controller.exec(self)
+    }
 }
 
 #[macro_export]
@@ -124,6 +141,7 @@ macro_rules! cmd {
         }
     ) => {
         $crate::cmd! {
+            BASE
             $(#[$attrs])*
             $name($group, $cmd) {
                 Params$(<$life>)? = $params;
@@ -179,6 +197,7 @@ macro_rules! cmd {
         }
     ) => {
         $crate::cmd! {
+            BASE
             $(#[$attrs])*
             $name($group, $cmd) {
                 Params$(<$life>)? = $params;
@@ -201,6 +220,7 @@ macro_rules! cmd {
         }
     ) => {
         $crate::cmd! {
+            BASE
             $(#[$attrs])*
             $name($group, $cmd) {
                 Params$(<$life>)? = $params;
@@ -214,72 +234,63 @@ macro_rules! cmd {
     (
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
-            Params = $params:ty;
+            Params$(<$life:lifetime>)? = $params:ty;
         }
     ) => {
-        $(#[$attrs])*
-        #[repr(transparent)]
-        #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        pub struct $name($params);
-
-        #[automatically_derived]
-        #[allow(unused_mut, unused_variables, unused_imports)]
-        impl $crate::cmd::Cmd for $name {
-            const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
-            type Params = $params;
-            fn params(&self) -> &$params {
-                &self.0
+        $crate::cmd! {
+            BASE
+            $(#[$attrs])*
+            $name($group, $cmd) {
+                Params$(<$life>)? = $params;
             }
         }
 
-        $crate::cmd! {
-            WRITE_HCI
-            $name
-        }
+        impl$(<$life>)? $crate::cmd::AsyncCmd for $name$(<$life>)? {}
     };
     (
+        BASE
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
-            Params<$life:lifetime> = $params:ty;
+            Params$(<$life:lifetime>)? = $params:ty;
         }
     ) => {
         $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        pub struct $name<$life>($params);
+        pub struct $name$(<$life>)?($params);
+
+        impl$(<$life>)? $name$(<$life>)? {
+            pub fn new(params: $params) -> Self {
+                Self(params)
+            }
+        }
 
         #[automatically_derived]
         #[allow(unused_mut, unused_variables, unused_imports)]
-        impl<$life> $crate::cmd::Cmd for $name<$life> {
+        impl$(<$life>)? $crate::cmd::Cmd for $name$(<$life>)? {
             const OPCODE: $crate::cmd::Opcode = $crate::cmd::Opcode::new($crate::cmd::OpcodeGroup::$group, $cmd);
             type Params = $params;
+
             fn params(&self) -> &$params {
                 &self.0
             }
         }
 
-        $crate::cmd! {
-            WRITE_HCI
-            $name<$life>
-        }
-    };
-    (WRITE_HCI $name:ident$(<$life:lifetime>)?) => {
         impl$(<$life>)? $crate::WriteHci for $name$(<$life>)? {
             #[inline(always)]
             fn size(&self) -> usize {
-                self.0.size() + 3
+                <$params as $crate::WriteHci>::size(&self.0) + 3
             }
 
             fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 writer.write_all(&<Self as $crate::cmd::Cmd>::header(self))?;
-                self.0.write_hci(writer)
+                <$params as $crate::WriteHci>::write_hci(&self.0, writer)
             }
 
             async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
                 writer.write_all(&<Self as $crate::cmd::Cmd>::header(self)).await?;
-                self.0.write_hci_async(writer).await
+                <$params as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
     };
