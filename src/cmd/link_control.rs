@@ -1,20 +1,16 @@
 //! Bluetooth Core Specification Vol 4, Part E, §7.1
 
+use crate::cmd;
 use crate::param::{ConnHandle, DisconnectReason};
-use crate::{cmd, param};
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.1.6
     Disconnect(LINK_CONTROL, 0x0006) {
-        Params = DisconnectParams;
+        DisconnectParams {
+            handle: ConnHandle,
+            reason: DisconnectReason,
+        }
         Return = ();
-    }
-}
-
-param! {
-    struct DisconnectParams {
-        handle: ConnHandle,
-        reason: DisconnectReason,
     }
 }
 

@@ -1,10 +1,10 @@
 //! Bluetooth Core Specification Vol 4, Part E, §7.3
 
+use crate::cmd;
 use crate::param::{
     ConnHandle, ConnHandleCompletedPackets, ControllerToHostFlowControl, Duration, EventMask, EventMaskPage2,
     PowerLevelKind,
 };
-use crate::{cmd, param};
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.1
@@ -25,19 +25,14 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.35
     ReadTransmitPowerLevel(CONTROL_BASEBAND, 0x002d) {
-        Params = ReadTransmitPowerLevelParams;
+        ReadTransmitPowerLevelParams {
+            kind: PowerLevelKind,
+        }
         /// Bluetooth Core Specification Vol 4, Part E, §7.3.35
         ReadTransmitPowerLevelReturn {
-            handle: ConnHandle,
             tx_power_level: i8,
         }
-    }
-}
-
-param! {
-    struct ReadTransmitPowerLevelParams {
-        handle: ConnHandle,
-        kind: PowerLevelKind,
+        Handle = handle: ConnHandle;
     }
 }
 
@@ -52,17 +47,13 @@ cmd! {
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.39
     HostBufferSize(CONTROL_BASEBAND, 0x0033) {
-        Params = HostBufferSizeParams;
+        HostBufferSizeParams {
+            host_acl_data_packet_len: u16,
+            host_sync_data_packet_len: u8,
+            host_total_acl_data_packets: u16,
+            host_total_sync_data_packets: u16,
+        }
         Return = ();
-    }
-}
-
-param! {
-    struct HostBufferSizeParams {
-        host_acl_data_packet_len: u16,
-        host_sync_data_packet_len: u8,
-        host_total_acl_data_packets: u16,
-        host_total_sync_data_packets: u16,
     }
 }
 
@@ -88,23 +79,19 @@ cmd! {
         Params = ConnHandle;
         /// Bluetooth Core Specification Vol 4, Part E, §7.3.93
         ReadAuthenticatedPayloadTimeoutReturn {
-            handle: ConnHandle,
             timeout: Duration<10_000>,
         }
+        Handle = handle: ConnHandle;
     }
 }
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.94
     WriteAuthenticatedPayloadTimeout(CONTROL_BASEBAND, 0x007c) {
-        Params = WriteAuthenticatedPayloadTimeoutParams;
+        WriteAuthenticatedPayloadTimeoutParams {
+            timeout: Duration<10_000>,
+        }
         Return = ConnHandle;
-    }
-}
-
-param! {
-    struct WriteAuthenticatedPayloadTimeoutParams {
-        handle: ConnHandle,
-        timeout: Duration<10_000>,
+        Handle = handle: ConnHandle;
     }
 }

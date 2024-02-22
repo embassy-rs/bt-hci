@@ -1,29 +1,9 @@
-use crate::{AsHciBytes, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
 
-impl AsHciBytes for () {
-    fn as_hci_bytes(&self) -> &[u8] {
-        &[]
-    }
-}
-
-impl<'de> FromHciBytes<'de> for () {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        Ok(((), data))
-    }
-}
-
-impl WriteHci for () {
+unsafe impl FixedSizeValue for () {
     #[inline(always)]
-    fn size(&self) -> usize {
-        0
-    }
-
-    fn write_hci<W: embedded_io::Write>(&self, _writer: W) -> Result<(), W::Error> {
-        Ok(())
-    }
-
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, _writer: W) -> Result<(), W::Error> {
-        Ok(())
+    fn is_valid(_data: &[u8]) -> bool {
+        true
     }
 }
 

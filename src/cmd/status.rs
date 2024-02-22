@@ -9,8 +9,8 @@ cmd! {
         Params = ConnHandle;
         /// Bluetooth Core Specification Vol 4, Part E, §7.5.4
         ReadRssiReturn {
-            handle: ConnHandle,
             rssi: i8,
         }
+        Handle = handle: ConnHandle;
     }
 }

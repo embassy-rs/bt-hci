@@ -313,11 +313,11 @@ pub trait Controller {
 }
 
 pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
-    /// Note: Some implementations may require [`Controller::recv()`] to be polled for this to return.
+    /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, param::Error>>;
 }
 
 pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
-    /// Note: Some implementations may require [`Controller::recv()`] to be polled for this to return.
+    /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), param::Error>>;
 }

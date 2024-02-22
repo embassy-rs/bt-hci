@@ -227,7 +227,7 @@ impl<'a> CommandComplete<'a> {
     ///
     /// For commands that return the connection handle provided as a parameter as
     /// their first return parameter, this will be valid even if `status` is an error.
-    pub fn handle<C: SyncCmd>(&self) -> Option<ConnHandle> {
+    pub fn handle<C: SyncCmd>(&self) -> Result<C::Handle, FromHciBytesError> {
         C::return_handle(&self.return_param_bytes)
     }
 

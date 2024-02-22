@@ -4,8 +4,10 @@
 
 use core::future::Future;
 
-use crate::param::{self, param, ConnHandle};
-use crate::{ControllerCmdAsync, ControllerCmdSync, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
+use crate::param::{self, param};
+use crate::{
+    ControllerCmdAsync, ControllerCmdSync, FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci,
+};
 
 pub mod controller_baseband;
 pub mod info;
@@ -106,18 +108,19 @@ pub trait AsyncCmd: Cmd {
 pub trait SyncCmd: Cmd {
     /// The type of the parameters for the [`CommandComplete`](crate::event::CommandComplete) event
     type Return: for<'a> FromHciBytes<'a> + Copy;
+    type Handle: FixedSizeValue;
 
-    /// Extracts the [`ConnHandle`] from the return parameters for commands that return a `ConnHandle`
+    fn param_handle(&self) -> Self::Handle;
+
+    /// Extracts the [`Self::Handle`] from the return parameters for commands that return a handle.
     ///
-    /// If the command takes a connection handle and returns it as the first parameter of the associated
+    /// If the command takes a handle or BdAddr and returns it as the first parameter of the associated
     /// [`CommandComplete`](crate::event::CommandComplete) event, this method will extract that handle from the return
     /// parameters. This is needed to identify which command the `CommandComplete` event was for in the event that the
     /// status of the command was an error.
     ///
     /// See Bluetooth Core Specification Vol 4, Part E, §4.5
-    fn return_handle(_data: &[u8]) -> Option<ConnHandle> {
-        None
-    }
+    fn return_handle(_data: &[u8]) -> Result<Self::Handle, crate::FromHciBytesError>;
 
     fn exec<C: ControllerCmdSync<Self>>(
         &self,
@@ -132,34 +135,33 @@ macro_rules! cmd {
     (
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
-            Params$(<$life:lifetime>)? = $params:ty;
+            $(#[$param_attrs:meta])*
+            $params:ident$(<$life:lifetime>)? {
+                $($param_name:ident: $param_ty:ty,)+
+            }
             $(#[$ret_attrs:meta])*
             $ret:ident {
-                handle: ConnHandle,
                 $($ret_name:ident: $ret_ty:ty,)+
             }
+            $(Handle = $handle_name:ident: $handle:ty;)?
         }
     ) => {
         $crate::cmd! {
-            BASE
             $(#[$attrs])*
             $name($group, $cmd) {
-                Params$(<$life>)? = $params;
-            }
-        }
-
-        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
-            type Return = $ret;
-
-            fn return_handle(data: &[u8]) -> Option<$crate::param::ConnHandle> {
-                <$crate::param::ConnHandle as $crate::FromHciBytes>::from_hci_bytes(data).ok().map(|(x, _)| x)
+                $(#[$param_attrs])*
+                $params$(<$life>)? {
+                    $($param_name: $param_ty,)+
+                }
+                Return = $ret;
+                $(Handle = $handle_name: $handle;)?
             }
         }
 
         $crate::param! {
             $(#[$ret_attrs])*
             struct $ret {
-                handle: ConnHandle,
+                $($handle_name: $handle,)?
                 $($ret_name: $ret_ty,)*
             }
         }
@@ -167,7 +169,7 @@ macro_rules! cmd {
     (
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
-            Params$(<$life:lifetime>)? = $params:ty;
+            Params = ();
             $(#[$ret_attrs:meta])*
             $ret:ident {
                 $($ret_name:ident: $ret_ty:ty,)+
@@ -177,7 +179,7 @@ macro_rules! cmd {
         $crate::cmd! {
             $(#[$attrs])*
             $name($group, $cmd) {
-                Params$(<$life>)? = $params;
+                Params = ();
                 Return = $ret;
             }
         }
@@ -192,23 +194,107 @@ macro_rules! cmd {
     (
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
-            Params$(<$life:lifetime>)? = $params:ty;
-            Return = ConnHandle;
+            Params$(<$life:lifetime>)? = $param:ty;
+            $(#[$ret_attrs:meta])*
+            $ret:ident {
+                $($ret_name:ident: $ret_ty:ty,)+
+            }
+            $(Handle = $handle_name:ident: $handle:ty;)?
+        }
+    ) => {
+        $crate::cmd! {
+            $(#[$attrs])*
+            $name($group, $cmd) {
+                Params$(<$life>)? = $param;
+                Return = $ret;
+                $(Handle = $handle;)?
+            }
+        }
+
+        $crate::param! {
+            $(#[$ret_attrs])*
+            struct $ret {
+                $($handle_name: $handle,)?
+                $($ret_name: $ret_ty,)*
+            }
+        }
+    };
+    (
+        $(#[$attrs:meta])*
+        $name:ident($group:ident, $cmd:expr) {
+            $(#[$param_attrs:meta])*
+            $params:ident$(<$life:lifetime>)? {
+                $($param_name:ident: $param_ty:ty,)+
+            }
+            $(
+                Return = $ret:ty;
+                $(Handle = $handle_name:ident: $handle:ty;)?
+            )?
         }
     ) => {
         $crate::cmd! {
             BASE
             $(#[$attrs])*
             $name($group, $cmd) {
-                Params$(<$life>)? = $params;
+                Params$(<$life>)? = $params$(<$life>)?;
+                $(
+                    Return = $ret;
+                    $(Handle = $handle;)?
+                )?
             }
         }
 
-        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
-            type Return = ConnHandle;
+        impl$(<$life>)? $name$(<$life>)? {
+            #[allow(clippy::too_many_arguments)]
+            pub fn new($($($handle_name: $handle,)?)? $($param_name: $param_ty),+) -> Self {
+                Self($params {
+                    $($($handle_name,)?)?
+                    $($param_name,)*
+                })
+            }
 
-            fn return_handle(data: &[u8]) -> Option<$crate::param::ConnHandle> {
-                <$crate::param::ConnHandle as $crate::FromHciBytes>::from_hci_bytes(data).ok().map(|(x, _)| x)
+            $(
+                $(
+                    fn handle(&self) -> $handle {
+                        self.0.$handle_name
+                    }
+                )?
+            )?
+        }
+
+        $crate::param! {
+            $(#[$param_attrs])*
+            struct $params$(<$life>)? {
+                $($($handle_name: $handle,)?)?
+                $($param_name: $param_ty,)*
+            }
+        }
+    };
+    (
+        $(#[$attrs:meta])*
+        $name:ident($group:ident, $cmd:expr) {
+            Params = ();
+            $(Return = $ret:ty;)?
+        }
+    ) => {
+        $crate::cmd! {
+            BASE
+            $(#[$attrs])*
+            $name($group, $cmd) {
+                Params = ();
+                $(Return = $ret;)?
+            }
+        }
+
+        impl $name {
+            pub fn new() -> Self {
+                Self(())
+            }
+        }
+
+        impl Default for $name {
+            fn default() -> Self {
+                Self(())
             }
         }
     };
@@ -216,7 +302,10 @@ macro_rules! cmd {
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
             Params$(<$life:lifetime>)? = $params:ty;
-            Return = $ret_ty:ty;
+            $(
+                Return = $ret:ty;
+                $(Handle = $handle:ty;)?
+            )?
         }
     ) => {
         $crate::cmd! {
@@ -224,34 +313,36 @@ macro_rules! cmd {
             $(#[$attrs])*
             $name($group, $cmd) {
                 Params$(<$life>)? = $params;
+                $(
+                    Return = $ret;
+                    $(Handle = $handle;)?
+                )?
             }
         }
 
-        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
-            type Return = $ret_ty;
-        }
-    };
-    (
-        $(#[$attrs:meta])*
-        $name:ident($group:ident, $cmd:expr) {
-            Params$(<$life:lifetime>)? = $params:ty;
-        }
-    ) => {
-        $crate::cmd! {
-            BASE
-            $(#[$attrs])*
-            $name($group, $cmd) {
-                Params$(<$life>)? = $params;
+        impl$(<$life>)? $name$(<$life>)? {
+            pub fn new(param: $params) -> Self {
+                Self(param)
             }
-        }
 
-        impl$(<$life>)? $crate::cmd::AsyncCmd for $name$(<$life>)? {}
+            $(
+                $(
+                    fn handle(&self) -> $handle {
+                        self.0
+                    }
+                )?
+            )?
+        }
     };
     (
         BASE
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
             Params$(<$life:lifetime>)? = $params:ty;
+            $(
+                Return = $ret:ty;
+                $(Handle = $handle:ty;)?
+            )?
         }
     ) => {
         $(#[$attrs])*
@@ -259,12 +350,6 @@ macro_rules! cmd {
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct $name$(<$life>)?($params);
-
-        impl$(<$life>)? $name$(<$life>)? {
-            pub fn new(params: $params) -> Self {
-                Self(params)
-            }
-        }
 
         #[automatically_derived]
         #[allow(unused_mut, unused_variables, unused_imports)]
@@ -274,6 +359,13 @@ macro_rules! cmd {
 
             fn params(&self) -> &$params {
                 &self.0
+            }
+        }
+
+        #[automatically_derived]
+        impl$(<$life>)? From<$params> for $name$(<$life>)? {
+            fn from(params: $params) -> Self {
+                Self(params)
             }
         }
 
@@ -293,6 +385,60 @@ macro_rules! cmd {
                 <$params as $crate::WriteHci>::write_hci_async(&self.0, writer).await
             }
         }
+
+        $crate::cmd! {
+            RETURN
+            $name$(<$life>)? {
+                $(
+                    Return = $ret;
+                    $(Handle = $handle;)?
+                )?
+            }
+        }
+    };
+    (
+        RETURN
+        $name:ident$(<$life:lifetime>)? {
+            Return = $ret:ty;
+            Handle = $handle:ty;
+        }
+    ) => {
+        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
+            type Return = $ret;
+            type Handle = $handle;
+
+            fn param_handle(&self) -> Self::Handle {
+                self.handle()
+            }
+
+            fn return_handle(data: &[u8]) -> Result<Self::Handle, $crate::FromHciBytesError> {
+                <$handle as $crate::FromHciBytes>::from_hci_bytes(data).map(|(x, _)| x)
+            }
+        }
+    };
+    (
+        RETURN
+        $name:ident$(<$life:lifetime>)? {
+            Return = $ret:ty;
+        }
+    ) => {
+        impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
+            type Return = $ret;
+            type Handle = ();
+
+            fn param_handle(&self) {}
+
+            fn return_handle(_data: &[u8]) -> Result<Self::Handle, $crate::FromHciBytesError> {
+                Ok(())
+            }
+        }
+    };
+    (
+        RETURN
+        $name:ident$(<$life:lifetime>)? {
+        }
+    ) => {
+        impl$(<$life>)? $crate::cmd::AsyncCmd for $name$(<$life>)? {}
     };
 }
 
