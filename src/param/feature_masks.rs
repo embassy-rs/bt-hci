@@ -101,5 +101,9 @@ param! {
         (37, supports_conn_subrating, set_conn_subrating);
         (38, supports_conn_subrating_host, set_conn_subrating_host);
         (39, supports_channel_classification, set_channel_classification);
+        (40, supports_adv_coding_selection, set_adv_coding_selection);
+        (41, supports_adv_coding_selection_host_support, set_adv_coding_selection_host_support);
+        (43, supports_periodic_adv_with_resp_advertiser, set_periodic_adv_with_resp_advertiser);
+        (44, supports_periodic_adv_with_resp_scanner, set_periodic_adv_with_resp_scanner);
     }
 }

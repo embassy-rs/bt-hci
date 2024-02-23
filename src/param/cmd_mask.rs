@@ -439,5 +439,13 @@ cmds! {
     46 => {
         (0, le_set_default_subrate);
         (1, le_subrate_request);
+        (2, le_set_ext_adv_parameters_v2);
+        (5, le_set_periodic_adv_subevent_data);
+        (6, le_set_periodic_adv_response_data);
+        (7, le_set_periodic_sync_subevent);
+    }
+    47 => {
+        (0, le_ext_create_conn_v2);
+        (1, le_set_periodic_adv_parameters_v2);
     }
 }

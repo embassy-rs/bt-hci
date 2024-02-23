@@ -226,6 +226,7 @@ impl CoreSpecificationVersion {
     pub const VERSION_5_1: CoreSpecificationVersion = CoreSpecificationVersion(0x0A);
     pub const VERSION_5_2: CoreSpecificationVersion = CoreSpecificationVersion(0x0B);
     pub const VERSION_5_3: CoreSpecificationVersion = CoreSpecificationVersion(0x0C);
+    pub const VERSION_5_4: CoreSpecificationVersion = CoreSpecificationVersion(0x0D);
 }
 
 param! {

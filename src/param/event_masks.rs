@@ -108,5 +108,11 @@ param! {
         (32, is_le_transmit_power_reporting_enabled, enable_le_transmit_power_reporting);
         (33, is_le_biginfo_adv_report_enabled, enable_le_biginfo_adv_report);
         (34, is_le_subrate_change_enabled, enable_le_subrate_change);
+        (35, is_le_periodic_adv_sync_established_v2_enabled, enable_le_periodic_adv_sync_established_v2);
+        (36, is_le_periodic_adv_report_v2_enabled, enable_le_periodic_adv_report_v2);
+        (37, is_le_periodic_adv_sync_transfer_received_v2_enabled, enable_le_periodic_adv_sync_transfer_received_v2);
+        (38, is_le_periodic_adv_subevent_data_request_enabled, enable_le_periodic_adv_subevent_data_request);
+        (39, is_le_periodic_adv_response_report_enabled, enable_le_periodic_adv_response_report);
+        (40, is_le_enhanced_conn_complete_v2_enabled, enable_le_enhanced_conn_complete_v2);
     }
 }
