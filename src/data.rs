@@ -90,12 +90,12 @@ impl<'a> AclPacket<'a> {
     /// Create an `AclPacket` from `header` and `data`
     pub fn from_header_hci_bytes(header: AclPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
         let data_len = usize::from(header.data_len);
-        if data.len() != data_len {
+        if data.len() < data_len {
             Err(FromHciBytesError::InvalidSize)
         } else {
             Ok(Self {
                 handle: header.handle,
-                data,
+                data: &data[..data_len],
             })
         }
     }
