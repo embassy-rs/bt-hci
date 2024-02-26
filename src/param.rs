@@ -1,6 +1,6 @@
 //! Parameter types for Bluetooth HCI command and event packets.
 
-use crate::{AsHciBytes, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{AsHciBytes, ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
 
 mod cmd_mask;
 mod event_masks;
@@ -65,6 +65,15 @@ param!(struct BdAddr([u8; 6]));
 impl BdAddr {
     pub fn new(val: [u8; 6]) -> Self {
         Self(val)
+    }
+}
+
+unsafe impl ByteAlignedValue for BdAddr {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de BdAddr {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <BdAddr as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 
@@ -143,6 +152,15 @@ unsafe impl FixedSizeValue for IsoDuration {
     #[inline(always)]
     fn is_valid(_data: &[u8]) -> bool {
         true
+    }
+}
+
+unsafe impl ByteAlignedValue for IsoDuration {}
+
+impl<'de> FromHciBytes<'de> for &'de IsoDuration {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <IsoDuration as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 
@@ -227,6 +245,15 @@ impl CoreSpecificationVersion {
     pub const VERSION_5_2: CoreSpecificationVersion = CoreSpecificationVersion(0x0B);
     pub const VERSION_5_3: CoreSpecificationVersion = CoreSpecificationVersion(0x0C);
     pub const VERSION_5_4: CoreSpecificationVersion = CoreSpecificationVersion(0x0D);
+}
+
+unsafe impl ByteAlignedValue for CoreSpecificationVersion {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de CoreSpecificationVersion {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <CoreSpecificationVersion as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
 }
 
 param! {

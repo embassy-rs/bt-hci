@@ -1,10 +1,8 @@
-use crate::FixedSizeValue;
-
 macro_rules! impl_param_int {
     ($($ty:ty),+) => {
         $(
             #[automatically_derived]
-            unsafe impl FixedSizeValue for $ty {
+            unsafe impl $crate::FixedSizeValue for $ty {
                 #[inline(always)]
                 fn is_valid(data: &[u8]) -> bool {
                     true
@@ -17,6 +15,23 @@ macro_rules! impl_param_int {
 const _IS_LITTLE_ENDIAN: [u8; 0] = [0; (u32::from_le_bytes(0x01020304u32.to_ne_bytes()) != 0x01020304u32) as usize];
 
 impl_param_int!(u8, i8, u16, i16, u32, u64, u128);
+
+unsafe impl crate::ByteAlignedValue for u8 {}
+unsafe impl crate::ByteAlignedValue for i8 {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de u8 {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <u8 as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
+
+impl<'de> crate::FromHciBytes<'de> for &'de i8 {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <i8 as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
 
 #[macro_export]
 macro_rules! param {
@@ -78,6 +93,15 @@ macro_rules! param {
                 $(
                     && <$ty as $crate::FixedSizeValue>::is_valid(&data[core::mem::offset_of!(Self, $field)..])
                 )*
+            }
+        }
+
+        unsafe impl $crate::ByteAlignedValue for $name {}
+
+        impl<'de> $crate::FromHciBytes<'de> for &'de $name {
+            #[inline(always)]
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
+                <$name as $crate::ByteAlignedValue>::ref_from_hci_bytes(data)
             }
         }
     };
@@ -155,6 +179,15 @@ macro_rules! param {
                 $(data[0] == $value ||)* false
             }
         }
+
+        unsafe impl $crate::ByteAlignedValue for $name {}
+
+        impl<'de> $crate::FromHciBytes<'de> for &'de $name {
+            #[inline(always)]
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
+                <$name as $crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+            }
+        }
     };
 
     (
@@ -193,6 +226,15 @@ macro_rules! param {
             #[inline(always)]
             fn is_valid(_data: &[u8]) -> bool {
                 true
+            }
+        }
+
+        unsafe impl $crate::ByteAlignedValue for $name {}
+
+        impl<'de> $crate::FromHciBytes<'de> for &'de $name {
+            #[inline(always)]
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
+                <$name as $crate::ByteAlignedValue>::ref_from_hci_bytes(data)
             }
         }
     };
@@ -237,6 +279,15 @@ macro_rules! param {
             #[inline(always)]
             fn is_valid(_data: &[u8]) -> bool {
                 true
+            }
+        }
+
+        unsafe impl $crate::ByteAlignedValue for $name {}
+
+        impl<'de> $crate::FromHciBytes<'de> for &'de $name {
+            #[inline(always)]
+            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
+                <$name as $crate::ByteAlignedValue>::ref_from_hci_bytes(data)
             }
         }
     };

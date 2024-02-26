@@ -93,6 +93,23 @@ pub unsafe trait FixedSizeValue: Copy {
     fn is_valid(data: &[u8]) -> bool;
 }
 
+/// Marker trait for `FixedSizeValue`s that have byte alignment.
+///
+/// # Safety
+/// - Must have `core::mem::align_of::<T>() == 1`
+pub unsafe trait ByteAlignedValue: FixedSizeValue {
+    fn ref_from_hci_bytes(data: &[u8]) -> Result<(&Self, &[u8]), FromHciBytesError> {
+        if data.len() < core::mem::size_of::<Self>() {
+            Err(FromHciBytesError::InvalidSize)
+        } else if !Self::is_valid(data) {
+            Err(FromHciBytesError::InvalidValue)
+        } else {
+            let (data, rest) = data.split_at(core::mem::size_of::<Self>());
+            Ok((unsafe { &*(data.as_ptr() as *const Self) }, rest))
+        }
+    }
+}
+
 impl<T: FixedSizeValue> AsHciBytes for T {
     fn as_hci_bytes(&self) -> &[u8] {
         unsafe { core::slice::from_raw_parts(self as *const _ as *const u8, core::mem::size_of::<Self>()) }
@@ -109,6 +126,31 @@ impl<'de, T: FixedSizeValue> FromHciBytes<'de> for T {
             let (data, rest) = data.split_at(core::mem::size_of::<Self>());
             Ok((unsafe { core::ptr::read_unaligned(data.as_ptr() as *const Self) }, rest))
         }
+    }
+}
+
+impl<'de, T: ByteAlignedValue> FromHciBytes<'de> for &'de [T] {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        let Some((len, data)) = data.split_first() else {
+            return Err(FromHciBytesError::InvalidSize);
+        };
+
+        let len = usize::from(*len);
+        let byte_len = len * core::mem::size_of::<T>();
+        if byte_len > data.len() {
+            return Err(FromHciBytesError::InvalidSize);
+        }
+
+        let (data, rest) = data.split_at(byte_len);
+
+        if !data.chunks_exact(core::mem::size_of::<T>()).all(|x| T::is_valid(x)) {
+            return Err(FromHciBytesError::InvalidValue);
+        }
+
+        Ok((
+            unsafe { core::slice::from_raw_parts(data.as_ptr() as *const T, len) },
+            rest,
+        ))
     }
 }
 

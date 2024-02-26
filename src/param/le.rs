@@ -1,7 +1,7 @@
 use core::iter::FusedIterator;
 
 use super::{param, param_slice, BdAddr, ConnHandle, Duration, RemainingBytes};
-use crate::{FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{ByteAlignedValue, FromHciBytes, FromHciBytesError, WriteHci};
 
 param!(struct AddrKind(u8));
 
@@ -11,6 +11,15 @@ impl AddrKind {
     pub const RESOLVABLE_PRIVATE_OR_PUBLIC: AddrKind = AddrKind(2);
     pub const RESOLVABLE_PRIVATE_OR_RANDOM: AddrKind = AddrKind(3);
     pub const ANONYMOUS_ADV: AddrKind = AddrKind(0xff);
+}
+
+unsafe impl ByteAlignedValue for AddrKind {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de AddrKind {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <AddrKind as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
 }
 
 param! {
@@ -41,6 +50,15 @@ impl ChannelMap {
         let byte = usize::from(channel / 8);
         let bit = channel % 8;
         self.0[byte] = (self.0[byte] & !(1 << bit)) | (u8::from(bad) << bit);
+    }
+}
+
+unsafe impl ByteAlignedValue for ChannelMap {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de ChannelMap {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <ChannelMap as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 
@@ -188,6 +206,15 @@ impl<T: WriteHci> WriteHci for PhyParams<T> {
 
 param!(struct AdvHandle(u8));
 
+unsafe impl ByteAlignedValue for AdvHandle {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de AdvHandle {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <AdvHandle as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
+
 param! {
     bitfield AdvEventProps[1] {
         (0, connectable_adv, set_connectable_adv);
@@ -221,27 +248,6 @@ param! {
 }
 
 param_slice!(&'a [AdvSet]);
-
-impl<'a> FromHciBytes<'a> for &'a [AdvSet] {
-    fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
-        let Some((len, data)) = data.split_first() else {
-            return Err(FromHciBytesError::InvalidSize);
-        };
-
-        let len = usize::from(*len);
-        let byte_len = len * core::mem::size_of::<AdvSet>();
-        if byte_len > data.len() {
-            return Err(FromHciBytesError::InvalidSize);
-        }
-
-        let (data, rest) = data.split_at(byte_len);
-
-        Ok((
-            unsafe { core::slice::from_raw_parts(data.as_ptr() as *const AdvSet, len) },
-            rest,
-        ))
-    }
-}
 
 param! {
     bitfield PeriodicAdvProps[2] {

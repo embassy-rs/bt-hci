@@ -1,4 +1,4 @@
-use crate::{FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
 
 unsafe impl FixedSizeValue for () {
     #[inline(always)]
@@ -7,10 +7,28 @@ unsafe impl FixedSizeValue for () {
     }
 }
 
+unsafe impl ByteAlignedValue for () {}
+
+impl<'de> FromHciBytes<'de> for &'static () {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        Ok((&(), data))
+    }
+}
+
 unsafe impl FixedSizeValue for bool {
     #[inline(always)]
     fn is_valid(data: &[u8]) -> bool {
         data.len() == 1 && data[0] < 2
+    }
+}
+
+unsafe impl ByteAlignedValue for bool {}
+
+impl<'de> FromHciBytes<'de> for &'de bool {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <bool as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 
@@ -33,26 +51,19 @@ impl<'a> WriteHci for &'a [u8] {
     }
 }
 
-impl<'de> FromHciBytes<'de> for &'de [u8] {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        match data.split_first() {
-            Some((&len, data)) => {
-                let len = usize::from(len);
-                if data.len() >= len {
-                    Ok(data.split_at(len))
-                } else {
-                    Err(FromHciBytesError::InvalidSize)
-                }
-            }
-            None => Err(FromHciBytesError::InvalidSize),
-        }
-    }
-}
-
-unsafe impl<const N: usize> FixedSizeValue for [u8; N] {
+unsafe impl<T: FixedSizeValue, const N: usize> FixedSizeValue for [T; N] {
     #[inline(always)]
     fn is_valid(_data: &[u8]) -> bool {
         true
+    }
+}
+
+unsafe impl<T: ByteAlignedValue, const N: usize> ByteAlignedValue for [T; N] {}
+
+impl<'de, T: ByteAlignedValue, const N: usize> FromHciBytes<'de> for &'de [T; N] {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <[T; N] as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 

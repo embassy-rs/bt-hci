@@ -59,6 +59,8 @@ cmd! {
 
 cmd! {
     /// Bluetooth Core Specification Vol 4, Part E, §7.3.40
+    ///
+    /// *Note:* This command only returns a [`CommandComplete`](crate::event::CommandComplete) event on error. No event is generated on success.
     HostNumberOfCompletedPackets(CONTROL_BASEBAND, 0x0035)  {
         Params<'a> = &'a [ConnHandleCompletedPackets];
         Return = ();

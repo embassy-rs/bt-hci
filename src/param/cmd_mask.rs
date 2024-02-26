@@ -1,4 +1,4 @@
-use crate::FixedSizeValue;
+use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes};
 
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -21,6 +21,15 @@ unsafe impl FixedSizeValue for CmdMask {
     #[inline(always)]
     fn is_valid(_data: &[u8]) -> bool {
         true
+    }
+}
+
+unsafe impl ByteAlignedValue for CmdMask {}
+
+impl<'de> FromHciBytes<'de> for &'de CmdMask {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <CmdMask as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 
