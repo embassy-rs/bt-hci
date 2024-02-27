@@ -304,7 +304,7 @@ impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
 }
 
 pub trait Controller {
-    type Error;
+    type Error: core::fmt::Debug;
 
     fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
