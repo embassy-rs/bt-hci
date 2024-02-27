@@ -198,6 +198,7 @@ impl WriteHci for PacketKind {
     }
 }
 
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ControllerToHostPacket<'a> {
     Acl(data::AclPacket<'a>),
     Sync(data::SyncPacket<'a>),
