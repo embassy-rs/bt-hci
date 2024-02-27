@@ -272,12 +272,12 @@ impl<'a> SyncPacket<'a> {
     /// Create a `SyncPacket` from `header` and `data`
     pub fn from_header_hci_bytes(header: SyncPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
         let data_len = usize::from(header.data_len);
-        if data.len() != data_len {
+        if data.len() < data_len {
             Err(FromHciBytesError::InvalidSize)
         } else {
             Ok(Self {
                 handle: header.handle,
-                data,
+                data: &data[..data_len],
             })
         }
     }
@@ -531,12 +531,12 @@ impl<'a> IsoPacket<'a> {
     /// Create an `IsoPacket` from `header` and `data`
     pub fn from_header_hci_bytes(header: IsoPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
         let data_load_len = usize::from(header.data_load_len);
-        if data.len() != data_load_len {
+        if data.len() < data_load_len {
             Err(FromHciBytesError::InvalidSize)
         } else {
             let (data_load_header, data) = match header.boundary_flag() {
                 IsoPacketBoundary::FirstFragment | IsoPacketBoundary::Complete => {
-                    IsoDataLoadHeader::from_hci_bytes(header.has_timestamp(), data).map(|(x, y)| (Some(x), y))?
+                    IsoDataLoadHeader::from_hci_bytes(header.has_timestamp(), &data[..data_load_len]).map(|(x, y)| (Some(x), y))?
                 }
                 IsoPacketBoundary::ContinuationFragment | IsoPacketBoundary::LastFragment => (None, data),
             };
