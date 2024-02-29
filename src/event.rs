@@ -61,12 +61,18 @@ macro_rules! events {
         }
 
         impl<'a> Event<'a> {
-            fn from_header_hci_bytes(header: EventPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
-                let data = &data[..header.params_len as usize];
+            fn from_header_hci_bytes(header: EventPacketHeader, data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
                 match header.code {
-                    $($code => $name::from_hci_bytes_complete(data).map(Self::$name),)+
-                    0x3e => LeEvent::from_hci_bytes_complete(data).map(Self::Le),
-                    _ => Ok(Self::Unknown { code: header.code, params: data }),
+                    $($code => $name::from_hci_bytes(data).map(|(x, rest)| (Self::$name(x), rest)),)+
+                    0x3e => LeEvent::from_hci_bytes(data).map(|(x, rest)| (Self::Le(x), rest)),
+                    _ => {
+                        if data.len() < usize::from(header.params_len) {
+                            Err(FromHciBytesError::InvalidSize)
+                        } else {
+                            let (data, rest) = data.split_at(usize::from(header.params_len));
+                            Ok((Self::Unknown { code: header.code, params: data }, rest))
+                        }
+                    }
                 }
             }
         }
@@ -186,7 +192,7 @@ events! {
 impl<'de> FromHciBytes<'de> for Event<'de> {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
         let (header, data) = EventPacketHeader::from_hci_bytes(data)?;
-        Self::from_header_hci_bytes(header, data).map(|x| (x, &[] as &[u8]))
+        Self::from_header_hci_bytes(header, data)
     }
 }
 
@@ -201,7 +207,8 @@ impl<'de> ReadHci<'de> for Event<'de> {
         } else {
             let (buf, _) = buf.split_at_mut(params_len);
             reader.read_exact(buf)?;
-            Self::from_header_hci_bytes(header, buf).map_err(Into::into)
+            let (pkt, _) = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
         }
     }
 
@@ -218,7 +225,8 @@ impl<'de> ReadHci<'de> for Event<'de> {
         } else {
             let (buf, _) = buf.split_at_mut(params_len);
             reader.read_exact(buf).await?;
-            Self::from_header_hci_bytes(header, buf).map_err(Into::into)
+            let (pkt, _) = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
         }
     }
 }

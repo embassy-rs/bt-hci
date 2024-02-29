@@ -88,23 +88,27 @@ pub struct AclPacket<'a> {
 
 impl<'a> AclPacket<'a> {
     pub fn new(handle: ConnHandle, pbf: AclPacketBoundary, bf: AclBroadcastFlag, data: &'a [u8]) -> Self {
-        let handle: u16 = handle.into_inner() | ((pbf as u16) << 12)| ((bf as u16) << 14);
-        Self {
-            handle,
-            data
-        }
+        let handle: u16 = handle.into_inner() | ((pbf as u16) << 12) | ((bf as u16) << 14);
+        Self { handle, data }
     }
 
     /// Create an `AclPacket` from `header` and `data`
-    pub fn from_header_hci_bytes(header: AclPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
+    pub fn from_header_hci_bytes(
+        header: AclPacketHeader,
+        data: &'a [u8],
+    ) -> Result<(Self, &'a [u8]), FromHciBytesError> {
         let data_len = usize::from(header.data_len);
         if data.len() < data_len {
             Err(FromHciBytesError::InvalidSize)
         } else {
-            Ok(Self {
-                handle: header.handle,
-                data: &data[..data_len],
-            })
+            let (data, rest) = data.split_at(data_len);
+            Ok((
+                Self {
+                    handle: header.handle,
+                    data: &data[..data_len],
+                },
+                rest,
+            ))
         }
     }
 
@@ -144,7 +148,7 @@ impl<'a> AclPacket<'a> {
 impl<'de> FromHciBytes<'de> for AclPacket<'de> {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
         let (header, data) = AclPacketHeader::from_hci_bytes(data)?;
-        Self::from_header_hci_bytes(header, data).map(|x| (x, &[] as &[u8]))
+        Self::from_header_hci_bytes(header, data)
     }
 }
 
@@ -159,7 +163,8 @@ impl<'de> ReadHci<'de> for AclPacket<'de> {
         } else {
             let (buf, _) = buf.split_at_mut(data_len);
             reader.read_exact(buf)?;
-            Self::from_header_hci_bytes(header, buf).map_err(Into::into)
+            let (pkt, _) = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
         }
     }
 
@@ -176,7 +181,8 @@ impl<'de> ReadHci<'de> for AclPacket<'de> {
         } else {
             let (buf, _) = buf.split_at_mut(data_len);
             reader.read_exact(buf).await?;
-            Self::from_header_hci_bytes(header, buf).map_err(Into::into)
+            let (pkt, _) = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
         }
     }
 }
@@ -278,15 +284,22 @@ pub struct SyncPacket<'a> {
 
 impl<'a> SyncPacket<'a> {
     /// Create a `SyncPacket` from `header` and `data`
-    pub fn from_header_hci_bytes(header: SyncPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
+    pub fn from_header_hci_bytes(
+        header: SyncPacketHeader,
+        data: &'a [u8],
+    ) -> Result<(Self, &'a [u8]), FromHciBytesError> {
         let data_len = usize::from(header.data_len);
         if data.len() < data_len {
             Err(FromHciBytesError::InvalidSize)
         } else {
-            Ok(Self {
-                handle: header.handle,
-                data: &data[..data_len],
-            })
+            let (data, rest) = data.split_at(data_len);
+            Ok((
+                Self {
+                    handle: header.handle,
+                    data: &data[..data_len],
+                },
+                rest,
+            ))
         }
     }
 
@@ -315,7 +328,7 @@ impl<'a> SyncPacket<'a> {
 impl<'de> FromHciBytes<'de> for SyncPacket<'de> {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
         let (header, data) = SyncPacketHeader::from_hci_bytes(data)?;
-        Self::from_header_hci_bytes(header, data).map(|x| (x, &[] as &[u8]))
+        Self::from_header_hci_bytes(header, data)
     }
 }
 
@@ -330,7 +343,8 @@ impl<'de> ReadHci<'de> for SyncPacket<'de> {
         } else {
             let (buf, _) = buf.split_at_mut(data_len);
             reader.read_exact(buf)?;
-            Self::from_header_hci_bytes(header, buf).map_err(Into::into)
+            let (pkt, _) = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
         }
     }
 
@@ -347,7 +361,8 @@ impl<'de> ReadHci<'de> for SyncPacket<'de> {
         } else {
             let (buf, _) = buf.split_at_mut(data_len);
             reader.read_exact(buf).await?;
-            Self::from_header_hci_bytes(header, buf).map_err(Into::into)
+            let (pkt, _) = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
         }
     }
 }
@@ -537,23 +552,31 @@ pub struct IsoPacket<'a> {
 
 impl<'a> IsoPacket<'a> {
     /// Create an `IsoPacket` from `header` and `data`
-    pub fn from_header_hci_bytes(header: IsoPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
+    pub fn from_header_hci_bytes(
+        header: IsoPacketHeader,
+        data: &'a [u8],
+    ) -> Result<(Self, &'a [u8]), FromHciBytesError> {
         let data_load_len = usize::from(header.data_load_len);
         if data.len() < data_load_len {
             Err(FromHciBytesError::InvalidSize)
         } else {
+            let (data, rest) = data.split_at(data_load_len);
             let (data_load_header, data) = match header.boundary_flag() {
                 IsoPacketBoundary::FirstFragment | IsoPacketBoundary::Complete => {
-                    IsoDataLoadHeader::from_hci_bytes(header.has_timestamp(), &data[..data_load_len]).map(|(x, y)| (Some(x), y))?
+                    IsoDataLoadHeader::from_hci_bytes(header.has_timestamp(), &data[..data_load_len])
+                        .map(|(x, y)| (Some(x), y))?
                 }
                 IsoPacketBoundary::ContinuationFragment | IsoPacketBoundary::LastFragment => (None, data),
             };
 
-            Ok(Self {
-                handle: header.handle,
-                data_load_header,
-                data,
-            })
+            Ok((
+                Self {
+                    handle: header.handle,
+                    data_load_header,
+                    data,
+                },
+                rest,
+            ))
         }
     }
 
@@ -592,7 +615,7 @@ impl<'a> IsoPacket<'a> {
 impl<'de> FromHciBytes<'de> for IsoPacket<'de> {
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
         let (header, data) = IsoPacketHeader::from_hci_bytes(data)?;
-        Self::from_header_hci_bytes(header, data).map(|x| (x, &[] as &[u8]))
+        Self::from_header_hci_bytes(header, data)
     }
 }
 
@@ -607,7 +630,8 @@ impl<'de> ReadHci<'de> for IsoPacket<'de> {
         } else {
             let (buf, _) = buf.split_at_mut(data_load_len);
             reader.read_exact(buf)?;
-            Self::from_header_hci_bytes(header, buf).map_err(Into::into)
+            let (pkt, _) = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
         }
     }
 
@@ -624,7 +648,8 @@ impl<'de> ReadHci<'de> for IsoPacket<'de> {
         } else {
             let (buf, _) = buf.split_at_mut(data_load_len);
             reader.read_exact(buf).await?;
-            Self::from_header_hci_bytes(header, buf).map_err(Into::into)
+            let (pkt, _) = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
         }
     }
 }
