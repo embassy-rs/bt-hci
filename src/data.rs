@@ -87,6 +87,14 @@ pub struct AclPacket<'a> {
 }
 
 impl<'a> AclPacket<'a> {
+    pub fn new(handle: ConnHandle, pbf: AclPacketBoundary, bf: AclBroadcastFlag, data: &'a [u8]) -> Self {
+        let handle: u16 = handle.into_inner() | ((pbf as u16) << 12)| ((bf as u16) << 14);
+        Self {
+            handle,
+            data
+        }
+    }
+
     /// Create an `AclPacket` from `header` and `data`
     pub fn from_header_hci_bytes(header: AclPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
         let data_len = usize::from(header.data_len);
