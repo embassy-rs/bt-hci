@@ -62,6 +62,7 @@ macro_rules! events {
 
         impl<'a> Event<'a> {
             fn from_header_hci_bytes(header: EventPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
+                let data = &data[..header.params_len as usize];
                 match header.code {
                     $($code => $name::from_hci_bytes_complete(data).map(Self::$name),)+
                     0x3e => LeEvent::from_hci_bytes_complete(data).map(Self::Le),

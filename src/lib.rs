@@ -346,7 +346,10 @@ impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
 }
 
 pub trait Controller {
+    #[cfg(not(feature = "defmt"))]
     type Error: core::fmt::Debug;
+    #[cfg(feature = "defmt")]
+    type Error: core::fmt::Debug + defmt::Format;
 
     fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
