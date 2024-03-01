@@ -142,7 +142,7 @@ impl<'a> AclPacket<'a> {
     }
 
     /// The data of the packet
-    pub fn data(&self) -> &[u8] {
+    pub fn data(&self) -> &'a [u8] {
         self.data
     }
 }
