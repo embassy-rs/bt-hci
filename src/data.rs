@@ -8,16 +8,17 @@ use crate::{FromHciBytes, FromHciBytesError, HostToControllerPacket, PacketKind,
 /// See Bluetooth Core Specification Vol 4, Part E, §5.4.2
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(u8)]
 pub enum AclPacketBoundary {
     /// First non-automatically-flushable packet of a higher layer message (start of a non-automatically-flushable
     /// L2CAP PDU) from Host to Controller.
-    FirstNonFlushable,
+    FirstNonFlushable = 0x00,
     /// Continuing fragment of a higher layer message
-    Continuing,
+    Continuing = 0x01,
     /// First automatically flushable packet of a higher layer message (start of an automatically-flushable L2CAP PDU).
-    FirstFlushable,
+    FirstFlushable = 0x02,
     /// A complete L2CAP PDU. Automatically flushable.
-    Complete,
+    Complete = 0x03,
 }
 
 /// HCI ACL Data packet `Broadcast_Flag`
@@ -25,13 +26,14 @@ pub enum AclPacketBoundary {
 /// See Bluetooth Core Specification Vol 4, Part E, §5.4.2
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(u8)]
 pub enum AclBroadcastFlag {
     /// Point-to-point (ACL-U or LE-U)
-    PointToPoint,
+    PointToPoint = 0x00,
     /// BR/EDR broadcast (APB-U)
-    BrEdrBroadcast,
+    BrEdrBroadcast = 0x01,
     /// Reserved for future use.
-    Reserved,
+    Reserved = 0x02,
 }
 
 param! {
@@ -140,7 +142,7 @@ impl<'a> AclPacket<'a> {
     }
 
     /// The data of the packet
-    pub fn data(&self) -> &[u8] {
+    pub fn data(&self) -> &'a [u8] {
         self.data
     }
 }
