@@ -71,13 +71,13 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
         slots[idx] = CommandSlot::Empty;
     }
 
-    pub fn acquire_slot(&self, opcode: cmd::Opcode, handle: u16) -> Option<&Signal<NoopRawMutex, CommandResponse>> {
+    pub fn acquire_slot(&self, opcode: cmd::Opcode, handle: u16) -> Option<(&Signal<NoopRawMutex, CommandResponse>, usize)> {
         let mut slots = self.slots.borrow_mut();
         for (idx, slot) in slots.iter_mut().enumerate() {
             match slot {
                 CommandSlot::Empty => {
                     *slot = CommandSlot::Pending { opcode: opcode.to_raw(), handle };
-                    return Some(&self.signals[idx])
+                    return Some((&self.signals[idx], idx))
                 }
                 _ => {}
             }
@@ -181,7 +181,10 @@ where
 {
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, CmdError<Self::Error>>> {
         async {
-            let slot = self.slots.acquire_slot(C::OPCODE, 0).ok_or(CmdError::Param(param::Error::CONN_REJECTED_LIMITED_RESOURCES))?;
+            let (slot, idx) = self.slots.acquire_slot(C::OPCODE, 0).ok_or(CmdError::Param(param::Error::CONN_REJECTED_LIMITED_RESOURCES))?;
+            let _d = OnDrop::new(|| {
+                self.slots.release_slot(idx);
+            });
             let mut io = self.io.lock().await;
             WithIndicator::new(cmd).write_hci_async(io.deref_mut()).await.map_err(CmdError::Controller)?;
             let result = slot.wait().await;
@@ -203,5 +206,61 @@ where
             WithIndicator::new(cmd).write_hci_async(io.deref_mut()).await.map_err(CmdError::Controller)?;
             Ok(())
         }
+    }
+}
+
+use core::mem;
+use core::mem::MaybeUninit;
+
+/// A type to delay the drop handler invocation.
+#[must_use = "to delay the drop handler invocation to the end of the scope"]
+pub struct OnDrop<F: FnOnce()> {
+    f: MaybeUninit<F>,
+}
+
+impl<F: FnOnce()> OnDrop<F> {
+    /// Create a new instance.
+    pub fn new(f: F) -> Self {
+        Self { f: MaybeUninit::new(f) }
+    }
+
+    /// Prevent drop handler from running.
+    pub fn defuse(self) {
+        mem::forget(self)
+    }
+}
+
+impl<F: FnOnce()> Drop for OnDrop<F> {
+    fn drop(&mut self) {
+        unsafe { self.f.as_ptr().read()() }
+    }
+}
+
+/// An explosive ordinance that panics if it is improperly disposed of.
+///
+/// This is to forbid dropping futures, when there is absolutely no other choice.
+///
+/// To correctly dispose of this device, call the [defuse](struct.DropBomb.html#method.defuse)
+/// method before this object is dropped.
+#[must_use = "to delay the drop bomb invokation to the end of the scope"]
+pub struct DropBomb {
+    _private: (),
+}
+
+impl DropBomb {
+    /// Create a new instance.
+    pub fn new() -> Self {
+        Self { _private: () }
+    }
+
+    /// Defuses the bomb, rendering it safe to drop.
+    pub fn defuse(self) {
+        mem::forget(self)
+    }
+}
+
+impl Drop for DropBomb {
+    fn drop(&mut self) {
+        panic!("boom")
     }
 }
