@@ -1,6 +1,6 @@
 #![no_std]
 
-use core::future::Future;
+use core::{future::Future, task::Waker};
 
 use embedded_io::ReadExactError;
 
@@ -358,12 +358,26 @@ pub trait Controller {
     fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
 }
 
-pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
+pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized> {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, param::Error>>;
 }
 
-pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
+pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized> {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), param::Error>>;
+}
+
+
+pub trait Driver {
+    #[cfg(not(feature = "defmt"))]
+    type Error: core::fmt::Debug;
+    #[cfg(feature = "defmt")]
+    type Error: core::fmt::Debug + defmt::Format;
+
+    fn try_write(&mut self, kind: PacketKind, packet: &[u8]) -> Result<Option<()>, Self::Error>;
+    fn try_read(&mut self, buf: &mut [u8]) -> Result<Option<PacketKind>, Self::Error>;
+
+    fn register_write_waker(&mut self, waker: &Waker);
+    fn register_read_waker(&mut self, waker: &Waker);
 }
