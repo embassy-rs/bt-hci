@@ -1,7 +1,8 @@
 #![no_std]
 
-use core::future::Future;
+use core::{future::{Future, poll_fn}, task::{Waker, Poll}, cell::RefCell};
 
+use cmd::Cmd;
 use embedded_io::ReadExactError;
 
 mod fmt;
@@ -345,22 +346,59 @@ impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
     }
 }
 
-pub trait Controller {
+pub trait Driver {
     #[cfg(not(feature = "defmt"))]
     type Error: core::fmt::Debug;
     #[cfg(feature = "defmt")]
     type Error: core::fmt::Debug + defmt::Format;
 
-    fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
-    fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
-    fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>>;
+    fn try_write(&mut self, kind: PacketKind, packet: &[u8]) -> Result<Option<()>, Self::Error>;
+    fn try_read(&mut self, buf: &mut [u8]) -> Result<Option<PacketKind>, Self::Error>;
 
-    fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
+    fn register_write_waker(&mut self, waker: Waker);
+    fn register_read_waker(&mut self, waker: Waker);
+}
+
+// Allows drivers that don't need to serialize commands to be implemented efficiently.
+pub trait ControllerCmd<C: cmd::Cmd + ?Sized> {
+    /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
+    fn exec(&mut self, cmd: &C, rx: &mut [u8]) -> impl Future<Output = Result<C::Return, param::Error>>;
+}
+
+pub struct Controller<D: Driver> {
+    driver: D,
+}
+
+impl<D: Driver> Controller<D> {
+    pub async fn write_acl_data(&mut self, packet: &data::AclPacket<'_>) -> Result<(), D::Error> {
+        poll_fn(|cx| {
+            match self.driver.try_write(PacketKind::AclData, packet) {
+                Ok(Some(_)) => Poll::Ready(Ok(())),
+                Ok(None) => {
+                    self.driver.register_write_waker(cx.waker());
+                    Poll::Pending
+                }
+                Err(e) => Poll::Ready(Err(e))
+            }
+        }).await
+    }
+
+    pub async fn write_sync_data(&mut self, packet: &data::SyncPacket<'_>) -> Result<(), D::Error> {
+        todo!()
+    }
+
+    pub async fn write_iso_data(&mut self, packet: &data::IsoPacket<'_>) -> Result<(), D::Error> {
+        todo!()
+    }
+
+    pub async fn read<'m>(&mut self, buf: &'m mut [u8]) -> Result<ControllerToHostPacket<'m>, D::Error> {
+        todo!()
+    }
 }
 
 pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, param::Error>>;
+    fn exec(&self, cmd: &C) -> impl Future<Output = Result<Option<C::Return>, param::Error>>;
 }
 
 pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {

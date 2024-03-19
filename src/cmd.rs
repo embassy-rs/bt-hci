@@ -121,13 +121,6 @@ pub trait SyncCmd: Cmd {
     ///
     /// See Bluetooth Core Specification Vol 4, Part E, §4.5
     fn return_handle(_data: &[u8]) -> Result<Self::Handle, crate::FromHciBytesError>;
-
-    fn exec<C: ControllerCmdSync<Self>>(
-        &self,
-        controller: &C,
-    ) -> impl Future<Output = Result<Self::Return, param::Error>> {
-        controller.exec(self)
-    }
 }
 
 #[macro_export]
