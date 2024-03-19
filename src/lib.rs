@@ -359,6 +359,8 @@ pub trait Controller {
     fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
 }
 
+#[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum CmdError<E> {
     Param(param::Error),
     Controller(E),
