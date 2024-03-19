@@ -6,7 +6,8 @@ use core::future::Future;
 
 use crate::param::{self, param};
 use crate::{
-    ControllerCmdAsync, ControllerCmdSync, FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci,
+    CmdError, Controller, ControllerCmdAsync, ControllerCmdSync, FixedSizeValue, FromHciBytes, HostToControllerPacket,
+    PacketKind, WriteHci,
 };
 
 pub mod controller_baseband;
@@ -98,7 +99,10 @@ impl<T: Cmd> HostToControllerPacket for T {
 /// A marker trait for objects representing HCI Commands that generate [`CommandStatus`](crate::event::CommandStatus)
 /// events
 pub trait AsyncCmd: Cmd {
-    fn exec<C: ControllerCmdAsync<Self>>(&self, controller: &C) -> impl Future<Output = Result<(), param::Error>> {
+    fn exec<C: ControllerCmdAsync<Self>>(
+        &self,
+        controller: &C,
+    ) -> impl Future<Output = Result<(), CmdError<<C as Controller>::Error>>> {
         controller.exec(self)
     }
 }
@@ -125,7 +129,7 @@ pub trait SyncCmd: Cmd {
     fn exec<C: ControllerCmdSync<Self>>(
         &self,
         controller: &C,
-    ) -> impl Future<Output = Result<Self::Return, param::Error>> {
+    ) -> impl Future<Output = Result<Self::Return, CmdError<<C as Controller>::Error>>> {
         controller.exec(self)
     }
 }

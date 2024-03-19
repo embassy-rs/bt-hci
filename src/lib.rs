@@ -10,6 +10,7 @@ pub mod cmd;
 pub mod data;
 pub mod event;
 pub mod param;
+pub mod serial;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -358,12 +359,17 @@ pub trait Controller {
     fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
 }
 
+pub enum CmdError<E> {
+    Param(param::Error),
+    Controller(E),
+}
+
 pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, param::Error>>;
+    fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, CmdError<Self::Error>>>;
 }
 
 pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), param::Error>>;
+    fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), CmdError<Self::Error>>>;
 }
