@@ -1,4 +1,3 @@
-use crate::cmd::Opcode;
 use crate::param::RemainingBytes;
 use crate::param::Status;
 use crate::FromHciBytes;
