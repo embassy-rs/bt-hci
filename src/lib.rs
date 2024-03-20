@@ -8,6 +8,7 @@ mod fmt;
 
 pub mod cmd;
 pub mod data;
+pub mod driver;
 pub mod event;
 pub mod param;
 pub mod serial;
@@ -42,6 +43,17 @@ pub enum ReadHciError<E: embedded_io::Error> {
     BufferTooSmall,
     InvalidValue,
     Read(ReadExactError<E>),
+}
+
+impl<E: embedded_io::Error> embedded_io::Error for ReadHciError<E> {
+    fn kind(&self) -> embedded_io::ErrorKind {
+        match self {
+            Self::BufferTooSmall => embedded_io::ErrorKind::OutOfMemory,
+            Self::InvalidValue => embedded_io::ErrorKind::InvalidInput,
+            Self::Read(ReadExactError::Other(e)) => e.kind(),
+            Self::Read(ReadExactError::UnexpectedEof) => embedded_io::ErrorKind::BrokenPipe,
+        }
+    }
 }
 
 impl<E: embedded_io::Error> From<ReadExactError<E>> for ReadHciError<E> {
