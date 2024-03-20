@@ -182,7 +182,10 @@ where
                     let mut io = self.reader.lock().await;
                     let value: ControllerToHostPacket<'a> = ControllerToHostPacket::read_hci_async(io.deref_mut(), buf)
                         .await
-                        .map_err(|_| embedded_io::ErrorKind::Other)?;
+                        .map_err(|e| {
+                            warn!("Error reading from controller: {:?}", e);
+                            embedded_io::ErrorKind::Other
+                        })?;
 
                     match value {
                         ControllerToHostPacket::Event(ref event) => match &event {
