@@ -4,7 +4,7 @@
 
 use core::future::Future;
 
-use crate::param::{self, param};
+use crate::param::param;
 use crate::{
     CmdError, Controller, ControllerCmdAsync, ControllerCmdSync, FixedSizeValue, FromHciBytes, HostToControllerPacket,
     PacketKind, WriteHci,

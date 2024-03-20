@@ -304,7 +304,7 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
         mut reader: R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
-        let mut kind = [0];
+        let mut kind = [0u8];
         reader.read_exact(&mut kind).await?;
         match PacketKind::from_hci_bytes(&kind)?.0 {
             PacketKind::Cmd => Err(ReadHciError::InvalidValue),
