@@ -360,10 +360,7 @@ impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
 }
 
 pub trait Controller {
-    #[cfg(not(feature = "defmt"))]
-    type Error: core::fmt::Debug;
-    #[cfg(feature = "defmt")]
-    type Error: core::fmt::Debug + defmt::Format;
+    type Error: embedded_io::Error;
 
     fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
@@ -377,6 +374,12 @@ pub trait Controller {
 pub enum CmdError<E> {
     Param(param::Error),
     Controller(E),
+}
+
+impl<E> From<param::Error> for CmdError<E> {
+    fn from(e: param::Error) -> Self {
+        Self::Param(e)
+    }
 }
 
 pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
