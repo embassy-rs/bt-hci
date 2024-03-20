@@ -183,7 +183,10 @@ where
                     let value: ControllerToHostPacket<'a> = ControllerToHostPacket::read_hci_async(io.deref_mut(), buf)
                         .await
                         .map_err(|e| {
+                            #[cfg(not(feature = "defmt"))]
                             warn!("Error reading from controller: {:?}", e);
+                            #[cfg(feature = "defmt")]
+                            warn!("Error reading from controller: {:?}", defmt::Debug2Format(&e));
                             embedded_io::ErrorKind::Other
                         })?;
 
