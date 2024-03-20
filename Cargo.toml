@@ -12,6 +12,7 @@ defmt = ["dep:defmt", "embedded-io/defmt-03", "embedded-io-async/defmt-03"]
 
 [dependencies]
 defmt = { version = "0.3", optional = true }
+log = { version = "0.4", optional = true }
 embedded-io = "0.6.0"
 embedded-io-async = "0.6.0"
 embassy-sync = "0.5"

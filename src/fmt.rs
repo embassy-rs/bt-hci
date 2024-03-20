@@ -1,6 +1,11 @@
 #![macro_use]
 #![allow(unused_macros)]
 
+use core::fmt::{Debug, Display, LowerHex};
+
+#[cfg(all(feature = "defmt", feature = "log"))]
+compile_error!("You may not enable both `defmt` and `log` features.");
+
 macro_rules! assert {
     ($($x:tt)*) => {
         {
@@ -78,14 +83,17 @@ macro_rules! todo {
     };
 }
 
+#[cfg(not(feature = "defmt"))]
 macro_rules! unreachable {
     ($($x:tt)*) => {
-        {
-            #[cfg(not(feature = "defmt"))]
-            ::core::unreachable!($($x)*);
-            #[cfg(feature = "defmt")]
-            ::defmt::unreachable!($($x)*);
-        }
+        ::core::unreachable!($($x)*)
+    };
+}
+
+#[cfg(feature = "defmt")]
+macro_rules! unreachable {
+    ($($x:tt)*) => {
+        ::defmt::unreachable!($($x)*)
     };
 }
 
@@ -96,6 +104,71 @@ macro_rules! panic {
             ::core::panic!($($x)*);
             #[cfg(feature = "defmt")]
             ::defmt::panic!($($x)*);
+        }
+    };
+}
+
+macro_rules! trace {
+    ($s:literal $(, $x:expr)* $(,)?) => {
+        {
+            #[cfg(feature = "log")]
+            ::log::trace!($s $(, $x)*);
+            #[cfg(feature = "defmt")]
+            ::defmt::trace!($s $(, $x)*);
+            #[cfg(not(any(feature = "log", feature="defmt")))]
+            let _ = ($( & $x ),*);
+        }
+    };
+}
+
+macro_rules! debug {
+    ($s:literal $(, $x:expr)* $(,)?) => {
+        {
+            #[cfg(feature = "log")]
+            ::log::debug!($s $(, $x)*);
+            #[cfg(feature = "defmt")]
+            ::defmt::debug!($s $(, $x)*);
+            #[cfg(not(any(feature = "log", feature="defmt")))]
+            let _ = ($( & $x ),*);
+        }
+    };
+}
+
+macro_rules! info {
+    ($s:literal $(, $x:expr)* $(,)?) => {
+        {
+            #[cfg(feature = "log")]
+            ::log::info!($s $(, $x)*);
+            #[cfg(feature = "defmt")]
+            ::defmt::info!($s $(, $x)*);
+            #[cfg(not(any(feature = "log", feature="defmt")))]
+            let _ = ($( & $x ),*);
+        }
+    };
+}
+
+macro_rules! warn {
+    ($s:literal $(, $x:expr)* $(,)?) => {
+        {
+            #[cfg(feature = "log")]
+            ::log::warn!($s $(, $x)*);
+            #[cfg(feature = "defmt")]
+            ::defmt::warn!($s $(, $x)*);
+            #[cfg(not(any(feature = "log", feature="defmt")))]
+            let _ = ($( & $x ),*);
+        }
+    };
+}
+
+macro_rules! error {
+    ($s:literal $(, $x:expr)* $(,)?) => {
+        {
+            #[cfg(feature = "log")]
+            ::log::error!($s $(, $x)*);
+            #[cfg(feature = "defmt")]
+            ::defmt::error!($s $(, $x)*);
+            #[cfg(not(any(feature = "log", feature="defmt")))]
+            let _ = ($( & $x ),*);
         }
     };
 }
@@ -153,5 +226,33 @@ impl<T, E> Try for Result<T, E> {
     #[inline]
     fn into_result(self) -> Self {
         self
+    }
+}
+
+#[allow(unused)]
+pub(crate) struct Bytes<'a>(pub &'a [u8]);
+
+impl<'a> Debug for Bytes<'a> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{:#02x?}", self.0)
+    }
+}
+
+impl<'a> Display for Bytes<'a> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{:#02x?}", self.0)
+    }
+}
+
+impl<'a> LowerHex for Bytes<'a> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{:#02x?}", self.0)
+    }
+}
+
+#[cfg(feature = "defmt")]
+impl<'a> defmt::Format for Bytes<'a> {
+    fn format(&self, fmt: defmt::Formatter) {
+        defmt::write!(fmt, "{:02x}", self.0)
     }
 }
