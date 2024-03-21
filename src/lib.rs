@@ -72,6 +72,8 @@ impl<E: embedded_io::Error> From<FromHciBytesError> for ReadHciError<E> {
 }
 
 pub trait ReadHci<'de>: FromHciBytes<'de> {
+    const MAX_LEN: usize;
+
     fn read_hci<R: embedded_io::Read>(reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>>;
 
     fn read_hci_async<R: embedded_io_async::Read>(
@@ -168,6 +170,8 @@ impl<'de, T: ByteAlignedValue> FromHciBytes<'de> for &'de [T] {
 }
 
 impl<'de, T: FixedSizeValue> ReadHci<'de> for T {
+    const MAX_LEN: usize = core::mem::size_of::<Self>();
+
     fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         if buf.len() < core::mem::size_of::<Self>() {
             Err(ReadHciError::BufferTooSmall)
@@ -300,6 +304,8 @@ impl<'de> FromHciBytes<'de> for ControllerToHostPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
+    const MAX_LEN: usize = 258;
+
     fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut kind = [0];
         reader.read_exact(&mut kind)?;

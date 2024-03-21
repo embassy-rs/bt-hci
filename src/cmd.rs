@@ -107,12 +107,28 @@ pub trait AsyncCmd: Cmd {
     }
 }
 
+pub trait CmdReturnBuf: Copy + AsRef<[u8]> + AsMut<[u8]> {
+    const LEN: usize;
+
+    fn new() -> Self;
+}
+
+impl<const N: usize> CmdReturnBuf for [u8; N] {
+    const LEN: usize = N;
+
+    #[inline(always)]
+    fn new() -> Self {
+        [0; N]
+    }
+}
+
 /// A trait for objects representing HCI Commands that generate [`CommandComplete`](crate::event::CommandComplete)
 /// events
 pub trait SyncCmd: Cmd {
     /// The type of the parameters for the [`CommandComplete`](crate::event::CommandComplete) event
     type Return: for<'a> FromHciBytes<'a> + Copy;
     type Handle: FixedSizeValue;
+    type ReturnBuf: CmdReturnBuf;
 
     fn param_handle(&self) -> Self::Handle;
 
@@ -410,6 +426,7 @@ macro_rules! cmd {
         impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
             type Return = $ret;
             type Handle = $handle;
+            type ReturnBuf = [u8; <$ret as $crate::ReadHci>::MAX_LEN];
 
             fn param_handle(&self) -> Self::Handle {
                 self.handle()
@@ -429,6 +446,7 @@ macro_rules! cmd {
         impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
             type Return = $ret;
             type Handle = ();
+            type ReturnBuf = [u8; <$ret as $crate::ReadHci>::MAX_LEN];
 
             fn param_handle(&self) {}
 

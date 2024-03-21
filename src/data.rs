@@ -155,6 +155,8 @@ impl<'de> FromHciBytes<'de> for AclPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for AclPacket<'de> {
+    const MAX_LEN: usize = 255;
+
     fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 4];
         reader.read_exact(&mut header)?;
@@ -335,6 +337,8 @@ impl<'de> FromHciBytes<'de> for SyncPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for SyncPacket<'de> {
+    const MAX_LEN: usize = 258;
+
     fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 3];
         reader.read_exact(&mut header)?;
@@ -622,6 +626,8 @@ impl<'de> FromHciBytes<'de> for IsoPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for IsoPacket<'de> {
+    const MAX_LEN: usize = 255;
+
     fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 4];
         reader.read_exact(&mut header)?;

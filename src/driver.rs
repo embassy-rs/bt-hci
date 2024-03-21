@@ -1,4 +1,4 @@
-use crate::cmd::Cmd;
+use crate::cmd::{Cmd, CmdReturnBuf};
 use crate::param::RemainingBytes;
 use crate::param::Status;
 use crate::FromHciBytes;
@@ -130,11 +130,10 @@ where
 {
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, CmdError<Self::Error>>> {
         async {
-            // TODO: Something more appropriately sized matching the expected return lenght
-            let mut retval: [u8; 255] = [0u8; 255];
+            let mut retval: C::ReturnBuf = C::ReturnBuf::new();
 
             //info!("Executing command with opcode {}", C::OPCODE);
-            let (slot, idx) = self.slots.acquire(C::OPCODE, retval.as_mut_ptr()).await;
+            let (slot, idx) = self.slots.acquire(C::OPCODE, retval.as_mut()).await;
             let _d = OnDrop::new(|| {
                 self.slots.release_slot(idx);
             });
@@ -144,7 +143,7 @@ where
                 .map_err(CmdError::Controller)?;
 
             let result = slot.wait().await;
-            let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval[..result.len]).unwrap();
+            let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
             let e = CommandComplete {
                 num_hci_cmd_pkts: 0,
                 status: result.status,
@@ -165,7 +164,7 @@ where
 {
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), CmdError<Self::Error>>> {
         async {
-            let (slot, idx) = self.slots.acquire(C::OPCODE, core::ptr::null_mut()).await;
+            let (slot, idx) = self.slots.acquire(C::OPCODE, &mut []).await;
             let _d = OnDrop::new(|| {
                 self.slots.release_slot(idx);
             });
@@ -195,7 +194,7 @@ pub struct CommandResponse {
 
 pub enum CommandSlot {
     Empty,
-    Pending { opcode: u16, event: *mut u8 },
+    Pending { opcode: u16, event: *mut [u8] },
 }
 
 impl<const SLOTS: usize> ControllerState<SLOTS> {
@@ -219,7 +218,7 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
                     if !data.is_empty() {
                         assert!(!event.is_null());
                         // Safety: since the slot is in pending, the caller stack will be valid.
-                        unsafe { event.copy_from(data.as_ptr(), data.len()) };
+                        unsafe { (**event)[..data.len()].copy_from_slice(data) };
                     }
                     self.signals[idx].signal(CommandResponse {
                         status,
@@ -250,7 +249,7 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
         slots[idx] = CommandSlot::Empty;
     }
 
-    async fn acquire(&self, op: cmd::Opcode, event: *mut u8) -> (&Signal<NoopRawMutex, CommandResponse>, usize) {
+    async fn acquire(&self, op: cmd::Opcode, event: *mut [u8]) -> (&Signal<NoopRawMutex, CommandResponse>, usize) {
         let to_acquire = if op == Reset::OPCODE { self.permits.permits() } else { 1 };
         let mut permit = self.permits.acquire(to_acquire).await;
         permit.disarm();
@@ -264,7 +263,11 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
         .await
     }
 
-    fn acquire_slot(&self, op: cmd::Opcode, event: *mut u8) -> Option<(&Signal<NoopRawMutex, CommandResponse>, usize)> {
+    fn acquire_slot(
+        &self,
+        op: cmd::Opcode,
+        event: *mut [u8],
+    ) -> Option<(&Signal<NoopRawMutex, CommandResponse>, usize)> {
         let mut slots = self.slots.borrow_mut();
         // Make sure there are no existing command with this opcode
         for slot in slots.iter() {

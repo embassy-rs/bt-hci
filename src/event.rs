@@ -197,6 +197,8 @@ impl<'de> FromHciBytes<'de> for Event<'de> {
 }
 
 impl<'de> ReadHci<'de> for Event<'de> {
+    const MAX_LEN: usize = 257;
+
     fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 2];
         reader.read_exact(&mut header)?;
