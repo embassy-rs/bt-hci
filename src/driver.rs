@@ -97,7 +97,17 @@ where
                     match value {
                         ControllerToHostPacket::Event(ref event) => match &event {
                             Event::CommandComplete(e) => {
-                                self.slots.complete(e);
+                                self.slots.complete(
+                                    e.cmd_opcode,
+                                    e.status,
+                                    e.num_hci_cmd_pkts as usize,
+                                    e.return_param_bytes.as_ref(),
+                                );
+                                continue;
+                            }
+                            Event::CommandStatus(e) => {
+                                self.slots
+                                    .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
                                 continue;
                             }
                             _ => return Ok(value),
@@ -153,9 +163,17 @@ where
 {
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), CmdError<Self::Error>>> {
         async {
+            let (slot, idx) = self.slots.acquire(C::OPCODE, core::ptr::null_mut()).await;
+            let _d = OnDrop::new(|| {
+                self.slots.release_slot(idx);
+            });
+
             self.write(WithIndicator::new(cmd))
                 .await
                 .map_err(CmdError::Controller)?;
+
+            let result = slot.wait().await;
+            result.status.to_result()?;
             Ok(())
         }
     }
@@ -191,18 +209,19 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
         }
     }
 
-    pub fn complete(&self, evt: &CommandComplete<'_>) {
+    pub fn complete(&self, op: cmd::Opcode, status: Status, num_hci_command_packets: usize, data: &[u8]) {
         let mut slots = self.slots.borrow_mut();
         for (idx, slot) in slots.iter_mut().enumerate() {
             match slot {
-                CommandSlot::Pending { opcode, event } if *opcode == evt.cmd_opcode.to_raw() => {
-                    let data = evt.return_param_bytes.as_ref();
-
-                    // Safety: since the slot is in pending, the caller stack will be valid.
-                    unsafe { event.copy_from(data.as_ptr(), data.len()) };
+                CommandSlot::Pending { opcode, event } if *opcode == op.to_raw() => {
+                    if !data.is_empty() {
+                        assert!(!event.is_null());
+                        // Safety: since the slot is in pending, the caller stack will be valid.
+                        unsafe { event.copy_from(data.as_ptr(), data.len()) };
+                    }
                     self.signals[idx].signal(CommandResponse {
-                        status: evt.status,
-                        len: evt.return_param_bytes.len(),
+                        status,
+                        len: data.len(),
                     });
                     break;
                 }
@@ -211,7 +230,7 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
         }
         // Adjust the semaphore permits ensuring we don't grant more than num_hci_cmd_pkts
         self.permits
-            .release((evt.num_hci_cmd_pkts as usize).saturating_sub(self.permits.permits()));
+            .release(num_hci_command_packets.saturating_sub(self.permits.permits()));
     }
 
     fn release_slot(&self, idx: usize) {
