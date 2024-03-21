@@ -6,12 +6,15 @@ use crate::{
     cmd::{self},
     data,
     event::{CommandComplete, Event},
-    param::{self},
     CmdError, Controller, ControllerCmdAsync, ControllerCmdSync, ControllerToHostPacket, FixedSizeValue, WithIndicator,
 };
+use core::future::poll_fn;
 use core::mem;
 use core::mem::MaybeUninit;
+use core::task::Poll;
+use core::task::Waker;
 use core::{cell::RefCell, future::Future};
+use embassy_sync::waitqueue::AtomicWaker;
 use embassy_sync::{blocking_mutex::raw::NoopRawMutex, signal::Signal};
 
 /// A packet-oriented HCI trait.
@@ -53,6 +56,17 @@ where
         data.write_hci(&mut packet[..]).unwrap();
         self.driver.write(&packet[..len]).await?;
         Ok(())
+    }
+
+    async fn acquire_slot(&self, op: cmd::Opcode, event: *mut u8) -> (&Signal<NoopRawMutex, CommandResponse>, usize) {
+        poll_fn(|cx| match self.slots.acquire_slot(op, event) {
+            Some(ret) => Poll::Ready(ret),
+            None => {
+                self.slots.register_waker(cx.waker());
+                Poll::Pending
+            }
+        })
+        .await
     }
 }
 
@@ -119,10 +133,7 @@ where
             let mut retval: [u8; 255] = [0u8; 255];
 
             //info!("Executing command with opcode {}", C::OPCODE);
-            let (slot, idx) = self
-                .slots
-                .acquire_slot(C::OPCODE, retval.as_mut_ptr())
-                .ok_or(CmdError::Param(param::Error::CONN_REJECTED_LIMITED_RESOURCES))?;
+            let (slot, idx) = self.acquire_slot(C::OPCODE, retval.as_mut_ptr()).await;
             let _d = OnDrop::new(|| {
                 self.slots.release_slot(idx);
             });
@@ -164,6 +175,7 @@ where
 pub struct ControllerState<const SLOTS: usize> {
     slots: RefCell<[CommandSlot; SLOTS]>,
     signals: [Signal<NoopRawMutex, CommandResponse>; SLOTS],
+    waker: AtomicWaker,
 }
 
 pub struct CommandResponse {
@@ -185,6 +197,7 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
         Self {
             slots: RefCell::new([Self::EMPTY_SLOT; SLOTS]),
             signals: [Self::EMPTY_SIGNAL; SLOTS],
+            waker: AtomicWaker::new(),
         }
     }
 
@@ -212,6 +225,10 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
     fn release_slot(&self, idx: usize) {
         let mut slots = self.slots.borrow_mut();
         slots[idx] = CommandSlot::Empty;
+    }
+
+    fn register_waker(&self, w: &Waker) {
+        self.waker.register(w);
     }
 
     fn acquire_slot(&self, op: cmd::Opcode, event: *mut u8) -> Option<(&Signal<NoopRawMutex, CommandResponse>, usize)> {
