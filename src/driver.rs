@@ -1,3 +1,4 @@
+use crate::cmd::Cmd;
 use crate::param::RemainingBytes;
 use crate::param::Status;
 use crate::FromHciBytes;
@@ -8,6 +9,7 @@ use crate::{
     event::{CommandComplete, Event},
     CmdError, Controller, ControllerCmdAsync, ControllerCmdSync, ControllerToHostPacket, FixedSizeValue, WithIndicator,
 };
+use cmd::controller_baseband::Reset;
 use core::future::poll_fn;
 use core::mem;
 use core::mem::MaybeUninit;
@@ -223,11 +225,21 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
                         status,
                         len: data.len(),
                     });
-                    break;
+                    if op != Reset::OPCODE {
+                        break;
+                    }
+                }
+                CommandSlot::Pending { opcode: _, event: _ } if op == Reset::OPCODE => {
+                    // Signal other commands
+                    self.signals[idx].signal(CommandResponse {
+                        status: Status::CONTROLLER_BUSY,
+                        len: 0,
+                    });
                 }
                 _ => {}
             }
         }
+
         // Adjust the semaphore permits ensuring we don't grant more than num_hci_cmd_pkts
         self.permits
             .release(num_hci_command_packets.saturating_sub(self.permits.permits()));
@@ -239,7 +251,8 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
     }
 
     async fn acquire(&self, op: cmd::Opcode, event: *mut u8) -> (&Signal<NoopRawMutex, CommandResponse>, usize) {
-        let mut permit = self.permits.acquire(1).await;
+        let to_acquire = if op == Reset::OPCODE { self.permits.permits() } else { 1 };
+        let mut permit = self.permits.acquire(to_acquire).await;
         permit.disarm();
         poll_fn(|cx| match self.acquire_slot(op, event) {
             Some(ret) => Poll::Ready(ret),
