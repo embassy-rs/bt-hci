@@ -12,10 +12,10 @@ use core::future::poll_fn;
 use core::mem;
 use core::mem::MaybeUninit;
 use core::task::Poll;
-use core::task::Waker;
 use core::{cell::RefCell, future::Future};
 use embassy_sync::waitqueue::AtomicWaker;
 use embassy_sync::{blocking_mutex::raw::NoopRawMutex, signal::Signal};
+use futures_intrusive::sync::LocalSemaphore;
 
 /// A packet-oriented HCI trait.
 pub trait HciDriver {
@@ -56,17 +56,6 @@ where
         data.write_hci(&mut packet[..]).unwrap();
         self.driver.write(&packet[..len]).await?;
         Ok(())
-    }
-
-    async fn acquire_slot(&self, op: cmd::Opcode, event: *mut u8) -> (&Signal<NoopRawMutex, CommandResponse>, usize) {
-        poll_fn(|cx| match self.slots.acquire_slot(op, event) {
-            Some(ret) => Poll::Ready(ret),
-            None => {
-                self.slots.register_waker(cx.waker());
-                Poll::Pending
-            }
-        })
-        .await
     }
 }
 
@@ -133,7 +122,7 @@ where
             let mut retval: [u8; 255] = [0u8; 255];
 
             //info!("Executing command with opcode {}", C::OPCODE);
-            let (slot, idx) = self.acquire_slot(C::OPCODE, retval.as_mut_ptr()).await;
+            let (slot, idx) = self.slots.acquire(C::OPCODE, retval.as_mut_ptr()).await;
             let _d = OnDrop::new(|| {
                 self.slots.release_slot(idx);
             });
@@ -145,7 +134,7 @@ where
             let result = slot.wait().await;
             let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval[..result.len]).unwrap();
             let e = CommandComplete {
-                num_hci_cmd_pkts: result.num_hci_cmd_pkts,
+                num_hci_cmd_pkts: 0,
                 status: result.status,
                 cmd_opcode: C::OPCODE,
                 return_param_bytes,
@@ -173,13 +162,13 @@ where
 }
 
 pub struct ControllerState<const SLOTS: usize> {
+    permits: LocalSemaphore,
     slots: RefCell<[CommandSlot; SLOTS]>,
     signals: [Signal<NoopRawMutex, CommandResponse>; SLOTS],
     waker: AtomicWaker,
 }
 
 pub struct CommandResponse {
-    num_hci_cmd_pkts: u8,
     status: Status,
     len: usize,
 }
@@ -195,6 +184,7 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
 
     pub fn new() -> Self {
         Self {
+            permits: LocalSemaphore::new(true, 1),
             slots: RefCell::new([Self::EMPTY_SLOT; SLOTS]),
             signals: [Self::EMPTY_SIGNAL; SLOTS],
             waker: AtomicWaker::new(),
@@ -211,7 +201,6 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
                     // Safety: since the slot is in pending, the caller stack will be valid.
                     unsafe { event.copy_from(data.as_ptr(), data.len()) };
                     self.signals[idx].signal(CommandResponse {
-                        num_hci_cmd_pkts: evt.num_hci_cmd_pkts,
                         status: evt.status,
                         len: evt.return_param_bytes.len(),
                     });
@@ -220,6 +209,9 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
                 _ => {}
             }
         }
+        // Adjust the semaphore permits ensuring we don't grant more than num_hci_cmd_pkts
+        self.permits
+            .release((evt.num_hci_cmd_pkts as usize).saturating_sub(self.permits.permits()));
     }
 
     fn release_slot(&self, idx: usize) {
@@ -227,8 +219,17 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
         slots[idx] = CommandSlot::Empty;
     }
 
-    fn register_waker(&self, w: &Waker) {
-        self.waker.register(w);
+    async fn acquire(&self, op: cmd::Opcode, event: *mut u8) -> (&Signal<NoopRawMutex, CommandResponse>, usize) {
+        let mut permit = self.permits.acquire(1).await;
+        permit.disarm();
+        poll_fn(|cx| match self.acquire_slot(op, event) {
+            Some(ret) => Poll::Ready(ret),
+            None => {
+                self.waker.register(cx.waker());
+                Poll::Pending
+            }
+        })
+        .await
     }
 
     fn acquire_slot(&self, op: cmd::Opcode, event: *mut u8) -> Option<(&Signal<NoopRawMutex, CommandResponse>, usize)> {
