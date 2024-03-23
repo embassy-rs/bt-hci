@@ -1,3 +1,5 @@
+//! Bluetooth HCI transport layer definitions.
+
 use core::future::Future;
 
 use embassy_sync::blocking_mutex::raw::RawMutex;
@@ -23,25 +25,12 @@ pub struct SerialTransport<M: RawMutex, R, W> {
     writer: Mutex<M, W>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum WriteHciError<E: embedded_io::Error> {
-    Write(E),
-}
-
-impl<E: embedded_io::Error> embedded_io::Error for WriteHciError<E> {
-    fn kind(&self) -> embedded_io::ErrorKind {
-        match self {
-            Self::Write(e) => e.kind(),
-        }
-    }
-}
-
+/// Error type for HCI transport layer communication errors.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum Error<E: embedded_io::Error> {
     Read(ReadHciError<E>),
-    Write(WriteHciError<E>),
+    Write(E),
 }
 
 impl<E: embedded_io::Error> embedded_io::Error for Error<E> {
@@ -53,8 +42,8 @@ impl<E: embedded_io::Error> embedded_io::Error for Error<E> {
     }
 }
 
-impl<E: embedded_io::Error> From<WriteHciError<E>> for Error<E> {
-    fn from(e: WriteHciError<E>) -> Self {
+impl<E: embedded_io::Error> From<E> for Error<E> {
+    fn from(e: E) -> Self {
         Self::Write(e)
     }
 }
@@ -106,6 +95,6 @@ impl<
         WithIndicator(tx)
             .write_hci_async(&mut *w)
             .await
-            .map_err(|e| Error::Write(WriteHciError::Write(e)))
+            .map_err(|e| Error::Write(e))
     }
 }
