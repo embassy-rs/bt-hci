@@ -4,11 +4,9 @@
 
 use core::future::Future;
 
+use crate::controller::{CmdError, Controller, ControllerCmdAsync, ControllerCmdSync};
 use crate::param::param;
-use crate::{
-    CmdError, Controller, ControllerCmdAsync, ControllerCmdSync, FixedSizeValue, FromHciBytes, HostToControllerPacket,
-    PacketKind, WriteHci,
-};
+use crate::{FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
 pub mod info;

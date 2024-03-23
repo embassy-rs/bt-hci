@@ -1,23 +1,22 @@
-use crate::cmd::{Cmd, CmdReturnBuf};
-use crate::param::RemainingBytes;
-use crate::param::Status;
-use crate::FromHciBytes;
-use crate::WriteHci;
-use crate::{
-    cmd::{self},
-    data,
-    event::{CommandComplete, Event},
-    CmdError, Controller, ControllerCmdAsync, ControllerCmdSync, ControllerToHostPacket, FixedSizeValue, WithIndicator,
-};
-use cmd::controller_baseband::Reset;
-use core::future::poll_fn;
+use core::cell::RefCell;
+use core::future::{poll_fn, Future};
 use core::mem;
 use core::mem::MaybeUninit;
 use core::task::Poll;
-use core::{cell::RefCell, future::Future};
+
+use cmd::controller_baseband::Reset;
+use embassy_sync::blocking_mutex::raw::NoopRawMutex;
+use embassy_sync::signal::Signal;
 use embassy_sync::waitqueue::AtomicWaker;
-use embassy_sync::{blocking_mutex::raw::NoopRawMutex, signal::Signal};
 use futures_intrusive::sync::LocalSemaphore;
+
+use super::{CmdError, Controller, ControllerCmdAsync, ControllerCmdSync};
+use crate::cmd::{
+    Cmd, CmdReturnBuf, {self},
+};
+use crate::event::{CommandComplete, Event};
+use crate::param::{RemainingBytes, Status};
+use crate::{data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, WithIndicator, WriteHci};
 
 /// A packet-oriented HCI trait.
 pub trait HciDriver {
@@ -138,9 +137,7 @@ where
                 self.slots.release_slot(idx);
             });
 
-            self.write(WithIndicator::new(cmd))
-                .await
-                .map_err(CmdError::Controller)?;
+            self.write(WithIndicator::new(cmd)).await.map_err(CmdError::Io)?;
 
             let result = slot.wait().await;
             let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
@@ -150,7 +147,7 @@ where
                 cmd_opcode: C::OPCODE,
                 return_param_bytes,
             };
-            let r = e.to_result::<C>().map_err(CmdError::Param)?;
+            let r = e.to_result::<C>().map_err(CmdError::Hci)?;
             // info!("Done executing command with opcode {}", C::OPCODE);
             Ok(r)
         }
@@ -169,9 +166,7 @@ where
                 self.slots.release_slot(idx);
             });
 
-            self.write(WithIndicator::new(cmd))
-                .await
-                .map_err(CmdError::Controller)?;
+            self.write(WithIndicator::new(cmd)).await.map_err(CmdError::Io)?;
 
             let result = slot.wait().await;
             result.status.to_result()?;

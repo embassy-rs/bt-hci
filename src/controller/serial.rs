@@ -1,13 +1,13 @@
-use crate::data::AclPacketHeader;
-use crate::driver::HciDriver;
-use crate::event::EventPacketHeader;
-use crate::FromHciBytes;
-use crate::FromHciBytesError;
-use crate::PacketKind;
-use crate::ReadHciError;
 use core::future::Future;
-use embassy_sync::{blocking_mutex::raw::RawMutex, mutex::Mutex};
+
+use embassy_sync::blocking_mutex::raw::RawMutex;
+use embassy_sync::mutex::Mutex;
 use embedded_io::ReadExactError;
+
+use super::driver::HciDriver;
+use crate::data::AclPacketHeader;
+use crate::event::EventPacketHeader;
+use crate::{FromHciBytes, FromHciBytesError, PacketKind, ReadHciError};
 
 /// A HCI driver implementation for a split serial
 pub struct SerialHciDriver<M: RawMutex, R, W> {
