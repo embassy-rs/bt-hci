@@ -16,15 +16,15 @@ use crate::cmd::{
 };
 use crate::event::{CommandComplete, Event};
 use crate::param::{RemainingBytes, Status};
-use crate::{data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, WithIndicator, WriteHci};
+use crate::{data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, HostToControllerPacket};
 
 /// A packet-oriented HCI trait.
 pub trait HciDriver {
     type Error: embedded_io::Error;
     /// Read a complete HCI packet into the rx buffer
-    fn read(&self, rx: &mut [u8]) -> impl Future<Output = Result<usize, Self::Error>>;
+    fn read<'a>(&self, rx: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
     /// Write a complete HCI packet from the tx buffer
-    fn write(&self, tx: &[u8]) -> impl Future<Output = Result<(), Self::Error>>;
+    fn write<T: HostToControllerPacket>(&self, val: &T) -> impl Future<Output = Result<(), Self::Error>>;
 }
 
 /// The controller state holds a number of command slots that can be used
@@ -51,12 +51,8 @@ where
         }
     }
 
-    async fn write<W: WriteHci>(&self, data: W) -> Result<(), D::Error> {
-        let mut packet: [u8; 512] = [0; 512];
-        let len = data.size();
-        data.write_hci(&mut packet[..]).unwrap();
-        self.driver.write(&packet[..len]).await?;
-        Ok(())
+    async fn write<W: HostToControllerPacket>(&self, data: &W) -> Result<(), D::Error> {
+        self.driver.write(data).await
     }
 }
 
@@ -66,17 +62,17 @@ where
 {
     type Error = D::Error;
     async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
-        self.write(WithIndicator::new(packet)).await?;
+        self.write(packet).await?;
         Ok(())
     }
 
     async fn write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), Self::Error> {
-        self.write(WithIndicator::new(packet)).await?;
+        self.write(packet).await?;
         Ok(())
     }
 
     async fn write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), Self::Error> {
-        self.write(WithIndicator::new(packet)).await?;
+        self.write(packet).await?;
         Ok(())
     }
 
@@ -85,9 +81,7 @@ where
             {
                 // Safety: we will not hold references across loop iterations.
                 let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
-                let len = self.driver.read(&mut buf[..]).await?;
-                let (value, _): (ControllerToHostPacket<'a>, _) =
-                    ControllerToHostPacket::from_hci_bytes(&buf[..len]).unwrap();
+                let value = self.driver.read(&mut buf[..]).await?;
                 match value {
                     ControllerToHostPacket::Event(ref event) => match &event {
                         Event::CommandComplete(e) => {
@@ -128,7 +122,7 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.write(WithIndicator::new(cmd)).await.map_err(CmdError::Io)?;
+        self.write(cmd).await.map_err(CmdError::Io)?;
 
         let result = slot.wait().await;
         let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
@@ -155,7 +149,7 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.write(WithIndicator::new(cmd)).await.map_err(CmdError::Io)?;
+        self.write(cmd).await.map_err(CmdError::Io)?;
 
         let result = slot.wait().await;
         result.status.to_result()?;
@@ -304,35 +298,5 @@ impl<F: FnOnce()> OnDrop<F> {
 impl<F: FnOnce()> Drop for OnDrop<F> {
     fn drop(&mut self) {
         unsafe { self.f.as_ptr().read()() }
-    }
-}
-
-/// An explosive ordinance that panics if it is improperly disposed of.
-///
-/// This is to forbid dropping futures, when there is absolutely no other choice.
-///
-/// To correctly dispose of this device, call the [defuse](struct.DropBomb.html#method.defuse)
-/// method before this object is dropped.
-#[must_use = "to delay the drop bomb invokation to the end of the scope"]
-#[derive(Default)]
-pub struct DropBomb {
-    _private: (),
-}
-
-impl DropBomb {
-    /// Create a new instance.
-    pub fn new() -> Self {
-        Self { _private: () }
-    }
-
-    /// Defuses the bomb, rendering it safe to drop.
-    pub fn defuse(self) {
-        mem::forget(self)
-    }
-}
-
-impl Drop for DropBomb {
-    fn drop(&mut self) {
-        panic!("boom")
     }
 }

@@ -3,9 +3,9 @@ use embassy_sync::mutex::Mutex;
 use embedded_io::ReadExactError;
 
 use super::driver::HciDriver;
-use crate::data::AclPacketHeader;
-use crate::event::EventPacketHeader;
-use crate::{FromHciBytes, FromHciBytesError, PacketKind, ReadHciError};
+use crate::{
+    ControllerToHostPacket, FromHciBytesError, HostToControllerPacket, ReadHci, ReadHciError, WithIndicator, WriteHci,
+};
 
 /// A HCI driver implementation for a split serial
 pub struct SerialHciDriver<M: RawMutex, R, W> {
@@ -84,37 +84,18 @@ impl<
     > HciDriver for SerialHciDriver<M, R, W>
 {
     type Error = Error<E>;
-    async fn read(&self, rx: &mut [u8]) -> Result<usize, Self::Error> {
+    async fn read<'a>(&self, rx: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, Self::Error> {
         let mut r = self.reader.lock().await;
-
-        r.read_exact(&mut rx[0..1]).await?;
-
-        match PacketKind::from_hci_bytes(&rx[0..1])?.0 {
-            PacketKind::Cmd => Err(Error::Read(ReadHciError::InvalidValue)),
-            PacketKind::AclData => {
-                r.read_exact(&mut rx[1..5]).await?;
-                let header = AclPacketHeader::from_hci_bytes_complete(&rx[1..5])?;
-                let data_len = header.data_len();
-                r.read_exact(&mut rx[5..5 + data_len]).await?;
-                Ok(5 + data_len)
-            }
-            PacketKind::SyncData => unimplemented!(),
-            PacketKind::IsoData => unimplemented!(),
-            PacketKind::Event => {
-                r.read_exact(&mut rx[1..3]).await?;
-                let header = EventPacketHeader::from_hci_bytes_complete(&rx[1..3])?;
-                let params_len = usize::from(header.params_len);
-                r.read_exact(&mut rx[3..3 + params_len]).await?;
-                Ok(3 + params_len)
-            }
-        }
+        ControllerToHostPacket::read_hci_async(&mut *r, rx)
+            .await
+            .map_err(Error::Read)
     }
 
-    async fn write(&self, tx: &[u8]) -> Result<(), Self::Error> {
+    async fn write<T: HostToControllerPacket>(&self, tx: &T) -> Result<(), Self::Error> {
         let mut w = self.writer.lock().await;
-        w.write_all(tx)
+        WithIndicator(tx)
+            .write_hci_async(&mut *w)
             .await
-            .map_err(|e| Error::Write(WriteHciError::Write(e)))?;
-        Ok(())
+            .map_err(|e| Error::Write(WriteHciError::Write(e)))
     }
 }
