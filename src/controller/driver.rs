@@ -65,56 +65,48 @@ where
     D: HciDriver,
 {
     type Error = D::Error;
-    fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>> {
-        async {
-            self.write(WithIndicator::new(packet)).await?;
-            Ok(())
-        }
+    async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
+        self.write(WithIndicator::new(packet)).await?;
+        Ok(())
     }
 
-    fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>> {
-        async {
-            self.write(WithIndicator::new(packet)).await?;
-            Ok(())
-        }
+    async fn write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), Self::Error> {
+        self.write(WithIndicator::new(packet)).await?;
+        Ok(())
     }
 
-    fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>> {
-        async {
-            self.write(WithIndicator::new(packet)).await?;
-            Ok(())
-        }
+    async fn write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), Self::Error> {
+        self.write(WithIndicator::new(packet)).await?;
+        Ok(())
     }
 
-    fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>> {
-        async {
-            loop {
-                {
-                    // Safety: we will not hold references across loop iterations.
-                    let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
-                    let len = self.driver.read(&mut buf[..]).await?;
-                    let (value, _): (ControllerToHostPacket<'a>, _) =
-                        ControllerToHostPacket::from_hci_bytes(&buf[..len]).unwrap();
-                    match value {
-                        ControllerToHostPacket::Event(ref event) => match &event {
-                            Event::CommandComplete(e) => {
-                                self.slots.complete(
-                                    e.cmd_opcode,
-                                    e.status,
-                                    e.num_hci_cmd_pkts as usize,
-                                    e.return_param_bytes.as_ref(),
-                                );
-                                continue;
-                            }
-                            Event::CommandStatus(e) => {
-                                self.slots
-                                    .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
-                                continue;
-                            }
-                            _ => return Ok(value),
-                        },
+    async fn read<'a>(&self, buf: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, Self::Error> {
+        loop {
+            {
+                // Safety: we will not hold references across loop iterations.
+                let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
+                let len = self.driver.read(&mut buf[..]).await?;
+                let (value, _): (ControllerToHostPacket<'a>, _) =
+                    ControllerToHostPacket::from_hci_bytes(&buf[..len]).unwrap();
+                match value {
+                    ControllerToHostPacket::Event(ref event) => match &event {
+                        Event::CommandComplete(e) => {
+                            self.slots.complete(
+                                e.cmd_opcode,
+                                e.status,
+                                e.num_hci_cmd_pkts as usize,
+                                e.return_param_bytes.as_ref(),
+                            );
+                            continue;
+                        }
+                        Event::CommandStatus(e) => {
+                            self.slots
+                                .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
+                            continue;
+                        }
                         _ => return Ok(value),
-                    }
+                    },
+                    _ => return Ok(value),
                 }
             }
         }
@@ -127,30 +119,28 @@ where
     C: cmd::SyncCmd,
     C::Return: FixedSizeValue,
 {
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, CmdError<Self::Error>>> {
-        async {
-            let mut retval: C::ReturnBuf = C::ReturnBuf::new();
+    async fn exec(&self, cmd: &C) -> Result<C::Return, CmdError<Self::Error>> {
+        let mut retval: C::ReturnBuf = C::ReturnBuf::new();
 
-            //info!("Executing command with opcode {}", C::OPCODE);
-            let (slot, idx) = self.slots.acquire(C::OPCODE, retval.as_mut()).await;
-            let _d = OnDrop::new(|| {
-                self.slots.release_slot(idx);
-            });
+        //info!("Executing command with opcode {}", C::OPCODE);
+        let (slot, idx) = self.slots.acquire(C::OPCODE, retval.as_mut()).await;
+        let _d = OnDrop::new(|| {
+            self.slots.release_slot(idx);
+        });
 
-            self.write(WithIndicator::new(cmd)).await.map_err(CmdError::Io)?;
+        self.write(WithIndicator::new(cmd)).await.map_err(CmdError::Io)?;
 
-            let result = slot.wait().await;
-            let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
-            let e = CommandComplete {
-                num_hci_cmd_pkts: 0,
-                status: result.status,
-                cmd_opcode: C::OPCODE,
-                return_param_bytes,
-            };
-            let r = e.to_result::<C>().map_err(CmdError::Hci)?;
-            // info!("Done executing command with opcode {}", C::OPCODE);
-            Ok(r)
-        }
+        let result = slot.wait().await;
+        let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
+        let e = CommandComplete {
+            num_hci_cmd_pkts: 0,
+            status: result.status,
+            cmd_opcode: C::OPCODE,
+            return_param_bytes,
+        };
+        let r = e.to_result::<C>().map_err(CmdError::Hci)?;
+        // info!("Done executing command with opcode {}", C::OPCODE);
+        Ok(r)
     }
 }
 
@@ -159,19 +149,17 @@ where
     D: HciDriver,
     C: cmd::AsyncCmd,
 {
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), CmdError<Self::Error>>> {
-        async {
-            let (slot, idx) = self.slots.acquire(C::OPCODE, &mut []).await;
-            let _d = OnDrop::new(|| {
-                self.slots.release_slot(idx);
-            });
+    async fn exec(&self, cmd: &C) -> Result<(), CmdError<Self::Error>> {
+        let (slot, idx) = self.slots.acquire(C::OPCODE, &mut []).await;
+        let _d = OnDrop::new(|| {
+            self.slots.release_slot(idx);
+        });
 
-            self.write(WithIndicator::new(cmd)).await.map_err(CmdError::Io)?;
+        self.write(WithIndicator::new(cmd)).await.map_err(CmdError::Io)?;
 
-            let result = slot.wait().await;
-            result.status.to_result()?;
-            Ok(())
-        }
+        let result = slot.wait().await;
+        result.status.to_result()?;
+        Ok(())
     }
 }
 
@@ -192,8 +180,15 @@ pub enum CommandSlot {
     Pending { opcode: u16, event: *mut [u8] },
 }
 
+impl<const SLOTS: usize> Default for ControllerState<SLOTS> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<const SLOTS: usize> ControllerState<SLOTS> {
     const EMPTY_SLOT: CommandSlot = CommandSlot::Empty;
+    #[allow(clippy::declare_interior_mutable_const)]
     const EMPTY_SIGNAL: Signal<NoopRawMutex, CommandResponse> = Signal::new();
 
     pub fn new() -> Self {
@@ -275,16 +270,13 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
         }
         // Reserve our slot
         for (idx, slot) in slots.iter_mut().enumerate() {
-            match slot {
-                CommandSlot::Empty => {
-                    *slot = CommandSlot::Pending {
-                        opcode: op.to_raw(),
-                        event,
-                    };
-                    self.signals[idx].reset();
-                    return Some((&self.signals[idx], idx));
-                }
-                _ => {}
+            if matches!(slot, CommandSlot::Empty) {
+                *slot = CommandSlot::Pending {
+                    opcode: op.to_raw(),
+                    event,
+                };
+                self.signals[idx].reset();
+                return Some((&self.signals[idx], idx));
             }
         }
         None
@@ -322,6 +314,7 @@ impl<F: FnOnce()> Drop for OnDrop<F> {
 /// To correctly dispose of this device, call the [defuse](struct.DropBomb.html#method.defuse)
 /// method before this object is dropped.
 #[must_use = "to delay the drop bomb invokation to the end of the scope"]
+#[derive(Default)]
 pub struct DropBomb {
     _private: (),
 }

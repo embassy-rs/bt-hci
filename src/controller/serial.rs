@@ -1,5 +1,3 @@
-use core::future::Future;
-
 use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
 use embedded_io::ReadExactError;
@@ -86,41 +84,37 @@ impl<
     > HciDriver for SerialHciDriver<M, R, W>
 {
     type Error = Error<E>;
-    fn read(&self, rx: &mut [u8]) -> impl Future<Output = Result<usize, Self::Error>> {
-        async {
-            let mut r = self.reader.lock().await;
+    async fn read(&self, rx: &mut [u8]) -> Result<usize, Self::Error> {
+        let mut r = self.reader.lock().await;
 
-            r.read_exact(&mut rx[0..1]).await?;
+        r.read_exact(&mut rx[0..1]).await?;
 
-            match PacketKind::from_hci_bytes(&rx[0..1])?.0 {
-                PacketKind::Cmd => Err(Error::Read(ReadHciError::InvalidValue)),
-                PacketKind::AclData => {
-                    r.read_exact(&mut rx[1..5]).await?;
-                    let header = AclPacketHeader::from_hci_bytes_complete(&rx[1..5])?;
-                    let data_len = header.data_len();
-                    r.read_exact(&mut rx[5..5 + data_len]).await?;
-                    Ok(5 + data_len)
-                }
-                PacketKind::SyncData => unimplemented!(),
-                PacketKind::IsoData => unimplemented!(),
-                PacketKind::Event => {
-                    r.read_exact(&mut rx[1..3]).await?;
-                    let header = EventPacketHeader::from_hci_bytes_complete(&rx[1..3])?;
-                    let params_len = usize::from(header.params_len);
-                    r.read_exact(&mut rx[3..3 + params_len]).await?;
-                    Ok(3 + params_len)
-                }
+        match PacketKind::from_hci_bytes(&rx[0..1])?.0 {
+            PacketKind::Cmd => Err(Error::Read(ReadHciError::InvalidValue)),
+            PacketKind::AclData => {
+                r.read_exact(&mut rx[1..5]).await?;
+                let header = AclPacketHeader::from_hci_bytes_complete(&rx[1..5])?;
+                let data_len = header.data_len();
+                r.read_exact(&mut rx[5..5 + data_len]).await?;
+                Ok(5 + data_len)
+            }
+            PacketKind::SyncData => unimplemented!(),
+            PacketKind::IsoData => unimplemented!(),
+            PacketKind::Event => {
+                r.read_exact(&mut rx[1..3]).await?;
+                let header = EventPacketHeader::from_hci_bytes_complete(&rx[1..3])?;
+                let params_len = usize::from(header.params_len);
+                r.read_exact(&mut rx[3..3 + params_len]).await?;
+                Ok(3 + params_len)
             }
         }
     }
 
-    fn write(&self, tx: &[u8]) -> impl Future<Output = Result<(), Self::Error>> {
-        async {
-            let mut w = self.writer.lock().await;
-            w.write_all(tx)
-                .await
-                .map_err(|e| Error::Write(WriteHciError::Write(e)))?;
-            Ok(())
-        }
+    async fn write(&self, tx: &[u8]) -> Result<(), Self::Error> {
+        let mut w = self.writer.lock().await;
+        w.write_all(tx)
+            .await
+            .map_err(|e| Error::Write(WriteHciError::Write(e)))?;
+        Ok(())
     }
 }
