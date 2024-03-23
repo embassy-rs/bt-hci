@@ -1,14 +1,24 @@
+use core::future::Future;
+
 use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
 use embedded_io::ReadExactError;
 
-use super::driver::HciDriver;
 use crate::{
     ControllerToHostPacket, FromHciBytesError, HostToControllerPacket, ReadHci, ReadHciError, WithIndicator, WriteHci,
 };
 
-/// A HCI driver implementation for a split serial
-pub struct SerialHciDriver<M: RawMutex, R, W> {
+/// A packet-oriented HCI transport layer
+pub trait Transport {
+    type Error: embedded_io::Error;
+    /// Read a complete HCI packet into the rx buffer
+    fn read<'a>(&self, rx: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
+    /// Write a complete HCI packet from the tx buffer
+    fn write<T: HostToControllerPacket>(&self, val: &T) -> impl Future<Output = Result<(), Self::Error>>;
+}
+
+/// A HCI transport layer implementation for a split serial using the UART transport layer protocol
+pub struct SerialTransport<M: RawMutex, R, W> {
     reader: Mutex<M, R>,
     writer: Mutex<M, W>,
 }
@@ -67,7 +77,7 @@ impl<E: embedded_io::Error> From<FromHciBytesError> for Error<E> {
     }
 }
 
-impl<M: RawMutex, R: embedded_io_async::Read, W: embedded_io_async::Write> SerialHciDriver<M, R, W> {
+impl<M: RawMutex, R: embedded_io_async::Read, W: embedded_io_async::Write> SerialTransport<M, R, W> {
     pub fn new(reader: R, writer: W) -> Self {
         Self {
             reader: Mutex::new(reader),
@@ -81,7 +91,7 @@ impl<
         R: embedded_io_async::Read<Error = E>,
         W: embedded_io_async::Write<Error = E>,
         E: embedded_io::Error,
-    > HciDriver for SerialHciDriver<M, R, W>
+    > Transport for SerialTransport<M, R, W>
 {
     type Error = Error<E>;
     async fn read<'a>(&self, rx: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, Self::Error> {

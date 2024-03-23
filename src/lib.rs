@@ -11,6 +11,7 @@ pub mod controller;
 pub mod data;
 pub mod event;
 pub mod param;
+pub mod transport;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]

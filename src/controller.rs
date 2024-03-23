@@ -3,7 +3,6 @@ use core::future::Future;
 use crate::{cmd, data, param, ControllerToHostPacket};
 
 pub mod driver;
-pub mod serial;
 
 pub trait Controller {
     type Error: embedded_io::Error;

@@ -1,5 +1,5 @@
 use core::cell::RefCell;
-use core::future::{poll_fn, Future};
+use core::future::poll_fn;
 use core::mem;
 use core::mem::MaybeUninit;
 use core::task::Poll;
@@ -16,16 +16,8 @@ use crate::cmd::{
 };
 use crate::event::{CommandComplete, Event};
 use crate::param::{RemainingBytes, Status};
+use crate::transport::Transport;
 use crate::{data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, HostToControllerPacket};
-
-/// A packet-oriented HCI trait.
-pub trait HciDriver {
-    type Error: embedded_io::Error;
-    /// Read a complete HCI packet into the rx buffer
-    fn read<'a>(&self, rx: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
-    /// Write a complete HCI packet from the tx buffer
-    fn write<T: HostToControllerPacket>(&self, val: &T) -> impl Future<Output = Result<(), Self::Error>>;
-}
 
 /// The controller state holds a number of command slots that can be used
 /// to issue commands and await responses from an underlying controller.
@@ -34,7 +26,7 @@ pub trait HciDriver {
 /// returns a signal handle that can be used to await a response.
 pub struct HciController<D, const SLOTS: usize>
 where
-    D: HciDriver,
+    D: Transport,
 {
     driver: D,
     slots: ControllerState<SLOTS>,
@@ -42,7 +34,7 @@ where
 
 impl<D, const SLOTS: usize> HciController<D, SLOTS>
 where
-    D: HciDriver,
+    D: Transport,
 {
     pub fn new(driver: D) -> Self {
         Self {
@@ -58,7 +50,7 @@ where
 
 impl<D, const SLOTS: usize> Controller for HciController<D, SLOTS>
 where
-    D: HciDriver,
+    D: Transport,
 {
     type Error = D::Error;
     async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
@@ -109,7 +101,7 @@ where
 
 impl<D, C, const SLOTS: usize> ControllerCmdSync<C> for HciController<D, SLOTS>
 where
-    D: HciDriver,
+    D: Transport,
     C: cmd::SyncCmd,
     C::Return: FixedSizeValue,
 {
@@ -140,7 +132,7 @@ where
 
 impl<D, C, const SLOTS: usize> ControllerCmdAsync<C> for HciController<D, SLOTS>
 where
-    D: HciDriver,
+    D: Transport,
     C: cmd::AsyncCmd,
 {
     async fn exec(&self, cmd: &C) -> Result<(), CmdError<Self::Error>> {
