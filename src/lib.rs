@@ -7,9 +7,11 @@ use embedded_io::ReadExactError;
 mod fmt;
 
 pub mod cmd;
+pub mod controller;
 pub mod data;
 pub mod event;
 pub mod param;
+pub mod transport;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -43,6 +45,17 @@ pub enum ReadHciError<E: embedded_io::Error> {
     Read(ReadExactError<E>),
 }
 
+impl<E: embedded_io::Error> embedded_io::Error for ReadHciError<E> {
+    fn kind(&self) -> embedded_io::ErrorKind {
+        match self {
+            Self::BufferTooSmall => embedded_io::ErrorKind::OutOfMemory,
+            Self::InvalidValue => embedded_io::ErrorKind::InvalidInput,
+            Self::Read(ReadExactError::Other(e)) => e.kind(),
+            Self::Read(ReadExactError::UnexpectedEof) => embedded_io::ErrorKind::BrokenPipe,
+        }
+    }
+}
+
 impl<E: embedded_io::Error> From<ReadExactError<E>> for ReadHciError<E> {
     fn from(value: ReadExactError<E>) -> Self {
         ReadHciError::Read(value)
@@ -59,6 +72,8 @@ impl<E: embedded_io::Error> From<FromHciBytesError> for ReadHciError<E> {
 }
 
 pub trait ReadHci<'de>: FromHciBytes<'de> {
+    const MAX_LEN: usize;
+
     fn read_hci<R: embedded_io::Read>(reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>>;
 
     fn read_hci_async<R: embedded_io_async::Read>(
@@ -155,6 +170,8 @@ impl<'de, T: ByteAlignedValue> FromHciBytes<'de> for &'de [T] {
 }
 
 impl<'de, T: FixedSizeValue> ReadHci<'de> for T {
+    const MAX_LEN: usize = core::mem::size_of::<Self>();
+
     fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         if buf.len() < core::mem::size_of::<Self>() {
             Err(ReadHciError::BufferTooSmall)
@@ -240,6 +257,7 @@ impl WriteHci for PacketKind {
     }
 }
 
+#[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ControllerToHostPacket<'a> {
     Acl(data::AclPacket<'a>),
@@ -286,6 +304,8 @@ impl<'de> FromHciBytes<'de> for ControllerToHostPacket<'de> {
 }
 
 impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
+    const MAX_LEN: usize = 258;
+
     fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut kind = [0];
         reader.read_exact(&mut kind)?;
@@ -302,7 +322,7 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
         mut reader: R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
-        let mut kind = [0];
+        let mut kind = [0u8];
         reader.read_exact(&mut kind).await?;
         match PacketKind::from_hci_bytes(&kind)?.0 {
             PacketKind::Cmd => Err(ReadHciError::InvalidValue),
@@ -343,27 +363,4 @@ impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
         T::KIND.write_hci_async(&mut writer).await?;
         self.0.write_hci_async(writer).await
     }
-}
-
-pub trait Controller {
-    #[cfg(not(feature = "defmt"))]
-    type Error: core::fmt::Debug;
-    #[cfg(feature = "defmt")]
-    type Error: core::fmt::Debug + defmt::Format;
-
-    fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
-    fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
-    fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>>;
-
-    fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
-}
-
-pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
-    /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, param::Error>>;
-}
-
-pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
-    /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), param::Error>>;
 }

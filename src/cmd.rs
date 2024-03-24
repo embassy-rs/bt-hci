@@ -4,10 +4,9 @@
 
 use core::future::Future;
 
-use crate::param::{self, param};
-use crate::{
-    ControllerCmdAsync, ControllerCmdSync, FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci,
-};
+use crate::controller::{CmdError, Controller, ControllerCmdAsync, ControllerCmdSync};
+use crate::param::param;
+use crate::{FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
 pub mod info;
@@ -98,8 +97,26 @@ impl<T: Cmd> HostToControllerPacket for T {
 /// A marker trait for objects representing HCI Commands that generate [`CommandStatus`](crate::event::CommandStatus)
 /// events
 pub trait AsyncCmd: Cmd {
-    fn exec<C: ControllerCmdAsync<Self>>(&self, controller: &C) -> impl Future<Output = Result<(), param::Error>> {
+    fn exec<C: ControllerCmdAsync<Self>>(
+        &self,
+        controller: &C,
+    ) -> impl Future<Output = Result<(), CmdError<<C as Controller>::Error>>> {
         controller.exec(self)
+    }
+}
+
+pub trait CmdReturnBuf: Copy + AsRef<[u8]> + AsMut<[u8]> {
+    const LEN: usize;
+
+    fn new() -> Self;
+}
+
+impl<const N: usize> CmdReturnBuf for [u8; N] {
+    const LEN: usize = N;
+
+    #[inline(always)]
+    fn new() -> Self {
+        [0; N]
     }
 }
 
@@ -109,6 +126,7 @@ pub trait SyncCmd: Cmd {
     /// The type of the parameters for the [`CommandComplete`](crate::event::CommandComplete) event
     type Return: for<'a> FromHciBytes<'a> + Copy;
     type Handle: FixedSizeValue;
+    type ReturnBuf: CmdReturnBuf;
 
     fn param_handle(&self) -> Self::Handle;
 
@@ -125,7 +143,7 @@ pub trait SyncCmd: Cmd {
     fn exec<C: ControllerCmdSync<Self>>(
         &self,
         controller: &C,
-    ) -> impl Future<Output = Result<Self::Return, param::Error>> {
+    ) -> impl Future<Output = Result<Self::Return, CmdError<<C as Controller>::Error>>> {
         controller.exec(self)
     }
 }
@@ -406,6 +424,7 @@ macro_rules! cmd {
         impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
             type Return = $ret;
             type Handle = $handle;
+            type ReturnBuf = [u8; <$ret as $crate::ReadHci>::MAX_LEN];
 
             fn param_handle(&self) -> Self::Handle {
                 self.handle()
@@ -425,6 +444,7 @@ macro_rules! cmd {
         impl$(<$life>)? $crate::cmd::SyncCmd for $name$(<$life>)? {
             type Return = $ret;
             type Handle = ();
+            type ReturnBuf = [u8; <$ret as $crate::ReadHci>::MAX_LEN];
 
             fn param_handle(&self) {}
 
