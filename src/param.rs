@@ -84,6 +84,10 @@ impl ConnHandle {
         assert!(val <= 0xeff);
         Self(val)
     }
+
+    pub fn raw(&self) -> u16 {
+        self.0
+    }
 }
 
 /// A 16-bit duration. The `US` generic paramter indicates the timebase in µs.
