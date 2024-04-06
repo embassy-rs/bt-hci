@@ -206,6 +206,12 @@ impl<T: WriteHci> WriteHci for PhyParams<T> {
 
 param!(struct AdvHandle(u8));
 
+impl AdvHandle {
+    pub const fn new(v: u8) -> Self {
+        Self(v)
+    }
+}
+
 unsafe impl ByteAlignedValue for AdvHandle {}
 
 impl<'de> crate::FromHciBytes<'de> for &'de AdvHandle {
