@@ -1,7 +1,7 @@
 use core::iter::FusedIterator;
 
 use super::{param, param_slice, BdAddr, ConnHandle, Duration, RemainingBytes};
-use crate::{ByteAlignedValue, FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
 
 param!(struct AddrKind(u8));
 
@@ -131,13 +131,30 @@ param! {
     }
 }
 
-param! {
-    #[derive(Default)]
-    enum PhyOptions {
-        #[default]
-        NoPreferredCoding = 0,
-        S2CodingPreferred = 1,
-        S8CodingPreferred = 2,
+#[derive(Default)]
+#[repr(u16, align(1))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum PhyOptions {
+    #[default]
+    NoPreferredCoding = 0,
+    S2CodingPreferred = 1,
+    S8CodingPreferred = 2,
+}
+
+unsafe impl FixedSizeValue for PhyOptions {
+    #[inline(always)]
+    fn is_valid(data: &[u8]) -> bool {
+        data[0] == 0 || data[0] == 1 || data[0] == 2 || false
+    }
+}
+
+unsafe impl ByteAlignedValue for PhyOptions {}
+
+impl<'de> FromHciBytes<'de> for &'de PhyOptions {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        <PhyOptions as ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 
@@ -222,7 +239,7 @@ impl<'de> crate::FromHciBytes<'de> for &'de AdvHandle {
 }
 
 param! {
-    bitfield AdvEventProps[1] {
+    bitfield AdvEventProps[2] {
         (0, connectable_adv, set_connectable_adv);
         (1, scannable_adv, set_scannable_adv);
         (2, directed_adv, set_directed_adv);

@@ -2,10 +2,11 @@
 
 use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr, ChannelMap,
-    ConnHandle, CteKind, CteMask, Duration, FilterDuplicates, InitiatingPhy, LeDataRelatedAddrChangeReasons,
-    LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
-    LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
-    PrivacyMode, ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates, SyncHandle,
+    ConnHandle, CteKind, CteMask, Duration, ExtDuration, FilterDuplicates, InitiatingPhy,
+    LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions,
+    LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData, LePeriodicAdvSyncTransferMode, LeScanKind, Operation,
+    PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode, ScanningFilterPolicy, ScanningPhy,
+    SwitchingSamplingRates, SyncHandle,
 };
 use crate::{cmd, WriteHci};
 
@@ -460,8 +461,8 @@ cmd! {
         LeSetExtAdvParamsParams {
                 adv_handle: AdvHandle,
                 adv_event_props: AdvEventProps,
-                primary_adv_interval_min: Duration<625>,
-                primary_adv_interval_max: Duration<625>,
+                primary_adv_interval_min: ExtDuration<625>,
+                primary_adv_interval_max: ExtDuration<625>,
                 primary_adv_channel_map: AdvChannelMap,
                 own_addr_kind: AddrKind,
                 peer_addr_kind: AddrKind,

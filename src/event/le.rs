@@ -4,7 +4,7 @@
 
 use crate::param::{
     AddrKind, AdvHandle, BdAddr, BigHandle, BisConnHandle, ClockAccuracy, ConnHandle, CteKind, DataStatus, Duration,
-    IsoDuration, LeAdvReports, LeConnRole, LeDirectedAdvertisingReportParam, LeExtAdvReports, LeFeatureMask,
+    ExtDuration, LeAdvReports, LeConnRole, LeDirectedAdvertisingReportParam, LeExtAdvReports, LeFeatureMask,
     LeIQSample, LeTxPowerReportingReason, PacketStatus, PhyKind, PowerLevelKind, Status, SyncHandle, ZoneEntered,
 };
 use crate::{FromHciBytes, FromHciBytesError};
@@ -287,10 +287,10 @@ le_events! {
     struct LeCisEstablished(25) {
         status: Status,
         handle: ConnHandle,
-        cig_sync_delay: IsoDuration,
-        cis_sync_delay: IsoDuration,
-        transport_latency_c_to_p: IsoDuration,
-        transport_latency_p_to_c: IsoDuration,
+        cig_sync_delay: ExtDuration,
+        cis_sync_delay: ExtDuration,
+        transport_latency_c_to_p: ExtDuration,
+        transport_latency_p_to_c: ExtDuration,
         phy_c_to_p: PhyKind,
         phy_p_to_c: PhyKind,
         nse: u8,
@@ -315,8 +315,8 @@ le_events! {
     struct LeCreateBigComplete<'a>(27) {
         status: Status,
         big_handle: BigHandle,
-        big_sync_delay: IsoDuration,
-        transport_latency_big: IsoDuration,
+        big_sync_delay: ExtDuration,
+        transport_latency_big: ExtDuration,
         phy: PhyKind,
         nse: u8,
         bn: u8,
@@ -337,7 +337,7 @@ le_events! {
     struct LeBigSyncEstablished<'a>(29) {
         status: Status,
         big_handle: BigHandle,
-        transport_latency_big: IsoDuration,
+        transport_latency_big: ExtDuration,
         nse: u8,
         bn: u8,
         pto: u8,
@@ -388,7 +388,7 @@ le_events! {
         pto: u8,
         irc: u8,
         max_pdu: u16,
-        sdu_interval: IsoDuration,
+        sdu_interval: ExtDuration,
         max_sdu: u16,
         phy: PhyKind,
         is_framed: bool,
