@@ -150,53 +150,61 @@ impl<const US: u32> Duration<US> {
 #[repr(transparent)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct IsoDuration([u8; 3]);
+pub struct ExtDuration<const US: u16 = 1>([u8; 3]);
 
-unsafe impl FixedSizeValue for IsoDuration {
+unsafe impl<const US: u16> FixedSizeValue for ExtDuration<US> {
     #[inline(always)]
     fn is_valid(_data: &[u8]) -> bool {
         true
     }
 }
 
-unsafe impl ByteAlignedValue for IsoDuration {}
+unsafe impl<const US: u16> ByteAlignedValue for ExtDuration<US> {}
 
-impl<'de> FromHciBytes<'de> for &'de IsoDuration {
+impl<'de, const US: u16> FromHciBytes<'de> for &'de ExtDuration<US> {
     #[inline(always)]
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
-        <IsoDuration as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+        <ExtDuration<US> as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 
-impl IsoDuration {
+impl<const US: u16> ExtDuration<US> {
     #[inline(always)]
-    pub fn from_micros(val: u32) -> Self {
+    pub fn from_u32(val: u32) -> Self {
+        assert!(val < (1 << 24));
         Self(*unwrap!(val.to_le_bytes().first_chunk()))
     }
 
     #[inline(always)]
+    pub fn from_micros(val: u64) -> Self {
+        Self::from_u32(unwrap!((val / u64::from(US)).try_into()))
+    }
+
+    #[inline(always)]
     pub fn from_millis(val: u32) -> Self {
-        Self::from_micros(unwrap!(val.checked_mul(1000)))
+        Self::from_micros(u64::from(val) * 1000)
     }
 
     #[inline(always)]
     pub fn from_secs(val: u32) -> Self {
-        Self::from_micros(unwrap!(val.checked_mul(1_000_000)))
+        Self::from_micros(u64::from(val) * 1_000_000)
     }
 
     #[inline(always)]
-    pub fn as_micros(&self) -> u32 {
-        u32::from_le_bytes([self.0[0], self.0[1], self.0[2], 0])
+    pub fn as_micros(&self) -> u64 {
+        u64::from_le_bytes([self.0[0], self.0[1], self.0[2], 0, 0, 0, 0, 0]) * u64::from(US)
     }
 
     #[inline(always)]
     pub fn as_millis(&self) -> u32 {
-        self.as_micros() / 1000
+        // ((1 << 24 - 1) * u16::MAX / 1_000) < u32::MAX so this is safe
+        (self.as_micros() / 1000) as u32
     }
 
     #[inline(always)]
     pub fn as_secs(&self) -> u32 {
-        self.as_micros() / 1_000_000
+        // ((1 << 24 - 1) * u16::MAX / 1_000_000) < u32::MAX so this is safe
+        (self.as_micros() / 1_000_000) as u32
     }
 }
 
