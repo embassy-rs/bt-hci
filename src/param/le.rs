@@ -477,6 +477,18 @@ param! {
 }
 
 param! {
+    bitfield LeExtAdvEventKind[2] {
+        (0, connectable);
+        (1, scannable);
+        (2, directed);
+        (3, scan_response);
+        (4, legacy);
+        (5, data_status_1);
+        (6, data_status_2);
+    }
+}
+
+param! {
     struct LeAdvReport<'a> {
         event_kind: LeAdvEventKind,
         addr_kind: AddrKind,
@@ -551,7 +563,7 @@ impl<'a> FusedIterator for LeAdvReportsIter<'a> {}
 
 param! {
     struct LeExtAdvReport<'a> {
-        event_kind: LeAdvEventKind,
+        event_kind: LeExtAdvEventKind,
         addr_kind: AddrKind,
         addr: BdAddr,
         data: &'a [u8],
