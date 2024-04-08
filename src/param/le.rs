@@ -227,6 +227,10 @@ impl AdvHandle {
     pub const fn new(v: u8) -> Self {
         Self(v)
     }
+
+    pub fn as_raw(&self) -> u8 {
+        self.0
+    }
 }
 
 unsafe impl ByteAlignedValue for AdvHandle {}
