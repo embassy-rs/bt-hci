@@ -146,6 +146,7 @@ impl<const US: u32> Duration<US> {
     }
 }
 
+#[cfg(feature = "embassy-time")]
 impl<const US: u32> From<embassy_time::Duration> for Duration<US> {
     fn from(duration: embassy_time::Duration) -> Self {
         Self::from_micros(duration.as_micros())
@@ -214,6 +215,7 @@ impl<const US: u16> ExtDuration<US> {
     }
 }
 
+#[cfg(feature = "embassy-time")]
 impl<const US: u16> From<embassy_time::Duration> for ExtDuration<US> {
     fn from(duration: embassy_time::Duration) -> Self {
         Self::from_micros(duration.as_micros())
