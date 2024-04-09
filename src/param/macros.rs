@@ -291,52 +291,6 @@ macro_rules! param {
             }
         }
     };
-    (
-        $(#[$attrs:meta])*
-        bitfield $name:ident[$octets:expr] {
-            $(($bit:expr, $get:ident);)+
-        }
-    ) => {
-        $(#[$attrs])*
-        #[repr(transparent)]
-        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        pub struct $name([u8; $octets]);
-
-        impl $name {
-            pub fn new() -> Self {
-                Self::default()
-            }
-
-            pub fn into_inner(self) -> [u8; $octets] {
-                self.0
-            }
-
-            $(
-                pub const fn $get(&self) -> bool {
-                    const OCTET: usize = $bit / 8;
-                    const BIT: usize = $bit % 8;
-                    (self.0[OCTET] & (1 << BIT)) != 0
-                }
-            )+
-        }
-
-        unsafe impl $crate::FixedSizeValue for $name {
-            #[inline(always)]
-            fn is_valid(_data: &[u8]) -> bool {
-                true
-            }
-        }
-
-        unsafe impl $crate::ByteAlignedValue for $name {}
-
-        impl<'de> $crate::FromHciBytes<'de> for &'de $name {
-            #[inline(always)]
-            fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), $crate::FromHciBytesError> {
-                <$name as $crate::ByteAlignedValue>::ref_from_hci_bytes(data)
-            }
-        }
-    };
 }
 
 macro_rules! param_slice {

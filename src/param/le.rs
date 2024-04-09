@@ -478,13 +478,47 @@ param! {
 
 param! {
     bitfield LeExtAdvEventKind[2] {
-        (0, connectable);
-        (1, scannable);
-        (2, directed);
-        (3, scan_response);
-        (4, legacy);
-        (5, data_status_1);
-        (6, data_status_2);
+        (0, connectable, set_connectable);
+        (1, scannable, set_scannable);
+        (2, directed, set_directed);
+        (3, scan_response, set_scan_response);
+        (4, legacy, set_legacy);
+        (5, data_status_1, set_data_status_1);
+        (6, data_status_2, set_data_status_2);
+    }
+}
+
+pub enum LeExtAdvDataStatus {
+    Complete,
+    IncompleteMoreExpected,
+    IncompleteTruncated,
+}
+
+impl LeExtAdvEventKind {
+    pub fn data_status(&self) -> LeExtAdvDataStatus {
+        match (self.data_status_1(), self.data_status_2()) {
+            (false, false) => LeExtAdvDataStatus::Complete,
+            (false, true) => LeExtAdvDataStatus::IncompleteMoreExpected,
+            (true, false) => LeExtAdvDataStatus::IncompleteTruncated,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn set_data_status(&mut self, status: LeExtAdvDataStatus) {
+        match status {
+            LeExtAdvDataStatus::Complete => {
+                self.set_data_status_1(false);
+                self.set_data_status_2(false);
+            }
+            LeExtAdvDataStatus::IncompleteMoreExpected => {
+                self.set_data_status_1(false);
+                self.set_data_status_2(true);
+            }
+            LeExtAdvDataStatus::IncompleteTruncated => {
+                self.set_data_status_1(true);
+                self.set_data_status_2(false);
+            }
+        }
     }
 }
 
