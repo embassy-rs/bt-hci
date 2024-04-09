@@ -223,6 +223,7 @@ impl<const US: u16> From<embassy_time::Duration> for ExtDuration<US> {
 param!(
     enum DisconnectReason {
         AuthenticationFailure = 0x05,
+        ConnectionTimeout = 0x08,
         RemoteUserTerminatedConn = 0x13,
         RemoteDeviceTerminatedConnLowResources = 0x14,
         RemoteDeviceTerminatedConnPowerOff = 0x15,
