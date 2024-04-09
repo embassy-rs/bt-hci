@@ -115,7 +115,7 @@ events! {
     struct DisconnectionComplete(0x05) {
         status: Status,
         handle: ConnHandle,
-        reasdon: DisconnectReason,
+        reason: DisconnectReason,
     }
 
     /// Bluetooth Core Specification Vol 4, Part E, §7.7.8
