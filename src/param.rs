@@ -146,6 +146,12 @@ impl<const US: u32> Duration<US> {
     }
 }
 
+impl<const US: u32> From<embassy_time::Duration> for Duration<US> {
+    fn from(duration: embassy_time::Duration) -> Self {
+        Self::from_micros(duration.as_micros())
+    }
+}
+
 /// A 24-bit isochronous duration (in microseconds)
 #[repr(transparent)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -205,6 +211,12 @@ impl<const US: u16> ExtDuration<US> {
     pub fn as_secs(&self) -> u32 {
         // ((1 << 24 - 1) * u16::MAX / 1_000_000) < u32::MAX so this is safe
         (self.as_micros() / 1_000_000) as u32
+    }
+}
+
+impl<const US: u16> From<embassy_time::Duration> for ExtDuration<US> {
+    fn from(duration: embassy_time::Duration) -> Self {
+        Self::from_micros(duration.as_micros())
     }
 }
 
