@@ -483,8 +483,6 @@ param! {
         (2, directed, set_directed);
         (3, scan_response, set_scan_response);
         (4, legacy, set_legacy);
-        (5, data_status_1, set_data_status_1);
-        (6, data_status_2, set_data_status_2);
     }
 }
 
@@ -496,29 +494,24 @@ pub enum LeExtAdvDataStatus {
 
 impl LeExtAdvEventKind {
     pub fn data_status(&self) -> LeExtAdvDataStatus {
-        match (self.data_status_1(), self.data_status_2()) {
-            (false, false) => LeExtAdvDataStatus::Complete,
-            (false, true) => LeExtAdvDataStatus::IncompleteMoreExpected,
-            (true, false) => LeExtAdvDataStatus::IncompleteTruncated,
+        let data_status = self.0[0] >> 5 & 0x03;
+        match data_status {
+            0 => LeExtAdvDataStatus::Complete,
+            1 => LeExtAdvDataStatus::IncompleteMoreExpected,
+            2 => LeExtAdvDataStatus::IncompleteTruncated,
             _ => unreachable!(),
         }
     }
 
-    pub fn set_data_status(&mut self, status: LeExtAdvDataStatus) {
-        match status {
-            LeExtAdvDataStatus::Complete => {
-                self.set_data_status_1(false);
-                self.set_data_status_2(false);
-            }
-            LeExtAdvDataStatus::IncompleteMoreExpected => {
-                self.set_data_status_1(false);
-                self.set_data_status_2(true);
-            }
-            LeExtAdvDataStatus::IncompleteTruncated => {
-                self.set_data_status_1(true);
-                self.set_data_status_2(false);
-            }
-        }
+    pub fn set_data_status(mut self, status: LeExtAdvDataStatus) -> Self {
+        let value = match status {
+            LeExtAdvDataStatus::Complete => 0,
+            LeExtAdvDataStatus::IncompleteMoreExpected => 1,
+            LeExtAdvDataStatus::IncompleteTruncated => 2,
+        };
+        self.0[0] &= !(0x03 << 5);
+        self.0[0] |= value << 5;
+        self
     }
 }
 
@@ -697,5 +690,22 @@ impl<'a, 'b: 'a> WriteHci for &'a [LePeriodicAdvSubeventData<'b>] {
             <LePeriodicAdvSubeventData as WriteHci>::write_hci_async(x, &mut writer).await?;
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_ext_adv_event_kind() {
+        let k = LeExtAdvEventKind::new().set_connectable(true);
+        assert_eq!(k.0[0], 0b0000001);
+        let k = k.set_data_status(LeExtAdvDataStatus::Complete);
+        assert_eq!(k.0[0], 0b0000001);
+        let k = k.set_data_status(LeExtAdvDataStatus::IncompleteMoreExpected);
+        assert_eq!(k.0[0], 0b0100001);
+        let k = k.set_data_status(LeExtAdvDataStatus::IncompleteTruncated);
+        assert_eq!(k.0[0], 0b1000001);
     }
 }
