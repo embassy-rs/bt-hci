@@ -509,7 +509,7 @@ impl LeExtAdvEventKind {
             LeExtAdvDataStatus::Complete => 0,
             LeExtAdvDataStatus::IncompleteMoreExpected => 1,
             LeExtAdvDataStatus::IncompleteTruncated => 2,
-            LeExtAdvDataStatus::Reserved => 0xFF,
+            LeExtAdvDataStatus::Reserved => 3,
         };
         self.0[0] &= !(0x03 << 5);
         self.0[0] |= value << 5;
