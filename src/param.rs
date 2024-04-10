@@ -146,6 +146,13 @@ impl<const US: u32> Duration<US> {
     }
 }
 
+#[cfg(feature = "embassy-time")]
+impl<const US: u32> From<embassy_time::Duration> for Duration<US> {
+    fn from(duration: embassy_time::Duration) -> Self {
+        Self::from_micros(duration.as_micros())
+    }
+}
+
 /// A 24-bit isochronous duration (in microseconds)
 #[repr(transparent)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -208,9 +215,17 @@ impl<const US: u16> ExtDuration<US> {
     }
 }
 
+#[cfg(feature = "embassy-time")]
+impl<const US: u16> From<embassy_time::Duration> for ExtDuration<US> {
+    fn from(duration: embassy_time::Duration) -> Self {
+        Self::from_micros(duration.as_micros())
+    }
+}
+
 param!(
     enum DisconnectReason {
         AuthenticationFailure = 0x05,
+        ConnectionTimeout = 0x08,
         RemoteUserTerminatedConn = 0x13,
         RemoteDeviceTerminatedConnLowResources = 0x14,
         RemoteDeviceTerminatedConnPowerOff = 0x15,
