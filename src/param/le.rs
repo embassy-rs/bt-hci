@@ -148,7 +148,7 @@ pub enum PhyOptions {
 unsafe impl FixedSizeValue for PhyOptions {
     #[inline(always)]
     fn is_valid(data: &[u8]) -> bool {
-        data[0] == 0 || data[0] == 1 || data[0] == 2 || false
+        data[0] == 0 || data[0] == 1 || data[0] == 2
     }
 }
 
