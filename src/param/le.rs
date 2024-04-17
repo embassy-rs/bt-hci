@@ -40,16 +40,19 @@ impl AdvChannelMap {
 param!(struct ChannelMap([u8; 5]));
 
 impl ChannelMap {
+    pub fn new() -> Self {
+        Self([0xff, 0xff, 0xff, 0xff, 0xf8])
+    }
     pub fn is_channel_bad(&self, channel: u8) -> bool {
         let byte = usize::from(channel / 8);
         let bit = channel % 8;
-        (self.0[byte] & (1 << bit)) != 0
+        (self.0[byte] & (1 << bit)) == 0
     }
 
     pub fn set_channel_bad(&mut self, channel: u8, bad: bool) {
         let byte = usize::from(channel / 8);
         let bit = channel % 8;
-        self.0[byte] = (self.0[byte] & !(1 << bit)) | (u8::from(bad) << bit);
+        self.0[byte] = (self.0[byte] & !(1 << bit)) | (u8::from(!bad) << bit);
     }
 }
 
