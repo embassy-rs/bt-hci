@@ -712,5 +712,6 @@ mod tests {
         assert_eq!(k.0[0], 0b0100001);
         let k = k.set_data_status(LeExtAdvDataStatus::IncompleteTruncated);
         assert_eq!(k.0[0], 0b1000001);
+        assert!(false);
     }
 }
