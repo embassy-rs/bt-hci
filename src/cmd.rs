@@ -1,11 +1,9 @@
-//! Bluetooth HCI command packets.
-//!
-//! See Bluetooth Core Specification Vol 4, Part E, §7.
+//! HCI commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ee8bbec6-ebdd-b47d-41d5-a7e655cad979)
 
 use core::future::Future;
 
-use crate::controller::{CmdError, Controller, ControllerCmdAsync, ControllerCmdSync};
-use crate::param::param;
+use crate::controller::{Controller, ControllerCmdAsync, ControllerCmdSync};
+use crate::param::{self, param};
 use crate::{FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
@@ -22,19 +20,19 @@ pub mod status;
 pub struct OpcodeGroup(u8);
 
 impl OpcodeGroup {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.1
+    /// Link Control commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fe2a33d3-28f4-9fd1-4d08-62286985c05e)
     pub const LINK_CONTROL: OpcodeGroup = OpcodeGroup(1);
-    /// Bluetooth Core Specification Vol 4, Part E, §7.2
+    /// Link Policy commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a593fa1a-89f3-8042-5ebe-6da6174e2cf9)
     pub const LINK_POLICY: OpcodeGroup = OpcodeGroup(2);
-    /// Bluetooth Core Specification Vol 4, Part E, §7.3
+    /// Controller & Baseband commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5ced811b-a6ce-701a-16b2-70f2d9795c05)
     pub const CONTROL_BASEBAND: OpcodeGroup = OpcodeGroup(3);
-    /// Bluetooth Core Specification Vol 4, Part E, §7.4
+    /// Informational parameters [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-42372304-c9ef-dcab-6905-4e5b64703d45)
     pub const INFO_PARAMS: OpcodeGroup = OpcodeGroup(4);
-    /// Bluetooth Core Specification Vol 4, Part E, §7.5
+    /// Status parameters [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-40e8a930-65b3-c409-007e-388fd48e1041)
     pub const STATUS_PARAMS: OpcodeGroup = OpcodeGroup(5);
-    /// Bluetooth Core Specification Vol 4, Part E, §7.6
+    /// Testing commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ec2ddbf2-ae4c-ec45-7a06-94f8b3327220)
     pub const TESTING: OpcodeGroup = OpcodeGroup(6);
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8
+    /// LE Controller commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0f07d2b9-81e3-6508-ee08-8c808e468fed)
     pub const LE: OpcodeGroup = OpcodeGroup(8);
     /// Vendor Specific Debug commands
     pub const VENDOR_SPECIFIC: OpcodeGroup = OpcodeGroup(0x3f);
@@ -74,6 +72,20 @@ impl Opcode {
     }
 }
 
+/// An error type for HCI commands
+#[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum Error<E> {
+    Hci(param::Error),
+    Io(E),
+}
+
+impl<E> From<param::Error> for Error<E> {
+    fn from(e: param::Error) -> Self {
+        Self::Hci(e)
+    }
+}
+
 /// An object representing an HCI Command
 pub trait Cmd: WriteHci {
     /// The opcode identifying this kind of HCI Command
@@ -100,7 +112,7 @@ pub trait AsyncCmd: Cmd {
     fn exec<C: ControllerCmdAsync<Self>>(
         &self,
         controller: &C,
-    ) -> impl Future<Output = Result<(), CmdError<<C as Controller>::Error>>> {
+    ) -> impl Future<Output = Result<(), Error<<C as Controller>::Error>>> {
         controller.exec(self)
     }
 }
@@ -143,21 +155,20 @@ pub trait SyncCmd: Cmd {
     fn exec<C: ControllerCmdSync<Self>>(
         &self,
         controller: &C,
-    ) -> impl Future<Output = Result<Self::Return, CmdError<<C as Controller>::Error>>> {
+    ) -> impl Future<Output = Result<Self::Return, Error<<C as Controller>::Error>>> {
         controller.exec(self)
     }
 }
 
+#[doc(hidden)]
 #[macro_export]
 macro_rules! cmd {
     (
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
-            $(#[$param_attrs:meta])*
             $params:ident$(<$life:lifetime>)? {
                 $($param_name:ident: $param_ty:ty,)+
             }
-            $(#[$ret_attrs:meta])*
             $ret:ident {
                 $($ret_name:ident: $ret_ty:ty,)+
             }
@@ -167,7 +178,6 @@ macro_rules! cmd {
         $crate::cmd! {
             $(#[$attrs])*
             $name($group, $cmd) {
-                $(#[$param_attrs])*
                 $params$(<$life>)? {
                     $($param_name: $param_ty,)+
                 }
@@ -177,7 +187,8 @@ macro_rules! cmd {
         }
 
         $crate::param! {
-            $(#[$ret_attrs])*
+            #[doc = "Return parameters for"]
+            $(#[$attrs])*
             struct $ret {
                 $($handle_name: $handle,)?
                 $($ret_name: $ret_ty,)*
@@ -188,7 +199,6 @@ macro_rules! cmd {
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
             Params = ();
-            $(#[$ret_attrs:meta])*
             $ret:ident {
                 $($ret_name:ident: $ret_ty:ty,)+
             }
@@ -203,7 +213,8 @@ macro_rules! cmd {
         }
 
         $crate::param! {
-            $(#[$ret_attrs])*
+            #[doc = "Return parameters for"]
+            $(#[$attrs])*
             struct $ret {
                 $($ret_name: $ret_ty,)*
             }
@@ -213,7 +224,6 @@ macro_rules! cmd {
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
             Params$(<$life:lifetime>)? = $param:ty;
-            $(#[$ret_attrs:meta])*
             $ret:ident {
                 $($ret_name:ident: $ret_ty:ty,)+
             }
@@ -230,7 +240,8 @@ macro_rules! cmd {
         }
 
         $crate::param! {
-            $(#[$ret_attrs])*
+            #[doc = "Return parameters for"]
+            $(#[$attrs])*
             struct $ret {
                 $($handle_name: $handle,)?
                 $($ret_name: $ret_ty,)*
@@ -240,7 +251,6 @@ macro_rules! cmd {
     (
         $(#[$attrs:meta])*
         $name:ident($group:ident, $cmd:expr) {
-            $(#[$param_attrs:meta])*
             $params:ident$(<$life:lifetime>)? {
                 $($param_name:ident: $param_ty:ty,)+
             }
@@ -281,7 +291,8 @@ macro_rules! cmd {
         }
 
         $crate::param! {
-            $(#[$param_attrs])*
+            #[doc = "Parameters for"]
+            $(#[$attrs])*
             struct $params$(<$life>)? {
                 $($($handle_name: $handle,)?)?
                 $($param_name: $param_ty,)*

@@ -95,6 +95,8 @@ pub trait HostToControllerPacket: WriteHci {
     const KIND: PacketKind;
 }
 
+/// Marker trait for HCI values that have a known, fixed size
+///
 /// # Safety
 /// - Must not contain any padding (uninitialized) bytes (recursively)
 /// - structs must be `#[repr(C)]` or `#[repr(transparent)]`
@@ -108,7 +110,7 @@ pub unsafe trait FixedSizeValue: Copy {
     fn is_valid(data: &[u8]) -> bool;
 }
 
-/// Marker trait for `FixedSizeValue`s that have byte alignment.
+/// Marker trait for [`FixedSizeValue`]s that have byte alignment.
 ///
 /// # Safety
 /// - Must have `core::mem::align_of::<T>() == 1`
@@ -331,36 +333,5 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
             PacketKind::Event => event::Event::read_hci_async(reader, buf).await.map(Self::Event),
             PacketKind::IsoData => data::IsoPacket::read_hci_async(reader, buf).await.map(Self::Iso),
         }
-    }
-}
-
-/// Wrapper for a [`HostToControllerPacket`] that will write the [`PacketKind`] indicator byte before the packet itself
-/// when serialized with [`WriteHci`].
-///
-/// This is used for transports where all packets are sent over a common channel, such as the UART transport.
-pub struct WithIndicator<'a, T: HostToControllerPacket>(&'a T);
-
-impl<'a, T: HostToControllerPacket> WithIndicator<'a, T> {
-    pub fn new(pkt: &'a T) -> Self {
-        Self(pkt)
-    }
-}
-
-impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
-    #[inline(always)]
-    fn size(&self) -> usize {
-        1 + self.0.size()
-    }
-
-    #[inline(always)]
-    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        T::KIND.write_hci(&mut writer)?;
-        self.0.write_hci(writer)
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        T::KIND.write_hci_async(&mut writer).await?;
-        self.0.write_hci_async(writer).await
     }
 }
