@@ -1,3 +1,5 @@
+//! HCI controller
+
 use core::cell::RefCell;
 use core::future::{poll_fn, Future};
 use core::mem::MaybeUninit;
@@ -13,7 +15,7 @@ use crate::cmd::{Cmd, CmdReturnBuf};
 use crate::event::{CommandComplete, Event};
 use crate::param::{RemainingBytes, Status};
 use crate::transport::Transport;
-use crate::{cmd, data, param, ControllerToHostPacket, FixedSizeValue, FromHciBytes, HostToControllerPacket};
+use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, HostToControllerPacket};
 
 pub trait Controller {
     type Error: embedded_io::Error;
@@ -25,31 +27,17 @@ pub trait Controller {
     fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
 }
 
-/// An error type for Bluetooth HCI commands.
-#[derive(Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum CmdError<E> {
-    Hci(param::Error),
-    Io(E),
-}
-
-impl<E> From<param::Error> for CmdError<E> {
-    fn from(e: param::Error) -> Self {
-        Self::Hci(e)
-    }
-}
-
 pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, CmdError<Self::Error>>>;
+    fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, cmd::Error<Self::Error>>>;
 }
 
 pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
-    fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), CmdError<Self::Error>>>;
+    fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), cmd::Error<Self::Error>>>;
 }
 
-/// An external Bluetooth controller with communication via [`Transport`] type `T`.
+/// An external [`Controller`] with communication via [`Transport`] type `T`.
 ///
 /// The controller state holds a number of command slots that can be used
 /// to issue commands and await responses from an underlying controller.
@@ -137,7 +125,7 @@ where
     C: cmd::SyncCmd,
     C::Return: FixedSizeValue,
 {
-    async fn exec(&self, cmd: &C) -> Result<C::Return, CmdError<Self::Error>> {
+    async fn exec(&self, cmd: &C) -> Result<C::Return, cmd::Error<Self::Error>> {
         let mut retval: C::ReturnBuf = C::ReturnBuf::new();
 
         //info!("Executing command with opcode {}", C::OPCODE);
@@ -146,7 +134,7 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.write(cmd).await.map_err(CmdError::Io)?;
+        self.write(cmd).await.map_err(cmd::Error::Io)?;
 
         let result = slot.wait().await;
         let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
@@ -156,7 +144,7 @@ where
             cmd_opcode: C::OPCODE,
             return_param_bytes,
         };
-        let r = e.to_result::<C>().map_err(CmdError::Hci)?;
+        let r = e.to_result::<C>().map_err(cmd::Error::Hci)?;
         // info!("Done executing command with opcode {}", C::OPCODE);
         Ok(r)
     }
@@ -167,13 +155,13 @@ where
     T: Transport,
     C: cmd::AsyncCmd,
 {
-    async fn exec(&self, cmd: &C) -> Result<(), CmdError<Self::Error>> {
+    async fn exec(&self, cmd: &C) -> Result<(), cmd::Error<Self::Error>> {
         let (slot, idx) = self.slots.acquire(C::OPCODE, &mut []).await;
         let _d = OnDrop::new(|| {
             self.slots.release_slot(idx);
         });
 
-        self.write(cmd).await.map_err(CmdError::Io)?;
+        self.write(cmd).await.map_err(cmd::Error::Io)?;
 
         let result = slot.wait().await;
         result.status.to_result()?;

@@ -1,4 +1,4 @@
-//! Bluetooth HCI transport layer definitions.
+//! HCI transport layers [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface.html)
 
 use core::future::Future;
 
@@ -6,11 +6,9 @@ use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
 use embedded_io::ReadExactError;
 
-use crate::{
-    ControllerToHostPacket, FromHciBytesError, HostToControllerPacket, ReadHci, ReadHciError, WithIndicator, WriteHci,
-};
+use crate::{ControllerToHostPacket, FromHciBytesError, HostToControllerPacket, ReadHci, ReadHciError, WriteHci};
 
-/// A packet-oriented HCI transport layer
+/// A packet-oriented HCI Transport Layer
 pub trait Transport {
     type Error: embedded_io::Error;
     /// Read a complete HCI packet into the rx buffer
@@ -19,7 +17,7 @@ pub trait Transport {
     fn write<T: HostToControllerPacket>(&self, val: &T) -> impl Future<Output = Result<(), Self::Error>>;
 }
 
-/// A HCI transport layer implementation for a split serial using the UART transport layer protocol
+/// HCI transport layer for a split serial bus using the UART transport layer protocol [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/uart-transport-layer.html)
 pub struct SerialTransport<M: RawMutex, R, W> {
     reader: Mutex<M, R>,
     writer: Mutex<M, W>,
@@ -96,5 +94,36 @@ impl<
             .write_hci_async(&mut *w)
             .await
             .map_err(|e| Error::Write(e))
+    }
+}
+
+/// Wrapper for a [`HostToControllerPacket`] that will write the [`PacketKind`](crate::PacketKind) indicator byte before the packet itself
+/// when serialized with [`WriteHci`].
+///
+/// This is used for transports where all packets are sent over a common channel, such as the UART transport.
+pub struct WithIndicator<'a, T: HostToControllerPacket>(&'a T);
+
+impl<'a, T: HostToControllerPacket> WithIndicator<'a, T> {
+    pub fn new(pkt: &'a T) -> Self {
+        Self(pkt)
+    }
+}
+
+impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        1 + self.0.size()
+    }
+
+    #[inline(always)]
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        T::KIND.write_hci(&mut writer)?;
+        self.0.write_hci(writer)
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        T::KIND.write_hci_async(&mut writer).await?;
+        self.0.write_hci_async(writer).await
     }
 }

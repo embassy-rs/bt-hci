@@ -1,6 +1,4 @@
-//! Bluetooth LE events.
-//!
-//! This module contains the sub-events of the LE Meta event (see Bluetooth Core Specification Vol 4, Part E, §7.7.65).
+//! LE Meta events [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9bfbd351-a103-f197-b85f-ffd9dcc92872)
 
 use crate::param::{
     AddrKind, AdvHandle, BdAddr, BigHandle, BisConnHandle, ClockAccuracy, ConnHandle, CteKind, DataStatus, Duration,
@@ -25,13 +23,12 @@ macro_rules! le_events {
             }
         )+
     ) => {
-        /// Bluetooth Core Specification Vol 4, Part E, §7.7.65
+        /// LE Meta event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9bfbd351-a103-f197-b85f-ffd9dcc92872)
         #[non_exhaustive]
         #[derive(Debug, Clone, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum LeEvent<'a> {
             $(
-                #[allow(missing_docs)]
                 $name($name$(<$life>)?),
             )+
         }
@@ -52,7 +49,6 @@ macro_rules! le_events {
             #[cfg_attr(feature = "defmt", derive(defmt::Format))]
             pub struct $name$(<$life>)? {
                 $(
-                    #[allow(missing_docs)]
                     pub $field: $ty,
                 )*
             }
@@ -80,7 +76,7 @@ macro_rules! le_events {
 }
 
 le_events! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.1
+    /// LE Connection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-eee7884c-c6d1-159a-9fc2-aebf6bcf30e7)
     struct LeConnectionComplete(1) {
         status: Status,
         handle: ConnHandle,
@@ -93,12 +89,12 @@ le_events! {
         central_clock_accuracy: ClockAccuracy,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.2
+    /// LE Advertising Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-bf6970a8-7187-7d2c-0408-b83aa09837e3)
     struct LeAdvertisingReport<'a>(2) {
         reports: LeAdvReports<'a>,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.3
+    /// LE Connection Update Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5a3debb8-e7b3-44a4-9c42-317bc40ee1d2)
     struct LeConnectionUpdateComplete(3) {
         status: Status,
         handle: ConnHandle,
@@ -107,21 +103,21 @@ le_events! {
         supervision_timeout: Duration<10_000>,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.4
+    /// LE Read Remote Features Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a33d9f3f-718b-016c-a89c-8a77c5589ba9)
     struct LeReadRemoteFeaturesComplete(4) {
         status: Status,
         handle: ConnHandle,
         le_features: LeFeatureMask,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.5
+    /// LE Long Term Key Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2bb7b9d8-d02b-0320-3dc8-9699e4b30332)
     struct LeLongTermKeyRequest(5) {
         handle: ConnHandle,
         random_number: [u8; 8],
         encrypted_diversifier: u16,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.6
+    /// LE Remote Connection Parameter Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-98e6a66c-1561-7bd0-d4c6-79bff2ba7652)
     struct LeRemoteConnectionParameterRequest(6) {
         handle: ConnHandle,
         interval_min: Duration<1_250>,
@@ -130,7 +126,7 @@ le_events! {
         timeout: Duration<10_000>,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.7
+    /// LE Data Length Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-631c5539-4155-072a-af53-a226e0bfb96a)
     struct LeDataLengthChange(7) {
         handle: ConnHandle,
         max_tx_octets: u16,
@@ -139,20 +135,20 @@ le_events! {
         max_rx_time: u16,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.8
+    /// LE Read Local P-256 Public Key Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b2210bd7-74d1-949a-091c-008440a8625f)
     struct LeReadLocalP256PublicKeyComplete(8) {
         status: Status,
         key_x_coordinate: [u8; 32],
         key_y_coordinate: [u8; 32],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.9
+    /// LE Generate DHKey Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a5b34696-b6fa-ec1a-31ae-8a09db157322)
     struct LeGenerateDhkeyComplete(9) {
         status: Status,
         dh_key: [u8; 32],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.10
+    /// LE Enhanced Connection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ed5dc708-ff96-949f-586a-4d418466b226)
     struct LeEnhancedConnectionComplete(10) {
         status: Status,
         handle: ConnHandle,
@@ -167,12 +163,12 @@ le_events! {
         central_clock_accuracy: ClockAccuracy,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.11
+    /// LE Directed Advertising Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3e0a8a2e-a30f-df11-7490-132e35ee5daa)
     struct LeDirectedAdvertisingReport<'a>(11) {
         reports: &'a [LeDirectedAdvertisingReportParam],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.12
+    /// LE PHY Update Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1f6a363e-bd01-bbf7-be6f-fb86ffa645ec)
     struct LePhyUpdateComplete(12) {
         status: Status,
         handle: ConnHandle,
@@ -180,12 +176,12 @@ le_events! {
         rx_phy: PhyKind,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.13
+    /// LE Extended Advertising Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-37c674d6-c93f-c46c-420a-b2569dff4fa0)
     struct LeExtendedAdvertisingReport<'a>(13) {
         reports: LeExtAdvReports<'a>
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.14
+    /// LE Periodic Advertising Sync Established event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1f76b4e2-f279-1976-1e33-5ba86d0955c2)
     struct LePeriodicAdvertisingSyncEstablished(14) {
         status: Status,
         sync_handle: SyncHandle,
@@ -197,7 +193,7 @@ le_events! {
         adv_clock_accuracy: ClockAccuracy,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.15
+    /// LE Periodic Advertising Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e216c26f-0383-c651-4b8d-1409b91c7e34)
     struct LePeriodicAdvertisingReport<'a>(15) {
         sync_handle: SyncHandle,
         tx_power: i8,
@@ -207,15 +203,15 @@ le_events! {
         data: &'a [u8],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.16
+    /// LE Periodic Advertising Sync Lost event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a1a90403-d1b7-d117-0f30-620c8d3912ef)
     struct LePeriodicAdvertisingSyncLost(16) {
         sync_handle: SyncHandle,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.17
+    /// LE Scan Timeout event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fd746670-5772-b038-ad51-135d8371fb00)
     struct LeScanTimeout(17) {}
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.18
+    /// LE Advertising Set Terminated event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b7eedd85-4369-f88f-7872-7278f7778cd2)
     struct LeAdvertisingSetTerminated(18) {
         status: Status,
         adv_handle: AdvHandle,
@@ -223,20 +219,20 @@ le_events! {
         num_completed_ext_adv_evts: u8,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.19
+    /// LE Scan Request Received event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-10c1448e-03ab-9ce7-8d90-7ad870c8da20)
     struct LeScanRequestReceived(19) {
         adv_handle: AdvHandle,
         scanner_addr_kind: AddrKind,
         scanner_addr: BdAddr,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.20
+    /// LE Channel Selection Algorithm event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8ccdba3a-0523-031c-bb51-7d4f2c2e1191)
     struct LeChannelSelectionAlgorithm(20) {
         handle: ConnHandle,
         channel_selection_algorithm: u8,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.21
+    /// LE Connectionless IQ Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fafa104b-6cb3-ef73-38bd-37539d44e865)
     struct LeConnectionlessIqReport<'a>(21) {
         sync_handle: SyncHandle,
         channel_index: u8,
@@ -249,7 +245,7 @@ le_events! {
         iq_samples: &'a [LeIQSample],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.22
+    /// LE Connection IQ Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b38e7527-8dc5-ea71-c7ce-892e2362e338)
     struct LeConnectionIqReport<'a>(22) {
         handle: ConnHandle,
         rx_phy: PhyKind,
@@ -263,13 +259,13 @@ le_events! {
         iq_samples: &'a [LeIQSample],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.23
+    /// LE CTE Request Failed event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f546f56f-fff2-6ba2-1b86-77dbcf8fc012)
     struct LeCteRequestFailed(23) {
         status: Status,
         handle: ConnHandle,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.24
+    /// LE Periodic Advertising Sync Transfer Received event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6feaf258-f0a9-7db2-d837-5bd8c07ef396)
     struct LePeriodicAdvertisingSyncTransferReceived(24) {
         status: Status,
         handle: ConnHandle,
@@ -283,7 +279,7 @@ le_events! {
         adv_clock_accuracy: ClockAccuracy,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.25
+    /// LE CIS Established event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3c346948-9111-a11b-fc1d-6249936d559a)
     struct LeCisEstablished(25) {
         status: Status,
         handle: ConnHandle,
@@ -303,7 +299,7 @@ le_events! {
         iso_interval: Duration<1_250>,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.26
+    /// LE CIS Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0e5babb6-41aa-4d16-41cb-062d2d7e51dd)
     struct LeCisRequest(26) {
         acl_handle: ConnHandle,
         cis_handle: ConnHandle,
@@ -311,7 +307,7 @@ le_events! {
         cis_id: u8,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.27
+    /// LE Create BIG Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8ca85f3c-5223-d2b4-2b8d-58bb15d58c67)
     struct LeCreateBigComplete<'a>(27) {
         status: Status,
         big_handle: BigHandle,
@@ -327,13 +323,13 @@ le_events! {
         bis_handles: &'a [BisConnHandle],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.28
+    /// LE Terminate BIG Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4f2ef51e-85af-5f2a-fda4-822eb32bc6dd)
     struct LeTerminateBigComplete(28) {
         big_handle: BigHandle,
         reason: Status,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.29
+    /// LE BIG Sync Established event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5d591ea2-a469-5df9-bfd1-e7bf9f0d0e59)
     struct LeBigSyncEstablished<'a>(29) {
         status: Status,
         big_handle: BigHandle,
@@ -347,27 +343,27 @@ le_events! {
         bis_handles: &'a [BisConnHandle],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.30
+    /// LE BIG Sync Lost event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1d70bc8d-a600-7f3e-a35e-4d198005b683)
     struct LeBigSyncLost(30) {
         big_handle: BigHandle,
         reason: Status,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.31
+    /// LE Request Peer SCA Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c03d0f69-243c-20d1-c62d-eacbec5c6769)
     struct LeRequestPeerScaComplete(31) {
         status: Status,
         handle: ConnHandle,
         peer_clock_accuracy: ClockAccuracy,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.32
+    /// LE Path Loss Threshold event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ddc59a86-983e-07ab-8e1e-7a18a033f2da)
     struct LePathLossThreshold(32) {
         handle: ConnHandle,
         current_path_loss: u8,
         zone_entered: ZoneEntered,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.33
+    /// LE Transmit Power Reporting event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-56658b09-da26-d33e-e960-35a474cda8b4)
     struct LeTransmitPowerReporting(33) {
         status: Status,
         handle: ConnHandle,
@@ -378,7 +374,7 @@ le_events! {
         delta: i8,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.34
+    /// LE BIGInfo Advertising Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b86e844-492e-a003-21cb-ff92c6aedf06)
     struct LeBiginfoAdvertisingReport(34) {
         sync_handle: SyncHandle,
         num_bis: u8,
@@ -395,7 +391,7 @@ le_events! {
         is_encrypted: bool,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.65.35
+    /// LE Subrate Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-dd0459e3-1dd8-6cf1-c591-307412647335)
     struct LeSubrateChange(35) {
         status: Status,
         handle: ConnHandle,

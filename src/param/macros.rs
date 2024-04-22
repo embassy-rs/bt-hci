@@ -33,6 +33,7 @@ impl<'de> crate::FromHciBytes<'de> for &'de i8 {
     }
 }
 
+#[doc(hidden)]
 #[macro_export]
 macro_rules! param {
     (

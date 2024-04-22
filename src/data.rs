@@ -1,11 +1,9 @@
-//! Bluetooth HCI data packets.
+//! HCI data packets [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c8fdfc58-ec59-1a87-6e78-0a01de2e0846)
 
 use crate::param::{param, ConnHandle};
 use crate::{FromHciBytes, FromHciBytesError, HostToControllerPacket, PacketKind, ReadHci, ReadHciError, WriteHci};
 
-/// HCI ACL Data packet `Packet_Boundary_Flag`
-///
-/// See Bluetooth Core Specification Vol 4, Part E, §5.4.2
+/// HCI ACL Data packet `Packet_Boundary_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-49cf6aaa-b2f3-30b0-e737-5b515d3b3168)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
@@ -21,9 +19,7 @@ pub enum AclPacketBoundary {
     Complete = 0x03,
 }
 
-/// HCI ACL Data packet `Broadcast_Flag`
-///
-/// See Bluetooth Core Specification Vol 4, Part E, §5.4.2
+/// HCI ACL Data packet `Broadcast_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-49cf6aaa-b2f3-30b0-e737-5b515d3b3168)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
@@ -37,7 +33,7 @@ pub enum AclBroadcastFlag {
 }
 
 param! {
-    /// Bluetooth Core Specification Vol 4, Part E, §5.4.2 (figure 5.2)
+    /// HCI ACL Data Packet header [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-49cf6aaa-b2f3-30b0-e737-5b515d3b3168)
     struct AclPacketHeader {
         handle: u16,
         data_len: u16,
@@ -78,9 +74,7 @@ impl AclPacketHeader {
     }
 }
 
-/// HCI ACL Data packet
-///
-/// See Bluetooth Core Specification Vol 4, Part E, §5.4.2
+/// HCI ACL Data Packet [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-49cf6aaa-b2f3-30b0-e737-5b515d3b3168)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct AclPacket<'a> {
@@ -222,9 +216,7 @@ impl<'a> HostToControllerPacket for AclPacket<'a> {
     const KIND: PacketKind = PacketKind::AclData;
 }
 
-/// HCI Synchronous Data packet `Packet_Status_Flag`
-///
-/// See Bluetooth Core Specification Vol 4, Part E, §5.4.3
+/// HCI Synchronous Data packet `Packet_Status_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ea780739-1980-92c8-1a0a-96fcf9bec7b7)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum SyncPacketStatus {
@@ -246,7 +238,7 @@ pub enum SyncPacketStatus {
 }
 
 param! {
-    /// Bluetooth Core Specification Vol 4, Part E, §5.4.3 (figure 5.3)
+    /// HCI Synchronous Data packet header [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ea780739-1980-92c8-1a0a-96fcf9bec7b7)
     struct SyncPacketHeader {
         handle: u16,
         data_len: u8,
@@ -276,9 +268,7 @@ impl SyncPacketHeader {
     }
 }
 
-/// HCI Synchronous Data packet
-///
-/// See Bluetooth Core Specification Vol 4, Part E, §5.4.3
+/// HCI Synchronous Data packet [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ea780739-1980-92c8-1a0a-96fcf9bec7b7)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct SyncPacket<'a> {
@@ -404,9 +394,7 @@ impl<'a> HostToControllerPacket for SyncPacket<'a> {
     const KIND: PacketKind = PacketKind::SyncData;
 }
 
-/// HCI ISO Data packet `PB_Flag`
-///
-/// See Bluetooth Core Specification Vol 4, Part E, §5.4.5
+/// HCI ISO Data packet `PB_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b5fb085-278b-5084-ac33-bee2839abe6b)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum IsoPacketBoundary {
@@ -420,9 +408,7 @@ pub enum IsoPacketBoundary {
     LastFragment,
 }
 
-/// HCI ISO Data packet `Packet_Status_Flag`
-///
-/// See Bluetooth Core Specification Vol 4, Part E, §5.4.5
+/// HCI ISO Data packet `Packet_Status_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b5fb085-278b-5084-ac33-bee2839abe6b)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum IsoPacketStatus {
@@ -436,7 +422,7 @@ pub enum IsoPacketStatus {
 }
 
 param! {
-    /// Bluetooth Core Specification Vol 4, Part E, §5.4.5 (figure 5.5)
+    /// HCI ISO Data packet header [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b5fb085-278b-5084-ac33-bee2839abe6b)
     struct IsoPacketHeader {
         handle: u16,
         data_load_len: u16,
@@ -475,7 +461,7 @@ impl IsoPacketHeader {
     }
 }
 
-/// Bluetooth Core Specification Vol 4, Part E, §5.4.5 (figure 5.6)
+/// HCI ISO Data conditional header values [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b5fb085-278b-5084-ac33-bee2839abe6b)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IsoDataLoadHeader {
@@ -545,9 +531,7 @@ impl WriteHci for IsoDataLoadHeader {
     }
 }
 
-/// HCI ISO Data packet
-///
-/// See Bluetooth Core Specification Vol 4, Part E, §5.4.5
+/// HCI ISO Data packet [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b5fb085-278b-5084-ac33-bee2839abe6b)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IsoPacket<'a> {

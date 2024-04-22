@@ -1,4 +1,4 @@
-//! Bluetooth Core Specification Vol 4, Part E, §7.8
+//! LE Controller commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0f07d2b9-81e3-6508-ee08-8c808e468fed)
 
 use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr, ChannelMap,
@@ -11,7 +11,7 @@ use crate::param::{
 use crate::{cmd, WriteHci};
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.1
+    /// LE Set Event Mask command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8d6890a5-79b9-ba8a-2079-4efa3128263c)
     LeSetEventMask(LE, 0x0001) {
         Params = LeEventMask;
         Return = ();
@@ -19,10 +19,9 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.2
+    /// LE Read Buffer Size command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1446fd8f-af42-e54c-890d-3cc275ed372f)
     LeReadBufferSize(LE, 0x0002) {
         Params = ();
-        /// Bluetooth Core Specification Vol 4, Part E, §7.8.2
         LeReadBufferSizeReturn {
             le_acl_data_packet_length: u16,
             total_num_le_acl_data_packets: u8,
@@ -31,7 +30,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.3
+    /// LE Read Local Supported Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3ad76ac5-3812-cca4-a4f5-f73e96cebcba)
     LeReadLocalSupportedFeatures(LE, 0x0003) {
         Params = ();
         Return = LeFeatureMask;
@@ -39,7 +38,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.4
+    /// LE Set Random Address command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-89d45457-bdb5-cade-32c5-a27240733659)
     LeSetRandomAddr(LE, 0x0005) {
         Params = BdAddr;
         Return = ();
@@ -47,7 +46,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.5
+    /// LE Set Advertising Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d33351b8-bd92-76f5-47b7-2051fc6e7379)
     LeSetAdvParams(LE, 0x0006) {
         LeSetAdvParamsParams {
             adv_interval_min: Duration<625>,
@@ -64,7 +63,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.6
+    /// LE Read Advertising Physical Channel Tx Power command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b984fde-3e9f-05f3-d698-054ca618bcf3)
     LeReadAdvPhysicalChannelTxPower(LE, 0x0007) {
         Params = ();
         Return = i8;
@@ -72,7 +71,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.7
+    /// LE Set Advertising Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b83376f-e321-e7ce-3bf1-2af187798be4)
     LeSetAdvData(LE, 0x0008) {
         LeSetAdvDataParams {
             data_len: u8,
@@ -83,7 +82,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.8
+    /// LE Set Scan Response Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7f9e3a5b-fa09-5292-b64e-1a5304b6a255)
     LeSetScanResponseData(LE, 0x0009) {
         LeSetScanResponseDataParams {
             data_len: u8,
@@ -94,7 +93,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.9
+    /// LE Set Advertising Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-79bb990c-0338-9c1e-e615-7be8508c8e12)
     LeSetAdvEnable(LE, 0x000a) {
         Params = bool;
         Return = ();
@@ -102,7 +101,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.10
+    /// LE Set Scan Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-28d28698-0fd7-d273-2e31-7a6731617c77)
     LeSetScanParams(LE, 0x000b) {
         LeSetScanParamsParams {
             le_scan_kind: LeScanKind,
@@ -116,7 +115,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.11
+    /// LE Set Scan Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-10327f75-4024-80df-14bc-68fe1e42b9e0)
     LeSetScanEnable(LE, 0x000c) {
         LeSetScanEnableParams {
             enable: bool,
@@ -127,7 +126,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.12
+    /// LE Create Connection command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-dc5080f3-63c3-ac48-23d1-2d35c6393ac2)
     LeCreateConn(LE, 0x000d) {
         LeCreateConnParams {
             le_scan_interval: Duration<10_000>,
@@ -147,7 +146,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.13
+    /// LE Create Connection Cancel command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-37a5c913-6abe-c7b6-9fc8-0d94c8cd266d)
     LeCreateConnCancel(LE, 0x000e) {
         Params = ();
         Return = ();
@@ -155,7 +154,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.14
+    /// LE Read Filter Accept List Size command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-453b3a49-0aba-3f5e-ee16-5919bea4903d)
     LeReadFilterAcceptListSize(LE, 0x000f) {
         Params = ();
         Return = u8;
@@ -163,7 +162,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.15
+    /// LE Clear Filter Accept List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-85c43f7b-9100-63a2-1e97-4def7f859861)
     LeClearFilterAcceptList(LE, 0x0010) {
         Params = ();
         Return = ();
@@ -171,7 +170,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.16
+    /// LE Add Device To Filter Accept List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-80115d56-8927-4ad8-8da7-b9c5ed728c3d)
     LeAddDeviceToFilterAcceptList(LE, 0x0011) {
         LeAddDeviceToFilterAcceptListParams {
             addr_kind: AddrKind,
@@ -182,7 +181,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.17
+    /// LE Remove Device From Filter Accept List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7e2ae96c-2231-3fe0-603e-c4e2d27e7448)
     LeRemoveDeviceFromFilterAcceptList(LE, 0x0012) {
         LeRemoveDeviceFromFilterAcceptListParams {
             addr_kind: AddrKind,
@@ -193,7 +192,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.18
+    /// LE Connection Update command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9d9b11a8-7762-8a3a-5204-0b7f27eea504)
     LeConnUpdate(LE, 0x0013) {
         LeConnUpdateParams {
             handle: ConnHandle,
@@ -208,7 +207,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.19
+    /// LE Set Host Channel Classification command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d76b3c58-aa23-3e1f-d771-fbc347ab29b5)
     LeSetHostChannelClassification(LE, 0x0014) {
         Params = ChannelMap;
         Return = ();
@@ -216,10 +215,9 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.20
+    /// LE Read Channel Map command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-adaea68c-13d3-4d3d-dc76-317d6f7f606b)
     LeReadChannelMap(LE, 0x0015) {
         Params = ConnHandle;
-        /// Bluetooth Core Specification Vol 4, Part E, §7.8.20
         LeReadChannelMapReturn {
             channel_map: ChannelMap,
         }
@@ -228,14 +226,14 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.21
+    /// LE Read Remote Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5cef6d01-c629-c784-03a5-490eb9b0408e)
     LeReadRemoteFeatures(LE, 0x0016) {
         Params = ConnHandle;
     }
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.22
+    /// LE Encrypt command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a902995a-d073-7d20-bede-01bf748323e7)
     LeEncrypt(LE, 0x0017) {
         LeEncryptParams {
             key: [u8; 16],
@@ -246,7 +244,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.23
+    /// LE Rand command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-71fbbee4-dc3f-4c0e-2170-b7c25e22f18d)
     LeRand(LE, 0x0018) {
         Params = ();
         Return = [u8; 8];
@@ -254,7 +252,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.24
+    /// LE Enable Encryption command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d4c636e4-5e0c-39ca-09ec-43b7d229efa0)
     LeEnableEncryption(LE, 0x0019) {
         LeEnableEncryptionParams {
             handle: ConnHandle,
@@ -266,7 +264,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.25
+    /// LE Long Term Key Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e89a5372-a7cd-ae2b-5c8d-e281694793ae)
     LeLongTermKeyRequestReply(LE, 0x001a) {
         LeLongTermKeyRequestReplyParams {
             long_term_key: [u8; 16],
@@ -277,7 +275,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.26
+    /// LE Long Term Key Request Negative Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e64f1aa8-6c23-0d70-c11d-4ac00fb2abe7)
     LeLongTermKeyRequestNegativeReply(LE, 0x001b) {
         Params = ConnHandle;
         Return = ConnHandle;
@@ -286,7 +284,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.27
+    /// LE Read Supported States command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-69afd9a8-4d1a-18fe-ccd0-adf5080328f5)
     LeReadSupportedStates(LE, 0x001c) {
         Params = ();
         Return = [u8; 8];
@@ -294,7 +292,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.30
+    /// LE Test End command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cafabb90-1522-7ad5-8def-5d6dc5a8dabd)
     LeTestEnd(LE, 0x001f) {
         Params = ();
         Return = u16;
@@ -302,7 +300,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.33
+    /// LE Set Data Length command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-242f8446-8cd1-8293-a341-b09354bae550)
     LeSetDataLength(LE, 0x0022) {
         LeSetDataLengthParams {
             tx_octets: u16,
@@ -314,10 +312,9 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.34
+    /// LE Read Suggested Default Data Length command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-63da6c78-1392-4471-9a11-a31567c10655)
     LeReadSuggestedDefaultDataLength(LE, 0x0023) {
         Params = ();
-        /// Bluetooth Core Specification Vol 4, Part E, §7.8.34
         LeReadSuggestedDefaultDataLengthReturn {
             suggested_max_tx_octets: u16,
             suggested_max_tx_time: u16,
@@ -326,7 +323,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.35
+    /// LE Write Suggested Default Data Length command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ab836cdb-5055-0155-37fe-e480ac02bd20)
     LeWriteSuggestedDefaultDataLength(LE, 0x0024) {
         LeWriteSuggestedDefaultDataLengthParams {
             suggested_max_tx_octets: u16,
@@ -337,7 +334,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.38
+    /// LE Add Device To Resolving List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d9a635b2-e7bc-359b-2e6a-5e8b45b38df3)
     LeAddDeviceToResolvingList(LE, 0x0027) {
         LeAddDeviceToResolvingListParams {
             peer_id_addr_kind: AddrKind,
@@ -350,7 +347,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.39
+    /// LE Remove Device From Resolving List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4e58626c-6af2-3797-18f1-7ccf643377d8)
     LeRemoveDeviceFromResolvingList(LE, 0x0028) {
         LeRemoveDeviceFromResolvingListParams {
             peer_id_addr_kind: AddrKind,
@@ -361,7 +358,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.40
+    /// LE Clear Resolving List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7db0d65f-6851-c005-634b-6e7c31835a2e)
     LeClearResolvingList(LE, 0x0029) {
         Params = ();
         Return = ();
@@ -369,7 +366,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.41
+    /// LE Read Resolving List Size command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-dc9dd4cf-11ac-ed84-5101-d7c80ba06f2e)
     LeReadResolvingListSize(LE, 0x002a) {
         Params = ();
         Return = u8;
@@ -377,7 +374,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.44
+    /// LE Set Address Resolution Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ff994d82-39b7-a0a3-dab9-d145d42a35bf)
     LeSetAddrResolutionEnable(LE, 0x002d) {
         Params = bool;
         Return = ();
@@ -385,7 +382,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.45
+    /// LE Set Resolvable Private Address Timeout command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f539d523-751b-6ffa-fa0c-e9633f0d7cc9)
     LeSetResolvablePrivateAddrTimeout(LE, 0x002e) {
         Params = Duration<1_000_000>;
         Return = ();
@@ -393,10 +390,9 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.46
+    /// LE Read Maximum Data Length command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-467bd8e9-d61a-7a76-593f-02cfe246d126)
     LeReadMaxDataLength(LE, 0x002f) {
         Params = ();
-        /// Bluetooth Core Specification Vol 4, Part E, §7.8.46
         LeReadMaxDataLengthReturn {
             supported_max_tx_octets: u16,
             supported_max_tx_time: u16,
@@ -407,10 +403,9 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.47
+    /// LE Read PHY command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d5598779-e01d-73fc-143f-749484029046)
     LeReadPhy(LE, 0x0030) {
         Params = ConnHandle;
-        /// Bluetooth Core Specification Vol 4, Part E, §7.8.47
         LeReadPhyReturn {
             tx_phy: PhyKind,
             rx_phy: PhyKind,
@@ -420,7 +415,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.48
+    /// LE Set Default PHY command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f0d3d393-85fa-9083-d9c0-589b3800a153)
     LeSetDefaultPhy(LE, 0x0031) {
         LeSetDefaultPhyParams {
             all_phys: AllPhys,
@@ -432,7 +427,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.49
+    /// LE Set PHY command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8b2521a7-2192-15c2-1815-bcd8fa11da15)
     LeSetPhy(LE, 0x0032) {
         LeSetPhyParams {
             handle: ConnHandle,
@@ -445,7 +440,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.52
+    /// LE Set Advertising Set Random Address command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7c76cb49-d60d-1b5a-09ba-e3637d96d41d)
     LeSetAdvSetRandomAddr(LE, 0x0035) {
         LeSetAdvSetRandomAddrParams {
             adv_handle: AdvHandle,
@@ -456,7 +451,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.53
+    /// LE Set Extended Advertising Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2d5f3e1f-6666-baa9-dcc2-5d8af3709dac)
     LeSetExtAdvParams(LE, 0x0036) {
         LeSetExtAdvParamsParams {
                 adv_handle: AdvHandle,
@@ -480,7 +475,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.54
+    /// LE Set Extended Advertising Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b63f0c30-a14d-ffdf-8a57-73cfe903c539)
     LeSetExtAdvData(LE, 0x0037) {
         LeSetExtAdvDataParams<'d> {
             adv_handle: AdvHandle,
@@ -493,7 +488,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.55
+    /// LE Set Extended Scan Response Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e3dc6edb-4cde-4655-8186-cbde281bcb53)
     LeSetExtScanResponseData(LE, 0x0038) {
         LeSetExtScanResponseDataParams<'d> {
             adv_handle: AdvHandle,
@@ -506,7 +501,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.56
+    /// LE Set Extended Advertising Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d05d4cfe-f0b5-b0e2-1a63-672c960dc088)
     LeSetExtAdvEnable(LE, 0x0039) {
         LeSetExtAdvEnableParams<'a> {
             enable: bool,
@@ -517,7 +512,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.57
+    /// LE Read Maximum Advertising Data Length command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-762a3b37-a74d-a5b8-31ea-2d1ad02f257d)
     LeReadMaxAdvDataLength(LE, 0x003a) {
         Params = ();
         Return = u16;
@@ -525,7 +520,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.58
+    /// LE Read Number of Supported Advertising Sets command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2b7bf2df-474b-031d-35c5-74623905cfe8)
     LeReadNumberOfSupportedAdvSets(LE, 0x003b) {
         Params = ();
         Return = u8;
@@ -533,7 +528,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.59
+    /// LE Remove Advertising Set command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-eaf84df1-f597-9d23-067d-29931a2bdac9)
     LeRemoveAdvSet(LE, 0x003c) {
         Params = AdvHandle;
         Return = ();
@@ -541,7 +536,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.60
+    /// LE Clear Advertising Sets command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6b002f0a-b5b7-cb02-bc4d-deb80c9bab77)
     LeClearAdvSets(LE, 0x003d) {
         Params = ();
         Return = ();
@@ -549,7 +544,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.61
+    /// LE Set Periodic Advertising Parameters (v1) command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e0bc9abb-d57e-8a02-b515-428c7f30e7d2)
     LeSetPeriodicAdvParams(LE, 0x003e) {
         LeSetPeriodicAdvParamsParams {
             adv_handle: AdvHandle,
@@ -562,7 +557,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.61
+    /// LE Set Periodic Advertising Parameters (v2) command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e0bc9abb-d57e-8a02-b515-428c7f30e7d2)
     LeSetPeriodicAdvParamsV2(LE, 0x003e) {
         LeSetPeriodicAdvParamsV2Params {
             periodic_adv_interval_min: Duration<1_250>,
@@ -580,7 +575,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.62
+    /// LE Set Periodic Advertising Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6154cdf5-c004-4eb1-7bdf-13ecda5bba78)
     LeSetPeriodicAdvData(LE, 0x003f) {
         LeSetPeriodicAdvDataParams<'a> {
             adv_handle: AdvHandle,
@@ -592,7 +587,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.63
+    /// LE Set Periodic Advertising Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f69a3383-9839-e8f2-5339-a1e9327d5bf8)
     LeSetPeriodicAdvEnable(LE, 0x0040) {
         LeSetPeriodicAdvEnableParams {
             enable: bool,
@@ -604,7 +599,7 @@ cmd! {
 
 crate::cmd! {
     BASE
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.64
+    /// LE Set Extended Scan Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-431e2ed0-fe1f-17bd-6e6a-91ff801c6063)
     LeSetExtScanParams(LE, 0x0041) {
         Params = LeSetExtScanParamsParams;
         Return = ();
@@ -625,6 +620,7 @@ impl LeSetExtScanParams {
     }
 }
 
+/// Parameters for LE Set Extended Scan Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-431e2ed0-fe1f-17bd-6e6a-91ff801c6063)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeSetExtScanParamsParams {
@@ -653,7 +649,7 @@ impl WriteHci for LeSetExtScanParamsParams {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.65
+    /// LE Set Extended Scan Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-bfe8407c-4def-2ded-51dd-e47cf9e8916c)
     LeSetExtScanEnable(LE, 0x0042) {
         LeSetExtScanEnableParams {
             enable: bool,
@@ -667,7 +663,7 @@ cmd! {
 
 crate::cmd! {
     BASE
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.66
+    /// LE Extended Create Connection (v1) command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1dad213e-f660-2937-c94d-7a3162e94105)
     LeExtCreateConn(LE, 0x0043) {
         Params = LeExtCreateConnParams;
     }
@@ -691,6 +687,7 @@ impl LeExtCreateConn {
     }
 }
 
+/// Parameters for LE Extended Create Connection (v1) command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1dad213e-f660-2937-c94d-7a3162e94105)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeExtCreateConnParams {
@@ -730,7 +727,7 @@ impl WriteHci for LeExtCreateConnParams {
 
 cmd! {
     BASE
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.66
+    /// LE Extended Create Connection (v2) command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1dad213e-f660-2937-c94d-7a3162e94105)
     LeExtCreateConnV2(LE, 0x0085) {
         Params = LeExtCreateConnV2Params;
     }
@@ -758,6 +755,7 @@ impl LeExtCreateConnV2 {
     }
 }
 
+/// LE Extended Create Connection (v2) command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1dad213e-f660-2937-c94d-7a3162e94105)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeExtCreateConnV2Params {
@@ -804,7 +802,7 @@ impl WriteHci for LeExtCreateConnV2Params {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.67
+    /// LE Periodic Advertising Create Sync command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-29188ef0-bf80-7807-2c96-385e7d9782ed)
     LePeriodicAdvCreateSync(LE, 0x0044) {
         LePeriodicAdvCreateSyncParams {
             options: LePeriodicAdvCreateSyncOptions,
@@ -819,7 +817,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.68
+    /// LE Periodic Advertising Create Sync Cancel command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-203d8b19-9d3f-65b2-82c7-96c6abdc5928)
     LePeriodicAdvCreateSyncCancel(LE, 0x0045) {
         Params = ();
         Return = ();
@@ -827,7 +825,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.69
+    /// LE Periodic Advertising Terminate Sync command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c47f3b5c-e6db-f151-3a45-203bfe8b4fb9)
     LePeriodicAdvTerminateSync(LE, 0x0046) {
         Params = SyncHandle;
         Return = ();
@@ -835,7 +833,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.70
+    /// LE Add Device To Periodic Advertiser List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f73da323-a9c4-78cc-669d-6ebf05029416)
     LeAddDeviceToPeriodicAdvList(LE, 0x0047) {
         LeAddDeviceToPeriodicAdvListParams {
             adv_addr_kind: AddrKind,
@@ -847,7 +845,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.71
+    /// LE Remove Device From Periodic Advertiser List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2f419914-71e3-3886-cecb-c9b5da98b538)
     LeRemoveDeviceFromPeriodicAdvList(LE, 0x0048) {
         LeRemoveDeviceFromPeriodicAdvListParams {
             adv_addr_kind: AddrKind,
@@ -859,7 +857,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.72
+    /// LE Clear Periodic Advertiser List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-049826bb-cdb2-df43-7c18-c5232ad99ef8)
     LeClearPeriodicAdvList(LE, 0x0049) {
         Params = ();
         Return = ();
@@ -867,7 +865,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.73
+    /// LE Read Periodic Advertiser List Size command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3212f6f2-a838-872c-9ead-dd81ac4b7a66)
     LeReadPeriodicAdvListSize(LE, 0x004a) {
         Params = ();
         Return = u8;
@@ -875,7 +873,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.74
+    /// LE Read Transmit Power command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-66ee9869-6f38-c57f-0ab5-b5228ff5302c)
     LeReadTransmitPower(LE, 0x004b) {
         Params = ();
         LeReadTransmitPowerReturn {
@@ -886,7 +884,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.75
+    /// LE Read RF Path Compensation command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8bba170c-e42b-8b42-f44b-64a0bc73af1d)
     LeReadRfPathCompensation(LE, 0x004c) {
         Params = ();
         LeReadRfPathCompensationReturn {
@@ -897,7 +895,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.76
+    /// LE Write RF Path Compensation command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-85f69948-b4de-6b55-8282-77208c43f3aa)
     LeWriteRfPathCompensation(LE, 0x004d) {
         LeWriteRfPathCompensationParams {
             rf_tx_path_compensation_value: i16,
@@ -908,7 +906,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.77
+    /// LE Set Privacy Mode command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6a48bb1b-af90-9620-22c8-a4b9297d257c)
     LeSetPrivacyMode(LE, 0x004e) {
         LeSetPrivacyModeParams {
             peer_id_addr_kind: AddrKind,
@@ -920,7 +918,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.80
+    /// LE Set Connectionless CTE Transmit Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-53d42c3c-cefd-aff5-f3f4-a27d02c8d46e)
     LeSetConnectionlessCteTransmitParams(LE, 0x0051) {
         LeSetConnectionlessCteTransmitParamsParams<'a> {
             adv_handle: AdvHandle,
@@ -934,7 +932,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.81
+    /// LE Set Connectionless CTE Transmit Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f816ec0f-6970-7548-4370-b009c693259f)
     LeSetConnectionlessCteTransmitEnable(LE, 0x0052) {
         LeSetConnectionlessCteTransmitEnableParams {
             adv_handle: AdvHandle,
@@ -945,7 +943,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.84
+    /// LE Set Connection CTE Transmit Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a8cd66e1-b702-2d8e-c027-4f0a89d4f8a1)
     LeSetConnCteTransmitParams(LE, 0x0055) {
         LeSetConnCteTransmitParamsParams<'a> {
             cte_kinds: CteMask,
@@ -957,7 +955,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.86
+    /// LE Connection CTE Response Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cbb39f47-1d2f-e229-ff9e-d716111b38a8)
     LeConnCteResponseEnable(LE, 0x0057) {
         LeConnCteResponseEnableParams {
             enable: bool,
@@ -968,10 +966,9 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.87
+    /// LE Read Antenna Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7a80c226-cea1-de43-ff2b-2503b2e7f91e)
     LeReadAntennaInformation(LE, 0x0058) {
         Params = ();
-        /// Bluetooth Core Specification Vol 4, Part E, §7.8.87
         LeReadAntennaInformationReturn {
             supported_switching_sampling_rates: SwitchingSamplingRates,
             num_antennae: u8,
@@ -982,7 +979,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.88
+    /// LE Set Periodic Advertising Receive Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b055b724-7607-bf63-3862-3e164dfc2251)
     LeSetPeriodicAdvReceiveEnable(LE, 0x0059) {
         LeSetPeriodicAdvReceiveEnableParams {
             sync_handle: SyncHandle,
@@ -993,7 +990,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.89
+    /// LE Periodic Advertising Sync Transfer command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-28bd445b-503e-6c1e-7d80-7bf4c8bd5e8d)
     LePeriodicAdvSyncTransfer(LE, 0x005a) {
         LePeriodicAdvSyncTransferParams {
             service_data: u16,
@@ -1005,7 +1002,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.90
+    /// LE Periodic Advertising Set Info Transfer command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b1707675-34fd-4375-7c1c-354098a52db6)
     LePeriodicAdvSetInfoTransfer(LE, 0x005b) {
         LePeriodicAdvSetInfoTransferParams {
             service_data: u16,
@@ -1017,7 +1014,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.91
+    /// LE Set Periodic Advertising Sync Transfer Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5ae627f7-febe-a209-e4fb-275a35572ae7)
     LeSetPeriodicAdvSyncTransferParams(LE, 0x005c) {
         LeSetPeriodicAdvSyncTransferParamsParams {
             mode: LePeriodicAdvSyncTransferMode,
@@ -1031,7 +1028,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.92
+    /// LE Set Default Periodic Advertising Sync Transfer Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5c2a7c01-0658-1b94-ae09-16a436c9ef4f)
     LeSetDefaultPeriodicAdvSyncTransferParams(LE, 0x005d) {
         LeSetDefaultPeriodicAdvSyncTransferParamsParams {
             mode: LePeriodicAdvSyncTransferMode,
@@ -1044,19 +1041,18 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.108
+    /// LE Request Peer SCA command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4960a916-5311-968d-b432-8537b2dd12ed)
     LeRequestPeerSca(LE, 0x006d) {
         Params = ConnHandle;
     }
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.117
+    /// LE Enhanced Read Transmit Power Level command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9460c908-2c3d-5915-e04b-25ce98dda7a8)
     LeEnhancedReadTransmitPowerLevel(LE, 0x0076) {
         LeEnhancedReadTransmitPowerLevelParams {
             phy: PhyKind,
         }
-        /// Bluetooth Core Specification Vol 4, Part E, §7.8.117
         LeEnhancedReadTransmitPowerLevelReturn {
             phy: PhyKind,
             current_tx_power_level: i8,
@@ -1067,7 +1063,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.118
+    /// LE Read Remote Transmit Power Level command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e0399448-0f93-7fcf-73ed-43171e6627ea)
     LeReadRemoteTransmitPowerLevel(LE, 0x0077) {
         LeReadRemoteTransmitPowerLevelParams {
             handle: ConnHandle,
@@ -1077,7 +1073,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.119
+    /// LE Set Path Loss Reporting Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-40bf69ec-6834-33a5-2978-4bec08e281f2)
     LeSetPathLossReportingParams(LE, 0x0078) {
         LeSetPathLossReportingParamsParams {
             high_threshold: i8,
@@ -1092,7 +1088,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.120
+    /// LE Set Path Loss Reporting Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fd9496a1-33de-7228-a0c1-44b9024daae1)
     LeSetPathLossReportingEnable(LE, 0x0079) {
         LeSetPathLossReportingEnableParams {
             enable: bool,
@@ -1103,7 +1099,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.121
+    /// LE Set Transmit Power Reporting Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cdc834a7-3f30-7329-01d8-44a457aae980)
     LeSetTransmitPowerReportingEnable(LE, 0x007a) {
         LeSetTransmitPowerReportingEnableParams {
             local_enable: bool,
@@ -1115,7 +1111,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.122
+    /// LE Set Data Related Address Changes command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cd6cc02d-3496-3d16-22cb-37f39c2df763)
     LeSetDataRelatedAddrChanges(LE, 0x007c) {
         LeSetDataRelatedAddrChangesParams {
             adv_handle: AdvHandle,
@@ -1127,7 +1123,7 @@ cmd! {
 
 cmd! {
     BASE
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.125
+    /// LE Set Periodic Advertising Subevent Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-927cb8c3-4a12-6154-d2f2-384f4a10f0a4)
     LeSetPeriodicAdvSubeventData(LE, 0x0082) {
         Params<'a> = LeSetPeriodicAdvSubeventDataParams<'a, 'a>;
         Return = AdvHandle;
@@ -1140,6 +1136,7 @@ impl<'a> LeSetPeriodicAdvSubeventData<'a> {
     }
 }
 
+/// Parameters for LE Set Periodic Advertising Subevent Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-927cb8c3-4a12-6154-d2f2-384f4a10f0a4)
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeSetPeriodicAdvSubeventDataParams<'a, 'b> {
@@ -1169,7 +1166,7 @@ impl<'a, 'b> WriteHci for LeSetPeriodicAdvSubeventDataParams<'a, 'b> {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.126
+    /// LE Set Periodic Advertising Response Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8ada75aa-8e1f-c742-6441-8dd1164fc646)
     LeSetPeriodicAdvResponseData(LE, 0x007c) {
         LeSetPeriodicAdvResponseDataParams<'a> {
             adv_handle: SyncHandle,
@@ -1184,7 +1181,7 @@ cmd! {
 }
 
 cmd! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.8.127
+    /// LE Set Periodic Sync Subevent command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e3b9bdd9-b435-9adf-2516-ad94e14ece70)
     LeSetPeriodicSyncSubevent(LE, 0x007c) {
         LeSetPeriodicSyncSubeventParams<'a> {
             adv_handle: SyncHandle,

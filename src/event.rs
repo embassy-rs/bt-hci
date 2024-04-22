@@ -1,6 +1,4 @@
-//! Bluetooth HCI event packets.
-//!
-//! See Bluetooth Core Specification Vol 4, Part E, §7.7.
+//! HCI events [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d21276b6-83d0-cbc3-8295-6ff23b70a0c5)
 
 use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
@@ -111,21 +109,21 @@ macro_rules! events {
 }
 
 events! {
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.5
+    /// Disconnection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-332adb1f-b5ac-5289-82a2-c51a59d533e7)
     struct DisconnectionComplete(0x05) {
         status: Status,
         handle: ConnHandle,
         reason: DisconnectReason,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.8
+    /// Encryption Change (v1) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
     struct EncryptionChangeV1(0x08) {
         status: Status,
         handle: ConnHandle,
         enabled: bool,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.8
+    /// Encryption Change (v2) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
     struct EncryptionChangeV2(0x59) {
         status: Status,
         handle: ConnHandle,
@@ -133,7 +131,7 @@ events! {
         encryption_key_size: u8,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.12
+    /// Read Remote Version Information Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-81ed98a1-98b1-dae5-a3f5-bb7bc69d39b7)
     struct ReadRemoteVersionInformationComplete(0x0c) {
         status: Status,
         handle: ConnHandle,
@@ -142,7 +140,7 @@ events! {
         subversion: u16,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.14
+    /// Command Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-76d31a33-1a9e-07bc-87c4-8ebffee065fd)
     struct CommandComplete<'a>(0x0e) {
         num_hci_cmd_pkts: u8,
         cmd_opcode: Opcode,
@@ -150,40 +148,40 @@ events! {
         return_param_bytes: RemainingBytes<'a>,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.15
+    /// Command Status event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4d87067c-be74-d2ff-d5c4-86416bf7af91)
     struct CommandStatus(0x0f) {
         status: Status,
         num_hci_cmd_pkts: u8,
         cmd_opcode: Opcode,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.16
+    /// Hardware Error event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2479a101-ae3b-5b5d-f3d4-4776af39a377)
     struct HardwareError(0x10) {
         hardware_code: u8,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.19
+    /// Number Of Completed Packets event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9ccbff85-45ce-9c0d-6d0c-2e6e5af52b0e)
     struct NumberOfCompletedPackets<'a>(0x13) {
         completed_packets: &'a [ConnHandleCompletedPackets],
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.26
+    /// Data Buffer Overflow event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e15e12c7-d29a-8c25-349f-af6206c2ae57)
     struct DataBufferOverflow(0x1a) {
         link_type: LinkType,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.39
+    /// Encryption Key Refresh Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a321123c-83a5-7baf-6971-05edd1241357)
     struct EncryptionKeyRefreshComplete(0x30) {
         status: Status,
         handle: ConnHandle,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §7.7.75
+    /// Authenticated Payload Timeout Expired event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6cfdff94-ace8-294c-6af9-d90d94653e19)
     struct AuthenticatedPayloadTimeoutExpired(0x57) {
         handle: ConnHandle,
     }
 
-    /// Bluetooth Core Specification Vol 4, Part E, §5.4.4
+    /// HCI Event packet [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f209cdf7-0496-8bcd-b7e1-500831511378)
     struct Vendor<'a>(0xff) {
         params: RemainingBytes<'a>,
     }

@@ -1,4 +1,4 @@
-//! Parameter types for Bluetooth HCI command and event packets.
+//! Parameter types for HCI command and event packets [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8af7a4d8-7a08-0895-b041-fdf9e27d6508)
 
 use crate::{AsHciBytes, ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
 
