@@ -17,14 +17,46 @@ use crate::param::{RemainingBytes, Status};
 use crate::transport::Transport;
 use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, HostToControllerPacket};
 
-pub trait Controller {
+pub trait ErrorType {
     type Error: embedded_io::Error;
+}
 
+pub trait Controller: ErrorType {
     fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>>;
 
     fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
+}
+
+pub trait TryController: ErrorType {
+    fn try_write_acl_data(&self, packet: &data::AclPacket) -> Result<(), TryError<Self::Error>>;
+    fn try_write_sync_data(&self, packet: &data::SyncPacket) -> Result<(), TryError<Self::Error>>;
+    fn try_write_iso_data(&self, packet: &data::IsoPacket) -> Result<(), TryError<Self::Error>>;
+
+    fn try_read<'a>(&self, buf: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, TryError<Self::Error>>;
+}
+
+/// An error type for Bluetooth HCI commands.
+#[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum CmdError<E> {
+    Hci(param::Error),
+    Io(E),
+}
+
+/// An error type for try operations.
+#[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum TryError<E> {
+    Error(E),
+    Busy,
+}
+
+impl<E> From<param::Error> for CmdError<E> {
+    fn from(e: param::Error) -> Self {
+        Self::Hci(e)
+    }
 }
 
 pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
@@ -38,6 +70,15 @@ pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
 }
 
 /// An external [`Controller`] with communication via [`Transport`] type `T`.
+pub trait TryControllerCmdSync<C: cmd::SyncCmd + ?Sized>: TryController {
+    fn try_exec(&self, cmd: &C) -> Result<C::Return, TryError<CmdError<Self::Error>>>;
+}
+
+pub trait TryControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: TryController {
+    fn try_exec(&self, cmd: &C) -> Result<(), TryError<CmdError<Self::Error>>>;
+}
+
+/// An external Bluetooth controller with communication via [`Transport`] type `T`.
 ///
 /// The controller state holds a number of command slots that can be used
 /// to issue commands and await responses from an underlying controller.
@@ -68,11 +109,17 @@ where
     }
 }
 
-impl<T, const SLOTS: usize> Controller for ExternalController<T, SLOTS>
+impl<T, const SLOTS: usize> ErrorType for ExternalController<T, SLOTS>
 where
     T: Transport,
 {
     type Error = T::Error;
+}
+
+impl<T, const SLOTS: usize> Controller for ExternalController<T, SLOTS>
+where
+    T: Transport,
+{
     async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
         self.write(packet).await?;
         Ok(())
