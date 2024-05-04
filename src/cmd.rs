@@ -2,8 +2,8 @@
 
 use core::future::Future;
 
-use crate::controller::{Controller, ControllerCmdAsync, ControllerCmdSync};
-use crate::param::{self, param};
+use crate::controller::{blocking, CmdError, ControllerCmdAsync, ControllerCmdSync, ErrorType};
+use crate::param::param;
 use crate::{FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
@@ -116,11 +116,11 @@ pub trait AsyncCmd: Cmd {
         controller.exec(self)
     }
 
-    fn try_exec<C: TryControllerCmdAsync<Self>>(
+    fn exec_blocking<C: blocking::ControllerCmdAsync<Self>>(
         &self,
         controller: &C,
-    ) -> Result<(), TryError<CmdError<<C as ErrorType>::Error>>> {
-        controller.try_exec(self)
+    ) -> Result<(), blocking::TryError<CmdError<<C as ErrorType>::Error>>> {
+        controller.exec(self)
     }
 }
 
@@ -166,11 +166,11 @@ pub trait SyncCmd: Cmd {
         controller.exec(self)
     }
 
-    fn try_exec<C: TryControllerCmdSync<Self>>(
+    fn exec_blocking<C: blocking::ControllerCmdSync<Self>>(
         &self,
         controller: &C,
-    ) -> Result<Self::Return, TryError<CmdError<<C as ErrorType>::Error>>> {
-        controller.try_exec(self)
+    ) -> Result<Self::Return, blocking::TryError<CmdError<<C as ErrorType>::Error>>> {
+        controller.exec(self)
     }
 }
 

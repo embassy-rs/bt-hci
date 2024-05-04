@@ -17,6 +17,8 @@ use crate::param::{RemainingBytes, Status};
 use crate::transport::Transport;
 use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, HostToControllerPacket};
 
+pub mod blocking;
+
 pub trait ErrorType {
     type Error: embedded_io::Error;
 }
@@ -29,14 +31,6 @@ pub trait Controller: ErrorType {
     fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
 }
 
-pub trait TryController: ErrorType {
-    fn try_write_acl_data(&self, packet: &data::AclPacket) -> Result<(), TryError<Self::Error>>;
-    fn try_write_sync_data(&self, packet: &data::SyncPacket) -> Result<(), TryError<Self::Error>>;
-    fn try_write_iso_data(&self, packet: &data::IsoPacket) -> Result<(), TryError<Self::Error>>;
-
-    fn try_read<'a>(&self, buf: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, TryError<Self::Error>>;
-}
-
 /// An error type for Bluetooth HCI commands.
 #[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -46,13 +40,6 @@ pub enum CmdError<E> {
 }
 
 /// An error type for try operations.
-#[derive(Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum TryError<E> {
-    Error(E),
-    Busy,
-}
-
 impl<E> From<param::Error> for CmdError<E> {
     fn from(e: param::Error) -> Self {
         Self::Hci(e)
