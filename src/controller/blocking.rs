@@ -1,8 +1,4 @@
-use crate::{
-    cmd,
-    controller::{CmdError, ErrorType},
-    data, ControllerToHostPacket,
-};
+use crate::{controller::ErrorType, data, ControllerToHostPacket};
 
 pub trait Controller: ErrorType {
     fn write_acl_data(&self, packet: &data::AclPacket) -> Result<(), Self::Error>;
@@ -22,12 +18,4 @@ pub trait Controller: ErrorType {
 pub enum TryError<E> {
     Error(E),
     Busy,
-}
-
-pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
-    fn exec(&self, cmd: &C) -> Result<C::Return, TryError<CmdError<Self::Error>>>;
-}
-
-pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
-    fn exec(&self, cmd: &C) -> Result<(), TryError<CmdError<Self::Error>>>;
 }

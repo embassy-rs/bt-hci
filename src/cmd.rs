@@ -2,7 +2,7 @@
 
 use core::future::Future;
 
-use crate::controller::{blocking, CmdError, ControllerCmdAsync, ControllerCmdSync, ErrorType};
+use crate::controller::{CmdError, ControllerCmdAsync, ControllerCmdSync, ErrorType};
 use crate::param::param;
 use crate::{FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
@@ -115,13 +115,6 @@ pub trait AsyncCmd: Cmd {
     ) -> impl Future<Output = Result<(), Error<<C as Controller>::Error>>> {
         controller.exec(self)
     }
-
-    fn exec_blocking<C: blocking::ControllerCmdAsync<Self>>(
-        &self,
-        controller: &C,
-    ) -> Result<(), blocking::TryError<CmdError<<C as ErrorType>::Error>>> {
-        controller.exec(self)
-    }
 }
 
 pub trait CmdReturnBuf: Copy + AsRef<[u8]> + AsMut<[u8]> {
@@ -163,13 +156,6 @@ pub trait SyncCmd: Cmd {
         &self,
         controller: &C,
     ) -> impl Future<Output = Result<Self::Return, Error<<C as Controller>::Error>>> {
-        controller.exec(self)
-    }
-
-    fn exec_blocking<C: blocking::ControllerCmdSync<Self>>(
-        &self,
-        controller: &C,
-    ) -> Result<Self::Return, blocking::TryError<CmdError<<C as ErrorType>::Error>>> {
         controller.exec(self)
     }
 }
