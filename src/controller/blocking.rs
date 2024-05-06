@@ -1,4 +1,5 @@
-use crate::{controller::ErrorType, data, ControllerToHostPacket};
+use crate::controller::ErrorType;
+use crate::{data, ControllerToHostPacket};
 
 pub trait Controller: ErrorType {
     fn write_acl_data(&self, packet: &data::AclPacket) -> Result<(), Self::Error>;
