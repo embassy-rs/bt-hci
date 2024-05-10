@@ -9,6 +9,7 @@ use cmd::controller_baseband::Reset;
 use embassy_sync::blocking_mutex::raw::NoopRawMutex;
 use embassy_sync::signal::Signal;
 use embassy_sync::waitqueue::AtomicWaker;
+use embedded_io::ErrorType;
 use futures_intrusive::sync::LocalSemaphore;
 
 use crate::cmd::{Cmd, CmdReturnBuf};
@@ -19,31 +20,12 @@ use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, Hos
 
 pub mod blocking;
 
-pub trait ErrorType {
-    type Error: embedded_io::Error;
-}
-
 pub trait Controller: ErrorType {
     fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>>;
 
     fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
-}
-
-/// An error type for Bluetooth HCI commands.
-#[derive(Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum CmdError<E> {
-    Hci(param::Error),
-    Io(E),
-}
-
-/// An error type for try operations.
-impl<E> From<param::Error> for CmdError<E> {
-    fn from(e: param::Error) -> Self {
-        Self::Hci(e)
-    }
 }
 
 pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
@@ -54,15 +36,6 @@ pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
 pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), cmd::Error<Self::Error>>>;
-}
-
-/// An external [`Controller`] with communication via [`Transport`] type `T`.
-pub trait TryControllerCmdSync<C: cmd::SyncCmd + ?Sized>: TryController {
-    fn try_exec(&self, cmd: &C) -> Result<C::Return, TryError<CmdError<Self::Error>>>;
-}
-
-pub trait TryControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: TryController {
-    fn try_exec(&self, cmd: &C) -> Result<(), TryError<CmdError<Self::Error>>>;
 }
 
 /// An external Bluetooth controller with communication via [`Transport`] type `T`.
