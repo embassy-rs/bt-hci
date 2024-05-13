@@ -9,17 +9,18 @@ use cmd::controller_baseband::Reset;
 use embassy_sync::blocking_mutex::raw::NoopRawMutex;
 use embassy_sync::signal::Signal;
 use embassy_sync::waitqueue::AtomicWaker;
+use embedded_io::ErrorType;
 use futures_intrusive::sync::LocalSemaphore;
 
 use crate::cmd::{Cmd, CmdReturnBuf};
 use crate::event::{CommandComplete, Event};
 use crate::param::{RemainingBytes, Status};
 use crate::transport::Transport;
-use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, HostToControllerPacket};
+use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes};
 
-pub trait Controller {
-    type Error: embedded_io::Error;
+pub mod blocking;
 
+pub trait Controller: ErrorType {
     fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
     fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>>;
@@ -37,54 +38,50 @@ pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), cmd::Error<Self::Error>>>;
 }
 
-/// An external [`Controller`] with communication via [`Transport`] type `T`.
+/// An external Bluetooth controller with communication via [`Transport`] type `T`.
 ///
 /// The controller state holds a number of command slots that can be used
 /// to issue commands and await responses from an underlying controller.
 ///
 /// The contract is that before sending a command, a slot is reserved, which
 /// returns a signal handle that can be used to await a response.
-pub struct ExternalController<T, const SLOTS: usize>
-where
-    T: Transport,
-{
+pub struct ExternalController<T, const SLOTS: usize> {
     transport: T,
     slots: ControllerState<SLOTS>,
 }
 
-impl<T, const SLOTS: usize> ExternalController<T, SLOTS>
-where
-    T: Transport,
-{
+impl<T, const SLOTS: usize> ExternalController<T, SLOTS> {
     pub fn new(transport: T) -> Self {
         Self {
             slots: ControllerState::new(),
             transport,
         }
     }
+}
 
-    async fn write<W: HostToControllerPacket>(&self, data: &W) -> Result<(), T::Error> {
-        self.transport.write(data).await
-    }
+impl<T, const SLOTS: usize> ErrorType for ExternalController<T, SLOTS>
+where
+    T: ErrorType,
+{
+    type Error = T::Error;
 }
 
 impl<T, const SLOTS: usize> Controller for ExternalController<T, SLOTS>
 where
     T: Transport,
 {
-    type Error = T::Error;
     async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
-        self.write(packet).await?;
+        self.transport.write(packet).await?;
         Ok(())
     }
 
     async fn write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), Self::Error> {
-        self.write(packet).await?;
+        self.transport.write(packet).await?;
         Ok(())
     }
 
     async fn write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), Self::Error> {
-        self.write(packet).await?;
+        self.transport.write(packet).await?;
         Ok(())
     }
 
@@ -94,6 +91,98 @@ where
                 // Safety: we will not hold references across loop iterations.
                 let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
                 let value = self.transport.read(&mut buf[..]).await?;
+                match value {
+                    ControllerToHostPacket::Event(ref event) => match &event {
+                        Event::CommandComplete(e) => {
+                            self.slots.complete(
+                                e.cmd_opcode,
+                                e.status,
+                                e.num_hci_cmd_pkts as usize,
+                                e.return_param_bytes.as_ref(),
+                            );
+                            continue;
+                        }
+                        Event::CommandStatus(e) => {
+                            self.slots
+                                .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
+                            continue;
+                        }
+                        _ => return Ok(value),
+                    },
+                    _ => return Ok(value),
+                }
+            }
+        }
+    }
+}
+
+impl<T, const SLOTS: usize> blocking::Controller for ExternalController<T, SLOTS>
+where
+    T: crate::transport::blocking::Transport,
+{
+    fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
+        loop {
+            match self.try_write_acl_data(packet) {
+                Err(blocking::TryError::Busy) => {}
+                Err(blocking::TryError::Error(e)) => return Err(e),
+                Ok(r) => return Ok(r),
+            }
+        }
+    }
+
+    fn write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), Self::Error> {
+        loop {
+            match self.try_write_sync_data(packet) {
+                Err(blocking::TryError::Busy) => {}
+                Err(blocking::TryError::Error(e)) => return Err(e),
+                Ok(r) => return Ok(r),
+            }
+        }
+    }
+
+    fn write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), Self::Error> {
+        loop {
+            match self.try_write_iso_data(packet) {
+                Err(blocking::TryError::Busy) => {}
+                Err(blocking::TryError::Error(e)) => return Err(e),
+                Ok(r) => return Ok(r),
+            }
+        }
+    }
+
+    fn read<'a>(&self, buf: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, Self::Error> {
+        loop {
+            // Safety: we will not hold references across loop iterations.
+            let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
+            match self.try_read(buf) {
+                Err(blocking::TryError::Busy) => {}
+                Err(blocking::TryError::Error(e)) => return Err(e),
+                Ok(r) => return Ok(r),
+            }
+        }
+    }
+
+    fn try_write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
+        self.transport.write(packet)?;
+        Ok(())
+    }
+
+    fn try_write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
+        self.transport.write(packet)?;
+        Ok(())
+    }
+
+    fn try_write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
+        self.transport.write(packet)?;
+        Ok(())
+    }
+
+    fn try_read<'a>(&self, buf: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, blocking::TryError<Self::Error>> {
+        loop {
+            {
+                // Safety: we will not hold references across loop iterations.
+                let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
+                let value = self.transport.read(&mut buf[..])?;
                 match value {
                     ControllerToHostPacket::Event(ref event) => match &event {
                         Event::CommandComplete(e) => {
@@ -134,7 +223,7 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.write(cmd).await.map_err(cmd::Error::Io)?;
+        self.transport.write(cmd).await.map_err(cmd::Error::Io)?;
 
         let result = slot.wait().await;
         let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
@@ -161,7 +250,7 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.write(cmd).await.map_err(cmd::Error::Io)?;
+        self.transport.write(cmd).await.map_err(cmd::Error::Io)?;
 
         let result = slot.wait().await;
         result.status.to_result()?;
