@@ -6,10 +6,8 @@ use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
 use embedded_io::{ErrorType, ReadExactError};
 
-use crate::{
-    controller::blocking::TryError, ControllerToHostPacket, FromHciBytesError, HostToControllerPacket, ReadHci,
-    ReadHciError, WriteHci,
-};
+use crate::controller::blocking::TryError;
+use crate::{ControllerToHostPacket, FromHciBytesError, HostToControllerPacket, ReadHci, ReadHciError, WriteHci};
 
 /// A packet-oriented HCI Transport Layer
 pub trait Transport: embedded_io::ErrorType {
