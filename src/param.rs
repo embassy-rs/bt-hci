@@ -232,6 +232,7 @@ param!(
         UnsupportedRemoteFeature = 0x1A,
         PairingWithUnitKeyNotSupported = 0x29,
         UnacceptableConnParameters = 0x3b,
+        ConnectionEstablishFailed = 0x3e,
     }
 );
 
