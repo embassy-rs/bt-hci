@@ -2,8 +2,7 @@
 
 use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
-    param, ConnHandle, ConnHandleCompletedPackets, CoreSpecificationVersion, DisconnectReason, Error, LinkType,
-    RemainingBytes, Status,
+    param, ConnHandle, ConnHandleCompletedPackets, CoreSpecificationVersion, Error, LinkType, RemainingBytes, Status,
 };
 use crate::{FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
@@ -113,7 +112,7 @@ events! {
     struct DisconnectionComplete(0x05) {
         status: Status,
         handle: ConnHandle,
-        reason: DisconnectReason,
+        reason: Status,
     }
 
     /// Encryption Change (v1) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
