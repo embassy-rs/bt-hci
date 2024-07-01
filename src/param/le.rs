@@ -41,7 +41,7 @@ param!(struct ChannelMap([u8; 5]));
 
 impl ChannelMap {
     pub fn new() -> Self {
-        Self([0xff, 0xff, 0xff, 0xff, 0xf8])
+        Self([0xff, 0xff, 0xff, 0xff, 0x1f])
     }
     pub fn is_channel_bad(&self, channel: u8) -> bool {
         let byte = usize::from(channel / 8);
@@ -712,5 +712,17 @@ mod tests {
         assert_eq!(k.0[0], 0b0100001);
         let k = k.set_data_status(LeExtAdvDataStatus::IncompleteTruncated);
         assert_eq!(k.0[0], 0b1000001);
+    }
+
+    #[test]
+    fn test_channel_map_new() {
+        let m = ChannelMap::new();
+        for chan in 0..37 {
+            assert!(!m.is_channel_bad(chan));
+        }
+
+        for chan in 37..40 {
+            assert!(m.is_channel_bad(chan));
+        }
     }
 }
