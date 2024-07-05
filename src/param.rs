@@ -105,7 +105,7 @@ unsafe impl<const US: u32> FixedSizeValue for Duration<US> {
 
 impl<const US: u32> Duration<US> {
     #[inline(always)]
-    pub fn from_u16(val: u16) -> Self {
+    pub const fn from_u16(val: u16) -> Self {
         Self(val)
     }
 
