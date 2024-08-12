@@ -66,6 +66,10 @@ impl BdAddr {
     pub fn new(val: [u8; 6]) -> Self {
         Self(val)
     }
+
+    pub fn raw(&self) -> &[u8] {
+        &self.0[..]
+    }
 }
 
 unsafe impl ByteAlignedValue for BdAddr {}
