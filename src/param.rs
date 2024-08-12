@@ -302,3 +302,25 @@ param_slice! {
         num_completed_packets[2]: u16,
     }
 }
+
+impl ConnHandleCompletedPackets {
+    pub fn new(handle: ConnHandle, num_completed_packets: u16) -> Self {
+        let mut dest = [0; 4];
+        handle.write_hci(&mut dest[0..2]).unwrap();
+        num_completed_packets.write_hci(&mut dest[2..4]).unwrap();
+        Self(dest)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_encode_decode_conn_handle_completed_packets() {
+        let completed = ConnHandleCompletedPackets::new(ConnHandle::new(42), 2334);
+
+        assert_eq!(completed.handle().unwrap(), ConnHandle::new(42));
+        assert_eq!(completed.num_completed_packets().unwrap(), 2334);
+    }
+}
