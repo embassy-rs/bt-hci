@@ -1,3 +1,10 @@
+[![crates.io][crates-badge]][crates-url] [![docs.rs][docs-badge]][docs-url]
+
+[crates-badge]: https://img.shields.io/crates/v/bt-hci
+[crates-url]: https://crates.io/crates/bt-hci
+[docs-badge]: https://docs.rs/bt-hci/badge.svg
+[docs-url]: https://docs.rs/bt-hci
+
 # bt-hci
 
 Rust types for the Bluetooth HCI (Host Controller Interface) specification, and traits for implementing the `Controller` part
