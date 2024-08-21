@@ -9,6 +9,8 @@ version = "0.1.0"
 documentation = "https://docs.rs/bt-hci"
 keywords = ["bluetooth", "hci", "BLE"]
 categories = ["embedded", "hardware-support", "no-std"]
+rust-version = "1.77"
+exclude = [".github", ".vscode", "ci.sh", "rust-toolchain.toml", "rustfmt.toml"]
 
 [features]
 defmt = ["dep:defmt", "embedded-io/defmt-03", "embedded-io-async/defmt-03"]
