@@ -1,11 +1,14 @@
 [package]
-authors = ["Alex Moon <alex@moonspot.org>"]
+authors = ["Embassy project contributors"]
 description = "Bluetooth HCI data types"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 name = "bt-hci"
 repository = "https://github.com/embassy-rs/bt-hci"
 version = "0.1.0"
+documentation = "https://docs.rs/bt-hci"
+keywords = ["bluetooth", "hci", "BLE"]
+categories = ["embedded", "hardware-support", "no-std"]
 
 [features]
 defmt = ["dep:defmt", "embedded-io/defmt-03", "embedded-io-async/defmt-03"]
