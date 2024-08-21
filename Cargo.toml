@@ -4,7 +4,7 @@ description = "Bluetooth HCI data types"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 name = "bt-hci"
-repository = "https://github.com/alexmoon/bt-hci"
+repository = "https://github.com/embassy-rs/bt-hci"
 version = "0.1.0"
 
 [features]
