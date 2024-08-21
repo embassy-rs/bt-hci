@@ -1,3 +1,5 @@
+#![doc = include_str!("../README.md")]
+#![warn(missing_docs)]
 #![no_std]
 
 use core::future::Future;
@@ -13,20 +15,28 @@ pub mod event;
 pub mod param;
 pub mod transport;
 
+/// Errors from parsing HCI data.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum FromHciBytesError {
+    /// Size of input did not match valid size.
     InvalidSize,
+    /// Value of input did not match valid values.
     InvalidValue,
 }
 
+/// A HCI type which can be represented as bytes.
 pub trait AsHciBytes {
+    /// Get the byte representation of this type.
     fn as_hci_bytes(&self) -> &[u8];
 }
 
+/// A fixed size HCI type that can be deserialized from bytes.
 pub trait FromHciBytes<'de>: Sized {
+    /// Deserialize bytes into a HCI type, return additional bytes.
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError>;
 
+    /// Deserialize bytes into a HCI type, must consume all bytes.
     fn from_hci_bytes_complete(data: &'de [u8]) -> Result<Self, FromHciBytesError> {
         let (val, buf) = Self::from_hci_bytes(data)?;
         if buf.is_empty() {
@@ -37,11 +47,15 @@ pub trait FromHciBytes<'de>: Sized {
     }
 }
 
+/// Errors from reading HCI data.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ReadHciError<E: embedded_io::Error> {
+    /// Not enough bytes in buffer for reading.
     BufferTooSmall,
+    /// Value of input did not match valid values.
     InvalidValue,
+    /// Error from underlying embedded-io type.
     Read(ReadExactError<E>),
 }
 
@@ -71,27 +85,36 @@ impl<E: embedded_io::Error> From<FromHciBytesError> for ReadHciError<E> {
     }
 }
 
+/// Adapter trait for deserializing HCI types from embedded-io implementations.
 pub trait ReadHci<'de>: FromHciBytes<'de> {
+    /// Max length read by this type.
     const MAX_LEN: usize;
 
+    /// Read this type from the provided reader.
     fn read_hci<R: embedded_io::Read>(reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>>;
 
+    /// Read this type from the provided reader, async version.
     fn read_hci_async<R: embedded_io_async::Read>(
         reader: R,
         buf: &'de mut [u8],
     ) -> impl Future<Output = Result<Self, ReadHciError<R::Error>>>;
 }
 
+/// Adapter trait for serializing HCI types to embedded-io implementations.
 pub trait WriteHci {
     /// The number of bytes this value will write
     fn size(&self) -> usize;
 
+    /// Write this value to the provided writer.
     fn write_hci<W: embedded_io::Write>(&self, writer: W) -> Result<(), W::Error>;
 
+    /// Write this value to the provided writer, async version.
     fn write_hci_async<W: embedded_io_async::Write>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>>;
 }
 
+/// Trait representing a HCI packet.
 pub trait HostToControllerPacket: WriteHci {
+    /// Packet kind associated with this HCI packet.
     const KIND: PacketKind;
 }
 
@@ -115,6 +138,10 @@ pub unsafe trait FixedSizeValue: Copy {
 /// # Safety
 /// - Must have `core::mem::align_of::<T>() == 1`
 pub unsafe trait ByteAlignedValue: FixedSizeValue {
+    /// Obtain a reference to this type from a byte slice.
+    ///
+    /// # Safety
+    /// - Must have `core::mem::align_of::<T>() == 1`
     fn ref_from_hci_bytes(data: &[u8]) -> Result<(&Self, &[u8]), FromHciBytesError> {
         if data.len() < core::mem::size_of::<Self>() {
             Err(FromHciBytesError::InvalidSize)
@@ -213,14 +240,20 @@ impl<T: FixedSizeValue> WriteHci for T {
     }
 }
 
+/// Enum of valid HCI packet types.
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum PacketKind {
+    /// Command.
     Cmd = 1,
+    /// ACL data.
     AclData = 2,
+    /// Sync data.
     SyncData = 3,
+    /// Event.
     Event = 4,
+    /// Isochronous Data.
     IsoData = 5,
 }
 
@@ -259,16 +292,22 @@ impl WriteHci for PacketKind {
     }
 }
 
+/// Type representing valid deserialized HCI packets.
 #[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ControllerToHostPacket<'a> {
+    /// ACL packet.
     Acl(data::AclPacket<'a>),
+    /// Sync packet.
     Sync(data::SyncPacket<'a>),
+    /// Event packet.
     Event(event::Event<'a>),
+    /// Isochronous packet.
     Iso(data::IsoPacket<'a>),
 }
 
 impl<'a> ControllerToHostPacket<'a> {
+    /// The packet kind.
     pub fn kind(&self) -> PacketKind {
         match self {
             Self::Acl(_) => PacketKind::AclData,
@@ -278,6 +317,7 @@ impl<'a> ControllerToHostPacket<'a> {
         }
     }
 
+    /// Deserialize data assuming a specific kind of packet.
     pub fn from_hci_bytes_with_kind(
         kind: PacketKind,
         data: &'a [u8],

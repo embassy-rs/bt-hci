@@ -27,7 +27,9 @@ pub struct SerialTransport<M: RawMutex, R, W> {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum Error<E: embedded_io::Error> {
+    /// Error reading HCI data.
     Read(ReadHciError<E>),
+    /// Error writing data.
     Write(E),
 }
 
@@ -65,6 +67,7 @@ impl<E: embedded_io::Error> From<FromHciBytesError> for Error<E> {
 }
 
 impl<M: RawMutex, R: embedded_io_async::Read, W: embedded_io_async::Write> SerialTransport<M, R, W> {
+    /// Create a new instance.
     pub fn new(reader: R, writer: W) -> Self {
         Self {
             reader: Mutex::new(reader),
@@ -132,6 +135,7 @@ impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error =
 pub struct WithIndicator<'a, T: HostToControllerPacket>(&'a T);
 
 impl<'a, T: HostToControllerPacket> WithIndicator<'a, T> {
+    /// Create a new instance.
     pub fn new(pkt: &'a T) -> Self {
         Self(pkt)
     }
@@ -157,6 +161,7 @@ impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
 }
 
 pub mod blocking {
+    //! Blocking transport trait.
     use super::*;
     use crate::controller::blocking::TryError;
 

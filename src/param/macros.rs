@@ -44,9 +44,11 @@ macro_rules! param {
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        /// $name
         pub struct $name($wrapped);
 
         impl $name {
+            /// Get inner representation
             pub fn into_inner(self) -> $wrapped {
                 self.0
             }
@@ -70,6 +72,8 @@ macro_rules! param {
         $(#[$attrs])*
         #[repr(C, packed)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        /// $name parameter
+        #[allow(missing_docs)]
         pub struct $name {
             $(pub $field: $ty,)*
         }
@@ -117,6 +121,8 @@ macro_rules! param {
         $(#[$attrs])*
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        /// $name parameter
+        #[allow(missing_docs)]
         pub struct $name$(<$life>)? {
             $(pub $field: $ty,)*
         }
@@ -167,6 +173,8 @@ macro_rules! param {
         #[repr(u8)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        #[allow(missing_docs)]
+        /// $name.
         pub enum $name {
             $(
                 $(#[$variant_attrs])*
@@ -201,22 +209,27 @@ macro_rules! param {
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        /// $name.
         pub struct $name(u8);
 
         impl $name {
+            /// Create a new instance.
             pub fn new() -> Self {
                 Self::default()
             }
 
+            /// Get the inner representation.
             pub fn into_inner(self) -> u8 {
                 self.0
             }
 
             $(
+                #[allow(missing_docs)]
                 pub const fn $get(&self) -> bool {
                     (self.0 & (1 << $bit)) != 0
                 }
 
+                #[allow(missing_docs)]
                 pub const fn $set(self, val: bool) -> Self {
                     Self((self.0 & !(1 << $bit)) | ((val as u8) << $bit))
                 }
@@ -249,24 +262,29 @@ macro_rules! param {
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        /// $name
         pub struct $name([u8; $octets]);
 
         impl $name {
+            /// Create a new instance.
             pub fn new() -> Self {
                 Self::default()
             }
 
+            /// Get the inner representation.
             pub fn into_inner(self) -> [u8; $octets] {
                 self.0
             }
 
             $(
+                #[allow(missing_docs)]
                 pub const fn $get(&self) -> bool {
                     const OCTET: usize = $bit / 8;
                     const BIT: usize = $bit % 8;
                     (self.0[OCTET] & (1 << BIT)) != 0
                 }
 
+                #[allow(missing_docs)]
                 pub const fn $set(mut self, val: bool) -> Self {
                     const OCTET: usize = $bit / 8;
                     const BIT: usize = $bit % 8;
@@ -332,10 +350,12 @@ macro_rules! param_slice {
         $(#[$attrs])*
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        /// $name
         pub struct $name([u8; $octets]);
 
         impl $name {
             $(
+                /// Get value of $field
                 pub fn $field(&self) -> Result<$ty, $crate::FromHciBytesError> {
                     <$ty as $crate::FromHciBytes>::from_hci_bytes(&self.0[$off..]).map(|(x, _)| x)
                 }

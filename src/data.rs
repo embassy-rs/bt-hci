@@ -83,6 +83,7 @@ pub struct AclPacket<'a> {
 }
 
 impl<'a> AclPacket<'a> {
+    /// Create a new instance.
     pub fn new(handle: ConnHandle, pbf: AclPacketBoundary, bf: AclBroadcastFlag, data: &'a [u8]) -> Self {
         let handle: u16 = handle.into_inner() | ((pbf as u16) << 12) | ((bf as u16) << 14);
         Self { handle, data }

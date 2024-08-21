@@ -2,11 +2,13 @@ use core::num::NonZeroU8;
 
 use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes};
 
+/// A HCI status value.
 #[repr(transparent)]
 #[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Status(u8);
 
 impl Status {
+    /// Get the underlying representation.
     pub fn into_inner(self) -> u8 {
         self.0
     }
@@ -29,12 +31,16 @@ impl<'de> FromHciBytes<'de> for &'de Status {
 }
 
 impl Status {
+    /// Status for successful operation.
     pub const SUCCESS: Status = Status(0);
 
+    /// Create a new instance.
     pub const fn new(n: u8) -> Self {
         Status(n)
     }
 
+    /// Get a result representation of status which will provide an error
+    /// if not a success.
     pub const fn to_result(self) -> Result<(), Error> {
         if self.0 == Self::SUCCESS.0 {
             Ok(())
@@ -69,15 +75,21 @@ impl From<Status> for u8 {
     }
 }
 
+/// An error representation for HCI errors.
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Error(NonZeroU8);
 
 impl Error {
+    /// Create from the byte value
+    ///
+    /// # Safety
+    /// Must be a valid HCI error code.
     const unsafe fn from_u8(err: u8) -> Error {
         Error(NonZeroU8::new_unchecked(err))
     }
 
+    /// Get the status representation.
     pub const fn to_status(self) -> Status {
         Status(self.0.get())
     }

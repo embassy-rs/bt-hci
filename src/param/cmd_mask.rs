@@ -1,5 +1,6 @@
 use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes};
 
+/// A command mask.
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -12,6 +13,7 @@ impl Default for CmdMask {
 }
 
 impl CmdMask {
+    /// Get the inner representation.
     pub fn into_inner(self) -> [u8; 64] {
         self.0
     }
@@ -46,6 +48,7 @@ macro_rules! cmds {
         impl CmdMask {
             $(
                 $(
+                    /// Getter for $getter
                     pub fn $getter(&self) -> bool {
                         (self.0[$octet] & (1 << $bit)) != 0
                     }

@@ -63,10 +63,12 @@ impl<'a> FromHciBytes<'a> for RemainingBytes<'a> {
 param!(struct BdAddr([u8; 6]));
 
 impl BdAddr {
+    /// Create a new instance.
     pub fn new(val: [u8; 6]) -> Self {
         Self(val)
     }
 
+    /// Get the byte representation.
     pub fn raw(&self) -> &[u8] {
         &self.0[..]
     }
@@ -84,11 +86,13 @@ impl<'de> crate::FromHciBytes<'de> for &'de BdAddr {
 param!(struct ConnHandle(u16));
 
 impl ConnHandle {
+    /// Create a new instance.
     pub fn new(val: u16) -> Self {
         assert!(val <= 0xeff);
         Self(val)
     }
 
+    /// Get the underlying representation.
     pub fn raw(&self) -> u16 {
         self.0
     }
@@ -109,40 +113,48 @@ unsafe impl<const US: u32> FixedSizeValue for Duration<US> {
 
 impl<const US: u32> Duration<US> {
     #[inline(always)]
+    /// Create a new instance from raw value.
     pub const fn from_u16(val: u16) -> Self {
         Self(val)
     }
 
+    /// Create an instance from microseconds.
     #[inline(always)]
     pub fn from_micros(val: u64) -> Self {
         Self::from_u16(unwrap!((val / u64::from(US)).try_into()))
     }
 
+    /// Create an instance from milliseconds.
     #[inline(always)]
     pub fn from_millis(val: u32) -> Self {
         Self::from_micros(u64::from(val) * 1000)
     }
 
+    /// Create an instance from seconds.
     #[inline(always)]
     pub fn from_secs(val: u32) -> Self {
         Self::from_micros(u64::from(val) * 1_000_000)
     }
 
+    /// Get the underlying representation.
     #[inline(always)]
     pub fn as_u16(&self) -> u16 {
         self.0
     }
 
+    /// Get value as microseconds.
     #[inline(always)]
     pub fn as_micros(&self) -> u64 {
         u64::from(self.as_u16()) * u64::from(US)
     }
 
+    /// Get value as milliseconds.
     #[inline(always)]
     pub fn as_millis(&self) -> u32 {
         unwrap!((self.as_micros() / 1000).try_into())
     }
 
+    /// Get value as seconds.
     #[inline(always)]
     pub fn as_secs(&self) -> u32 {
         // (u16::MAX * u32::MAX / 1_000_000) < u32::MAX so this is safe
@@ -180,38 +192,45 @@ impl<'de, const US: u16> FromHciBytes<'de> for &'de ExtDuration<US> {
 }
 
 impl<const US: u16> ExtDuration<US> {
+    /// Create a new instance from raw value.
     #[inline(always)]
     pub fn from_u32(val: u32) -> Self {
         assert!(val < (1 << 24));
         Self(*unwrap!(val.to_le_bytes().first_chunk()))
     }
 
+    /// Create an instance from microseconds.
     #[inline(always)]
     pub fn from_micros(val: u64) -> Self {
         Self::from_u32(unwrap!((val / u64::from(US)).try_into()))
     }
 
+    /// Create an instance from milliseconds.
     #[inline(always)]
     pub fn from_millis(val: u32) -> Self {
         Self::from_micros(u64::from(val) * 1000)
     }
 
+    /// Create an instance from seconds.
     #[inline(always)]
     pub fn from_secs(val: u32) -> Self {
         Self::from_micros(u64::from(val) * 1_000_000)
     }
 
+    /// Get value as microseconds.
     #[inline(always)]
     pub fn as_micros(&self) -> u64 {
         u64::from_le_bytes([self.0[0], self.0[1], self.0[2], 0, 0, 0, 0, 0]) * u64::from(US)
     }
 
+    /// Get value as milliseconds.
     #[inline(always)]
     pub fn as_millis(&self) -> u32 {
         // ((1 << 24 - 1) * u16::MAX / 1_000) < u32::MAX so this is safe
         (self.as_micros() / 1000) as u32
     }
 
+    /// Get value as seconds.
     #[inline(always)]
     pub fn as_secs(&self) -> u32 {
         // ((1 << 24 - 1) * u16::MAX / 1_000_000) < u32::MAX so this is safe
@@ -260,6 +279,7 @@ param! {
 
 param!(struct CoreSpecificationVersion(u8));
 
+#[allow(missing_docs)]
 impl CoreSpecificationVersion {
     pub const VERSION_1_0B: CoreSpecificationVersion = CoreSpecificationVersion(0x00);
     pub const VERSION_1_1: CoreSpecificationVersion = CoreSpecificationVersion(0x01);
@@ -304,6 +324,7 @@ param_slice! {
 }
 
 impl ConnHandleCompletedPackets {
+    /// Create a new instance.
     pub fn new(handle: ConnHandle, num_completed_packets: u16) -> Self {
         let mut dest = [0; 4];
         handle.write_hci(&mut dest[0..2]).unwrap();
