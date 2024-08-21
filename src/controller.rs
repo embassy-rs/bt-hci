@@ -20,19 +20,26 @@ use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes};
 
 pub mod blocking;
 
+/// Trait representing a HCI controller which supports async operations.
 pub trait Controller: ErrorType {
+    /// Write ACL data to the controller.
     fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
+    /// Write Sync data to the controller.
     fn write_sync_data(&self, packet: &data::SyncPacket) -> impl Future<Output = Result<(), Self::Error>>;
+    /// Write Iso data to the controller.
     fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>>;
 
+    /// Read a valid HCI packet from the controller.
     fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
 }
 
+/// Marker trait for declaring that a controller supports a given HCI command.
 pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, cmd::Error<Self::Error>>>;
 }
 
+/// Marker trait for declaring that a controller supports a given async HCI command.
 pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), cmd::Error<Self::Error>>>;
@@ -51,6 +58,7 @@ pub struct ExternalController<T, const SLOTS: usize> {
 }
 
 impl<T, const SLOTS: usize> ExternalController<T, SLOTS> {
+    /// Create a new instance.
     pub fn new(transport: T) -> Self {
         Self {
             slots: ControllerState::new(),
@@ -386,7 +394,7 @@ struct OnDrop<F: FnOnce()> {
 
 impl<F: FnOnce()> OnDrop<F> {
     /// Create a new instance.
-    pub fn new(f: F) -> Self {
+    pub(crate) fn new(f: F) -> Self {
         Self { f: MaybeUninit::new(f) }
     }
 }

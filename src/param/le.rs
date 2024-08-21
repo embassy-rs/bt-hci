@@ -5,6 +5,7 @@ use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, W
 
 param!(struct AddrKind(u8));
 
+#[allow(missing_docs)]
 impl AddrKind {
     pub const PUBLIC: AddrKind = AddrKind(0);
     pub const RANDOM: AddrKind = AddrKind(1);
@@ -30,6 +31,7 @@ param! {
     }
 }
 
+#[allow(missing_docs)]
 impl AdvChannelMap {
     pub const ALL: AdvChannelMap = AdvChannelMap(0x07);
     pub const CHANNEL_37: AdvChannelMap = AdvChannelMap(0x01);
@@ -40,15 +42,19 @@ impl AdvChannelMap {
 param!(struct ChannelMap([u8; 5]));
 
 impl ChannelMap {
+    /// Create a new instance.
     pub fn new() -> Self {
         Self([0xff, 0xff, 0xff, 0xff, 0x1f])
     }
+
+    /// Check if channel is marked as bad.
     pub fn is_channel_bad(&self, channel: u8) -> bool {
         let byte = usize::from(channel / 8);
         let bit = channel % 8;
         (self.0[byte] & (1 << bit)) == 0
     }
 
+    /// Set channel to be marked as bad.
     pub fn set_channel_bad(&mut self, channel: u8, bad: bool) {
         let byte = usize::from(channel / 8);
         let bit = channel % 8;
@@ -134,10 +140,12 @@ param! {
     }
 }
 
+/// Preferences when one can choose the phy.
 #[derive(Default)]
 #[repr(u16, align(1))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[allow(missing_docs)]
 pub enum PhyOptions {
     #[default]
     NoPreferredCoding = 0,
@@ -182,15 +190,20 @@ param! {
     }
 }
 
+/// Parameters for different phy representations.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct PhyParams<T> {
+    /// 1M phy parameters.
     pub le_1m_phy: Option<T>,
+    /// 2M phy parameters.
     pub le_2m_phy: Option<T>,
+    /// Coded phy parameters.
     pub le_coded_phy: Option<T>,
 }
 
 impl<T> PhyParams<T> {
+    /// Get the mask associated with the parameters.
     pub fn scanning_phys(&self) -> PhyMask {
         PhyMask::new()
             .set_le_1m_preferred(self.le_1m_phy.is_some())
@@ -227,10 +240,12 @@ impl<T: WriteHci> WriteHci for PhyParams<T> {
 param!(struct AdvHandle(u8));
 
 impl AdvHandle {
+    /// Create a new instance.
     pub const fn new(v: u8) -> Self {
         Self(v)
     }
 
+    /// Get the inner representation.
     pub fn as_raw(&self) -> u8 {
         self.0
     }
@@ -489,6 +504,8 @@ param! {
     }
 }
 
+/// Advertising data status.
+#[allow(missing_docs)]
 pub enum LeExtAdvDataStatus {
     Complete,
     IncompleteMoreExpected,
@@ -497,6 +514,7 @@ pub enum LeExtAdvDataStatus {
 }
 
 impl LeExtAdvEventKind {
+    /// Get data status.
     pub fn data_status(&self) -> LeExtAdvDataStatus {
         let data_status = self.0[0] >> 5 & 0x03;
         match data_status {
@@ -507,6 +525,7 @@ impl LeExtAdvEventKind {
         }
     }
 
+    /// Set data status.
     pub fn set_data_status(mut self, status: LeExtAdvDataStatus) -> Self {
         let value = match status {
             LeExtAdvDataStatus::Complete => 0,
@@ -538,14 +557,17 @@ param! {
 }
 
 impl<'a> LeAdvReports<'a> {
+    /// Check if there are more reports available.
     pub fn is_empty(&self) -> bool {
         self.num_reports == 0
     }
 
+    /// Number of advertising reports.
     pub fn len(&self) -> usize {
         usize::from(self.num_reports)
     }
 
+    /// Create an iterator over the advertising reports.
     pub fn iter(&self) -> LeAdvReportsIter<'_> {
         LeAdvReportsIter {
             len: self.len(),
@@ -554,6 +576,7 @@ impl<'a> LeAdvReports<'a> {
     }
 }
 
+/// An iterator for advertising reports.
 pub struct LeAdvReportsIter<'a> {
     len: usize,
     bytes: &'a [u8],
@@ -611,14 +634,17 @@ param! {
 }
 
 impl<'a> LeExtAdvReports<'a> {
+    /// Check if there are more reports available.
     pub fn is_empty(&self) -> bool {
         self.num_reports == 0
     }
 
+    /// Number of advertising reports.
     pub fn len(&self) -> usize {
         usize::from(self.num_reports)
     }
 
+    /// Create an iterator over the advertising reports.
     pub fn iter(&self) -> LeExtAdvReportsIter<'_> {
         LeExtAdvReportsIter {
             len: self.len(),
@@ -627,6 +653,7 @@ impl<'a> LeExtAdvReports<'a> {
     }
 }
 
+/// An iterator for extended advertising reports.
 pub struct LeExtAdvReportsIter<'a> {
     len: usize,
     bytes: &'a [u8],

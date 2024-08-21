@@ -607,6 +607,7 @@ crate::cmd! {
 }
 
 impl LeSetExtScanParams {
+    /// Create a new instance of scan parameters.
     pub fn new(
         own_addr_kind: AddrKind,
         scanning_filter_policy: ScanningFilterPolicy,
@@ -624,8 +625,11 @@ impl LeSetExtScanParams {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeSetExtScanParamsParams {
+    /// Kind of address for self.
     pub own_addr_kind: AddrKind,
+    /// Scanning filter policy.
     pub scanning_filter_policy: ScanningFilterPolicy,
+    /// Phys used when scanning.
     pub scanning_phys: PhyParams<ScanningPhy>,
 }
 
@@ -670,6 +674,7 @@ crate::cmd! {
 }
 
 impl LeExtCreateConn {
+    /// Create a new instance of this command.
     pub fn new(
         initiator_filter_policy: bool,
         own_addr_kind: AddrKind,
@@ -691,10 +696,15 @@ impl LeExtCreateConn {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeExtCreateConnParams {
+    /// Should use the initiator filter policy or not.
     pub initiator_filter_policy: bool,
+    /// What kind of address for self.
     pub own_addr_kind: AddrKind,
+    /// What kind of address for peer.
     pub peer_addr_kind: AddrKind,
+    /// The peer address to connect to.
     pub peer_addr: BdAddr,
+    /// Which phys used for connecting.
     pub initiating_phys: PhyParams<InitiatingPhy>,
 }
 
@@ -734,6 +744,7 @@ cmd! {
 }
 
 impl LeExtCreateConnV2 {
+    /// Create a new instance.
     pub fn new(
         adv_handle: AdvHandle,
         subevent: u8,
@@ -759,12 +770,19 @@ impl LeExtCreateConnV2 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeExtCreateConnV2Params {
+    /// The advertising handle to use.
     pub adv_handle: AdvHandle,
+    /// Use connection sub-events.
     pub subevent: u8,
+    /// Should use the initiator filter policy or not.
     pub initiator_filter_policy: bool,
+    /// What kind of address for self.
     pub own_addr_kind: AddrKind,
+    /// What kind of address for peer.
     pub peer_addr_kind: AddrKind,
+    /// The peer address to connect to.
     pub peer_addr: BdAddr,
+    /// Which phys used for connecting.
     pub initiating_phys: PhyParams<InitiatingPhy>,
 }
 
@@ -1131,6 +1149,7 @@ cmd! {
 }
 
 impl<'a> LeSetPeriodicAdvSubeventData<'a> {
+    /// Create a new instance.
     pub fn new(adv_handle: AdvHandle, subevent: &'a [LePeriodicAdvSubeventData<'a>]) -> Self {
         Self(LeSetPeriodicAdvSubeventDataParams { adv_handle, subevent })
     }
@@ -1140,7 +1159,9 @@ impl<'a> LeSetPeriodicAdvSubeventData<'a> {
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct LeSetPeriodicAdvSubeventDataParams<'a, 'b> {
+    /// Which advertising handle to use.
     pub adv_handle: AdvHandle,
+    /// List of sub events used.
     pub subevent: &'b [LePeriodicAdvSubeventData<'a>],
 }
 

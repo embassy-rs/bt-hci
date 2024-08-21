@@ -77,7 +77,9 @@ impl Opcode {
 #[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum Error<E> {
+    /// HCI error.
     Hci(param::Error),
+    /// I/O error.
     Io(E),
 }
 
@@ -92,8 +94,10 @@ pub trait Cmd: WriteHci {
     /// The opcode identifying this kind of HCI Command
     const OPCODE: Opcode;
 
+    /// Parameters type for this command.
     type Params: WriteHci;
 
+    /// Parameters expected for this command.
     fn params(&self) -> &Self::Params;
 
     /// The command packet header for this command
@@ -110,6 +114,7 @@ impl<T: Cmd> HostToControllerPacket for T {
 /// A marker trait for objects representing HCI Commands that generate [`CommandStatus`](crate::event::CommandStatus)
 /// events
 pub trait AsyncCmd: Cmd {
+    /// Run the command on the provided controller.
     fn exec<C: ControllerCmdAsync<Self>>(
         &self,
         controller: &C,
@@ -118,9 +123,12 @@ pub trait AsyncCmd: Cmd {
     }
 }
 
+/// Type representing the buffer for a command response.
 pub trait CmdReturnBuf: Copy + AsRef<[u8]> + AsMut<[u8]> {
+    /// Length of buffer.
     const LEN: usize;
 
+    /// Create a new instance of the buffer.
     fn new() -> Self;
 }
 
@@ -138,9 +146,12 @@ impl<const N: usize> CmdReturnBuf for [u8; N] {
 pub trait SyncCmd: Cmd {
     /// The type of the parameters for the [`CommandComplete`](crate::event::CommandComplete) event
     type Return: for<'a> FromHciBytes<'a> + Copy;
+    /// Handle returned by this command.
     type Handle: FixedSizeValue;
+    /// Return buffer used by this command.
     type ReturnBuf: CmdReturnBuf;
 
+    /// Handle parameter for this command.
     fn param_handle(&self) -> Self::Handle;
 
     /// Extracts the [`Self::Handle`] from the return parameters for commands that return a handle.
@@ -153,6 +164,7 @@ pub trait SyncCmd: Cmd {
     /// See Bluetooth Core Specification Vol 4, Part E, §4.5
     fn return_handle(_data: &[u8]) -> Result<Self::Handle, crate::FromHciBytesError>;
 
+    /// Run the command on the provided controller.
     fn exec<C: ControllerCmdSync<Self>>(
         &self,
         controller: &C,
@@ -275,6 +287,7 @@ macro_rules! cmd {
 
         impl$(<$life>)? $name$(<$life>)? {
             #[allow(clippy::too_many_arguments)]
+            /// Create a new instance of a command.
             pub fn new($($($handle_name: $handle,)?)? $($param_name: $param_ty),+) -> Self {
                 Self($params {
                     $($($handle_name,)?)?
@@ -317,6 +330,7 @@ macro_rules! cmd {
         }
 
         impl $name {
+            /// Create a new instance of this command.
             pub fn new() -> Self {
                 Self(())
             }
@@ -351,6 +365,7 @@ macro_rules! cmd {
         }
 
         impl$(<$life>)? $name$(<$life>)? {
+            /// Create a new instance of the command with the provided parameters.
             pub fn new(param: $params) -> Self {
                 Self(param)
             }
@@ -379,6 +394,7 @@ macro_rules! cmd {
         #[repr(transparent)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        /// $name command.
         pub struct $name$(<$life>)?($params);
 
         #[automatically_derived]

@@ -29,6 +29,7 @@ macro_rules! le_events {
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum LeEvent<'a> {
             $(
+                /// $name
                 $name($name$(<$life>)?),
             )+
         }
@@ -47,8 +48,10 @@ macro_rules! le_events {
             $(#[$attrs])*
             #[derive(Debug, Clone, Hash)]
             #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+            /// $name
             pub struct $name$(<$life>)? {
                 $(
+                    /// $field
                     pub $field: $ty,
                 )*
             }
