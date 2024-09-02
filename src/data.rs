@@ -43,7 +43,7 @@ param! {
 impl AclPacketHeader {
     /// `Connection_Handle` to be used for transmitting a data packet or segment over a Controller.
     pub fn handle(&self) -> ConnHandle {
-        ConnHandle::new(self.handle & 0xeff)
+        ConnHandle::new(self.handle & 0xfff)
     }
 
     /// The `Packet_Boundary_Flag` of the packet
@@ -111,7 +111,7 @@ impl<'a> AclPacket<'a> {
 
     /// `Connection_Handle` to be used for transmitting a data packet or segment over a Controller.
     pub fn handle(&self) -> ConnHandle {
-        ConnHandle::new(self.handle & 0xeff)
+        ConnHandle::new(self.handle & 0xfff)
     }
 
     /// The `Packet_Boundary_Flag` of the packet
@@ -249,7 +249,7 @@ param! {
 impl SyncPacketHeader {
     /// `Connection_Handle` to be used to for transmitting a synchronous data packet or segment.
     pub fn handle(&self) -> ConnHandle {
-        ConnHandle::new(self.handle & 0xeff)
+        ConnHandle::new(self.handle & 0xfff)
     }
 
     /// The `Packet_Status_Flag` of the packet
@@ -300,7 +300,7 @@ impl<'a> SyncPacket<'a> {
 
     /// `Connection_Handle` to be used to for transmitting a synchronous data packet or segment.
     pub fn handle(&self) -> ConnHandle {
-        ConnHandle::new(self.handle & 0xeff)
+        ConnHandle::new(self.handle & 0xfff)
     }
 
     /// The `Packet_Status_Flag` of the packet
@@ -433,7 +433,7 @@ param! {
 impl IsoPacketHeader {
     /// The identifier of the logical channel between the Host and the Controller.
     pub fn handle(&self) -> ConnHandle {
-        ConnHandle::new(self.handle & 0xeff)
+        ConnHandle::new(self.handle & 0xfff)
     }
 
     /// The `PB_Flag` of the packet
@@ -573,7 +573,7 @@ impl<'a> IsoPacket<'a> {
 
     /// The identifier of the logical channel between the Host and the Controller.
     pub fn handle(&self) -> ConnHandle {
-        ConnHandle::new(self.handle & 0xeff)
+        ConnHandle::new(self.handle & 0xfff)
     }
 
     /// The `PB_Flag` of the packet
@@ -682,4 +682,22 @@ impl<'a> WriteHci for IsoPacket<'a> {
 
 impl<'a> HostToControllerPacket for IsoPacket<'a> {
     const KIND: PacketKind = PacketKind::IsoData;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::AclPacketHeader;
+    use crate::param::ConnHandle;
+    use crate::FromHciBytes;
+
+    #[test]
+    fn test_decode_acl_handle() {
+        let input = &[32, 32, 0, 0];
+        let header = AclPacketHeader::from_hci_bytes_complete(input).unwrap();
+        assert_eq!(header.handle(), ConnHandle::new(32));
+
+        let input = &[0, 33, 0, 0];
+        let header = AclPacketHeader::from_hci_bytes_complete(input).unwrap();
+        assert_eq!(header.handle(), ConnHandle::new(256));
+    }
 }
