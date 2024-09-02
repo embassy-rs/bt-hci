@@ -686,10 +686,9 @@ impl<'a> HostToControllerPacket for IsoPacket<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::FromHciBytes;
-
     use super::AclPacketHeader;
     use crate::param::ConnHandle;
+    use crate::FromHciBytes;
 
     #[test]
     fn test_decode_acl_handle() {
