@@ -14,6 +14,7 @@ pub mod data;
 pub mod event;
 pub mod param;
 pub mod transport;
+pub mod uuid;
 
 /// Errors from parsing HCI data.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
