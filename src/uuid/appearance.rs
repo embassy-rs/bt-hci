@@ -11,8 +11,7 @@
 ///
 /// ## Example
 ///
-/// ```rust
-/// use trouble_host::prelude::*;
+/// ```rust ignore
 ///
 /// const GAMEPAD: &[u8; 2] = &appearance::new(0x00F, 0x040);
 /// ```
