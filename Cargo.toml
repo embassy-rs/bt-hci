@@ -10,7 +10,7 @@ documentation = "https://docs.rs/bt-hci"
 keywords = ["bluetooth", "hci", "BLE"]
 categories = ["embedded", "hardware-support", "no-std"]
 rust-version = "1.77"
-exclude = [".github", ".vscode", "ci.sh", "rust-toolchain.toml", "rustfmt.toml"]
+exclude = [".github", ".vscode", "ci.sh", "rust-toolchain.toml", "rustfmt.toml", "update_uuids"]
 
 [features]
 defmt = ["dep:defmt", "embedded-io/defmt-03", "embedded-io-async/defmt-03"]
@@ -24,3 +24,6 @@ embassy-sync = "0.6"
 embassy-time = { version = "0.3", optional = true }
 heapless = "0.8"
 futures-intrusive = { version = "0.5.0", default-features = false }
+
+[workspace]
+members = ["update_uuids"]
