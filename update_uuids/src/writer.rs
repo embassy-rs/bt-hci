@@ -62,8 +62,8 @@ pub fn update_appearance(output_folder: &Path, appearance_data: &Vec<Category>) 
                 format!(
                     "pub mod {} {{
     //! Appearance {} with subcategories.
-    //! //!
-    //! //! Generic variant named `GENERIC_{}`\n
+    //!
+    //! Generic variant named `GENERIC_{}`\n
     use super::*;\n
     {}\n
 }}",
@@ -87,7 +87,7 @@ fn appearance_subcategory(cat: &Category) -> String {
     // add generic subcategory first
     constants.push(format!(
         "/// Bluetooth Appearance UUID.
-pub const GENERIC_{}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
+    pub const GENERIC_{}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
         screaming_snake_case(&cat.name),
         cat.category,
         0x000 // generic subcategory
