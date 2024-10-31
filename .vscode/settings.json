@@ -1,5 +1,4 @@
 {
-    "rust-analyzer.cargo.features": [
-        "async"
-    ]
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
 }
