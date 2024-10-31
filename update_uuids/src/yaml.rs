@@ -1,8 +1,6 @@
-use std::{
-    collections::HashMap,
-    error::Error,
-    path::{Path, PathBuf},
-};
+use std::collections::HashMap;
+use std::error::Error;
+use std::path::{Path, PathBuf};
 
 use serde::Deserialize;
 use walkdir::WalkDir;
@@ -20,7 +18,7 @@ struct Uuids {
     uuids: Vec<UuidData>,
 }
 
-/// Load UUID data from a directory of YAML files, 
+/// Load UUID data from a directory of YAML files.
 /// matches files in the bluetooth-sig/assigned_numbers/uuids folder.
 pub fn load_uuid_data(path: &PathBuf) -> Result<HashMap<String, Vec<UuidData>>, Box<dyn Error>> {
     let mut map = HashMap::new();
@@ -46,7 +44,7 @@ struct AppearanceValues {
 pub struct Category {
     pub category: u8,
     pub name: String,
-    pub subcategory: Option<Vec<Subcategory>>
+    pub subcategory: Option<Vec<Subcategory>>,
 }
 
 #[derive(Debug, Deserialize)]
