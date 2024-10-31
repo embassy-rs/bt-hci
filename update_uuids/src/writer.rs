@@ -1,14 +1,11 @@
-use crate::{
-    utils::screaming_snake_case,
-    yaml::{Category, UuidData},
-};
-use std::{
-    collections::HashMap,
-    error::Error,
-    fs::File,
-    io::Write,
-    path::{Path, PathBuf},
-};
+use std::collections::HashMap;
+use std::error::Error;
+use std::fs::File;
+use std::io::Write;
+use std::path::{Path, PathBuf};
+
+use crate::utils::screaming_snake_case;
+use crate::yaml::{Category, UuidData};
 
 /// Update the UUIDs in the source code
 pub fn update_uuids(output_folder: &Path, mut uuid_map: HashMap<String, Vec<UuidData>>) -> Result<(), Box<dyn Error>> {
