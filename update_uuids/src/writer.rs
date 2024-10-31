@@ -43,14 +43,14 @@ pub fn update_uuids(output_folder: &Path, mut uuid_map: HashMap<String, Vec<Uuid
 /// Update the Appearance values in the source code
 ///
 /// Subcatagories are dealt with as submodules.
-pub fn update_appearance(output_folder: &Path, appearance_data: &Vec<Category>) -> Result<(), Box<dyn Error>> {
+pub fn update_appearance(output_folder: &Path, appearance_data: &[Category]) -> Result<(), Box<dyn Error>> {
     let output_folder = output_folder.join("appearance");
-    let (module_name, mut file) = setup_rust_file(&"categories", output_folder)?;
+    let (module_name, mut file) = setup_rust_file("categories", output_folder)?;
     let mut tokens = String::new();
     let modules: Vec<_> = appearance_data
         .iter()
         .map(|cat| {
-            let module_name = cat.name.replace(" ", "_").to_lowercase();
+            let module_name = cat.name.replace(' ', "_").to_lowercase();
             if cat.subcategory.is_none() {
                 format!(
                     "/// Bluetooth Appearance UUID.\npub const {}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
