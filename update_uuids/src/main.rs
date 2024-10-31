@@ -10,10 +10,7 @@ mod writer;
 mod yaml;
 
 use git2::Repository;
-use std::{
-    error::Error,
-    path::{Path, PathBuf},
-};
+use std::{error::Error, path::Path};
 
 fn main() -> Result<(), Box<dyn Error>> {
     // Download the latest assigned numbers from the Bluetooth SIG

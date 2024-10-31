@@ -639,10 +639,8 @@ name = "update_uuids"
 version = "0.1.0"
 dependencies = [
  "git2",
- "quote",
  "serde",
  "serde_yaml",
- "syn 2.0.85",
  "walkdir",
 ]
 
