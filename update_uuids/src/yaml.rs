@@ -10,7 +10,6 @@ use walkdir::WalkDir;
 pub struct UuidData {
     pub uuid: u16,
     pub name: String,
-    pub id: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
