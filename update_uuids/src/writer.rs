@@ -62,7 +62,7 @@ pub fn update_appearance(output_folder: &Path, appearance_data: &[Category]) -> 
     //!
     //! Generic variant named `GENERIC_{}`.\n
     use super::super::BleUuid;\n
-    {}\n
+    {}
 }}",
                     module_name,
                     module_name,
@@ -73,7 +73,6 @@ pub fn update_appearance(output_folder: &Path, appearance_data: &[Category]) -> 
         })
         .collect();
     tokens.push_str(&modules.join("\n\n"));
-    tokens.push_str("\n\n");
     write_rust_file(&mut file, &module_name, tokens)?;
     Ok(())
 }
@@ -100,7 +99,6 @@ fn appearance_subcategory(cat: &Category) -> String {
             ));
         }
     }
-
     constants.join("\n\n")
 }
 
@@ -124,5 +122,6 @@ fn write_rust_file(file: &mut File, module_name: &str, tokens: String) -> Result
     writeln!(file, "use super::BleUuid;\n")?;
 
     write!(file, "{}", tokens)?; // write the file contents
+    write!(file, "\n")?; // add a newline at the end
     Ok(())
 }
