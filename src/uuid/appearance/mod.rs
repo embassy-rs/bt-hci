@@ -8,8 +8,9 @@
 #[allow(dead_code)]
 mod categories;
 
-use super::BleUuid;
 pub use categories::*;
+
+use super::BleUuid;
 
 #[cfg(test)]
 mod test {
