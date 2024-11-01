@@ -8,11 +8,15 @@ use crate::utils::screaming_snake_case;
 use crate::yaml::{Category, UuidData};
 
 /// Update the UUIDs in the source code
-pub fn update_uuids(output_folder: &Path, mut uuid_map: HashMap<String, Vec<UuidData>>) -> Result<(), Box<dyn Error>> {
+pub fn update_uuids(
+    output_folder: &Path,
+    mut input: HashMap<String, Vec<UuidData>>,
+    commit_hash: &str,
+) -> Result<(), Box<dyn Error>> {
     // each key in the map is a module name
     // each value is a list of UUIDs, which will be written as constants
     // in the form `pub const UUID_NAME: BleUuid = BleUuid::new(uuid);`
-    for (file_name, uuids) in uuid_map.iter_mut() {
+    for (file_name, uuids) in input.iter_mut() {
         let output_name = file_name.replace("_uuids", "").replace(".yaml", "");
         if output_name == "member" || output_name == "sdo" {
             continue; // skip the member and sdo modules
@@ -23,8 +27,10 @@ pub fn update_uuids(output_folder: &Path, mut uuid_map: HashMap<String, Vec<Uuid
             .iter()
             .map(|uuid| {
                 format!(
-                    "/// Bluetooth {} UUID.\npub const {}: BleUuid = BleUuid::new(0x{:x});",
+                    "/// Bluetooth {} UUID. (0x{:04x})
+pub const {}: BleUuid = BleUuid::new(0x{:x});",
                     module_name,
+                    uuid.uuid,
                     screaming_snake_case(&uuid.name),
                     uuid.uuid,
                 )
@@ -32,7 +38,7 @@ pub fn update_uuids(output_folder: &Path, mut uuid_map: HashMap<String, Vec<Uuid
             .collect();
         let tokens = constants.join("\n\n");
 
-        write_rust_file(&mut file, &module_name, tokens)?;
+        write_rust_file(&mut file, &module_name, tokens, commit_hash)?;
     }
     Ok(())
 }
@@ -40,17 +46,19 @@ pub fn update_uuids(output_folder: &Path, mut uuid_map: HashMap<String, Vec<Uuid
 /// Update the Appearance values in the source code
 ///
 /// Subcatagories are dealt with as submodules.
-pub fn update_appearance(output_folder: &Path, appearance_data: &[Category]) -> Result<(), Box<dyn Error>> {
+pub fn update_appearance(output_folder: &Path, input: &[Category], commit_hash: &str) -> Result<(), Box<dyn Error>> {
     let output_folder = output_folder.join("appearance");
     let (module_name, mut file) = setup_rust_file("categories", output_folder)?;
     let mut tokens = String::new();
-    let modules: Vec<_> = appearance_data
+    let modules: Vec<_> = input
         .iter()
         .map(|cat| {
             let module_name = cat.name.replace(' ', "_").to_lowercase();
             if cat.subcategory.is_none() {
                 format!(
-                    "/// Bluetooth Appearance UUID.\npub const {}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
+                    "/// Bluetooth Appearance UUID. (0x{:03x})
+pub const {}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
+                    appearance(cat),
                     screaming_snake_case(&cat.name),
                     cat.category,
                     0x000 // generic subcategory
@@ -73,7 +81,7 @@ pub fn update_appearance(output_folder: &Path, appearance_data: &[Category]) -> 
         })
         .collect();
     tokens.push_str(&modules.join("\n\n"));
-    write_rust_file(&mut file, &module_name, tokens)?;
+    write_rust_file(&mut file, &module_name, tokens, commit_hash)?;
     Ok(())
 }
 
@@ -82,8 +90,9 @@ fn appearance_subcategory(cat: &Category) -> String {
     let mut constants: Vec<_> = Vec::new();
     // add generic subcategory first
     constants.push(format!(
-        "/// Bluetooth Appearance UUID.
+        "/// Bluetooth Appearance UUID. (0x{:03x})
     pub const GENERIC_{}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
+        appearance(cat),
         screaming_snake_case(&cat.name),
         cat.category,
         0x000 // generic subcategory
@@ -91,8 +100,9 @@ fn appearance_subcategory(cat: &Category) -> String {
     if let Some(subcats) = &cat.subcategory {
         for subcat in subcats {
             constants.push(format!(
-                "    /// Bluetooth Appearance UUID.
+                "    /// Bluetooth Appearance UUID. (0x{:03x})
     pub const {}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
+                appearance(cat),
                 screaming_snake_case(&subcat.name),
                 cat.category,
                 subcat.value
@@ -113,15 +123,20 @@ fn setup_rust_file(output_name: &str, output_folder: PathBuf) -> Result<(String,
     Ok((module_name, file))
 }
 
-fn write_rust_file(file: &mut File, module_name: &str, tokens: String) -> Result<(), Box<dyn Error>> {
+fn write_rust_file(file: &mut File, name: &str, tokens: String, commit_hash: &str) -> Result<(), Box<dyn Error>> {
     // construct the header docstrings
-    writeln!(file, "//! UUIDs for the {} module.\n", module_name)?;
+    writeln!(file, "//! UUIDs for the {} module.\n", name)?;
     writeln!(file, "// This file is auto-generated by the update_uuids application.")?;
-    writeln!(file, "// Based on https://bitbucket.org/bluetooth-SIG/public.git\n")?;
+    writeln!(file, "// Based on https://bitbucket.org/bluetooth-SIG/public.git")?;
+    writeln!(file, "// Commit hash: {}\n", commit_hash,)?;
 
     writeln!(file, "use super::BleUuid;\n")?;
 
     write!(file, "{}", tokens)?; // write the file contents
     write!(file, "\n")?; // add a newline at the end
     Ok(())
+}
+
+fn appearance(cat: &Category) -> u16 {
+    ((cat.category as u16) << 6) | (0x000 as u16)
 }
