@@ -14,19 +14,16 @@ use super::BleUuid;
 
 #[cfg(test)]
 mod test {
-    use sensor::HUMIDITY_SENSOR;
-
     use super::*;
-    use crate::uuid::characteristic::SPORT_TYPE_FOR_AEROBIC_AND_ANAEROBIC_THRESHOLDS;
 
     #[test]
     fn test_appearance() {
         const CUSTOM_UUID: BleUuid = BleUuid::from_category(0x002, 0x007);
         assert_eq!(u16::from(CUSTOM_UUID), 0x0087);
-        let uuid: u16 = SPORT_TYPE_FOR_AEROBIC_AND_ANAEROBIC_THRESHOLDS.into();
-        assert_eq!(uuid, 0x2A93);
-        const HUMIDITY_BYTES: [u8; 2] = HUMIDITY_SENSOR.to_le_bytes();
-        assert_eq!(HUMIDITY_BYTES, [0x44, 0x05]);
+        let uuid: u16 = aircraft::LARGE_PASSENGER_AIRCRAFT.into();
+        assert_eq!(uuid, 0x0984);
+        const LABEL_BYTES: [u8; 2] = signage::ELECTRONIC_LABEL.to_le_bytes();
+        assert_eq!(LABEL_BYTES, [0xc2, 0x0a]);
         const GAMEPAD: BleUuid = power_device::GENERIC_POWER_DEVICE;
         assert_eq!(u16::from(GAMEPAD), 0x780);
     }

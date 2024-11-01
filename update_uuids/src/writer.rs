@@ -56,9 +56,9 @@ pub fn update_appearance(output_folder: &Path, input: &[Category], commit_hash: 
             let module_name = cat.name.replace(' ', "_").to_lowercase();
             if cat.subcategory.is_none() {
                 format!(
-                    "/// Bluetooth Appearance UUID. (0x{:03x})
-pub const {}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
-                    appearance(cat),
+                    "/// Bluetooth Appearance UUID. (0x{:04x})
+pub const {}: BleUuid = BleUuid::from_category(0x{:04x}, 0x{:04x});",
+                    appearance(cat.category, 0x000),
                     screaming_snake_case(&cat.name),
                     cat.category,
                     0x000 // generic subcategory
@@ -90,9 +90,9 @@ fn appearance_subcategory(cat: &Category) -> String {
     let mut constants: Vec<_> = Vec::new();
     // add generic subcategory first
     constants.push(format!(
-        "/// Bluetooth Appearance UUID. (0x{:03x})
-    pub const GENERIC_{}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
-        appearance(cat),
+        "/// Bluetooth Appearance UUID. (0x{:04x})
+    pub const GENERIC_{}: BleUuid = BleUuid::from_category(0x{:04x}, 0x{:04x});",
+        appearance(cat.category, 0x000),
         screaming_snake_case(&cat.name),
         cat.category,
         0x000 // generic subcategory
@@ -100,9 +100,9 @@ fn appearance_subcategory(cat: &Category) -> String {
     if let Some(subcats) = &cat.subcategory {
         for subcat in subcats {
             constants.push(format!(
-                "    /// Bluetooth Appearance UUID. (0x{:03x})
-    pub const {}: BleUuid = BleUuid::from_category(0x{:03x}, 0x{:03x});",
-                appearance(cat),
+                "    /// Bluetooth Appearance UUID. (0x{:04x})
+    pub const {}: BleUuid = BleUuid::from_category(0x{:04x}, 0x{:04x});",
+                appearance(cat.category, subcat.value),
                 screaming_snake_case(&subcat.name),
                 cat.category,
                 subcat.value
@@ -137,6 +137,6 @@ fn write_rust_file(file: &mut File, name: &str, tokens: String, commit_hash: &st
     Ok(())
 }
 
-fn appearance(cat: &Category) -> u16 {
-    ((cat.category as u16) << 6) | (0x000 as u16)
+fn appearance(cat: u8, subcat: u8) -> u16 {
+    ((cat as u16) << 6) | (subcat as u16)
 }
