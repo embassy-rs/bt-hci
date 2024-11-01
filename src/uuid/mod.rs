@@ -1,5 +1,7 @@
 //! This module contains the UUIDs for Bluetooth.
 
+use core::fmt::{Debug, Display};
+
 pub mod appearance;
 pub mod browse_group_identifiers;
 pub mod characteristic;
@@ -13,7 +15,7 @@ pub mod service_class;
 pub mod units;
 
 /// Bluetooth UUID.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct BleUuid(u16);
 
 impl BleUuid {
@@ -52,6 +54,18 @@ impl From<BleUuid> for u16 {
 impl From<BleUuid> for [u8; 2] {
     fn from(uuid: BleUuid) -> [u8; 2] {
         uuid.0.to_le_bytes()
+    }
+}
+
+impl Debug for BleUuid {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        write!(f, "BleUuid(0x{:04X})", self.0)
+    }
+}
+
+impl Display for BleUuid {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        write!(f, "0x{:04X}", self.0)
     }
 }
 
