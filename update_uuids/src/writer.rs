@@ -61,7 +61,7 @@ pub fn update_appearance(output_folder: &Path, input: &[Category], commit_hash: 
                 format!(
                     "/// Bluetooth Appearance UUID.
 ///
-/// `0x{:04x}` Generic {} 
+/// `0x{:04x}` Generic {}
 pub const {}: BluetoothUuid16 = super::from_category(0x{:04x}, 0x{:04x});",
                     appearance(cat.category, 0x000),
                     cat.name,

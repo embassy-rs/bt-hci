@@ -8,12 +8,12 @@ use super::BluetoothUuid16;
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0000` Generic Unknown 
+/// `0x0000` Generic Unknown
 pub const UNKNOWN: BluetoothUuid16 = super::from_category(0x0000, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0040` Generic Phone 
+/// `0x0040` Generic Phone
 pub const PHONE: BluetoothUuid16 = super::from_category(0x0001, 0x0000);
 
 pub mod computer {
@@ -129,42 +129,42 @@ pub mod watch {
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0100` Generic Clock 
+/// `0x0100` Generic Clock
 pub const CLOCK: BluetoothUuid16 = super::from_category(0x0004, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0140` Generic Display 
+/// `0x0140` Generic Display
 pub const DISPLAY: BluetoothUuid16 = super::from_category(0x0005, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0180` Generic Remote Control 
+/// `0x0180` Generic Remote Control
 pub const REMOTE_CONTROL: BluetoothUuid16 = super::from_category(0x0006, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x01c0` Generic Eye-glasses 
+/// `0x01c0` Generic Eye-glasses
 pub const EYE_GLASSES: BluetoothUuid16 = super::from_category(0x0007, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0200` Generic Tag 
+/// `0x0200` Generic Tag
 pub const TAG: BluetoothUuid16 = super::from_category(0x0008, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0240` Generic Keyring 
+/// `0x0240` Generic Keyring
 pub const KEYRING: BluetoothUuid16 = super::from_category(0x0009, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0280` Generic Media Player 
+/// `0x0280` Generic Media Player
 pub const MEDIA_PLAYER: BluetoothUuid16 = super::from_category(0x000a, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x02c0` Generic Barcode Scanner 
+/// `0x02c0` Generic Barcode Scanner
 pub const BARCODE_SCANNER: BluetoothUuid16 = super::from_category(0x000b, 0x0000);
 
 pub mod thermometer {
@@ -291,7 +291,7 @@ pub mod human_interface_device {
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0400` Generic Glucose Meter 
+/// `0x0400` Generic Glucose Meter
 pub const GLUCOSE_METER: BluetoothUuid16 = super::from_category(0x0010, 0x0000);
 
 pub mod running_walking_sensor {
@@ -855,12 +855,12 @@ pub mod hvac {
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0640` Generic Air Conditioning 
+/// `0x0640` Generic Air Conditioning
 pub const AIR_CONDITIONING: BluetoothUuid16 = super::from_category(0x0019, 0x0000);
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0680` Generic Humidifier 
+/// `0x0680` Generic Humidifier
 pub const HUMIDIFIER: BluetoothUuid16 = super::from_category(0x001a, 0x0000);
 
 pub mod heating {
@@ -1689,7 +1689,7 @@ pub mod pulse_oximeter {
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0c80` Generic Weight Scale 
+/// `0x0c80` Generic Weight Scale
 pub const WEIGHT_SCALE: BluetoothUuid16 = super::from_category(0x0032, 0x0000);
 
 pub mod personal_mobility_device {
@@ -1717,7 +1717,7 @@ pub mod personal_mobility_device {
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0d00` Generic Continuous Glucose Monitor 
+/// `0x0d00` Generic Continuous Glucose Monitor
 pub const CONTINUOUS_GLUCOSE_MONITOR: BluetoothUuid16 = super::from_category(0x0034, 0x0000);
 
 pub mod insulin_pump {
@@ -1750,7 +1750,7 @@ pub mod insulin_pump {
 
 /// Bluetooth Appearance UUID.
 ///
-/// `0x0d80` Generic Medication Delivery 
+/// `0x0d80` Generic Medication Delivery
 pub const MEDICATION_DELIVERY: BluetoothUuid16 = super::from_category(0x0036, 0x0000);
 
 pub mod spirometer {
