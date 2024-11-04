@@ -21,7 +21,7 @@ pub mod units;
 ///
 /// The full 128-bit value of a 16-bit or 32-bit UUID may be computed by a simple arithmetic operation.
 ///
-/// 128_bit_value = 16_bit_value × 296 + Bluetooth_Base_UUID
+/// 128_bit_value = 16_bit_value × 2^96 + Bluetooth_Base_UUID
 pub const BLUETOOTH_BASE_UUID: [u8; 16] = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB,
 ];
