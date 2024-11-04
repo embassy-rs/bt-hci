@@ -6,382 +6,382 @@
 
 use super::BluetoothUuid16;
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1000` ServiceDiscoveryServerServiceClassID
 pub const SERVICE_DISCOVERY_SERVER_SERVICE_CLASS_ID: BluetoothUuid16 = BluetoothUuid16::new(0x1000);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1001` BrowseGroupDescriptorServiceClassID
 pub const BROWSE_GROUP_DESCRIPTOR_SERVICE_CLASS_ID: BluetoothUuid16 = BluetoothUuid16::new(0x1001);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1101` SerialPort
 pub const SERIAL_PORT: BluetoothUuid16 = BluetoothUuid16::new(0x1101);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1102` LANAccessUsingPPP
 pub const LAN_ACCESS_USING_PPP: BluetoothUuid16 = BluetoothUuid16::new(0x1102);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1103` Dial-Up Networking
 pub const DIAL_UP_NETWORKING: BluetoothUuid16 = BluetoothUuid16::new(0x1103);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1104` IrMCSync
 pub const IR_MC_SYNC: BluetoothUuid16 = BluetoothUuid16::new(0x1104);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1105` OBEXObjectPush
 pub const OBEX_OBJECT_PUSH: BluetoothUuid16 = BluetoothUuid16::new(0x1105);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1106` OBEX File Transfer
 pub const OBEX_FILE_TRANSFER: BluetoothUuid16 = BluetoothUuid16::new(0x1106);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1107` IrMCSyncCommand
 pub const IR_MC_SYNC_COMMAND: BluetoothUuid16 = BluetoothUuid16::new(0x1107);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1108` Headset
 pub const HEADSET: BluetoothUuid16 = BluetoothUuid16::new(0x1108);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1109` CordlessTelephony
 pub const CORDLESS_TELEPHONY: BluetoothUuid16 = BluetoothUuid16::new(0x1109);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x110a` Audio Source
 pub const AUDIO_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x110a);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x110b` Audio Sink
 pub const AUDIO_SINK: BluetoothUuid16 = BluetoothUuid16::new(0x110b);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x110c` A/V Remote Control Target
 pub const AV_REMOTE_CONTROL_TARGET: BluetoothUuid16 = BluetoothUuid16::new(0x110c);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x110d` Advanced Audio Distribution
 pub const ADVANCED_AUDIO_DISTRIBUTION: BluetoothUuid16 = BluetoothUuid16::new(0x110d);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x110e` A/V Remote Control
 pub const AV_REMOTE_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x110e);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x110f` A/V Remote Control Controller
 pub const AV_REMOTE_CONTROL_CONTROLLER: BluetoothUuid16 = BluetoothUuid16::new(0x110f);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1110` Intercom
 pub const INTERCOM: BluetoothUuid16 = BluetoothUuid16::new(0x1110);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1111` Fax
 pub const FAX: BluetoothUuid16 = BluetoothUuid16::new(0x1111);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1112` Headset Audio Gateway
 pub const HEADSET_AUDIO_GATEWAY: BluetoothUuid16 = BluetoothUuid16::new(0x1112);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1113` WAP
 pub const WAP: BluetoothUuid16 = BluetoothUuid16::new(0x1113);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1114` WAP_CLIENT
 pub const WAP_CLIENT: BluetoothUuid16 = BluetoothUuid16::new(0x1114);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1115` PANU
 pub const PANU: BluetoothUuid16 = BluetoothUuid16::new(0x1115);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1116` NAP
 pub const NAP: BluetoothUuid16 = BluetoothUuid16::new(0x1116);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1117` GN
 pub const GN: BluetoothUuid16 = BluetoothUuid16::new(0x1117);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1118` DirectPrinting
 pub const DIRECT_PRINTING: BluetoothUuid16 = BluetoothUuid16::new(0x1118);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1119` ReferencePrinting
 pub const REFERENCE_PRINTING: BluetoothUuid16 = BluetoothUuid16::new(0x1119);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x111a` Imaging
 pub const IMAGING: BluetoothUuid16 = BluetoothUuid16::new(0x111a);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x111b` Imaging Responder
 pub const IMAGING_RESPONDER: BluetoothUuid16 = BluetoothUuid16::new(0x111b);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x111c` Imaging Automatic Archive
 pub const IMAGING_AUTOMATIC_ARCHIVE: BluetoothUuid16 = BluetoothUuid16::new(0x111c);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x111d` Imaging Referenced Objects
 pub const IMAGING_REFERENCED_OBJECTS: BluetoothUuid16 = BluetoothUuid16::new(0x111d);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x111e` Hands-Free
 pub const HANDS_FREE: BluetoothUuid16 = BluetoothUuid16::new(0x111e);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x111f` AG Hands-Free
 pub const AG_HANDS_FREE: BluetoothUuid16 = BluetoothUuid16::new(0x111f);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1120` DirectPrintingReferencedObjectsService
 pub const DIRECT_PRINTING_REFERENCED_OBJECTS_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x1120);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1121` ReflectedUI
 pub const REFLECTED_UI: BluetoothUuid16 = BluetoothUuid16::new(0x1121);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1122` BasicPrinting
 pub const BASIC_PRINTING: BluetoothUuid16 = BluetoothUuid16::new(0x1122);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1123` PrintingStatus
 pub const PRINTING_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x1123);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1124` HID
 pub const HID: BluetoothUuid16 = BluetoothUuid16::new(0x1124);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1125` HardcopyCableReplacement
 pub const HARDCOPY_CABLE_REPLACEMENT: BluetoothUuid16 = BluetoothUuid16::new(0x1125);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1126` HCR_Print
 pub const HCR_PRINT: BluetoothUuid16 = BluetoothUuid16::new(0x1126);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1127` HCR_Scan
 pub const HCR_SCAN: BluetoothUuid16 = BluetoothUuid16::new(0x1127);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1128` Common_ISDN_Access
 pub const COMMON_ISDN_ACCESS: BluetoothUuid16 = BluetoothUuid16::new(0x1128);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x112d` SIM Access
 pub const SIM_ACCESS: BluetoothUuid16 = BluetoothUuid16::new(0x112d);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x112e` Phonebook Access Client
 pub const PHONEBOOK_ACCESS_CLIENT: BluetoothUuid16 = BluetoothUuid16::new(0x112e);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x112f` Phonebook Access Server
 pub const PHONEBOOK_ACCESS_SERVER: BluetoothUuid16 = BluetoothUuid16::new(0x112f);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1130` Phonebook Access Profile
 pub const PHONEBOOK_ACCESS_PROFILE: BluetoothUuid16 = BluetoothUuid16::new(0x1130);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1131` Headset - HS
 pub const HEADSET_HS: BluetoothUuid16 = BluetoothUuid16::new(0x1131);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1132` Message Access Server
 pub const MESSAGE_ACCESS_SERVER: BluetoothUuid16 = BluetoothUuid16::new(0x1132);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1133` Message Notification Server
 pub const MESSAGE_NOTIFICATION_SERVER: BluetoothUuid16 = BluetoothUuid16::new(0x1133);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1134` Message Access Profile
 pub const MESSAGE_ACCESS_PROFILE: BluetoothUuid16 = BluetoothUuid16::new(0x1134);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1135` GNSS
 pub const GNSS: BluetoothUuid16 = BluetoothUuid16::new(0x1135);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1136` GNSS_Server
 pub const GNSS_SERVER: BluetoothUuid16 = BluetoothUuid16::new(0x1136);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1137` 3D Display
 pub const _3D_DISPLAY: BluetoothUuid16 = BluetoothUuid16::new(0x1137);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1138` 3D Glasses
 pub const _3D_GLASSES: BluetoothUuid16 = BluetoothUuid16::new(0x1138);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1139` 3D Synch Profile
 pub const _3D_SYNCH_PROFILE: BluetoothUuid16 = BluetoothUuid16::new(0x1139);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x113a` Multi Profile Specification
 pub const MULTI_PROFILE_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x113a);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x113b` MPS
 pub const MPS: BluetoothUuid16 = BluetoothUuid16::new(0x113b);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x113c` CTN Access Service
 pub const CTN_ACCESS_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x113c);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x113d` CTN Notification Service
 pub const CTN_NOTIFICATION_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x113d);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x113e` Calendar Tasks and Notes Profile
 pub const CALENDAR_TASKS_AND_NOTES_PROFILE: BluetoothUuid16 = BluetoothUuid16::new(0x113e);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1200` PnPInformation
 pub const PN_P_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x1200);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1201` Generic Networking
 pub const GENERIC_NETWORKING: BluetoothUuid16 = BluetoothUuid16::new(0x1201);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1202` GenericFileTransfer
 pub const GENERIC_FILE_TRANSFER: BluetoothUuid16 = BluetoothUuid16::new(0x1202);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1203` Generic Audio
 pub const GENERIC_AUDIO: BluetoothUuid16 = BluetoothUuid16::new(0x1203);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1204` GenericTelephony
 pub const GENERIC_TELEPHONY: BluetoothUuid16 = BluetoothUuid16::new(0x1204);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1205` UPNP_Service
 pub const UPNP_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x1205);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1206` UPNP_IP_Service
 pub const UPNP_IP_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x1206);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1300` ESDP_UPNP_IP_PAN
 pub const ESDP_UPNP_IP_PAN: BluetoothUuid16 = BluetoothUuid16::new(0x1300);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1301` ESDP_UPNP_IP_LAP
 pub const ESDP_UPNP_IP_LAP: BluetoothUuid16 = BluetoothUuid16::new(0x1301);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1302` ESDP_UPNP_L2CAP
 pub const ESDP_UPNP_L2_CAP: BluetoothUuid16 = BluetoothUuid16::new(0x1302);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1303` Video Source
 pub const VIDEO_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x1303);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1304` Video Sink
 pub const VIDEO_SINK: BluetoothUuid16 = BluetoothUuid16::new(0x1304);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1305` Video Distribution
 pub const VIDEO_DISTRIBUTION: BluetoothUuid16 = BluetoothUuid16::new(0x1305);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1400` HDP
 pub const HDP: BluetoothUuid16 = BluetoothUuid16::new(0x1400);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1401` HDP Source
 pub const HDP_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x1401);
 
-/// Bluetooth service class UUID. 
+/// Bluetooth service class UUID.
 ///
 /// `0x1402` HDP Sink
 pub const HDP_SINK: BluetoothUuid16 = BluetoothUuid16::new(0x1402);

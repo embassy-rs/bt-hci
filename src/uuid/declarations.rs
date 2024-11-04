@@ -6,22 +6,22 @@
 
 use super::BluetoothUuid16;
 
-/// Bluetooth declarations UUID. 
+/// Bluetooth declarations UUID.
 ///
 /// `0x2800` Primary Service
 pub const PRIMARY_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x2800);
 
-/// Bluetooth declarations UUID. 
+/// Bluetooth declarations UUID.
 ///
 /// `0x2801` Secondary Service
 pub const SECONDARY_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x2801);
 
-/// Bluetooth declarations UUID. 
+/// Bluetooth declarations UUID.
 ///
 /// `0x2802` Include
 pub const INCLUDE: BluetoothUuid16 = BluetoothUuid16::new(0x2802);
 
-/// Bluetooth declarations UUID. 
+/// Bluetooth declarations UUID.
 ///
 /// `0x2803` Characteristic
 pub const CHARACTERISTIC: BluetoothUuid16 = BluetoothUuid16::new(0x2803);
