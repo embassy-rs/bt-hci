@@ -4,76 +4,76 @@
 // Based on https://bitbucket.org/bluetooth-SIG/public.git
 // Commit hash: 43c96bbde30dc6937fba488adb22b6406e1b9cad
 
-use super::BleUuid;
+use super::BluetoothUuid16;
 
 /// Bluetooth protocol identifiers UUID. (0x0001)
-pub const SDP: BleUuid = BleUuid::new(0x1);
+pub const SDP: BluetoothUuid16 = BluetoothUuid16::new(0x1);
 
 /// Bluetooth protocol identifiers UUID. (0x0002)
-pub const UDP: BleUuid = BleUuid::new(0x2);
+pub const UDP: BluetoothUuid16 = BluetoothUuid16::new(0x2);
 
 /// Bluetooth protocol identifiers UUID. (0x0003)
-pub const RFCOMM: BleUuid = BleUuid::new(0x3);
+pub const RFCOMM: BluetoothUuid16 = BluetoothUuid16::new(0x3);
 
 /// Bluetooth protocol identifiers UUID. (0x0004)
-pub const TCP: BleUuid = BleUuid::new(0x4);
+pub const TCP: BluetoothUuid16 = BluetoothUuid16::new(0x4);
 
 /// Bluetooth protocol identifiers UUID. (0x0005)
-pub const TCS_BIN: BleUuid = BleUuid::new(0x5);
+pub const TCS_BIN: BluetoothUuid16 = BluetoothUuid16::new(0x5);
 
 /// Bluetooth protocol identifiers UUID. (0x0006)
-pub const TCS_AT: BleUuid = BleUuid::new(0x6);
+pub const TCS_AT: BluetoothUuid16 = BluetoothUuid16::new(0x6);
 
 /// Bluetooth protocol identifiers UUID. (0x0007)
-pub const ATT: BleUuid = BleUuid::new(0x7);
+pub const ATT: BluetoothUuid16 = BluetoothUuid16::new(0x7);
 
 /// Bluetooth protocol identifiers UUID. (0x0008)
-pub const OBEX: BleUuid = BleUuid::new(0x8);
+pub const OBEX: BluetoothUuid16 = BluetoothUuid16::new(0x8);
 
 /// Bluetooth protocol identifiers UUID. (0x0009)
-pub const IP: BleUuid = BleUuid::new(0x9);
+pub const IP: BluetoothUuid16 = BluetoothUuid16::new(0x9);
 
 /// Bluetooth protocol identifiers UUID. (0x000a)
-pub const FTP: BleUuid = BleUuid::new(0xa);
+pub const FTP: BluetoothUuid16 = BluetoothUuid16::new(0xa);
 
 /// Bluetooth protocol identifiers UUID. (0x000c)
-pub const HTTP: BleUuid = BleUuid::new(0xc);
+pub const HTTP: BluetoothUuid16 = BluetoothUuid16::new(0xc);
 
 /// Bluetooth protocol identifiers UUID. (0x000e)
-pub const WSP: BleUuid = BleUuid::new(0xe);
+pub const WSP: BluetoothUuid16 = BluetoothUuid16::new(0xe);
 
 /// Bluetooth protocol identifiers UUID. (0x000f)
-pub const BNEP: BleUuid = BleUuid::new(0xf);
+pub const BNEP: BluetoothUuid16 = BluetoothUuid16::new(0xf);
 
 /// Bluetooth protocol identifiers UUID. (0x0010)
-pub const UPNP: BleUuid = BleUuid::new(0x10);
+pub const UPNP: BluetoothUuid16 = BluetoothUuid16::new(0x10);
 
 /// Bluetooth protocol identifiers UUID. (0x0011)
-pub const HID_PROTOCOL: BleUuid = BleUuid::new(0x11);
+pub const HID_PROTOCOL: BluetoothUuid16 = BluetoothUuid16::new(0x11);
 
 /// Bluetooth protocol identifiers UUID. (0x0012)
-pub const HARDCOPY_CONTROL_CHANNEL: BleUuid = BleUuid::new(0x12);
+pub const HARDCOPY_CONTROL_CHANNEL: BluetoothUuid16 = BluetoothUuid16::new(0x12);
 
 /// Bluetooth protocol identifiers UUID. (0x0014)
-pub const HARDCOPY_DATA_CHANNEL: BleUuid = BleUuid::new(0x14);
+pub const HARDCOPY_DATA_CHANNEL: BluetoothUuid16 = BluetoothUuid16::new(0x14);
 
 /// Bluetooth protocol identifiers UUID. (0x0016)
-pub const HARDCOPY_NOTIFICATION_CHANNEL: BleUuid = BleUuid::new(0x16);
+pub const HARDCOPY_NOTIFICATION_CHANNEL: BluetoothUuid16 = BluetoothUuid16::new(0x16);
 
 /// Bluetooth protocol identifiers UUID. (0x0017)
-pub const AVCTP: BleUuid = BleUuid::new(0x17);
+pub const AVCTP: BluetoothUuid16 = BluetoothUuid16::new(0x17);
 
 /// Bluetooth protocol identifiers UUID. (0x0019)
-pub const AVDTP: BleUuid = BleUuid::new(0x19);
+pub const AVDTP: BluetoothUuid16 = BluetoothUuid16::new(0x19);
 
 /// Bluetooth protocol identifiers UUID. (0x001b)
-pub const CMTP: BleUuid = BleUuid::new(0x1b);
+pub const CMTP: BluetoothUuid16 = BluetoothUuid16::new(0x1b);
 
 /// Bluetooth protocol identifiers UUID. (0x001e)
-pub const MCAP_CONTROL_CHANNEL: BleUuid = BleUuid::new(0x1e);
+pub const MCAP_CONTROL_CHANNEL: BluetoothUuid16 = BluetoothUuid16::new(0x1e);
 
 /// Bluetooth protocol identifiers UUID. (0x001f)
-pub const MCAP_DATA_CHANNEL: BleUuid = BleUuid::new(0x1f);
+pub const MCAP_DATA_CHANNEL: BluetoothUuid16 = BluetoothUuid16::new(0x1f);
 
 /// Bluetooth protocol identifiers UUID. (0x0100)
-pub const L2_CAP: BleUuid = BleUuid::new(0x100);
+pub const L2_CAP: BluetoothUuid16 = BluetoothUuid16::new(0x100);

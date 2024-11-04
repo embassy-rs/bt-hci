@@ -15,11 +15,12 @@ pub mod service_class;
 pub mod units;
 
 /// Bluetooth UUID.
+#[repr(transparent)]
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub struct BleUuid(u16);
+pub struct BluetoothUuid16(u16);
 
-impl BleUuid {
-    /// Create a new `BleUuid`.
+impl BluetoothUuid16 {
+    /// Create a new `BluetoothUuid16`.
     pub const fn new(uuid: u16) -> Self {
         Self(uuid)
     }
@@ -32,38 +33,38 @@ impl BleUuid {
     ///
     /// ```rust ignore
     ///
-    /// const GAMEPAD: BleUuid = BleUuid::from_category(0x00F, 0x040);
+    /// const GAMEPAD: BluetoothUuid16 = BluetoothUuid16::from_category(0x00F, 0x040);
     /// const GAMEPAD_BYTES: &[u8; 2] = &GAMEPAD.to_le_bytes();
     /// ```
     pub const fn from_category(category: u8, subcategory: u8) -> Self {
         let uuid = ((category as u16) << 6) | (subcategory as u16);
         Self(uuid)
     }
-    /// Convert the `BleUuid` to a byte array as a const function.
+    /// Convert the `BluetoothUuid16` to a byte array as a const function.
     pub const fn to_le_bytes(self) -> [u8; 2] {
         self.0.to_le_bytes()
     }
 }
 
-impl From<BleUuid> for u16 {
-    fn from(uuid: BleUuid) -> u16 {
+impl From<BluetoothUuid16> for u16 {
+    fn from(uuid: BluetoothUuid16) -> u16 {
         uuid.0
     }
 }
 
-impl From<BleUuid> for [u8; 2] {
-    fn from(uuid: BleUuid) -> [u8; 2] {
+impl From<BluetoothUuid16> for [u8; 2] {
+    fn from(uuid: BluetoothUuid16) -> [u8; 2] {
         uuid.0.to_le_bytes()
     }
 }
 
-impl Debug for BleUuid {
+impl Debug for BluetoothUuid16 {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-        write!(f, "BleUuid(0x{:04X})", self.0)
+        write!(f, "BluetoothUuid16(0x{:04X})", self.0)
     }
 }
 
-impl Display for BleUuid {
+impl Display for BluetoothUuid16 {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "0x{:04X}", self.0)
     }
@@ -75,7 +76,7 @@ mod test {
 
     #[test]
     fn test_ble_uuid() {
-        const BLE_UUID: BleUuid = BleUuid::new(0x1234);
+        const BLE_UUID: BluetoothUuid16 = BluetoothUuid16::new(0x1234);
         assert_eq!(u16::from(BLE_UUID), 0x1234);
         let uuid: u16 = BLE_UUID.into();
         assert_eq!(uuid, 0x1234);

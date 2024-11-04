@@ -4,7 +4,7 @@
 // Based on https://bitbucket.org/bluetooth-SIG/public.git
 // Commit hash: 43c96bbde30dc6937fba488adb22b6406e1b9cad
 
-use super::BleUuid;
+use super::BluetoothUuid16;
 
 /// Bluetooth browse group identifiers UUID. (0x1002)
-pub const PUBLIC_BROWSE_ROOT: BleUuid = BleUuid::new(0x1002);
+pub const PUBLIC_BROWSE_ROOT: BluetoothUuid16 = BluetoothUuid16::new(0x1002);

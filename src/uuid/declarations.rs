@@ -4,16 +4,16 @@
 // Based on https://bitbucket.org/bluetooth-SIG/public.git
 // Commit hash: 43c96bbde30dc6937fba488adb22b6406e1b9cad
 
-use super::BleUuid;
+use super::BluetoothUuid16;
 
 /// Bluetooth declarations UUID. (0x2800)
-pub const PRIMARY_SERVICE: BleUuid = BleUuid::new(0x2800);
+pub const PRIMARY_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x2800);
 
 /// Bluetooth declarations UUID. (0x2801)
-pub const SECONDARY_SERVICE: BleUuid = BleUuid::new(0x2801);
+pub const SECONDARY_SERVICE: BluetoothUuid16 = BluetoothUuid16::new(0x2801);
 
 /// Bluetooth declarations UUID. (0x2802)
-pub const INCLUDE: BleUuid = BleUuid::new(0x2802);
+pub const INCLUDE: BluetoothUuid16 = BluetoothUuid16::new(0x2802);
 
 /// Bluetooth declarations UUID. (0x2803)
-pub const CHARACTERISTIC: BleUuid = BleUuid::new(0x2803);
+pub const CHARACTERISTIC: BluetoothUuid16 = BluetoothUuid16::new(0x2803);

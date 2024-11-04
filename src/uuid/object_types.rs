@@ -4,22 +4,22 @@
 // Based on https://bitbucket.org/bluetooth-SIG/public.git
 // Commit hash: 43c96bbde30dc6937fba488adb22b6406e1b9cad
 
-use super::BleUuid;
+use super::BluetoothUuid16;
 
 /// Bluetooth object types UUID. (0x2aca)
-pub const UNSPECIFIED: BleUuid = BleUuid::new(0x2aca);
+pub const UNSPECIFIED: BluetoothUuid16 = BluetoothUuid16::new(0x2aca);
 
 /// Bluetooth object types UUID. (0x2acb)
-pub const DIRECTORY_LISTING: BleUuid = BleUuid::new(0x2acb);
+pub const DIRECTORY_LISTING: BluetoothUuid16 = BluetoothUuid16::new(0x2acb);
 
 /// Bluetooth object types UUID. (0x2ba9)
-pub const MEDIA_PLAYER_ICON: BleUuid = BleUuid::new(0x2ba9);
+pub const MEDIA_PLAYER_ICON: BluetoothUuid16 = BluetoothUuid16::new(0x2ba9);
 
 /// Bluetooth object types UUID. (0x2baa)
-pub const TRACK_SEGMENT: BleUuid = BleUuid::new(0x2baa);
+pub const TRACK_SEGMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2baa);
 
 /// Bluetooth object types UUID. (0x2bab)
-pub const TRACK: BleUuid = BleUuid::new(0x2bab);
+pub const TRACK: BluetoothUuid16 = BluetoothUuid16::new(0x2bab);
 
 /// Bluetooth object types UUID. (0x2bac)
-pub const GROUP: BleUuid = BleUuid::new(0x2bac);
+pub const GROUP: BluetoothUuid16 = BluetoothUuid16::new(0x2bac);
