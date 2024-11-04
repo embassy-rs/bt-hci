@@ -27,7 +27,7 @@ pub fn update_uuids(
             .iter()
             .map(|uuid| {
                 format!(
-                    "/// Bluetooth {} UUID. 
+                    "/// Bluetooth {} UUID.
 ///
 /// `0x{:04x}` {}
 pub const {}: BluetoothUuid16 = BluetoothUuid16::new(0x{:x});",

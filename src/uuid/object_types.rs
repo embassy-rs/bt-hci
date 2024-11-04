@@ -6,32 +6,32 @@
 
 use super::BluetoothUuid16;
 
-/// Bluetooth object types UUID. 
+/// Bluetooth object types UUID.
 ///
 /// `0x2aca` Unspecified
 pub const UNSPECIFIED: BluetoothUuid16 = BluetoothUuid16::new(0x2aca);
 
-/// Bluetooth object types UUID. 
+/// Bluetooth object types UUID.
 ///
 /// `0x2acb` Directory Listing
 pub const DIRECTORY_LISTING: BluetoothUuid16 = BluetoothUuid16::new(0x2acb);
 
-/// Bluetooth object types UUID. 
+/// Bluetooth object types UUID.
 ///
 /// `0x2ba9` Media Player Icon
 pub const MEDIA_PLAYER_ICON: BluetoothUuid16 = BluetoothUuid16::new(0x2ba9);
 
-/// Bluetooth object types UUID. 
+/// Bluetooth object types UUID.
 ///
 /// `0x2baa` Track Segment
 pub const TRACK_SEGMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2baa);
 
-/// Bluetooth object types UUID. 
+/// Bluetooth object types UUID.
 ///
 /// `0x2bab` Track
 pub const TRACK: BluetoothUuid16 = BluetoothUuid16::new(0x2bab);
 
-/// Bluetooth object types UUID. 
+/// Bluetooth object types UUID.
 ///
 /// `0x2bac` Group
 pub const GROUP: BluetoothUuid16 = BluetoothUuid16::new(0x2bac);
