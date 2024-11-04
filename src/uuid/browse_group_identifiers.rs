@@ -6,5 +6,7 @@
 
 use super::BluetoothUuid16;
 
-/// Bluetooth browse group identifiers UUID. (0x1002)
+/// Bluetooth browse group identifiers UUID. 
+///
+/// `0x1002` PublicBrowseRoot
 pub const PUBLIC_BROWSE_ROOT: BluetoothUuid16 = BluetoothUuid16::new(0x1002);

@@ -27,10 +27,13 @@ pub fn update_uuids(
             .iter()
             .map(|uuid| {
                 format!(
-                    "/// Bluetooth {} UUID. (0x{:04x})
+                    "/// Bluetooth {} UUID. 
+///
+/// `0x{:04x}` {}
 pub const {}: BluetoothUuid16 = BluetoothUuid16::new(0x{:x});",
                     module_name,
                     uuid.uuid,
+                    uuid.name,
                     screaming_snake_case(&uuid.name),
                     uuid.uuid,
                 )
@@ -56,9 +59,12 @@ pub fn update_appearance(output_folder: &Path, input: &[Category], commit_hash: 
             let module_name = cat.name.replace(' ', "_").to_lowercase();
             if cat.subcategory.is_none() {
                 format!(
-                    "/// Bluetooth Appearance UUID. (0x{:04x})
+                    "/// Bluetooth Appearance UUID.
+///
+/// `0x{:04x}` Generic {} 
 pub const {}: BluetoothUuid16 = super::from_category(0x{:04x}, 0x{:04x});",
                     appearance(cat.category, 0x000),
+                    cat.name,
                     screaming_snake_case(&cat.name),
                     cat.category,
                     0x000 // generic subcategory
@@ -90,9 +96,12 @@ fn appearance_subcategory(cat: &Category) -> String {
     let mut constants: Vec<_> = Vec::new();
     // add generic subcategory first
     constants.push(format!(
-        "/// Bluetooth Appearance UUID. (0x{:04x})
+        "/// Bluetooth Appearance UUID.
+    ///
+    /// `0x{:04x}` Generic {}
     pub const GENERIC_{}: BluetoothUuid16 = from_category(0x{:04x}, 0x{:04x});",
         appearance(cat.category, 0x000),
+        cat.name,
         screaming_snake_case(&cat.name),
         cat.category,
         0x000 // generic subcategory
@@ -100,9 +109,13 @@ fn appearance_subcategory(cat: &Category) -> String {
     if let Some(subcats) = &cat.subcategory {
         for subcat in subcats {
             constants.push(format!(
-                "    /// Bluetooth Appearance UUID. (0x{:04x})
+                "    /// Bluetooth Appearance UUID.
+    ///
+    /// `0x{:04x}` {} | {}
     pub const {}: BluetoothUuid16 = from_category(0x{:04x}, 0x{:04x});",
                 appearance(cat.category, subcat.value),
+                cat.name,
+                subcat.name,
                 screaming_snake_case(&subcat.name),
                 cat.category,
                 subcat.value

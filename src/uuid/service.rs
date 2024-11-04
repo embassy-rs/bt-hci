@@ -6,212 +6,352 @@
 
 use super::BluetoothUuid16;
 
-/// Bluetooth service UUID. (0x1800)
+/// Bluetooth service UUID. 
+///
+/// `0x1800` GAP
 pub const GAP: BluetoothUuid16 = BluetoothUuid16::new(0x1800);
 
-/// Bluetooth service UUID. (0x1801)
+/// Bluetooth service UUID. 
+///
+/// `0x1801` GATT
 pub const GATT: BluetoothUuid16 = BluetoothUuid16::new(0x1801);
 
-/// Bluetooth service UUID. (0x1802)
+/// Bluetooth service UUID. 
+///
+/// `0x1802` Immediate Alert
 pub const IMMEDIATE_ALERT: BluetoothUuid16 = BluetoothUuid16::new(0x1802);
 
-/// Bluetooth service UUID. (0x1803)
+/// Bluetooth service UUID. 
+///
+/// `0x1803` Link Loss
 pub const LINK_LOSS: BluetoothUuid16 = BluetoothUuid16::new(0x1803);
 
-/// Bluetooth service UUID. (0x1804)
+/// Bluetooth service UUID. 
+///
+/// `0x1804` Tx Power
 pub const TX_POWER: BluetoothUuid16 = BluetoothUuid16::new(0x1804);
 
-/// Bluetooth service UUID. (0x1805)
+/// Bluetooth service UUID. 
+///
+/// `0x1805` Current Time
 pub const CURRENT_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x1805);
 
-/// Bluetooth service UUID. (0x1806)
+/// Bluetooth service UUID. 
+///
+/// `0x1806` Reference Time Update
 pub const REFERENCE_TIME_UPDATE: BluetoothUuid16 = BluetoothUuid16::new(0x1806);
 
-/// Bluetooth service UUID. (0x1807)
+/// Bluetooth service UUID. 
+///
+/// `0x1807` Next DST Change
 pub const NEXT_DST_CHANGE: BluetoothUuid16 = BluetoothUuid16::new(0x1807);
 
-/// Bluetooth service UUID. (0x1808)
+/// Bluetooth service UUID. 
+///
+/// `0x1808` Glucose
 pub const GLUCOSE: BluetoothUuid16 = BluetoothUuid16::new(0x1808);
 
-/// Bluetooth service UUID. (0x1809)
+/// Bluetooth service UUID. 
+///
+/// `0x1809` Health Thermometer
 pub const HEALTH_THERMOMETER: BluetoothUuid16 = BluetoothUuid16::new(0x1809);
 
-/// Bluetooth service UUID. (0x180a)
+/// Bluetooth service UUID. 
+///
+/// `0x180a` Device Information
 pub const DEVICE_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x180a);
 
-/// Bluetooth service UUID. (0x180d)
+/// Bluetooth service UUID. 
+///
+/// `0x180d` Heart Rate
 pub const HEART_RATE: BluetoothUuid16 = BluetoothUuid16::new(0x180d);
 
-/// Bluetooth service UUID. (0x180e)
+/// Bluetooth service UUID. 
+///
+/// `0x180e` Phone Alert Status
 pub const PHONE_ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x180e);
 
-/// Bluetooth service UUID. (0x180f)
+/// Bluetooth service UUID. 
+///
+/// `0x180f` Battery
 pub const BATTERY: BluetoothUuid16 = BluetoothUuid16::new(0x180f);
 
-/// Bluetooth service UUID. (0x1810)
+/// Bluetooth service UUID. 
+///
+/// `0x1810` Blood Pressure
 pub const BLOOD_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x1810);
 
-/// Bluetooth service UUID. (0x1811)
+/// Bluetooth service UUID. 
+///
+/// `0x1811` Alert Notification
 pub const ALERT_NOTIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x1811);
 
-/// Bluetooth service UUID. (0x1812)
+/// Bluetooth service UUID. 
+///
+/// `0x1812` Human Interface Device
 pub const HUMAN_INTERFACE_DEVICE: BluetoothUuid16 = BluetoothUuid16::new(0x1812);
 
-/// Bluetooth service UUID. (0x1813)
+/// Bluetooth service UUID. 
+///
+/// `0x1813` Scan Parameters
 pub const SCAN_PARAMETERS: BluetoothUuid16 = BluetoothUuid16::new(0x1813);
 
-/// Bluetooth service UUID. (0x1814)
+/// Bluetooth service UUID. 
+///
+/// `0x1814` Running Speed and Cadence
 pub const RUNNING_SPEED_AND_CADENCE: BluetoothUuid16 = BluetoothUuid16::new(0x1814);
 
-/// Bluetooth service UUID. (0x1815)
+/// Bluetooth service UUID. 
+///
+/// `0x1815` Automation IO
 pub const AUTOMATION_IO: BluetoothUuid16 = BluetoothUuid16::new(0x1815);
 
-/// Bluetooth service UUID. (0x1816)
+/// Bluetooth service UUID. 
+///
+/// `0x1816` Cycling Speed and Cadence
 pub const CYCLING_SPEED_AND_CADENCE: BluetoothUuid16 = BluetoothUuid16::new(0x1816);
 
-/// Bluetooth service UUID. (0x1818)
+/// Bluetooth service UUID. 
+///
+/// `0x1818` Cycling Power
 pub const CYCLING_POWER: BluetoothUuid16 = BluetoothUuid16::new(0x1818);
 
-/// Bluetooth service UUID. (0x1819)
+/// Bluetooth service UUID. 
+///
+/// `0x1819` Location and Navigation
 pub const LOCATION_AND_NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x1819);
 
-/// Bluetooth service UUID. (0x181a)
+/// Bluetooth service UUID. 
+///
+/// `0x181a` Environmental Sensing
 pub const ENVIRONMENTAL_SENSING: BluetoothUuid16 = BluetoothUuid16::new(0x181a);
 
-/// Bluetooth service UUID. (0x181b)
+/// Bluetooth service UUID. 
+///
+/// `0x181b` Body Composition
 pub const BODY_COMPOSITION: BluetoothUuid16 = BluetoothUuid16::new(0x181b);
 
-/// Bluetooth service UUID. (0x181c)
+/// Bluetooth service UUID. 
+///
+/// `0x181c` User Data
 pub const USER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x181c);
 
-/// Bluetooth service UUID. (0x181d)
+/// Bluetooth service UUID. 
+///
+/// `0x181d` Weight Scale
 pub const WEIGHT_SCALE: BluetoothUuid16 = BluetoothUuid16::new(0x181d);
 
-/// Bluetooth service UUID. (0x181e)
+/// Bluetooth service UUID. 
+///
+/// `0x181e` Bond Management
 pub const BOND_MANAGEMENT: BluetoothUuid16 = BluetoothUuid16::new(0x181e);
 
-/// Bluetooth service UUID. (0x181f)
+/// Bluetooth service UUID. 
+///
+/// `0x181f` Continuous Glucose Monitoring
 pub const CONTINUOUS_GLUCOSE_MONITORING: BluetoothUuid16 = BluetoothUuid16::new(0x181f);
 
-/// Bluetooth service UUID. (0x1820)
+/// Bluetooth service UUID. 
+///
+/// `0x1820` Internet Protocol Support
 pub const INTERNET_PROTOCOL_SUPPORT: BluetoothUuid16 = BluetoothUuid16::new(0x1820);
 
-/// Bluetooth service UUID. (0x1821)
+/// Bluetooth service UUID. 
+///
+/// `0x1821` Indoor Positioning
 pub const INDOOR_POSITIONING: BluetoothUuid16 = BluetoothUuid16::new(0x1821);
 
-/// Bluetooth service UUID. (0x1822)
+/// Bluetooth service UUID. 
+///
+/// `0x1822` Pulse Oximeter
 pub const PULSE_OXIMETER: BluetoothUuid16 = BluetoothUuid16::new(0x1822);
 
-/// Bluetooth service UUID. (0x1823)
+/// Bluetooth service UUID. 
+///
+/// `0x1823` HTTP Proxy
 pub const HTTP_PROXY: BluetoothUuid16 = BluetoothUuid16::new(0x1823);
 
-/// Bluetooth service UUID. (0x1824)
+/// Bluetooth service UUID. 
+///
+/// `0x1824` Transport Discovery
 pub const TRANSPORT_DISCOVERY: BluetoothUuid16 = BluetoothUuid16::new(0x1824);
 
-/// Bluetooth service UUID. (0x1825)
+/// Bluetooth service UUID. 
+///
+/// `0x1825` Object Transfer
 pub const OBJECT_TRANSFER: BluetoothUuid16 = BluetoothUuid16::new(0x1825);
 
-/// Bluetooth service UUID. (0x1826)
+/// Bluetooth service UUID. 
+///
+/// `0x1826` Fitness Machine
 pub const FITNESS_MACHINE: BluetoothUuid16 = BluetoothUuid16::new(0x1826);
 
-/// Bluetooth service UUID. (0x1827)
+/// Bluetooth service UUID. 
+///
+/// `0x1827` Mesh Provisioning
 pub const MESH_PROVISIONING: BluetoothUuid16 = BluetoothUuid16::new(0x1827);
 
-/// Bluetooth service UUID. (0x1828)
+/// Bluetooth service UUID. 
+///
+/// `0x1828` Mesh Proxy
 pub const MESH_PROXY: BluetoothUuid16 = BluetoothUuid16::new(0x1828);
 
-/// Bluetooth service UUID. (0x1829)
+/// Bluetooth service UUID. 
+///
+/// `0x1829` Reconnection Configuration
 pub const RECONNECTION_CONFIGURATION: BluetoothUuid16 = BluetoothUuid16::new(0x1829);
 
-/// Bluetooth service UUID. (0x183a)
+/// Bluetooth service UUID. 
+///
+/// `0x183a` Insulin Delivery
 pub const INSULIN_DELIVERY: BluetoothUuid16 = BluetoothUuid16::new(0x183a);
 
-/// Bluetooth service UUID. (0x183b)
+/// Bluetooth service UUID. 
+///
+/// `0x183b` Binary Sensor
 pub const BINARY_SENSOR: BluetoothUuid16 = BluetoothUuid16::new(0x183b);
 
-/// Bluetooth service UUID. (0x183c)
+/// Bluetooth service UUID. 
+///
+/// `0x183c` Emergency Configuration
 pub const EMERGENCY_CONFIGURATION: BluetoothUuid16 = BluetoothUuid16::new(0x183c);
 
-/// Bluetooth service UUID. (0x183d)
+/// Bluetooth service UUID. 
+///
+/// `0x183d` Authorization Control
 pub const AUTHORIZATION_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x183d);
 
-/// Bluetooth service UUID. (0x183e)
+/// Bluetooth service UUID. 
+///
+/// `0x183e` Physical Activity Monitor
 pub const PHYSICAL_ACTIVITY_MONITOR: BluetoothUuid16 = BluetoothUuid16::new(0x183e);
 
-/// Bluetooth service UUID. (0x183f)
+/// Bluetooth service UUID. 
+///
+/// `0x183f` Elapsed Time
 pub const ELAPSED_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x183f);
 
-/// Bluetooth service UUID. (0x1840)
+/// Bluetooth service UUID. 
+///
+/// `0x1840` Generic Health Sensor
 pub const GENERIC_HEALTH_SENSOR: BluetoothUuid16 = BluetoothUuid16::new(0x1840);
 
-/// Bluetooth service UUID. (0x1843)
+/// Bluetooth service UUID. 
+///
+/// `0x1843` Audio Input Control
 pub const AUDIO_INPUT_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x1843);
 
-/// Bluetooth service UUID. (0x1844)
+/// Bluetooth service UUID. 
+///
+/// `0x1844` Volume Control
 pub const VOLUME_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x1844);
 
-/// Bluetooth service UUID. (0x1845)
+/// Bluetooth service UUID. 
+///
+/// `0x1845` Volume Offset Control
 pub const VOLUME_OFFSET_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x1845);
 
-/// Bluetooth service UUID. (0x1846)
+/// Bluetooth service UUID. 
+///
+/// `0x1846` Coordinated Set Identification
 pub const COORDINATED_SET_IDENTIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x1846);
 
-/// Bluetooth service UUID. (0x1847)
+/// Bluetooth service UUID. 
+///
+/// `0x1847` Device Time
 pub const DEVICE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x1847);
 
-/// Bluetooth service UUID. (0x1848)
+/// Bluetooth service UUID. 
+///
+/// `0x1848` Media Control
 pub const MEDIA_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x1848);
 
-/// Bluetooth service UUID. (0x1849)
+/// Bluetooth service UUID. 
+///
+/// `0x1849` Generic Media Control
 pub const GENERIC_MEDIA_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x1849);
 
-/// Bluetooth service UUID. (0x184a)
+/// Bluetooth service UUID. 
+///
+/// `0x184a` Constant Tone Extension
 pub const CONSTANT_TONE_EXTENSION: BluetoothUuid16 = BluetoothUuid16::new(0x184a);
 
-/// Bluetooth service UUID. (0x184b)
+/// Bluetooth service UUID. 
+///
+/// `0x184b` Telephone Bearer
 pub const TELEPHONE_BEARER: BluetoothUuid16 = BluetoothUuid16::new(0x184b);
 
-/// Bluetooth service UUID. (0x184c)
+/// Bluetooth service UUID. 
+///
+/// `0x184c` Generic Telephone Bearer
 pub const GENERIC_TELEPHONE_BEARER: BluetoothUuid16 = BluetoothUuid16::new(0x184c);
 
-/// Bluetooth service UUID. (0x184d)
+/// Bluetooth service UUID. 
+///
+/// `0x184d` Microphone Control
 pub const MICROPHONE_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x184d);
 
-/// Bluetooth service UUID. (0x184e)
+/// Bluetooth service UUID. 
+///
+/// `0x184e` Audio Stream Control
 pub const AUDIO_STREAM_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x184e);
 
-/// Bluetooth service UUID. (0x184f)
+/// Bluetooth service UUID. 
+///
+/// `0x184f` Broadcast Audio Scan
 pub const BROADCAST_AUDIO_SCAN: BluetoothUuid16 = BluetoothUuid16::new(0x184f);
 
-/// Bluetooth service UUID. (0x1850)
+/// Bluetooth service UUID. 
+///
+/// `0x1850` Published Audio Capabilities
 pub const PUBLISHED_AUDIO_CAPABILITIES: BluetoothUuid16 = BluetoothUuid16::new(0x1850);
 
-/// Bluetooth service UUID. (0x1851)
+/// Bluetooth service UUID. 
+///
+/// `0x1851` Basic Audio Announcement
 pub const BASIC_AUDIO_ANNOUNCEMENT: BluetoothUuid16 = BluetoothUuid16::new(0x1851);
 
-/// Bluetooth service UUID. (0x1852)
+/// Bluetooth service UUID. 
+///
+/// `0x1852` Broadcast Audio Announcement
 pub const BROADCAST_AUDIO_ANNOUNCEMENT: BluetoothUuid16 = BluetoothUuid16::new(0x1852);
 
-/// Bluetooth service UUID. (0x1853)
+/// Bluetooth service UUID. 
+///
+/// `0x1853` Common Audio
 pub const COMMON_AUDIO: BluetoothUuid16 = BluetoothUuid16::new(0x1853);
 
-/// Bluetooth service UUID. (0x1854)
+/// Bluetooth service UUID. 
+///
+/// `0x1854` Hearing Access
 pub const HEARING_ACCESS: BluetoothUuid16 = BluetoothUuid16::new(0x1854);
 
-/// Bluetooth service UUID. (0x1855)
+/// Bluetooth service UUID. 
+///
+/// `0x1855` Telephony and Media Audio
 pub const TELEPHONY_AND_MEDIA_AUDIO: BluetoothUuid16 = BluetoothUuid16::new(0x1855);
 
-/// Bluetooth service UUID. (0x1856)
+/// Bluetooth service UUID. 
+///
+/// `0x1856` Public Broadcast Announcement
 pub const PUBLIC_BROADCAST_ANNOUNCEMENT: BluetoothUuid16 = BluetoothUuid16::new(0x1856);
 
-/// Bluetooth service UUID. (0x1857)
+/// Bluetooth service UUID. 
+///
+/// `0x1857` Electronic Shelf Label
 pub const ELECTRONIC_SHELF_LABEL: BluetoothUuid16 = BluetoothUuid16::new(0x1857);
 
-/// Bluetooth service UUID. (0x1858)
+/// Bluetooth service UUID. 
+///
+/// `0x1858` Gaming Audio
 pub const GAMING_AUDIO: BluetoothUuid16 = BluetoothUuid16::new(0x1858);
 
-/// Bluetooth service UUID. (0x1859)
+/// Bluetooth service UUID. 
+///
+/// `0x1859` Mesh Proxy Solicitation
 pub const MESH_PROXY_SOLICITATION: BluetoothUuid16 = BluetoothUuid16::new(0x1859);
 
-/// Bluetooth service UUID. (0x185a)
+/// Bluetooth service UUID. 
+///
+/// `0x185a` Industrial Measurement Device
 pub const INDUSTRIAL_MEASUREMENT_DEVICE: BluetoothUuid16 = BluetoothUuid16::new(0x185a);
