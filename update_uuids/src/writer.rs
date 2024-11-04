@@ -57,7 +57,7 @@ pub fn update_appearance(output_folder: &Path, input: &[Category], commit_hash: 
             if cat.subcategory.is_none() {
                 format!(
                     "/// Bluetooth Appearance UUID. (0x{:04x})
-pub const {}: BluetoothUuid16 = BluetoothUuid16::from_category(0x{:04x}, 0x{:04x});",
+pub const {}: BluetoothUuid16 = super::from_category(0x{:04x}, 0x{:04x});",
                     appearance(cat.category, 0x000),
                     screaming_snake_case(&cat.name),
                     cat.category,
@@ -69,7 +69,7 @@ pub const {}: BluetoothUuid16 = BluetoothUuid16::from_category(0x{:04x}, 0x{:04x
     //! Appearance {} with subcategories.
     //!
     //! Generic variant named `GENERIC_{}`.\n
-    use super::super::BluetoothUuid16;\n
+    use super::super::{{from_category, BluetoothUuid16}};\n
     {}
 }}",
                     module_name,
@@ -91,7 +91,7 @@ fn appearance_subcategory(cat: &Category) -> String {
     // add generic subcategory first
     constants.push(format!(
         "/// Bluetooth Appearance UUID. (0x{:04x})
-    pub const GENERIC_{}: BluetoothUuid16 = BluetoothUuid16::from_category(0x{:04x}, 0x{:04x});",
+    pub const GENERIC_{}: BluetoothUuid16 = from_category(0x{:04x}, 0x{:04x});",
         appearance(cat.category, 0x000),
         screaming_snake_case(&cat.name),
         cat.category,
@@ -101,7 +101,7 @@ fn appearance_subcategory(cat: &Category) -> String {
         for subcat in subcats {
             constants.push(format!(
                 "    /// Bluetooth Appearance UUID. (0x{:04x})
-    pub const {}: BluetoothUuid16 = BluetoothUuid16::from_category(0x{:04x}, 0x{:04x});",
+    pub const {}: BluetoothUuid16 = from_category(0x{:04x}, 0x{:04x});",
                 appearance(cat.category, subcat.value),
                 screaming_snake_case(&subcat.name),
                 cat.category,
