@@ -24,25 +24,13 @@ impl BluetoothUuid16 {
     pub const fn new(uuid: u16) -> Self {
         Self(uuid)
     }
-    /// Construct a new appearance value for the GAP Service.
-    ///
-    /// Follow the pattern of the examples below to create new appearance values.
-    /// Use UUIDs from the [Bluetooth Assigned Numbers list](https://www.bluetooth.com/wp-content/uploads/Files/Specification/Assigned_Numbers.html#bookmark49).
-    ///
-    /// ## Example
-    ///
-    /// ```rust ignore
-    ///
-    /// const GAMEPAD: BluetoothUuid16 = BluetoothUuid16::from_category(0x00F, 0x040);
-    /// const GAMEPAD_BYTES: &[u8; 2] = &GAMEPAD.to_le_bytes();
-    /// ```
-    pub const fn from_category(category: u8, subcategory: u8) -> Self {
-        let uuid = ((category as u16) << 6) | (subcategory as u16);
-        Self(uuid)
-    }
     /// Convert the `BluetoothUuid16` to a byte array as a const function.
     pub const fn to_le_bytes(self) -> [u8; 2] {
         self.0.to_le_bytes()
+    }
+    /// Convert from a byte array to a `BluetoothUuid16`.
+    pub const fn from_le_bytes(bytes: [u8; 2]) -> Self {
+        Self(u16::from_le_bytes(bytes))
     }
 }
 
@@ -70,6 +58,20 @@ impl Display for BluetoothUuid16 {
     }
 }
 
+#[cfg(feature = "defmt")]
+impl defmt::Format for BluetoothUuid16 {
+    fn format(&self, f: defmt::Formatter) {
+        defmt::write!(f, "BluetoothUuid16(0x{:04X})", self.0)
+    }
+}
+
+#[cfg(feature = "uuid")]
+impl From<BluetoothUuid16> for uuid::Uuid {
+    fn from(uuid: BluetoothUuid16) -> uuid::Uuid {
+        uuid::Uuid::from_u128(u128::from(uuid.0))
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -82,5 +84,14 @@ mod test {
         assert_eq!(uuid, 0x1234);
         const UUID: [u8; 2] = BLE_UUID.to_le_bytes();
         assert_eq!(UUID, [0x34, 0x12]);
+    }
+
+    #[cfg(feature = "uuid")]
+    #[test]
+    fn test_uuid_conversion() {
+        const BLE_UUID: BluetoothUuid16 = BluetoothUuid16::new(0x1234);
+        let result: uuid::Uuid = BLE_UUID.into();
+        let expected: uuid::Uuid = uuid::Uuid::from_u128(0x1234);
+        assert_eq!(result, expected);
     }
 }
