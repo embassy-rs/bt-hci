@@ -14,6 +14,19 @@ pub mod service;
 pub mod service_class;
 pub mod units;
 
+/// 0000xxxx-0000-1000-8000-00805F9B34FB;
+///
+/// BLUETOOTH CORE SPECIFICATION Version 6.0 | Vol 3, Part B | Page 1250
+/// [(link)](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host/service-discovery-protocol--sdp--specification.html#UUID-ef710684-4c7e-6793-4350-4a190ea9a7a4)
+///
+/// The full 128-bit value of a 16-bit or 32-bit UUID may be computed by a simple arithmetic operation.
+///
+/// 128_bit_value = 16_bit_value × 296 + Bluetooth_Base_UUID
+pub const BLUETOOTH_BASE_UUID: [u8; 16] = [
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB,
+];
+const BASE_UUID: uuid::Uuid = uuid::Uuid::from_bytes_le(BLUETOOTH_BASE_UUID);
+
 /// Bluetooth UUID.
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -68,7 +81,8 @@ impl defmt::Format for BluetoothUuid16 {
 #[cfg(feature = "uuid")]
 impl From<BluetoothUuid16> for uuid::Uuid {
     fn from(uuid: BluetoothUuid16) -> uuid::Uuid {
-        uuid::Uuid::from_u128(u128::from(uuid.0))
+        // "0000xxxx-0000-1000-8000-00805F9B34FB"
+        uuid::Uuid::from_u128(BASE_UUID.as_u128() | (u128::from(uuid.0) << 96))
     }
 }
 
@@ -89,9 +103,11 @@ mod test {
     #[cfg(feature = "uuid")]
     #[test]
     fn test_uuid_conversion() {
+        use core::str::FromStr;
+
         const BLE_UUID: BluetoothUuid16 = BluetoothUuid16::new(0x1234);
         let result: uuid::Uuid = BLE_UUID.into();
-        let expected: uuid::Uuid = uuid::Uuid::from_u128(0x1234);
+        let expected = uuid::Uuid::from_str("00001234-0000-0010-8000-00805f9b34fb").unwrap();
         assert_eq!(result, expected);
     }
 }
