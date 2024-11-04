@@ -6,1397 +6,2327 @@
 
 use super::BluetoothUuid16;
 
-/// Bluetooth characteristic UUID. (0x2a00)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a00` Device Name
 pub const DEVICE_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2a00);
 
-/// Bluetooth characteristic UUID. (0x2a01)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a01` Appearance
 pub const APPEARANCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a01);
 
-/// Bluetooth characteristic UUID. (0x2a02)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a02` Peripheral Privacy Flag
 pub const PERIPHERAL_PRIVACY_FLAG: BluetoothUuid16 = BluetoothUuid16::new(0x2a02);
 
-/// Bluetooth characteristic UUID. (0x2a03)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a03` Reconnection Address
 pub const RECONNECTION_ADDRESS: BluetoothUuid16 = BluetoothUuid16::new(0x2a03);
 
-/// Bluetooth characteristic UUID. (0x2a04)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a04` Peripheral Preferred Connection Parameters
 pub const PERIPHERAL_PREFERRED_CONNECTION_PARAMETERS: BluetoothUuid16 = BluetoothUuid16::new(0x2a04);
 
-/// Bluetooth characteristic UUID. (0x2a05)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a05` Service Changed
 pub const SERVICE_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2a05);
 
-/// Bluetooth characteristic UUID. (0x2a06)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a06` Alert Level
 pub const ALERT_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a06);
 
-/// Bluetooth characteristic UUID. (0x2a07)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a07` Tx Power Level
 pub const TX_POWER_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a07);
 
-/// Bluetooth characteristic UUID. (0x2a08)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a08` Date Time
 pub const DATE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a08);
 
-/// Bluetooth characteristic UUID. (0x2a09)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a09` Day of Week
 pub const DAY_OF_WEEK: BluetoothUuid16 = BluetoothUuid16::new(0x2a09);
 
-/// Bluetooth characteristic UUID. (0x2a0a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a0a` Day Date Time
 pub const DAY_DATE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a0a);
 
-/// Bluetooth characteristic UUID. (0x2a0c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a0c` Exact Time 256
 pub const EXACT_TIME_256: BluetoothUuid16 = BluetoothUuid16::new(0x2a0c);
 
-/// Bluetooth characteristic UUID. (0x2a0d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a0d` DST Offset
 pub const DST_OFFSET: BluetoothUuid16 = BluetoothUuid16::new(0x2a0d);
 
-/// Bluetooth characteristic UUID. (0x2a0e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a0e` Time Zone
 pub const TIME_ZONE: BluetoothUuid16 = BluetoothUuid16::new(0x2a0e);
 
-/// Bluetooth characteristic UUID. (0x2a0f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a0f` Local Time Information
 pub const LOCAL_TIME_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a0f);
 
-/// Bluetooth characteristic UUID. (0x2a11)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a11` Time with DST
 pub const TIME_WITH_DST: BluetoothUuid16 = BluetoothUuid16::new(0x2a11);
 
-/// Bluetooth characteristic UUID. (0x2a12)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a12` Time Accuracy
 pub const TIME_ACCURACY: BluetoothUuid16 = BluetoothUuid16::new(0x2a12);
 
-/// Bluetooth characteristic UUID. (0x2a13)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a13` Time Source
 pub const TIME_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a13);
 
-/// Bluetooth characteristic UUID. (0x2a14)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a14` Reference Time Information
 pub const REFERENCE_TIME_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a14);
 
-/// Bluetooth characteristic UUID. (0x2a16)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a16` Time Update Control Point
 pub const TIME_UPDATE_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a16);
 
-/// Bluetooth characteristic UUID. (0x2a17)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a17` Time Update State
 pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 
-/// Bluetooth characteristic UUID. (0x2a18)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a18` Glucose Measurement
 pub const GLUCOSE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a18);
 
-/// Bluetooth characteristic UUID. (0x2a19)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a19` Battery Level
 pub const BATTERY_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a19);
 
-/// Bluetooth characteristic UUID. (0x2a1c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a1c` Temperature Measurement
 pub const TEMPERATURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a1c);
 
-/// Bluetooth characteristic UUID. (0x2a1d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a1d` Temperature Type
 pub const TEMPERATURE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1d);
 
-/// Bluetooth characteristic UUID. (0x2a1e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a1e` Intermediate Temperature
 pub const INTERMEDIATE_TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1e);
 
-/// Bluetooth characteristic UUID. (0x2a21)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a21` Measurement Interval
 pub const MEASUREMENT_INTERVAL: BluetoothUuid16 = BluetoothUuid16::new(0x2a21);
 
-/// Bluetooth characteristic UUID. (0x2a22)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a22` Boot Keyboard Input Report
 pub const BOOT_KEYBOARD_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a22);
 
-/// Bluetooth characteristic UUID. (0x2a23)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a23` System ID
 pub const SYSTEM_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2a23);
 
-/// Bluetooth characteristic UUID. (0x2a24)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a24` Model Number String
 pub const MODEL_NUMBER_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a24);
 
-/// Bluetooth characteristic UUID. (0x2a25)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a25` Serial Number String
 pub const SERIAL_NUMBER_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a25);
 
-/// Bluetooth characteristic UUID. (0x2a26)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a26` Firmware Revision String
 pub const FIRMWARE_REVISION_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a26);
 
-/// Bluetooth characteristic UUID. (0x2a27)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a27` Hardware Revision String
 pub const HARDWARE_REVISION_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a27);
 
-/// Bluetooth characteristic UUID. (0x2a28)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a28` Software Revision String
 pub const SOFTWARE_REVISION_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a28);
 
-/// Bluetooth characteristic UUID. (0x2a29)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a29` Manufacturer Name String
 pub const MANUFACTURER_NAME_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a29);
 
-/// Bluetooth characteristic UUID. (0x2a2a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a2a` IEEE 11073-20601 Regulatory Certification Data List
 pub const IEEE_11073_20601_REGULATORY_CERTIFICATION_DATA_LIST: BluetoothUuid16 = BluetoothUuid16::new(0x2a2a);
 
-/// Bluetooth characteristic UUID. (0x2a2b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a2b` Current Time
 pub const CURRENT_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a2b);
 
-/// Bluetooth characteristic UUID. (0x2a2c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a2c` Magnetic Declination
 pub const MAGNETIC_DECLINATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a2c);
 
-/// Bluetooth characteristic UUID. (0x2a31)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a31` Scan Refresh
 pub const SCAN_REFRESH: BluetoothUuid16 = BluetoothUuid16::new(0x2a31);
 
-/// Bluetooth characteristic UUID. (0x2a32)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a32` Boot Keyboard Output Report
 pub const BOOT_KEYBOARD_OUTPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a32);
 
-/// Bluetooth characteristic UUID. (0x2a33)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a33` Boot Mouse Input Report
 pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33);
 
-/// Bluetooth characteristic UUID. (0x2a34)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a34` Glucose Measurement Context
 pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x2a34);
 
-/// Bluetooth characteristic UUID. (0x2a35)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a35` Blood Pressure Measurement
 pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a35);
 
-/// Bluetooth characteristic UUID. (0x2a36)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a36` Intermediate Cuff Pressure
 pub const INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a36);
 
-/// Bluetooth characteristic UUID. (0x2a37)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a37` Heart Rate Measurement
 pub const HEART_RATE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a37);
 
-/// Bluetooth characteristic UUID. (0x2a38)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a38` Body Sensor Location
 pub const BODY_SENSOR_LOCATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a38);
 
-/// Bluetooth characteristic UUID. (0x2a39)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a39` Heart Rate Control Point
 pub const HEART_RATE_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a39);
 
-/// Bluetooth characteristic UUID. (0x2a3f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a3f` Alert Status
 pub const ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2a3f);
 
-/// Bluetooth characteristic UUID. (0x2a40)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a40` Ringer Control Point
 pub const RINGER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a40);
 
-/// Bluetooth characteristic UUID. (0x2a41)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a41` Ringer Setting
 pub const RINGER_SETTING: BluetoothUuid16 = BluetoothUuid16::new(0x2a41);
 
-/// Bluetooth characteristic UUID. (0x2a42)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a42` Alert Category ID Bit Mask
 pub const ALERT_CATEGORY_ID_BIT_MASK: BluetoothUuid16 = BluetoothUuid16::new(0x2a42);
 
-/// Bluetooth characteristic UUID. (0x2a43)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a43` Alert Category ID
 pub const ALERT_CATEGORY_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2a43);
 
-/// Bluetooth characteristic UUID. (0x2a44)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a44` Alert Notification Control Point
 pub const ALERT_NOTIFICATION_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a44);
 
-/// Bluetooth characteristic UUID. (0x2a45)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a45` Unread Alert Status
 pub const UNREAD_ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2a45);
 
-/// Bluetooth characteristic UUID. (0x2a46)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a46` New Alert
 pub const NEW_ALERT: BluetoothUuid16 = BluetoothUuid16::new(0x2a46);
 
-/// Bluetooth characteristic UUID. (0x2a47)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a47` Supported New Alert Category
 pub const SUPPORTED_NEW_ALERT_CATEGORY: BluetoothUuid16 = BluetoothUuid16::new(0x2a47);
 
-/// Bluetooth characteristic UUID. (0x2a48)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a48` Supported Unread Alert Category
 pub const SUPPORTED_UNREAD_ALERT_CATEGORY: BluetoothUuid16 = BluetoothUuid16::new(0x2a48);
 
-/// Bluetooth characteristic UUID. (0x2a49)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a49` Blood Pressure Feature
 pub const BLOOD_PRESSURE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a49);
 
-/// Bluetooth characteristic UUID. (0x2a4a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a4a` HID Information
 pub const HID_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a4a);
 
-/// Bluetooth characteristic UUID. (0x2a4b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a4b` Report Map
 pub const REPORT_MAP: BluetoothUuid16 = BluetoothUuid16::new(0x2a4b);
 
-/// Bluetooth characteristic UUID. (0x2a4c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a4c` HID Control Point
 pub const HID_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a4c);
 
-/// Bluetooth characteristic UUID. (0x2a4d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a4d` Report
 pub const REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a4d);
 
-/// Bluetooth characteristic UUID. (0x2a4e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a4e` Protocol Mode
 pub const PROTOCOL_MODE: BluetoothUuid16 = BluetoothUuid16::new(0x2a4e);
 
-/// Bluetooth characteristic UUID. (0x2a4f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a4f` Scan Interval Window
 pub const SCAN_INTERVAL_WINDOW: BluetoothUuid16 = BluetoothUuid16::new(0x2a4f);
 
-/// Bluetooth characteristic UUID. (0x2a50)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a50` PnP ID
 pub const PNP_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2a50);
 
-/// Bluetooth characteristic UUID. (0x2a51)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a51` Glucose Feature
 pub const GLUCOSE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a51);
 
-/// Bluetooth characteristic UUID. (0x2a52)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a52` Record Access Control Point
 pub const RECORD_ACCESS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a52);
 
-/// Bluetooth characteristic UUID. (0x2a53)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a53` RSC Measurement
 pub const RSC_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a53);
 
-/// Bluetooth characteristic UUID. (0x2a54)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a54` RSC Feature
 pub const RSC_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a54);
 
-/// Bluetooth characteristic UUID. (0x2a55)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a55` SC Control Point
 pub const SC_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a55);
 
-/// Bluetooth characteristic UUID. (0x2a5a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a5a` Aggregate
 pub const AGGREGATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a5a);
 
-/// Bluetooth characteristic UUID. (0x2a5b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a5b` CSC Measurement
 pub const CSC_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a5b);
 
-/// Bluetooth characteristic UUID. (0x2a5c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a5c` CSC Feature
 pub const CSC_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a5c);
 
-/// Bluetooth characteristic UUID. (0x2a5d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a5d` Sensor Location
 pub const SENSOR_LOCATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a5d);
 
-/// Bluetooth characteristic UUID. (0x2a5e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a5e` PLX Spot-Check Measurement
 pub const PLX_SPOT_CHECK_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a5e);
 
-/// Bluetooth characteristic UUID. (0x2a5f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a5f` PLX Continuous Measurement
 pub const PLX_CONTINUOUS_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a5f);
 
-/// Bluetooth characteristic UUID. (0x2a60)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a60` PLX Features
 pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 
-/// Bluetooth characteristic UUID. (0x2a63)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a63` Cycling Power Measurement
 pub const CYCLING_POWER_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a63);
 
-/// Bluetooth characteristic UUID. (0x2a64)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a64` Cycling Power Vector
 pub const CYCLING_POWER_VECTOR: BluetoothUuid16 = BluetoothUuid16::new(0x2a64);
 
-/// Bluetooth characteristic UUID. (0x2a65)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a65` Cycling Power Feature
 pub const CYCLING_POWER_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a65);
 
-/// Bluetooth characteristic UUID. (0x2a66)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a66` Cycling Power Control Point
 pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a66);
 
-/// Bluetooth characteristic UUID. (0x2a67)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a67` Location and Speed
 pub const LOCATION_AND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a67);
 
-/// Bluetooth characteristic UUID. (0x2a68)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a68` Navigation
 pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 
-/// Bluetooth characteristic UUID. (0x2a69)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a69` Position Quality
 pub const POSITION_QUALITY: BluetoothUuid16 = BluetoothUuid16::new(0x2a69);
 
-/// Bluetooth characteristic UUID. (0x2a6a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a6a` LN Feature
 pub const LN_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6a);
 
-/// Bluetooth characteristic UUID. (0x2a6b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a6b` LN Control Point
 pub const LN_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a6b);
 
-/// Bluetooth characteristic UUID. (0x2a6c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a6c` Elevation
 pub const ELEVATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a6c);
 
-/// Bluetooth characteristic UUID. (0x2a6d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a6d` Pressure
 pub const PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6d);
 
-/// Bluetooth characteristic UUID. (0x2a6e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a6e` Temperature
 pub const TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6e);
 
-/// Bluetooth characteristic UUID. (0x2a6f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a6f` Humidity
 pub const HUMIDITY: BluetoothUuid16 = BluetoothUuid16::new(0x2a6f);
 
-/// Bluetooth characteristic UUID. (0x2a70)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a70` True Wind Speed
 pub const TRUE_WIND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a70);
 
-/// Bluetooth characteristic UUID. (0x2a71)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a71` True Wind Direction
 pub const TRUE_WIND_DIRECTION: BluetoothUuid16 = BluetoothUuid16::new(0x2a71);
 
-/// Bluetooth characteristic UUID. (0x2a72)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a72` Apparent Wind Speed
 pub const APPARENT_WIND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a72);
 
-/// Bluetooth characteristic UUID. (0x2a73)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a73` Apparent Wind Direction
 pub const APPARENT_WIND_DIRECTION: BluetoothUuid16 = BluetoothUuid16::new(0x2a73);
 
-/// Bluetooth characteristic UUID. (0x2a74)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a74` Gust Factor
 pub const GUST_FACTOR: BluetoothUuid16 = BluetoothUuid16::new(0x2a74);
 
-/// Bluetooth characteristic UUID. (0x2a75)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a75` Pollen Concentration
 pub const POLLEN_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a75);
 
-/// Bluetooth characteristic UUID. (0x2a76)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a76` UV Index
 pub const UV_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2a76);
 
-/// Bluetooth characteristic UUID. (0x2a77)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a77` Irradiance
 pub const IRRADIANCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a77);
 
-/// Bluetooth characteristic UUID. (0x2a78)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a78` Rainfall
 pub const RAINFALL: BluetoothUuid16 = BluetoothUuid16::new(0x2a78);
 
-/// Bluetooth characteristic UUID. (0x2a79)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a79` Wind Chill
 pub const WIND_CHILL: BluetoothUuid16 = BluetoothUuid16::new(0x2a79);
 
-/// Bluetooth characteristic UUID. (0x2a7a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a7a` Heat Index
 pub const HEAT_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2a7a);
 
-/// Bluetooth characteristic UUID. (0x2a7b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a7b` Dew Point
 pub const DEW_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a7b);
 
-/// Bluetooth characteristic UUID. (0x2a7d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a7d` Descriptor Value Changed
 pub const DESCRIPTOR_VALUE_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2a7d);
 
-/// Bluetooth characteristic UUID. (0x2a7e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a7e` Aerobic Heart Rate Lower Limit
 pub const AEROBIC_HEART_RATE_LOWER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new(0x2a7e);
 
-/// Bluetooth characteristic UUID. (0x2a7f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a7f` Aerobic Threshold
 pub const AEROBIC_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::new(0x2a7f);
 
-/// Bluetooth characteristic UUID. (0x2a80)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a80` Age
 pub const AGE: BluetoothUuid16 = BluetoothUuid16::new(0x2a80);
 
-/// Bluetooth characteristic UUID. (0x2a81)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a81` Anaerobic Heart Rate Lower Limit
 pub const ANAEROBIC_HEART_RATE_LOWER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new(0x2a81);
 
-/// Bluetooth characteristic UUID. (0x2a82)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a82` Anaerobic Heart Rate Upper Limit
 pub const ANAEROBIC_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new(0x2a82);
 
-/// Bluetooth characteristic UUID. (0x2a83)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a83` Anaerobic Threshold
 pub const ANAEROBIC_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::new(0x2a83);
 
-/// Bluetooth characteristic UUID. (0x2a84)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a84` Aerobic Heart Rate Upper Limit
 pub const AEROBIC_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new(0x2a84);
 
-/// Bluetooth characteristic UUID. (0x2a85)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a85` Date of Birth
 pub const DATE_OF_BIRTH: BluetoothUuid16 = BluetoothUuid16::new(0x2a85);
 
-/// Bluetooth characteristic UUID. (0x2a86)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a86` Date of Threshold Assessment
 pub const DATE_OF_THRESHOLD_ASSESSMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a86);
 
-/// Bluetooth characteristic UUID. (0x2a87)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a87` Email Address
 pub const EMAIL_ADDRESS: BluetoothUuid16 = BluetoothUuid16::new(0x2a87);
 
-/// Bluetooth characteristic UUID. (0x2a88)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a88` Fat Burn Heart Rate Lower Limit
 pub const FAT_BURN_HEART_RATE_LOWER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new(0x2a88);
 
-/// Bluetooth characteristic UUID. (0x2a89)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a89` Fat Burn Heart Rate Upper Limit
 pub const FAT_BURN_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new(0x2a89);
 
-/// Bluetooth characteristic UUID. (0x2a8a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a8a` First Name
 pub const FIRST_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2a8a);
 
-/// Bluetooth characteristic UUID. (0x2a8b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a8b` Five Zone Heart Rate Limits
 pub const FIVE_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x2a8b);
 
-/// Bluetooth characteristic UUID. (0x2a8c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a8c` Gender
 pub const GENDER: BluetoothUuid16 = BluetoothUuid16::new(0x2a8c);
 
-/// Bluetooth characteristic UUID. (0x2a8d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a8d` Heart Rate Max
 pub const HEART_RATE_MAX: BluetoothUuid16 = BluetoothUuid16::new(0x2a8d);
 
-/// Bluetooth characteristic UUID. (0x2a8e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a8e` Height
 pub const HEIGHT: BluetoothUuid16 = BluetoothUuid16::new(0x2a8e);
 
-/// Bluetooth characteristic UUID. (0x2a8f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a8f` Hip Circumference
 pub const HIP_CIRCUMFERENCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a8f);
 
-/// Bluetooth characteristic UUID. (0x2a90)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a90` Last Name
 pub const LAST_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2a90);
 
-/// Bluetooth characteristic UUID. (0x2a91)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a91` Maximum Recommended Heart Rate
 pub const MAXIMUM_RECOMMENDED_HEART_RATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a91);
 
-/// Bluetooth characteristic UUID. (0x2a92)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a92` Resting Heart Rate
 pub const RESTING_HEART_RATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a92);
 
-/// Bluetooth characteristic UUID. (0x2a93)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a93` Sport Type for Aerobic and Anaerobic Thresholds
 pub const SPORT_TYPE_FOR_AEROBIC_AND_ANAEROBIC_THRESHOLDS: BluetoothUuid16 = BluetoothUuid16::new(0x2a93);
 
-/// Bluetooth characteristic UUID. (0x2a94)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a94` Three Zone Heart Rate Limits
 pub const THREE_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x2a94);
 
-/// Bluetooth characteristic UUID. (0x2a95)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a95` Two Zone Heart Rate Limits
 pub const TWO_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x2a95);
 
-/// Bluetooth characteristic UUID. (0x2a96)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a96` VO2 Max
 pub const VO2_MAX: BluetoothUuid16 = BluetoothUuid16::new(0x2a96);
 
-/// Bluetooth characteristic UUID. (0x2a97)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a97` Waist Circumference
 pub const WAIST_CIRCUMFERENCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a97);
 
-/// Bluetooth characteristic UUID. (0x2a98)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a98` Weight
 pub const WEIGHT: BluetoothUuid16 = BluetoothUuid16::new(0x2a98);
 
-/// Bluetooth characteristic UUID. (0x2a99)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a99` Database Change Increment
 pub const DATABASE_CHANGE_INCREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a99);
 
-/// Bluetooth characteristic UUID. (0x2a9a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a9a` User Index
 pub const USER_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2a9a);
 
-/// Bluetooth characteristic UUID. (0x2a9b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a9b` Body Composition Feature
 pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9b);
 
-/// Bluetooth characteristic UUID. (0x2a9c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a9c` Body Composition Measurement
 pub const BODY_COMPOSITION_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a9c);
 
-/// Bluetooth characteristic UUID. (0x2a9d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a9d` Weight Measurement
 pub const WEIGHT_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a9d);
 
-/// Bluetooth characteristic UUID. (0x2a9e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a9e` Weight Scale Feature
 pub const WEIGHT_SCALE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9e);
 
-/// Bluetooth characteristic UUID. (0x2a9f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2a9f` User Control Point
 pub const USER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a9f);
 
-/// Bluetooth characteristic UUID. (0x2aa0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa0` Magnetic Flux Density - 2D
 pub const MAGNETIC_FLUX_DENSITY_2D: BluetoothUuid16 = BluetoothUuid16::new(0x2aa0);
 
-/// Bluetooth characteristic UUID. (0x2aa1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa1` Magnetic Flux Density - 3D
 pub const MAGNETIC_FLUX_DENSITY_3D: BluetoothUuid16 = BluetoothUuid16::new(0x2aa1);
 
-/// Bluetooth characteristic UUID. (0x2aa2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa2` Language
 pub const LANGUAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2aa2);
 
-/// Bluetooth characteristic UUID. (0x2aa3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa3` Barometric Pressure Trend
 pub const BAROMETRIC_PRESSURE_TREND: BluetoothUuid16 = BluetoothUuid16::new(0x2aa3);
 
-/// Bluetooth characteristic UUID. (0x2aa4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa4` Bond Management Control Point
 pub const BOND_MANAGEMENT_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2aa4);
 
-/// Bluetooth characteristic UUID. (0x2aa5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa5` Bond Management Feature
 pub const BOND_MANAGEMENT_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2aa5);
 
-/// Bluetooth characteristic UUID. (0x2aa6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa6` Central Address Resolution
 pub const CENTRAL_ADDRESS_RESOLUTION: BluetoothUuid16 = BluetoothUuid16::new(0x2aa6);
 
-/// Bluetooth characteristic UUID. (0x2aa7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa7` CGM Measurement
 pub const CGM_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2aa7);
 
-/// Bluetooth characteristic UUID. (0x2aa8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa8` CGM Feature
 pub const CGM_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2aa8);
 
-/// Bluetooth characteristic UUID. (0x2aa9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aa9` CGM Status
 pub const CGM_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2aa9);
 
-/// Bluetooth characteristic UUID. (0x2aaa)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aaa` CGM Session Start Time
 pub const CGM_SESSION_START_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aaa);
 
-/// Bluetooth characteristic UUID. (0x2aab)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aab` CGM Session Run Time
 pub const CGM_SESSION_RUN_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aab);
 
-/// Bluetooth characteristic UUID. (0x2aac)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aac` CGM Specific Ops Control Point
 pub const CGM_SPECIFIC_OPS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2aac);
 
-/// Bluetooth characteristic UUID. (0x2aad)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aad` Indoor Positioning Configuration
 pub const INDOOR_POSITIONING_CONFIGURATION: BluetoothUuid16 = BluetoothUuid16::new(0x2aad);
 
-/// Bluetooth characteristic UUID. (0x2aae)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aae` Latitude
 pub const LATITUDE: BluetoothUuid16 = BluetoothUuid16::new(0x2aae);
 
-/// Bluetooth characteristic UUID. (0x2aaf)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aaf` Longitude
 pub const LONGITUDE: BluetoothUuid16 = BluetoothUuid16::new(0x2aaf);
 
-/// Bluetooth characteristic UUID. (0x2ab0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab0` Local North Coordinate
 pub const LOCAL_NORTH_COORDINATE: BluetoothUuid16 = BluetoothUuid16::new(0x2ab0);
 
-/// Bluetooth characteristic UUID. (0x2ab1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab1` Local East Coordinate
 pub const LOCAL_EAST_COORDINATE: BluetoothUuid16 = BluetoothUuid16::new(0x2ab1);
 
-/// Bluetooth characteristic UUID. (0x2ab2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab2` Floor Number
 pub const FLOOR_NUMBER: BluetoothUuid16 = BluetoothUuid16::new(0x2ab2);
 
-/// Bluetooth characteristic UUID. (0x2ab3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab3` Altitude
 pub const ALTITUDE: BluetoothUuid16 = BluetoothUuid16::new(0x2ab3);
 
-/// Bluetooth characteristic UUID. (0x2ab4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab4` Uncertainty
 pub const UNCERTAINTY: BluetoothUuid16 = BluetoothUuid16::new(0x2ab4);
 
-/// Bluetooth characteristic UUID. (0x2ab5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab5` Location Name
 pub const LOCATION_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2ab5);
 
-/// Bluetooth characteristic UUID. (0x2ab6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab6` URI
 pub const URI: BluetoothUuid16 = BluetoothUuid16::new(0x2ab6);
 
-/// Bluetooth characteristic UUID. (0x2ab7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab7` HTTP Headers
 pub const HTTP_HEADERS: BluetoothUuid16 = BluetoothUuid16::new(0x2ab7);
 
-/// Bluetooth characteristic UUID. (0x2ab8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab8` HTTP Status Code
 pub const HTTP_STATUS_CODE: BluetoothUuid16 = BluetoothUuid16::new(0x2ab8);
 
-/// Bluetooth characteristic UUID. (0x2ab9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ab9` HTTP Entity Body
 pub const HTTP_ENTITY_BODY: BluetoothUuid16 = BluetoothUuid16::new(0x2ab9);
 
-/// Bluetooth characteristic UUID. (0x2aba)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aba` HTTP Control Point
 pub const HTTP_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2aba);
 
-/// Bluetooth characteristic UUID. (0x2abb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2abb` HTTPS Security
 pub const HTTPS_SECURITY: BluetoothUuid16 = BluetoothUuid16::new(0x2abb);
 
-/// Bluetooth characteristic UUID. (0x2abc)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2abc` TDS Control Point
 pub const TDS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2abc);
 
-/// Bluetooth characteristic UUID. (0x2abd)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2abd` OTS Feature
 pub const OTS_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2abd);
 
-/// Bluetooth characteristic UUID. (0x2abe)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2abe` Object Name
 pub const OBJECT_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2abe);
 
-/// Bluetooth characteristic UUID. (0x2abf)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2abf` Object Type
 pub const OBJECT_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2abf);
 
-/// Bluetooth characteristic UUID. (0x2ac0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac0` Object Size
 pub const OBJECT_SIZE: BluetoothUuid16 = BluetoothUuid16::new(0x2ac0);
 
-/// Bluetooth characteristic UUID. (0x2ac1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac1` Object First-Created
 pub const OBJECT_FIRST_CREATED: BluetoothUuid16 = BluetoothUuid16::new(0x2ac1);
 
-/// Bluetooth characteristic UUID. (0x2ac2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac2` Object Last-Modified
 pub const OBJECT_LAST_MODIFIED: BluetoothUuid16 = BluetoothUuid16::new(0x2ac2);
 
-/// Bluetooth characteristic UUID. (0x2ac3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac3` Object ID
 pub const OBJECT_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2ac3);
 
-/// Bluetooth characteristic UUID. (0x2ac4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac4` Object Properties
 pub const OBJECT_PROPERTIES: BluetoothUuid16 = BluetoothUuid16::new(0x2ac4);
 
-/// Bluetooth characteristic UUID. (0x2ac5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac5` Object Action Control Point
 pub const OBJECT_ACTION_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2ac5);
 
-/// Bluetooth characteristic UUID. (0x2ac6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac6` Object List Control Point
 pub const OBJECT_LIST_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2ac6);
 
-/// Bluetooth characteristic UUID. (0x2ac7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac7` Object List Filter
 pub const OBJECT_LIST_FILTER: BluetoothUuid16 = BluetoothUuid16::new(0x2ac7);
 
-/// Bluetooth characteristic UUID. (0x2ac8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac8` Object Changed
 pub const OBJECT_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2ac8);
 
-/// Bluetooth characteristic UUID. (0x2ac9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ac9` Resolvable Private Address Only
 pub const RESOLVABLE_PRIVATE_ADDRESS_ONLY: BluetoothUuid16 = BluetoothUuid16::new(0x2ac9);
 
-/// Bluetooth characteristic UUID. (0x2acc)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2acc` Fitness Machine Feature
 pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc);
 
-/// Bluetooth characteristic UUID. (0x2acd)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2acd` Treadmill Data
 pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 
-/// Bluetooth characteristic UUID. (0x2ace)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ace` Cross Trainer Data
 pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 
-/// Bluetooth characteristic UUID. (0x2acf)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2acf` Step Climber Data
 pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 
-/// Bluetooth characteristic UUID. (0x2ad0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad0` Stair Climber Data
 pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 
-/// Bluetooth characteristic UUID. (0x2ad1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad1` Rower Data
 pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 
-/// Bluetooth characteristic UUID. (0x2ad2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad2` Indoor Bike Data
 pub const INDOOR_BIKE_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad2);
 
-/// Bluetooth characteristic UUID. (0x2ad3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad3` Training Status
 pub const TRAINING_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2ad3);
 
-/// Bluetooth characteristic UUID. (0x2ad4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad4` Supported Speed Range
 pub const SUPPORTED_SPEED_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad4);
 
-/// Bluetooth characteristic UUID. (0x2ad5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad5` Supported Inclination Range
 pub const SUPPORTED_INCLINATION_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad5);
 
-/// Bluetooth characteristic UUID. (0x2ad6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad6` Supported Resistance Level Range
 pub const SUPPORTED_RESISTANCE_LEVEL_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad6);
 
-/// Bluetooth characteristic UUID. (0x2ad7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad7` Supported Heart Rate Range
 pub const SUPPORTED_HEART_RATE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad7);
 
-/// Bluetooth characteristic UUID. (0x2ad8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad8` Supported Power Range
 pub const SUPPORTED_POWER_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad8);
 
-/// Bluetooth characteristic UUID. (0x2ad9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ad9` Fitness Machine Control Point
 pub const FITNESS_MACHINE_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2ad9);
 
-/// Bluetooth characteristic UUID. (0x2ada)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ada` Fitness Machine Status
 pub const FITNESS_MACHINE_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2ada);
 
-/// Bluetooth characteristic UUID. (0x2adb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2adb` Mesh Provisioning Data In
 pub const MESH_PROVISIONING_DATA_IN: BluetoothUuid16 = BluetoothUuid16::new(0x2adb);
 
-/// Bluetooth characteristic UUID. (0x2adc)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2adc` Mesh Provisioning Data Out
 pub const MESH_PROVISIONING_DATA_OUT: BluetoothUuid16 = BluetoothUuid16::new(0x2adc);
 
-/// Bluetooth characteristic UUID. (0x2add)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2add` Mesh Proxy Data In
 pub const MESH_PROXY_DATA_IN: BluetoothUuid16 = BluetoothUuid16::new(0x2add);
 
-/// Bluetooth characteristic UUID. (0x2ade)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ade` Mesh Proxy Data Out
 pub const MESH_PROXY_DATA_OUT: BluetoothUuid16 = BluetoothUuid16::new(0x2ade);
 
-/// Bluetooth characteristic UUID. (0x2ae0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae0` Average Current
 pub const AVERAGE_CURRENT: BluetoothUuid16 = BluetoothUuid16::new(0x2ae0);
 
-/// Bluetooth characteristic UUID. (0x2ae1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae1` Average Voltage
 pub const AVERAGE_VOLTAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ae1);
 
-/// Bluetooth characteristic UUID. (0x2ae2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae2` Boolean
 pub const BOOLEAN: BluetoothUuid16 = BluetoothUuid16::new(0x2ae2);
 
-/// Bluetooth characteristic UUID. (0x2ae3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae3` Chromatic Distance from Planckian
 pub const CHROMATIC_DISTANCE_FROM_PLANCKIAN: BluetoothUuid16 = BluetoothUuid16::new(0x2ae3);
 
-/// Bluetooth characteristic UUID. (0x2ae4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae4` Chromaticity Coordinates
 pub const CHROMATICITY_COORDINATES: BluetoothUuid16 = BluetoothUuid16::new(0x2ae4);
 
-/// Bluetooth characteristic UUID. (0x2ae5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae5` Chromaticity in CCT and Duv Values
 pub const CHROMATICITY_IN_CCT_AND_DUV_VALUES: BluetoothUuid16 = BluetoothUuid16::new(0x2ae5);
 
-/// Bluetooth characteristic UUID. (0x2ae6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae6` Chromaticity Tolerance
 pub const CHROMATICITY_TOLERANCE: BluetoothUuid16 = BluetoothUuid16::new(0x2ae6);
 
-/// Bluetooth characteristic UUID. (0x2ae7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae7` CIE 13.3-1995 Color Rendering Index
 pub const CIE_133_1995_COLOR_RENDERING_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2ae7);
 
-/// Bluetooth characteristic UUID. (0x2ae8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae8` Coefficient
 pub const COEFFICIENT: BluetoothUuid16 = BluetoothUuid16::new(0x2ae8);
 
-/// Bluetooth characteristic UUID. (0x2ae9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ae9` Correlated Color Temperature
 pub const CORRELATED_COLOR_TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2ae9);
 
-/// Bluetooth characteristic UUID. (0x2aea)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aea` Count 16
 pub const COUNT_16: BluetoothUuid16 = BluetoothUuid16::new(0x2aea);
 
-/// Bluetooth characteristic UUID. (0x2aeb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aeb` Count 24
 pub const COUNT_24: BluetoothUuid16 = BluetoothUuid16::new(0x2aeb);
 
-/// Bluetooth characteristic UUID. (0x2aec)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aec` Country Code
 pub const COUNTRY_CODE: BluetoothUuid16 = BluetoothUuid16::new(0x2aec);
 
-/// Bluetooth characteristic UUID. (0x2aed)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aed` Date UTC
 pub const DATE_UTC: BluetoothUuid16 = BluetoothUuid16::new(0x2aed);
 
-/// Bluetooth characteristic UUID. (0x2aee)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aee` Electric Current
 pub const ELECTRIC_CURRENT: BluetoothUuid16 = BluetoothUuid16::new(0x2aee);
 
-/// Bluetooth characteristic UUID. (0x2aef)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aef` Electric Current Range
 pub const ELECTRIC_CURRENT_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2aef);
 
-/// Bluetooth characteristic UUID. (0x2af0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af0` Electric Current Specification
 pub const ELECTRIC_CURRENT_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2af0);
 
-/// Bluetooth characteristic UUID. (0x2af1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af1` Electric Current Statistics
 pub const ELECTRIC_CURRENT_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2af1);
 
-/// Bluetooth characteristic UUID. (0x2af2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af2` Energy
 pub const ENERGY: BluetoothUuid16 = BluetoothUuid16::new(0x2af2);
 
-/// Bluetooth characteristic UUID. (0x2af3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af3` Energy in a Period of Day
 pub const ENERGY_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::new(0x2af3);
 
-/// Bluetooth characteristic UUID. (0x2af4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af4` Event Statistics
 pub const EVENT_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2af4);
 
-/// Bluetooth characteristic UUID. (0x2af5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af5` Fixed String 16
 pub const FIXED_STRING_16: BluetoothUuid16 = BluetoothUuid16::new(0x2af5);
 
-/// Bluetooth characteristic UUID. (0x2af6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af6` Fixed String 24
 pub const FIXED_STRING_24: BluetoothUuid16 = BluetoothUuid16::new(0x2af6);
 
-/// Bluetooth characteristic UUID. (0x2af7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af7` Fixed String 36
 pub const FIXED_STRING_36: BluetoothUuid16 = BluetoothUuid16::new(0x2af7);
 
-/// Bluetooth characteristic UUID. (0x2af8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af8` Fixed String 8
 pub const FIXED_STRING_8: BluetoothUuid16 = BluetoothUuid16::new(0x2af8);
 
-/// Bluetooth characteristic UUID. (0x2af9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2af9` Generic Level
 pub const GENERIC_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2af9);
 
-/// Bluetooth characteristic UUID. (0x2afa)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2afa` Global Trade Item Number
 pub const GLOBAL_TRADE_ITEM_NUMBER: BluetoothUuid16 = BluetoothUuid16::new(0x2afa);
 
-/// Bluetooth characteristic UUID. (0x2afb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2afb` Illuminance
 pub const ILLUMINANCE: BluetoothUuid16 = BluetoothUuid16::new(0x2afb);
 
-/// Bluetooth characteristic UUID. (0x2afc)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2afc` Luminous Efficacy
 pub const LUMINOUS_EFFICACY: BluetoothUuid16 = BluetoothUuid16::new(0x2afc);
 
-/// Bluetooth characteristic UUID. (0x2afd)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2afd` Luminous Energy
 pub const LUMINOUS_ENERGY: BluetoothUuid16 = BluetoothUuid16::new(0x2afd);
 
-/// Bluetooth characteristic UUID. (0x2afe)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2afe` Luminous Exposure
 pub const LUMINOUS_EXPOSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2afe);
 
-/// Bluetooth characteristic UUID. (0x2aff)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2aff` Luminous Flux
 pub const LUMINOUS_FLUX: BluetoothUuid16 = BluetoothUuid16::new(0x2aff);
 
-/// Bluetooth characteristic UUID. (0x2b00)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b00` Luminous Flux Range
 pub const LUMINOUS_FLUX_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b00);
 
-/// Bluetooth characteristic UUID. (0x2b01)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b01` Luminous Intensity
 pub const LUMINOUS_INTENSITY: BluetoothUuid16 = BluetoothUuid16::new(0x2b01);
 
-/// Bluetooth characteristic UUID. (0x2b02)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b02` Mass Flow
 pub const MASS_FLOW: BluetoothUuid16 = BluetoothUuid16::new(0x2b02);
 
-/// Bluetooth characteristic UUID. (0x2b03)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b03` Perceived Lightness
 pub const PERCEIVED_LIGHTNESS: BluetoothUuid16 = BluetoothUuid16::new(0x2b03);
 
-/// Bluetooth characteristic UUID. (0x2b04)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b04` Percentage 8
 pub const PERCENTAGE_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b04);
 
-/// Bluetooth characteristic UUID. (0x2b05)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b05` Power
 pub const POWER: BluetoothUuid16 = BluetoothUuid16::new(0x2b05);
 
-/// Bluetooth characteristic UUID. (0x2b06)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b06` Power Specification
 pub const POWER_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b06);
 
-/// Bluetooth characteristic UUID. (0x2b07)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b07` Relative Runtime in a Current Range
 pub const RELATIVE_RUNTIME_IN_A_CURRENT_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b07);
 
-/// Bluetooth characteristic UUID. (0x2b08)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b08` Relative Runtime in a Generic Level Range
 pub const RELATIVE_RUNTIME_IN_A_GENERIC_LEVEL_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b08);
 
-/// Bluetooth characteristic UUID. (0x2b09)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b09` Relative Value in a Voltage Range
 pub const RELATIVE_VALUE_IN_A_VOLTAGE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b09);
 
-/// Bluetooth characteristic UUID. (0x2b0a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b0a` Relative Value in an Illuminance Range
 pub const RELATIVE_VALUE_IN_AN_ILLUMINANCE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b0a);
 
-/// Bluetooth characteristic UUID. (0x2b0b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b0b` Relative Value in a Period of Day
 pub const RELATIVE_VALUE_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::new(0x2b0b);
 
-/// Bluetooth characteristic UUID. (0x2b0c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b0c` Relative Value in a Temperature Range
 pub const RELATIVE_VALUE_IN_A_TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b0c);
 
-/// Bluetooth characteristic UUID. (0x2b0d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b0d` Temperature 8
 pub const TEMPERATURE_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b0d);
 
-/// Bluetooth characteristic UUID. (0x2b0e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b0e` Temperature 8 in a Period of Day
 pub const TEMPERATURE_8_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::new(0x2b0e);
 
-/// Bluetooth characteristic UUID. (0x2b0f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b0f` Temperature 8 Statistics
 pub const TEMPERATURE_8_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b0f);
 
-/// Bluetooth characteristic UUID. (0x2b10)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b10` Temperature Range
 pub const TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b10);
 
-/// Bluetooth characteristic UUID. (0x2b11)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b11` Temperature Statistics
 pub const TEMPERATURE_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b11);
 
-/// Bluetooth characteristic UUID. (0x2b12)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b12` Time Decihour 8
 pub const TIME_DECIHOUR_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b12);
 
-/// Bluetooth characteristic UUID. (0x2b13)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b13` Time Exponential 8
 pub const TIME_EXPONENTIAL_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b13);
 
-/// Bluetooth characteristic UUID. (0x2b14)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b14` Time Hour 24
 pub const TIME_HOUR_24: BluetoothUuid16 = BluetoothUuid16::new(0x2b14);
 
-/// Bluetooth characteristic UUID. (0x2b15)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b15` Time Millisecond 24
 pub const TIME_MILLISECOND_24: BluetoothUuid16 = BluetoothUuid16::new(0x2b15);
 
-/// Bluetooth characteristic UUID. (0x2b16)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b16` Time Second 16
 pub const TIME_SECOND_16: BluetoothUuid16 = BluetoothUuid16::new(0x2b16);
 
-/// Bluetooth characteristic UUID. (0x2b17)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b17` Time Second 8
 pub const TIME_SECOND_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b17);
 
-/// Bluetooth characteristic UUID. (0x2b18)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b18` Voltage
 pub const VOLTAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b18);
 
-/// Bluetooth characteristic UUID. (0x2b19)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b19` Voltage Specification
 pub const VOLTAGE_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b19);
 
-/// Bluetooth characteristic UUID. (0x2b1a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b1a` Voltage Statistics
 pub const VOLTAGE_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b1a);
 
-/// Bluetooth characteristic UUID. (0x2b1b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b1b` Volume Flow
 pub const VOLUME_FLOW: BluetoothUuid16 = BluetoothUuid16::new(0x2b1b);
 
-/// Bluetooth characteristic UUID. (0x2b1c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b1c` Chromaticity Coordinate
 pub const CHROMATICITY_COORDINATE: BluetoothUuid16 = BluetoothUuid16::new(0x2b1c);
 
-/// Bluetooth characteristic UUID. (0x2b1d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b1d` RC Feature
 pub const RC_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2b1d);
 
-/// Bluetooth characteristic UUID. (0x2b1e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b1e` RC Settings
 pub const RC_SETTINGS: BluetoothUuid16 = BluetoothUuid16::new(0x2b1e);
 
-/// Bluetooth characteristic UUID. (0x2b1f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b1f` Reconnection Configuration Control Point
 pub const RECONNECTION_CONFIGURATION_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b1f);
 
-/// Bluetooth characteristic UUID. (0x2b20)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b20` IDD Status Changed
 pub const IDD_STATUS_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2b20);
 
-/// Bluetooth characteristic UUID. (0x2b21)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b21` IDD Status
 pub const IDD_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2b21);
 
-/// Bluetooth characteristic UUID. (0x2b22)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b22` IDD Annunciation Status
 pub const IDD_ANNUNCIATION_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2b22);
 
-/// Bluetooth characteristic UUID. (0x2b23)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b23` IDD Features
 pub const IDD_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2b23);
 
-/// Bluetooth characteristic UUID. (0x2b24)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b24` IDD Status Reader Control Point
 pub const IDD_STATUS_READER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b24);
 
-/// Bluetooth characteristic UUID. (0x2b25)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b25` IDD Command Control Point
 pub const IDD_COMMAND_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b25);
 
-/// Bluetooth characteristic UUID. (0x2b26)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b26` IDD Command Data
 pub const IDD_COMMAND_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b26);
 
-/// Bluetooth characteristic UUID. (0x2b27)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b27` IDD Record Access Control Point
 pub const IDD_RECORD_ACCESS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b27);
 
-/// Bluetooth characteristic UUID. (0x2b28)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b28` IDD History Data
 pub const IDD_HISTORY_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b28);
 
-/// Bluetooth characteristic UUID. (0x2b29)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b29` Client Supported Features
 pub const CLIENT_SUPPORTED_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2b29);
 
-/// Bluetooth characteristic UUID. (0x2b2a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b2a` Database Hash
 pub const DATABASE_HASH: BluetoothUuid16 = BluetoothUuid16::new(0x2b2a);
 
-/// Bluetooth characteristic UUID. (0x2b2b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b2b` BSS Control Point
 pub const BSS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b2b);
 
-/// Bluetooth characteristic UUID. (0x2b2c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b2c` BSS Response
 pub const BSS_RESPONSE: BluetoothUuid16 = BluetoothUuid16::new(0x2b2c);
 
-/// Bluetooth characteristic UUID. (0x2b2d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b2d` Emergency ID
 pub const EMERGENCY_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2b2d);
 
-/// Bluetooth characteristic UUID. (0x2b2e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b2e` Emergency Text
 pub const EMERGENCY_TEXT: BluetoothUuid16 = BluetoothUuid16::new(0x2b2e);
 
-/// Bluetooth characteristic UUID. (0x2b2f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b2f` ACS Status
 pub const ACS_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2b2f);
 
-/// Bluetooth characteristic UUID. (0x2b30)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b30` ACS Data In
 pub const ACS_DATA_IN: BluetoothUuid16 = BluetoothUuid16::new(0x2b30);
 
-/// Bluetooth characteristic UUID. (0x2b31)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b31` ACS Data Out Notify
 pub const ACS_DATA_OUT_NOTIFY: BluetoothUuid16 = BluetoothUuid16::new(0x2b31);
 
-/// Bluetooth characteristic UUID. (0x2b32)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b32` ACS Data Out Indicate
 pub const ACS_DATA_OUT_INDICATE: BluetoothUuid16 = BluetoothUuid16::new(0x2b32);
 
-/// Bluetooth characteristic UUID. (0x2b33)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b33` ACS Control Point
 pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 
-/// Bluetooth characteristic UUID. (0x2b34)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b34` Enhanced Blood Pressure Measurement
 pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2b34);
 
-/// Bluetooth characteristic UUID. (0x2b35)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b35` Enhanced Intermediate Cuff Pressure
 pub const ENHANCED_INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2b35);
 
-/// Bluetooth characteristic UUID. (0x2b36)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b36` Blood Pressure Record
 pub const BLOOD_PRESSURE_RECORD: BluetoothUuid16 = BluetoothUuid16::new(0x2b36);
 
-/// Bluetooth characteristic UUID. (0x2b37)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b37` Registered User
 pub const REGISTERED_USER: BluetoothUuid16 = BluetoothUuid16::new(0x2b37);
 
-/// Bluetooth characteristic UUID. (0x2b38)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b38` BR-EDR Handover Data
 pub const BR_EDR_HANDOVER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b38);
 
-/// Bluetooth characteristic UUID. (0x2b39)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b39` Bluetooth SIG Data
 pub const BLUETOOTH_SIG_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b39);
 
-/// Bluetooth characteristic UUID. (0x2b3a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b3a` Server Supported Features
 pub const SERVER_SUPPORTED_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2b3a);
 
-/// Bluetooth characteristic UUID. (0x2b3b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b3b` Physical Activity Monitor Features
 pub const PHYSICAL_ACTIVITY_MONITOR_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2b3b);
 
-/// Bluetooth characteristic UUID. (0x2b3c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b3c` General Activity Instantaneous Data
 pub const GENERAL_ACTIVITY_INSTANTANEOUS_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b3c);
 
-/// Bluetooth characteristic UUID. (0x2b3d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b3d` General Activity Summary Data
 pub const GENERAL_ACTIVITY_SUMMARY_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b3d);
 
-/// Bluetooth characteristic UUID. (0x2b3e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b3e` CardioRespiratory Activity Instantaneous Data
 pub const CARDIORESPIRATORY_ACTIVITY_INSTANTANEOUS_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b3e);
 
-/// Bluetooth characteristic UUID. (0x2b3f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b3f` CardioRespiratory Activity Summary Data
 pub const CARDIORESPIRATORY_ACTIVITY_SUMMARY_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b3f);
 
-/// Bluetooth characteristic UUID. (0x2b40)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b40` Step Counter Activity Summary Data
 pub const STEP_COUNTER_ACTIVITY_SUMMARY_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b40);
 
-/// Bluetooth characteristic UUID. (0x2b41)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b41` Sleep Activity Instantaneous Data
 pub const SLEEP_ACTIVITY_INSTANTANEOUS_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b41);
 
-/// Bluetooth characteristic UUID. (0x2b42)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b42` Sleep Activity Summary Data
 pub const SLEEP_ACTIVITY_SUMMARY_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b42);
 
-/// Bluetooth characteristic UUID. (0x2b43)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b43` Physical Activity Monitor Control Point
 pub const PHYSICAL_ACTIVITY_MONITOR_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b43);
 
-/// Bluetooth characteristic UUID. (0x2b44)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b44` Physical Activity Current Session
 pub const PHYSICAL_ACTIVITY_CURRENT_SESSION: BluetoothUuid16 = BluetoothUuid16::new(0x2b44);
 
-/// Bluetooth characteristic UUID. (0x2b45)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b45` Physical Activity Session Descriptor
 pub const PHYSICAL_ACTIVITY_SESSION_DESCRIPTOR: BluetoothUuid16 = BluetoothUuid16::new(0x2b45);
 
-/// Bluetooth characteristic UUID. (0x2b46)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b46` Preferred Units
 pub const PREFERRED_UNITS: BluetoothUuid16 = BluetoothUuid16::new(0x2b46);
 
-/// Bluetooth characteristic UUID. (0x2b47)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b47` High Resolution Height
 pub const HIGH_RESOLUTION_HEIGHT: BluetoothUuid16 = BluetoothUuid16::new(0x2b47);
 
-/// Bluetooth characteristic UUID. (0x2b48)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b48` Middle Name
 pub const MIDDLE_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2b48);
 
-/// Bluetooth characteristic UUID. (0x2b49)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b49` Stride Length
 pub const STRIDE_LENGTH: BluetoothUuid16 = BluetoothUuid16::new(0x2b49);
 
-/// Bluetooth characteristic UUID. (0x2b4a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b4a` Handedness
 pub const HANDEDNESS: BluetoothUuid16 = BluetoothUuid16::new(0x2b4a);
 
-/// Bluetooth characteristic UUID. (0x2b4b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b4b` Device Wearing Position
 pub const DEVICE_WEARING_POSITION: BluetoothUuid16 = BluetoothUuid16::new(0x2b4b);
 
-/// Bluetooth characteristic UUID. (0x2b4c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b4c` Four Zone Heart Rate Limits
 pub const FOUR_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x2b4c);
 
-/// Bluetooth characteristic UUID. (0x2b4d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b4d` High Intensity Exercise Threshold
 pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::new(0x2b4d);
 
-/// Bluetooth characteristic UUID. (0x2b4e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b4e` Activity Goal
 pub const ACTIVITY_GOAL: BluetoothUuid16 = BluetoothUuid16::new(0x2b4e);
 
-/// Bluetooth characteristic UUID. (0x2b4f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b4f` Sedentary Interval Notification
 pub const SEDENTARY_INTERVAL_NOTIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b4f);
 
-/// Bluetooth characteristic UUID. (0x2b50)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b50` Caloric Intake
 pub const CALORIC_INTAKE: BluetoothUuid16 = BluetoothUuid16::new(0x2b50);
 
-/// Bluetooth characteristic UUID. (0x2b51)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b51` TMAP Role
 pub const TMAP_ROLE: BluetoothUuid16 = BluetoothUuid16::new(0x2b51);
 
-/// Bluetooth characteristic UUID. (0x2b77)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b77` Audio Input State
 pub const AUDIO_INPUT_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2b77);
 
-/// Bluetooth characteristic UUID. (0x2b78)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b78` Gain Settings Attribute
 pub const GAIN_SETTINGS_ATTRIBUTE: BluetoothUuid16 = BluetoothUuid16::new(0x2b78);
 
-/// Bluetooth characteristic UUID. (0x2b79)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b79` Audio Input Type
 pub const AUDIO_INPUT_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2b79);
 
-/// Bluetooth characteristic UUID. (0x2b7a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b7a` Audio Input Status
 pub const AUDIO_INPUT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2b7a);
 
-/// Bluetooth characteristic UUID. (0x2b7b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b7b` Audio Input Control Point
 pub const AUDIO_INPUT_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b7b);
 
-/// Bluetooth characteristic UUID. (0x2b7c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b7c` Audio Input Description
 pub const AUDIO_INPUT_DESCRIPTION: BluetoothUuid16 = BluetoothUuid16::new(0x2b7c);
 
-/// Bluetooth characteristic UUID. (0x2b7d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b7d` Volume State
 pub const VOLUME_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2b7d);
 
-/// Bluetooth characteristic UUID. (0x2b7e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b7e` Volume Control Point
 pub const VOLUME_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b7e);
 
-/// Bluetooth characteristic UUID. (0x2b7f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b7f` Volume Flags
 pub const VOLUME_FLAGS: BluetoothUuid16 = BluetoothUuid16::new(0x2b7f);
 
-/// Bluetooth characteristic UUID. (0x2b80)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b80` Volume Offset State
 pub const VOLUME_OFFSET_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2b80);
 
-/// Bluetooth characteristic UUID. (0x2b81)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b81` Audio Location
 pub const AUDIO_LOCATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b81);
 
-/// Bluetooth characteristic UUID. (0x2b82)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b82` Volume Offset Control Point
 pub const VOLUME_OFFSET_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b82);
 
-/// Bluetooth characteristic UUID. (0x2b83)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b83` Audio Output Description
 pub const AUDIO_OUTPUT_DESCRIPTION: BluetoothUuid16 = BluetoothUuid16::new(0x2b83);
 
-/// Bluetooth characteristic UUID. (0x2b84)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b84` Set Identity Resolving Key
 pub const SET_IDENTITY_RESOLVING_KEY: BluetoothUuid16 = BluetoothUuid16::new(0x2b84);
 
-/// Bluetooth characteristic UUID. (0x2b85)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b85` Coordinated Set Size
 pub const COORDINATED_SET_SIZE: BluetoothUuid16 = BluetoothUuid16::new(0x2b85);
 
-/// Bluetooth characteristic UUID. (0x2b86)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b86` Set Member Lock
 pub const SET_MEMBER_LOCK: BluetoothUuid16 = BluetoothUuid16::new(0x2b86);
 
-/// Bluetooth characteristic UUID. (0x2b87)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b87` Set Member Rank
 pub const SET_MEMBER_RANK: BluetoothUuid16 = BluetoothUuid16::new(0x2b87);
 
-/// Bluetooth characteristic UUID. (0x2b88)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b88` Encrypted Data Key Material
 pub const ENCRYPTED_DATA_KEY_MATERIAL: BluetoothUuid16 = BluetoothUuid16::new(0x2b88);
 
-/// Bluetooth characteristic UUID. (0x2b89)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b89` Apparent Energy 32
 pub const APPARENT_ENERGY_32: BluetoothUuid16 = BluetoothUuid16::new(0x2b89);
 
-/// Bluetooth characteristic UUID. (0x2b8a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b8a` Apparent Power
 pub const APPARENT_POWER: BluetoothUuid16 = BluetoothUuid16::new(0x2b8a);
 
-/// Bluetooth characteristic UUID. (0x2b8b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b8b` Live Health Observations
 pub const LIVE_HEALTH_OBSERVATIONS: BluetoothUuid16 = BluetoothUuid16::new(0x2b8b);
 
-/// Bluetooth characteristic UUID. (0x2b8c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b8c` CO\textsubscript{2} Concentration
 pub const CO2_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b8c);
 
-/// Bluetooth characteristic UUID. (0x2b8d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b8d` Cosine of the Angle
 pub const COSINE_OF_THE_ANGLE: BluetoothUuid16 = BluetoothUuid16::new(0x2b8d);
 
-/// Bluetooth characteristic UUID. (0x2b8e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b8e` Device Time Feature
 pub const DEVICE_TIME_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2b8e);
 
-/// Bluetooth characteristic UUID. (0x2b8f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b8f` Device Time Parameters
 pub const DEVICE_TIME_PARAMETERS: BluetoothUuid16 = BluetoothUuid16::new(0x2b8f);
 
-/// Bluetooth characteristic UUID. (0x2b90)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b90` Device Time
 pub const DEVICE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2b90);
 
-/// Bluetooth characteristic UUID. (0x2b91)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b91` Device Time Control Point
 pub const DEVICE_TIME_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b91);
 
-/// Bluetooth characteristic UUID. (0x2b92)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b92` Time Change Log Data
 pub const TIME_CHANGE_LOG_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2b92);
 
-/// Bluetooth characteristic UUID. (0x2b93)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b93` Media Player Name
 pub const MEDIA_PLAYER_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2b93);
 
-/// Bluetooth characteristic UUID. (0x2b94)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b94` Media Player Icon Object ID
 pub const MEDIA_PLAYER_ICON_OBJECT_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2b94);
 
-/// Bluetooth characteristic UUID. (0x2b95)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b95` Media Player Icon URL
 pub const MEDIA_PLAYER_ICON_URL: BluetoothUuid16 = BluetoothUuid16::new(0x2b95);
 
-/// Bluetooth characteristic UUID. (0x2b96)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b96` Track Changed
 pub const TRACK_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2b96);
 
-/// Bluetooth characteristic UUID. (0x2b97)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b97` Track Title
 pub const TRACK_TITLE: BluetoothUuid16 = BluetoothUuid16::new(0x2b97);
 
-/// Bluetooth characteristic UUID. (0x2b98)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b98` Track Duration
 pub const TRACK_DURATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b98);
 
-/// Bluetooth characteristic UUID. (0x2b99)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b99` Track Position
 pub const TRACK_POSITION: BluetoothUuid16 = BluetoothUuid16::new(0x2b99);
 
-/// Bluetooth characteristic UUID. (0x2b9a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b9a` Playback Speed
 pub const PLAYBACK_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2b9a);
 
-/// Bluetooth characteristic UUID. (0x2b9b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b9b` Seeking Speed
 pub const SEEKING_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2b9b);
 
-/// Bluetooth characteristic UUID. (0x2b9c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b9c` Current Track Segments Object ID
 pub const CURRENT_TRACK_SEGMENTS_OBJECT_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2b9c);
 
-/// Bluetooth characteristic UUID. (0x2b9d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b9d` Current Track Object ID
 pub const CURRENT_TRACK_OBJECT_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2b9d);
 
-/// Bluetooth characteristic UUID. (0x2b9e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b9e` Next Track Object ID
 pub const NEXT_TRACK_OBJECT_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2b9e);
 
-/// Bluetooth characteristic UUID. (0x2b9f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2b9f` Parent Group Object ID
 pub const PARENT_GROUP_OBJECT_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2b9f);
 
-/// Bluetooth characteristic UUID. (0x2ba0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba0` Current Group Object ID
 pub const CURRENT_GROUP_OBJECT_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2ba0);
 
-/// Bluetooth characteristic UUID. (0x2ba1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba1` Playing Order
 pub const PLAYING_ORDER: BluetoothUuid16 = BluetoothUuid16::new(0x2ba1);
 
-/// Bluetooth characteristic UUID. (0x2ba2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba2` Playing Orders Supported
 pub const PLAYING_ORDERS_SUPPORTED: BluetoothUuid16 = BluetoothUuid16::new(0x2ba2);
 
-/// Bluetooth characteristic UUID. (0x2ba3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba3` Media State
 pub const MEDIA_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2ba3);
 
-/// Bluetooth characteristic UUID. (0x2ba4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba4` Media Control Point
 pub const MEDIA_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2ba4);
 
-/// Bluetooth characteristic UUID. (0x2ba5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba5` Media Control Point Opcodes Supported
 pub const MEDIA_CONTROL_POINT_OPCODES_SUPPORTED: BluetoothUuid16 = BluetoothUuid16::new(0x2ba5);
 
-/// Bluetooth characteristic UUID. (0x2ba6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba6` Search Results Object ID
 pub const SEARCH_RESULTS_OBJECT_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2ba6);
 
-/// Bluetooth characteristic UUID. (0x2ba7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba7` Search Control Point
 pub const SEARCH_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2ba7);
 
-/// Bluetooth characteristic UUID. (0x2ba8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2ba8` Energy 32
 pub const ENERGY_32: BluetoothUuid16 = BluetoothUuid16::new(0x2ba8);
 
-/// Bluetooth characteristic UUID. (0x2bad)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bad` Constant Tone Extension Enable
 pub const CONSTANT_TONE_EXTENSION_ENABLE: BluetoothUuid16 = BluetoothUuid16::new(0x2bad);
 
-/// Bluetooth characteristic UUID. (0x2bae)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bae` Advertising Constant Tone Extension Minimum Length
 pub const ADVERTISING_CONSTANT_TONE_EXTENSION_MINIMUM_LENGTH: BluetoothUuid16 = BluetoothUuid16::new(0x2bae);
 
-/// Bluetooth characteristic UUID. (0x2baf)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2baf` Advertising Constant Tone Extension Minimum Transmit Count
 pub const ADVERTISING_CONSTANT_TONE_EXTENSION_MINIMUM_TRANSMIT_COUNT: BluetoothUuid16 = BluetoothUuid16::new(0x2baf);
 
-/// Bluetooth characteristic UUID. (0x2bb0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb0` Advertising Constant Tone Extension Transmit Duration
 pub const ADVERTISING_CONSTANT_TONE_EXTENSION_TRANSMIT_DURATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bb0);
 
-/// Bluetooth characteristic UUID. (0x2bb1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb1` Advertising Constant Tone Extension Interval
 pub const ADVERTISING_CONSTANT_TONE_EXTENSION_INTERVAL: BluetoothUuid16 = BluetoothUuid16::new(0x2bb1);
 
-/// Bluetooth characteristic UUID. (0x2bb2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb2` Advertising Constant Tone Extension PHY
 pub const ADVERTISING_CONSTANT_TONE_EXTENSION_PHY: BluetoothUuid16 = BluetoothUuid16::new(0x2bb2);
 
-/// Bluetooth characteristic UUID. (0x2bb3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb3` Bearer Provider Name
 pub const BEARER_PROVIDER_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2bb3);
 
-/// Bluetooth characteristic UUID. (0x2bb4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb4` Bearer UCI
 pub const BEARER_UCI: BluetoothUuid16 = BluetoothUuid16::new(0x2bb4);
 
-/// Bluetooth characteristic UUID. (0x2bb5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb5` Bearer Technology
 pub const BEARER_TECHNOLOGY: BluetoothUuid16 = BluetoothUuid16::new(0x2bb5);
 
-/// Bluetooth characteristic UUID. (0x2bb6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb6` Bearer URI Schemes Supported List
 pub const BEARER_URI_SCHEMES_SUPPORTED_LIST: BluetoothUuid16 = BluetoothUuid16::new(0x2bb6);
 
-/// Bluetooth characteristic UUID. (0x2bb7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb7` Bearer Signal Strength
 pub const BEARER_SIGNAL_STRENGTH: BluetoothUuid16 = BluetoothUuid16::new(0x2bb7);
 
-/// Bluetooth characteristic UUID. (0x2bb8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb8` Bearer Signal Strength Reporting Interval
 pub const BEARER_SIGNAL_STRENGTH_REPORTING_INTERVAL: BluetoothUuid16 = BluetoothUuid16::new(0x2bb8);
 
-/// Bluetooth characteristic UUID. (0x2bb9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bb9` Bearer List Current Calls
 pub const BEARER_LIST_CURRENT_CALLS: BluetoothUuid16 = BluetoothUuid16::new(0x2bb9);
 
-/// Bluetooth characteristic UUID. (0x2bba)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bba` Content Control ID
 pub const CONTENT_CONTROL_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2bba);
 
-/// Bluetooth characteristic UUID. (0x2bbb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bbb` Status Flags
 pub const STATUS_FLAGS: BluetoothUuid16 = BluetoothUuid16::new(0x2bbb);
 
-/// Bluetooth characteristic UUID. (0x2bbc)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bbc` Incoming Call Target Bearer URI
 pub const INCOMING_CALL_TARGET_BEARER_URI: BluetoothUuid16 = BluetoothUuid16::new(0x2bbc);
 
-/// Bluetooth characteristic UUID. (0x2bbd)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bbd` Call State
 pub const CALL_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bbd);
 
-/// Bluetooth characteristic UUID. (0x2bbe)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bbe` Call Control Point
 pub const CALL_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2bbe);
 
-/// Bluetooth characteristic UUID. (0x2bbf)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bbf` Call Control Point Optional Opcodes
 pub const CALL_CONTROL_POINT_OPTIONAL_OPCODES: BluetoothUuid16 = BluetoothUuid16::new(0x2bbf);
 
-/// Bluetooth characteristic UUID. (0x2bc0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc0` Termination Reason
 pub const TERMINATION_REASON: BluetoothUuid16 = BluetoothUuid16::new(0x2bc0);
 
-/// Bluetooth characteristic UUID. (0x2bc1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc1` Incoming Call
 pub const INCOMING_CALL: BluetoothUuid16 = BluetoothUuid16::new(0x2bc1);
 
-/// Bluetooth characteristic UUID. (0x2bc2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc2` Call Friendly Name
 pub const CALL_FRIENDLY_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2bc2);
 
-/// Bluetooth characteristic UUID. (0x2bc3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc3` Mute
 pub const MUTE: BluetoothUuid16 = BluetoothUuid16::new(0x2bc3);
 
-/// Bluetooth characteristic UUID. (0x2bc4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc4` Sink ASE
 pub const SINK_ASE: BluetoothUuid16 = BluetoothUuid16::new(0x2bc4);
 
-/// Bluetooth characteristic UUID. (0x2bc5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc5` Source ASE
 pub const SOURCE_ASE: BluetoothUuid16 = BluetoothUuid16::new(0x2bc5);
 
-/// Bluetooth characteristic UUID. (0x2bc6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc6` ASE Control Point
 pub const ASE_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2bc6);
 
-/// Bluetooth characteristic UUID. (0x2bc7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc7` Broadcast Audio Scan Control Point
 pub const BROADCAST_AUDIO_SCAN_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2bc7);
 
-/// Bluetooth characteristic UUID. (0x2bc8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc8` Broadcast Receive State
 pub const BROADCAST_RECEIVE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bc8);
 
-/// Bluetooth characteristic UUID. (0x2bc9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bc9` Sink PAC
 pub const SINK_PAC: BluetoothUuid16 = BluetoothUuid16::new(0x2bc9);
 
-/// Bluetooth characteristic UUID. (0x2bca)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bca` Sink Audio Locations
 pub const SINK_AUDIO_LOCATIONS: BluetoothUuid16 = BluetoothUuid16::new(0x2bca);
 
-/// Bluetooth characteristic UUID. (0x2bcb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bcb` Source PAC
 pub const SOURCE_PAC: BluetoothUuid16 = BluetoothUuid16::new(0x2bcb);
 
-/// Bluetooth characteristic UUID. (0x2bcc)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bcc` Source Audio Locations
 pub const SOURCE_AUDIO_LOCATIONS: BluetoothUuid16 = BluetoothUuid16::new(0x2bcc);
 
-/// Bluetooth characteristic UUID. (0x2bcd)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bcd` Available Audio Contexts
 pub const AVAILABLE_AUDIO_CONTEXTS: BluetoothUuid16 = BluetoothUuid16::new(0x2bcd);
 
-/// Bluetooth characteristic UUID. (0x2bce)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bce` Supported Audio Contexts
 pub const SUPPORTED_AUDIO_CONTEXTS: BluetoothUuid16 = BluetoothUuid16::new(0x2bce);
 
-/// Bluetooth characteristic UUID. (0x2bcf)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bcf` Ammonia Concentration
 pub const AMMONIA_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bcf);
 
-/// Bluetooth characteristic UUID. (0x2bd0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd0` Carbon Monoxide Concentration
 pub const CARBON_MONOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd0);
 
-/// Bluetooth characteristic UUID. (0x2bd1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd1` Methane Concentration
 pub const METHANE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd1);
 
-/// Bluetooth characteristic UUID. (0x2bd2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd2` Nitrogen Dioxide Concentration
 pub const NITROGEN_DIOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd2);
 
-/// Bluetooth characteristic UUID. (0x2bd3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd3` Non-Methane Volatile Organic Compounds Concentration
 pub const NON_METHANE_VOLATILE_ORGANIC_COMPOUNDS_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd3);
 
-/// Bluetooth characteristic UUID. (0x2bd4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd4` Ozone Concentration
 pub const OZONE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd4);
 
-/// Bluetooth characteristic UUID. (0x2bd5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd5` Particulate Matter - PM1 Concentration
 pub const PARTICULATE_MATTER_PM1_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd5);
 
-/// Bluetooth characteristic UUID. (0x2bd6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd6` Particulate Matter - PM2.5 Concentration
 pub const PARTICULATE_MATTER_PM25_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd6);
 
-/// Bluetooth characteristic UUID. (0x2bd7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd7` Particulate Matter - PM10 Concentration
 pub const PARTICULATE_MATTER_PM10_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd7);
 
-/// Bluetooth characteristic UUID. (0x2bd8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd8` Sulfur Dioxide Concentration
 pub const SULFUR_DIOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd8);
 
-/// Bluetooth characteristic UUID. (0x2bd9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bd9` Sulfur Hexafluoride Concentration
 pub const SULFUR_HEXAFLUORIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd9);
 
-/// Bluetooth characteristic UUID. (0x2bda)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bda` Hearing Aid Features
 pub const HEARING_AID_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2bda);
 
-/// Bluetooth characteristic UUID. (0x2bdb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bdb` Hearing Aid Preset Control Point
 pub const HEARING_AID_PRESET_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2bdb);
 
-/// Bluetooth characteristic UUID. (0x2bdc)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bdc` Active Preset Index
 pub const ACTIVE_PRESET_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2bdc);
 
-/// Bluetooth characteristic UUID. (0x2bdd)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bdd` Stored Health Observations
 pub const STORED_HEALTH_OBSERVATIONS: BluetoothUuid16 = BluetoothUuid16::new(0x2bdd);
 
-/// Bluetooth characteristic UUID. (0x2bde)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bde` Fixed String 64
 pub const FIXED_STRING_64: BluetoothUuid16 = BluetoothUuid16::new(0x2bde);
 
-/// Bluetooth characteristic UUID. (0x2bdf)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bdf` High Temperature
 pub const HIGH_TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2bdf);
 
-/// Bluetooth characteristic UUID. (0x2be0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be0` High Voltage
 pub const HIGH_VOLTAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2be0);
 
-/// Bluetooth characteristic UUID. (0x2be1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be1` Light Distribution
 pub const LIGHT_DISTRIBUTION: BluetoothUuid16 = BluetoothUuid16::new(0x2be1);
 
-/// Bluetooth characteristic UUID. (0x2be2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be2` Light Output
 pub const LIGHT_OUTPUT: BluetoothUuid16 = BluetoothUuid16::new(0x2be2);
 
-/// Bluetooth characteristic UUID. (0x2be3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be3` Light Source Type
 pub const LIGHT_SOURCE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2be3);
 
-/// Bluetooth characteristic UUID. (0x2be4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be4` Noise
 pub const NOISE: BluetoothUuid16 = BluetoothUuid16::new(0x2be4);
 
-/// Bluetooth characteristic UUID. (0x2be5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be5` Relative Runtime in a Correlated Color Temperature Range
 pub const RELATIVE_RUNTIME_IN_A_CORRELATED_COLOR_TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2be5);
 
-/// Bluetooth characteristic UUID. (0x2be6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be6` Time Second 32
 pub const TIME_SECOND_32: BluetoothUuid16 = BluetoothUuid16::new(0x2be6);
 
-/// Bluetooth characteristic UUID. (0x2be7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be7` VOC Concentration
 pub const VOC_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2be7);
 
-/// Bluetooth characteristic UUID. (0x2be8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be8` Voltage Frequency
 pub const VOLTAGE_FREQUENCY: BluetoothUuid16 = BluetoothUuid16::new(0x2be8);
 
-/// Bluetooth characteristic UUID. (0x2be9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2be9` Battery Critical Status
 pub const BATTERY_CRITICAL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2be9);
 
-/// Bluetooth characteristic UUID. (0x2bea)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bea` Battery Health Status
 pub const BATTERY_HEALTH_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bea);
 
-/// Bluetooth characteristic UUID. (0x2beb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2beb` Battery Health Information
 pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2beb);
 
-/// Bluetooth characteristic UUID. (0x2bec)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bec` Battery Information
 pub const BATTERY_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bec);
 
-/// Bluetooth characteristic UUID. (0x2bed)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bed` Battery Level Status
 pub const BATTERY_LEVEL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bed);
 
-/// Bluetooth characteristic UUID. (0x2bee)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bee` Battery Time Status
 pub const BATTERY_TIME_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bee);
 
-/// Bluetooth characteristic UUID. (0x2bef)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bef` Estimated Service Date
 pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef);
 
-/// Bluetooth characteristic UUID. (0x2bf0)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf0` Battery Energy Status
 pub const BATTERY_ENERGY_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bf0);
 
-/// Bluetooth characteristic UUID. (0x2bf1)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf1` Observation Schedule Changed
 pub const OBSERVATION_SCHEDULE_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2bf1);
 
-/// Bluetooth characteristic UUID. (0x2bf2)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf2` Current Elapsed Time
 pub const CURRENT_ELAPSED_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2bf2);
 
-/// Bluetooth characteristic UUID. (0x2bf3)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf3` Health Sensor Features
 pub const HEALTH_SENSOR_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2bf3);
 
-/// Bluetooth characteristic UUID. (0x2bf4)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf4` GHS Control Point
 pub const GHS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2bf4);
 
-/// Bluetooth characteristic UUID. (0x2bf5)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf5` LE GATT Security Levels
 pub const LE_GATT_SECURITY_LEVELS: BluetoothUuid16 = BluetoothUuid16::new(0x2bf5);
 
-/// Bluetooth characteristic UUID. (0x2bf6)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf6` ESL Address
 pub const ESL_ADDRESS: BluetoothUuid16 = BluetoothUuid16::new(0x2bf6);
 
-/// Bluetooth characteristic UUID. (0x2bf7)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf7` AP Sync Key Material
 pub const AP_SYNC_KEY_MATERIAL: BluetoothUuid16 = BluetoothUuid16::new(0x2bf7);
 
-/// Bluetooth characteristic UUID. (0x2bf8)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf8` ESL Response Key Material
 pub const ESL_RESPONSE_KEY_MATERIAL: BluetoothUuid16 = BluetoothUuid16::new(0x2bf8);
 
-/// Bluetooth characteristic UUID. (0x2bf9)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bf9` ESL Current Absolute Time
 pub const ESL_CURRENT_ABSOLUTE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2bf9);
 
-/// Bluetooth characteristic UUID. (0x2bfa)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bfa` ESL Display Information
 pub const ESL_DISPLAY_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bfa);
 
-/// Bluetooth characteristic UUID. (0x2bfb)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bfb` ESL Image Information
 pub const ESL_IMAGE_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bfb);
 
-/// Bluetooth characteristic UUID. (0x2bfc)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bfc` ESL Sensor Information
 pub const ESL_SENSOR_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bfc);
 
-/// Bluetooth characteristic UUID. (0x2bfd)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bfd` ESL LED Information
 pub const ESL_LED_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bfd);
 
-/// Bluetooth characteristic UUID. (0x2bfe)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bfe` ESL Control Point
 pub const ESL_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2bfe);
 
-/// Bluetooth characteristic UUID. (0x2bff)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2bff` UDI for Medical Devices
 pub const UDI_FOR_MEDICAL_DEVICES: BluetoothUuid16 = BluetoothUuid16::new(0x2bff);
 
-/// Bluetooth characteristic UUID. (0x2c00)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c00` GMAP Role
 pub const GMAP_ROLE: BluetoothUuid16 = BluetoothUuid16::new(0x2c00);
 
-/// Bluetooth characteristic UUID. (0x2c01)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c01` UGG Features
 pub const UGG_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2c01);
 
-/// Bluetooth characteristic UUID. (0x2c02)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c02` UGT Features
 pub const UGT_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2c02);
 
-/// Bluetooth characteristic UUID. (0x2c03)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c03` BGS Features
 pub const BGS_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2c03);
 
-/// Bluetooth characteristic UUID. (0x2c04)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c04` BGR Features
 pub const BGR_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2c04);
 
-/// Bluetooth characteristic UUID. (0x2c05)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c05` Percentage 8 Steps
 pub const PERCENTAGE_8_STEPS: BluetoothUuid16 = BluetoothUuid16::new(0x2c05);
 
-/// Bluetooth characteristic UUID. (0x2c06)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c06` Acceleration
 pub const ACCELERATION: BluetoothUuid16 = BluetoothUuid16::new(0x2c06);
 
-/// Bluetooth characteristic UUID. (0x2c07)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c07` Force
 pub const FORCE: BluetoothUuid16 = BluetoothUuid16::new(0x2c07);
 
-/// Bluetooth characteristic UUID. (0x2c08)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c08` Linear Position
 pub const LINEAR_POSITION: BluetoothUuid16 = BluetoothUuid16::new(0x2c08);
 
-/// Bluetooth characteristic UUID. (0x2c09)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c09` Rotational Speed
 pub const ROTATIONAL_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2c09);
 
-/// Bluetooth characteristic UUID. (0x2c0a)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c0a` Length
 pub const LENGTH: BluetoothUuid16 = BluetoothUuid16::new(0x2c0a);
 
-/// Bluetooth characteristic UUID. (0x2c0b)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c0b` Torque
 pub const TORQUE: BluetoothUuid16 = BluetoothUuid16::new(0x2c0b);
 
-/// Bluetooth characteristic UUID. (0x2c0c)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c0c` IMD Status
 pub const IMD_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2c0c);
 
-/// Bluetooth characteristic UUID. (0x2c0d)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c0d` IMDS Descriptor Value Changed
 pub const IMDS_DESCRIPTOR_VALUE_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2c0d);
 
-/// Bluetooth characteristic UUID. (0x2c0e)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c0e` First Use Date
 pub const FIRST_USE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2c0e);
 
-/// Bluetooth characteristic UUID. (0x2c0f)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c0f` Life Cycle Data
 pub const LIFE_CYCLE_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2c0f);
 
-/// Bluetooth characteristic UUID. (0x2c10)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c10` Work Cycle Data
 pub const WORK_CYCLE_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2c10);
 
-/// Bluetooth characteristic UUID. (0x2c11)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c11` Service Cycle Data
 pub const SERVICE_CYCLE_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2c11);
 
-/// Bluetooth characteristic UUID. (0x2c12)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c12` IMD Control
 pub const IMD_CONTROL: BluetoothUuid16 = BluetoothUuid16::new(0x2c12);
 
-/// Bluetooth characteristic UUID. (0x2c13)
+/// Bluetooth characteristic UUID. 
+///
+/// `0x2c13` IMD Historical Data
 pub const IMD_HISTORICAL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2c13);
