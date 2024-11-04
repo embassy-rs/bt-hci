@@ -15,7 +15,7 @@ pub fn update_uuids(
 ) -> Result<(), Box<dyn Error>> {
     // each key in the map is a module name
     // each value is a list of UUIDs, which will be written as constants
-    // in the form `pub const UUID_NAME: BleUuid = BleUuid::new(uuid);`
+    // in the form `pub const UUID_NAME: BluetoothUuid16 = BluetoothUuid16::new(uuid);`
     for (file_name, uuids) in input.iter_mut() {
         let output_name = file_name.replace("_uuids", "").replace(".yaml", "");
         if output_name == "member" || output_name == "sdo" {
@@ -28,7 +28,7 @@ pub fn update_uuids(
             .map(|uuid| {
                 format!(
                     "/// Bluetooth {} UUID. (0x{:04x})
-pub const {}: BleUuid = BleUuid::new(0x{:x});",
+pub const {}: BluetoothUuid16 = BluetoothUuid16::new(0x{:x});",
                     module_name,
                     uuid.uuid,
                     screaming_snake_case(&uuid.name),
@@ -57,7 +57,7 @@ pub fn update_appearance(output_folder: &Path, input: &[Category], commit_hash: 
             if cat.subcategory.is_none() {
                 format!(
                     "/// Bluetooth Appearance UUID. (0x{:04x})
-pub const {}: BleUuid = BleUuid::from_category(0x{:04x}, 0x{:04x});",
+pub const {}: BluetoothUuid16 = BluetoothUuid16::from_category(0x{:04x}, 0x{:04x});",
                     appearance(cat.category, 0x000),
                     screaming_snake_case(&cat.name),
                     cat.category,
@@ -69,7 +69,7 @@ pub const {}: BleUuid = BleUuid::from_category(0x{:04x}, 0x{:04x});",
     //! Appearance {} with subcategories.
     //!
     //! Generic variant named `GENERIC_{}`.\n
-    use super::super::BleUuid;\n
+    use super::super::BluetoothUuid16;\n
     {}
 }}",
                     module_name,
@@ -91,7 +91,7 @@ fn appearance_subcategory(cat: &Category) -> String {
     // add generic subcategory first
     constants.push(format!(
         "/// Bluetooth Appearance UUID. (0x{:04x})
-    pub const GENERIC_{}: BleUuid = BleUuid::from_category(0x{:04x}, 0x{:04x});",
+    pub const GENERIC_{}: BluetoothUuid16 = BluetoothUuid16::from_category(0x{:04x}, 0x{:04x});",
         appearance(cat.category, 0x000),
         screaming_snake_case(&cat.name),
         cat.category,
@@ -101,7 +101,7 @@ fn appearance_subcategory(cat: &Category) -> String {
         for subcat in subcats {
             constants.push(format!(
                 "    /// Bluetooth Appearance UUID. (0x{:04x})
-    pub const {}: BleUuid = BleUuid::from_category(0x{:04x}, 0x{:04x});",
+    pub const {}: BluetoothUuid16 = BluetoothUuid16::from_category(0x{:04x}, 0x{:04x});",
                 appearance(cat.category, subcat.value),
                 screaming_snake_case(&subcat.name),
                 cat.category,
@@ -130,7 +130,7 @@ fn write_rust_file(file: &mut File, name: &str, tokens: String, commit_hash: &st
     writeln!(file, "// Based on https://bitbucket.org/bluetooth-SIG/public.git")?;
     writeln!(file, "// Commit hash: {}\n", commit_hash,)?;
 
-    writeln!(file, "use super::BleUuid;\n")?;
+    writeln!(file, "use super::BluetoothUuid16;\n")?;
 
     write!(file, "{}", tokens)?; // write the file contents
     write!(file, "\n")?; // add a newline at the end

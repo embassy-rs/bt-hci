@@ -4,68 +4,68 @@
 // Based on https://bitbucket.org/bluetooth-SIG/public.git
 // Commit hash: 43c96bbde30dc6937fba488adb22b6406e1b9cad
 
-use super::BleUuid;
+use super::BluetoothUuid16;
 
 /// Bluetooth Appearance UUID. (0x0000)
-pub const UNKNOWN: BleUuid = BleUuid::from_category(0x0000, 0x0000);
+pub const UNKNOWN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0000, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x0040)
-pub const PHONE: BleUuid = BleUuid::from_category(0x0001, 0x0000);
+pub const PHONE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0001, 0x0000);
 
 pub mod computer {
     //! Appearance computer with subcategories.
     //!
     //! Generic variant named `GENERIC_COMPUTER`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0080)
-    pub const GENERIC_COMPUTER: BleUuid = BleUuid::from_category(0x0002, 0x0000);
+    pub const GENERIC_COMPUTER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0081)
-    pub const DESKTOP_WORKSTATION: BleUuid = BleUuid::from_category(0x0002, 0x0001);
+    pub const DESKTOP_WORKSTATION: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0082)
-    pub const SERVER_CLASS_COMPUTER: BleUuid = BleUuid::from_category(0x0002, 0x0002);
+    pub const SERVER_CLASS_COMPUTER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0083)
-    pub const LAPTOP: BleUuid = BleUuid::from_category(0x0002, 0x0003);
+    pub const LAPTOP: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0084)
-    pub const HANDHELD_PCPDA_CLAMSHELL: BleUuid = BleUuid::from_category(0x0002, 0x0004);
+    pub const HANDHELD_PCPDA_CLAMSHELL: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0085)
-    pub const PALM_SIZE_PCPDA: BleUuid = BleUuid::from_category(0x0002, 0x0005);
+    pub const PALM_SIZE_PCPDA: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0086)
-    pub const WEARABLE_COMPUTER_WATCH_SIZE: BleUuid = BleUuid::from_category(0x0002, 0x0006);
+    pub const WEARABLE_COMPUTER_WATCH_SIZE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x0087)
-    pub const TABLET: BleUuid = BleUuid::from_category(0x0002, 0x0007);
+    pub const TABLET: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x0088)
-    pub const DOCKING_STATION: BleUuid = BleUuid::from_category(0x0002, 0x0008);
+    pub const DOCKING_STATION: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x0089)
-    pub const ALL_IN_ONE: BleUuid = BleUuid::from_category(0x0002, 0x0009);
+    pub const ALL_IN_ONE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x008a)
-    pub const BLADE_SERVER: BleUuid = BleUuid::from_category(0x0002, 0x000a);
+    pub const BLADE_SERVER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x000a);
 
     /// Bluetooth Appearance UUID. (0x008b)
-    pub const CONVERTIBLE: BleUuid = BleUuid::from_category(0x0002, 0x000b);
+    pub const CONVERTIBLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x000b);
 
     /// Bluetooth Appearance UUID. (0x008c)
-    pub const DETACHABLE: BleUuid = BleUuid::from_category(0x0002, 0x000c);
+    pub const DETACHABLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x000c);
 
     /// Bluetooth Appearance UUID. (0x008d)
-    pub const IOT_GATEWAY: BleUuid = BleUuid::from_category(0x0002, 0x000d);
+    pub const IOT_GATEWAY: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x000d);
 
     /// Bluetooth Appearance UUID. (0x008e)
-    pub const MINI_PC: BleUuid = BleUuid::from_category(0x0002, 0x000e);
+    pub const MINI_PC: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x000e);
 
     /// Bluetooth Appearance UUID. (0x008f)
-    pub const STICK_PC: BleUuid = BleUuid::from_category(0x0002, 0x000f);
+    pub const STICK_PC: BluetoothUuid16 = BluetoothUuid16::from_category(0x0002, 0x000f);
 }
 
 pub mod watch {
@@ -73,54 +73,54 @@ pub mod watch {
     //!
     //! Generic variant named `GENERIC_WATCH`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x00c0)
-    pub const GENERIC_WATCH: BleUuid = BleUuid::from_category(0x0003, 0x0000);
+    pub const GENERIC_WATCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0003, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x00c1)
-    pub const SPORTS_WATCH: BleUuid = BleUuid::from_category(0x0003, 0x0001);
+    pub const SPORTS_WATCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0003, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x00c2)
-    pub const SMARTWATCH: BleUuid = BleUuid::from_category(0x0003, 0x0002);
+    pub const SMARTWATCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0003, 0x0002);
 }
 
 /// Bluetooth Appearance UUID. (0x0100)
-pub const CLOCK: BleUuid = BleUuid::from_category(0x0004, 0x0000);
+pub const CLOCK: BluetoothUuid16 = BluetoothUuid16::from_category(0x0004, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x0140)
-pub const DISPLAY: BleUuid = BleUuid::from_category(0x0005, 0x0000);
+pub const DISPLAY: BluetoothUuid16 = BluetoothUuid16::from_category(0x0005, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x0180)
-pub const REMOTE_CONTROL: BleUuid = BleUuid::from_category(0x0006, 0x0000);
+pub const REMOTE_CONTROL: BluetoothUuid16 = BluetoothUuid16::from_category(0x0006, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x01c0)
-pub const EYE_GLASSES: BleUuid = BleUuid::from_category(0x0007, 0x0000);
+pub const EYE_GLASSES: BluetoothUuid16 = BluetoothUuid16::from_category(0x0007, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x0200)
-pub const TAG: BleUuid = BleUuid::from_category(0x0008, 0x0000);
+pub const TAG: BluetoothUuid16 = BluetoothUuid16::from_category(0x0008, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x0240)
-pub const KEYRING: BleUuid = BleUuid::from_category(0x0009, 0x0000);
+pub const KEYRING: BluetoothUuid16 = BluetoothUuid16::from_category(0x0009, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x0280)
-pub const MEDIA_PLAYER: BleUuid = BleUuid::from_category(0x000a, 0x0000);
+pub const MEDIA_PLAYER: BluetoothUuid16 = BluetoothUuid16::from_category(0x000a, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x02c0)
-pub const BARCODE_SCANNER: BleUuid = BleUuid::from_category(0x000b, 0x0000);
+pub const BARCODE_SCANNER: BluetoothUuid16 = BluetoothUuid16::from_category(0x000b, 0x0000);
 
 pub mod thermometer {
     //! Appearance thermometer with subcategories.
     //!
     //! Generic variant named `GENERIC_THERMOMETER`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0300)
-    pub const GENERIC_THERMOMETER: BleUuid = BleUuid::from_category(0x000c, 0x0000);
+    pub const GENERIC_THERMOMETER: BluetoothUuid16 = BluetoothUuid16::from_category(0x000c, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0301)
-    pub const EAR_THERMOMETER: BleUuid = BleUuid::from_category(0x000c, 0x0001);
+    pub const EAR_THERMOMETER: BluetoothUuid16 = BluetoothUuid16::from_category(0x000c, 0x0001);
 }
 
 pub mod heart_rate_sensor {
@@ -128,13 +128,13 @@ pub mod heart_rate_sensor {
     //!
     //! Generic variant named `GENERIC_HEART_RATE_SENSOR`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0340)
-    pub const GENERIC_HEART_RATE_SENSOR: BleUuid = BleUuid::from_category(0x000d, 0x0000);
+    pub const GENERIC_HEART_RATE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x000d, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0341)
-    pub const HEART_RATE_BELT: BleUuid = BleUuid::from_category(0x000d, 0x0001);
+    pub const HEART_RATE_BELT: BluetoothUuid16 = BluetoothUuid16::from_category(0x000d, 0x0001);
 }
 
 pub mod blood_pressure {
@@ -142,16 +142,16 @@ pub mod blood_pressure {
     //!
     //! Generic variant named `GENERIC_BLOOD_PRESSURE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0380)
-    pub const GENERIC_BLOOD_PRESSURE: BleUuid = BleUuid::from_category(0x000e, 0x0000);
+    pub const GENERIC_BLOOD_PRESSURE: BluetoothUuid16 = BluetoothUuid16::from_category(0x000e, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0381)
-    pub const ARM_BLOOD_PRESSURE: BleUuid = BleUuid::from_category(0x000e, 0x0001);
+    pub const ARM_BLOOD_PRESSURE: BluetoothUuid16 = BluetoothUuid16::from_category(0x000e, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0382)
-    pub const WRIST_BLOOD_PRESSURE: BleUuid = BleUuid::from_category(0x000e, 0x0002);
+    pub const WRIST_BLOOD_PRESSURE: BluetoothUuid16 = BluetoothUuid16::from_category(0x000e, 0x0002);
 }
 
 pub mod human_interface_device {
@@ -159,63 +159,63 @@ pub mod human_interface_device {
     //!
     //! Generic variant named `GENERIC_HUMAN_INTERFACE_DEVICE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x03c0)
-    pub const GENERIC_HUMAN_INTERFACE_DEVICE: BleUuid = BleUuid::from_category(0x000f, 0x0000);
+    pub const GENERIC_HUMAN_INTERFACE_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x03c1)
-    pub const KEYBOARD: BleUuid = BleUuid::from_category(0x000f, 0x0001);
+    pub const KEYBOARD: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x03c2)
-    pub const MOUSE: BleUuid = BleUuid::from_category(0x000f, 0x0002);
+    pub const MOUSE: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x03c3)
-    pub const JOYSTICK: BleUuid = BleUuid::from_category(0x000f, 0x0003);
+    pub const JOYSTICK: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x03c4)
-    pub const GAMEPAD: BleUuid = BleUuid::from_category(0x000f, 0x0004);
+    pub const GAMEPAD: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x03c5)
-    pub const DIGITIZER_TABLET: BleUuid = BleUuid::from_category(0x000f, 0x0005);
+    pub const DIGITIZER_TABLET: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x03c6)
-    pub const CARD_READER: BleUuid = BleUuid::from_category(0x000f, 0x0006);
+    pub const CARD_READER: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x03c7)
-    pub const DIGITAL_PEN: BleUuid = BleUuid::from_category(0x000f, 0x0007);
+    pub const DIGITAL_PEN: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x03c8)
-    pub const BARCODE_SCANNER: BleUuid = BleUuid::from_category(0x000f, 0x0008);
+    pub const BARCODE_SCANNER: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x03c9)
-    pub const TOUCHPAD: BleUuid = BleUuid::from_category(0x000f, 0x0009);
+    pub const TOUCHPAD: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x03ca)
-    pub const PRESENTATION_REMOTE: BleUuid = BleUuid::from_category(0x000f, 0x000a);
+    pub const PRESENTATION_REMOTE: BluetoothUuid16 = BluetoothUuid16::from_category(0x000f, 0x000a);
 }
 
 /// Bluetooth Appearance UUID. (0x0400)
-pub const GLUCOSE_METER: BleUuid = BleUuid::from_category(0x0010, 0x0000);
+pub const GLUCOSE_METER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0010, 0x0000);
 
 pub mod running_walking_sensor {
     //! Appearance running_walking_sensor with subcategories.
     //!
     //! Generic variant named `GENERIC_RUNNING_WALKING_SENSOR`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0440)
-    pub const GENERIC_RUNNING_WALKING_SENSOR: BleUuid = BleUuid::from_category(0x0011, 0x0000);
+    pub const GENERIC_RUNNING_WALKING_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0011, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0441)
-    pub const IN_SHOE_RUNNING_WALKING_SENSOR: BleUuid = BleUuid::from_category(0x0011, 0x0001);
+    pub const IN_SHOE_RUNNING_WALKING_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0011, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0442)
-    pub const ON_SHOE_RUNNING_WALKING_SENSOR: BleUuid = BleUuid::from_category(0x0011, 0x0002);
+    pub const ON_SHOE_RUNNING_WALKING_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0011, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0443)
-    pub const ON_HIP_RUNNING_WALKING_SENSOR: BleUuid = BleUuid::from_category(0x0011, 0x0003);
+    pub const ON_HIP_RUNNING_WALKING_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0011, 0x0003);
 }
 
 pub mod cycling {
@@ -223,25 +223,25 @@ pub mod cycling {
     //!
     //! Generic variant named `GENERIC_CYCLING`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0480)
-    pub const GENERIC_CYCLING: BleUuid = BleUuid::from_category(0x0012, 0x0000);
+    pub const GENERIC_CYCLING: BluetoothUuid16 = BluetoothUuid16::from_category(0x0012, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0481)
-    pub const CYCLING_COMPUTER: BleUuid = BleUuid::from_category(0x0012, 0x0001);
+    pub const CYCLING_COMPUTER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0012, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0482)
-    pub const SPEED_SENSOR: BleUuid = BleUuid::from_category(0x0012, 0x0002);
+    pub const SPEED_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0012, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0483)
-    pub const CADENCE_SENSOR: BleUuid = BleUuid::from_category(0x0012, 0x0003);
+    pub const CADENCE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0012, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0484)
-    pub const POWER_SENSOR: BleUuid = BleUuid::from_category(0x0012, 0x0004);
+    pub const POWER_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0012, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0485)
-    pub const SPEED_AND_CADENCE_SENSOR: BleUuid = BleUuid::from_category(0x0012, 0x0005);
+    pub const SPEED_AND_CADENCE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0012, 0x0005);
 }
 
 pub mod control_device {
@@ -249,49 +249,49 @@ pub mod control_device {
     //!
     //! Generic variant named `GENERIC_CONTROL_DEVICE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x04c0)
-    pub const GENERIC_CONTROL_DEVICE: BleUuid = BleUuid::from_category(0x0013, 0x0000);
+    pub const GENERIC_CONTROL_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x04c1)
-    pub const SWITCH: BleUuid = BleUuid::from_category(0x0013, 0x0001);
+    pub const SWITCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x04c2)
-    pub const MULTI_SWITCH: BleUuid = BleUuid::from_category(0x0013, 0x0002);
+    pub const MULTI_SWITCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x04c3)
-    pub const BUTTON: BleUuid = BleUuid::from_category(0x0013, 0x0003);
+    pub const BUTTON: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x04c4)
-    pub const SLIDER: BleUuid = BleUuid::from_category(0x0013, 0x0004);
+    pub const SLIDER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x04c5)
-    pub const ROTARY_SWITCH: BleUuid = BleUuid::from_category(0x0013, 0x0005);
+    pub const ROTARY_SWITCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x04c6)
-    pub const TOUCH_PANEL: BleUuid = BleUuid::from_category(0x0013, 0x0006);
+    pub const TOUCH_PANEL: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x04c7)
-    pub const SINGLE_SWITCH: BleUuid = BleUuid::from_category(0x0013, 0x0007);
+    pub const SINGLE_SWITCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x04c8)
-    pub const DOUBLE_SWITCH: BleUuid = BleUuid::from_category(0x0013, 0x0008);
+    pub const DOUBLE_SWITCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x04c9)
-    pub const TRIPLE_SWITCH: BleUuid = BleUuid::from_category(0x0013, 0x0009);
+    pub const TRIPLE_SWITCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x04ca)
-    pub const BATTERY_SWITCH: BleUuid = BleUuid::from_category(0x0013, 0x000a);
+    pub const BATTERY_SWITCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x000a);
 
     /// Bluetooth Appearance UUID. (0x04cb)
-    pub const ENERGY_HARVESTING_SWITCH: BleUuid = BleUuid::from_category(0x0013, 0x000b);
+    pub const ENERGY_HARVESTING_SWITCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x000b);
 
     /// Bluetooth Appearance UUID. (0x04cc)
-    pub const PUSH_BUTTON: BleUuid = BleUuid::from_category(0x0013, 0x000c);
+    pub const PUSH_BUTTON: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x000c);
 
     /// Bluetooth Appearance UUID. (0x04cd)
-    pub const DIAL: BleUuid = BleUuid::from_category(0x0013, 0x000d);
+    pub const DIAL: BluetoothUuid16 = BluetoothUuid16::from_category(0x0013, 0x000d);
 }
 
 pub mod network_device {
@@ -299,19 +299,19 @@ pub mod network_device {
     //!
     //! Generic variant named `GENERIC_NETWORK_DEVICE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0500)
-    pub const GENERIC_NETWORK_DEVICE: BleUuid = BleUuid::from_category(0x0014, 0x0000);
+    pub const GENERIC_NETWORK_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0014, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0501)
-    pub const ACCESS_POINT: BleUuid = BleUuid::from_category(0x0014, 0x0001);
+    pub const ACCESS_POINT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0014, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0502)
-    pub const MESH_DEVICE: BleUuid = BleUuid::from_category(0x0014, 0x0002);
+    pub const MESH_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0014, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0503)
-    pub const MESH_NETWORK_PROXY: BleUuid = BleUuid::from_category(0x0014, 0x0003);
+    pub const MESH_NETWORK_PROXY: BluetoothUuid16 = BluetoothUuid16::from_category(0x0014, 0x0003);
 }
 
 pub mod sensor {
@@ -319,85 +319,85 @@ pub mod sensor {
     //!
     //! Generic variant named `GENERIC_SENSOR`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0540)
-    pub const GENERIC_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0000);
+    pub const GENERIC_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0541)
-    pub const MOTION_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0001);
+    pub const MOTION_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0542)
-    pub const AIR_QUALITY_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0002);
+    pub const AIR_QUALITY_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0543)
-    pub const TEMPERATURE_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0003);
+    pub const TEMPERATURE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0544)
-    pub const HUMIDITY_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0004);
+    pub const HUMIDITY_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0545)
-    pub const LEAK_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0005);
+    pub const LEAK_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0546)
-    pub const SMOKE_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0006);
+    pub const SMOKE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x0547)
-    pub const OCCUPANCY_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0007);
+    pub const OCCUPANCY_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x0548)
-    pub const CONTACT_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0008);
+    pub const CONTACT_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x0549)
-    pub const CARBON_MONOXIDE_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0009);
+    pub const CARBON_MONOXIDE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x054a)
-    pub const CARBON_DIOXIDE_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x000a);
+    pub const CARBON_DIOXIDE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x000a);
 
     /// Bluetooth Appearance UUID. (0x054b)
-    pub const AMBIENT_LIGHT_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x000b);
+    pub const AMBIENT_LIGHT_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x000b);
 
     /// Bluetooth Appearance UUID. (0x054c)
-    pub const ENERGY_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x000c);
+    pub const ENERGY_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x000c);
 
     /// Bluetooth Appearance UUID. (0x054d)
-    pub const COLOR_LIGHT_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x000d);
+    pub const COLOR_LIGHT_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x000d);
 
     /// Bluetooth Appearance UUID. (0x054e)
-    pub const RAIN_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x000e);
+    pub const RAIN_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x000e);
 
     /// Bluetooth Appearance UUID. (0x054f)
-    pub const FIRE_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x000f);
+    pub const FIRE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x000f);
 
     /// Bluetooth Appearance UUID. (0x0550)
-    pub const WIND_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0010);
+    pub const WIND_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0010);
 
     /// Bluetooth Appearance UUID. (0x0551)
-    pub const PROXIMITY_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0011);
+    pub const PROXIMITY_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0011);
 
     /// Bluetooth Appearance UUID. (0x0552)
-    pub const MULTI_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0012);
+    pub const MULTI_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0012);
 
     /// Bluetooth Appearance UUID. (0x0553)
-    pub const FLUSH_MOUNTED_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0013);
+    pub const FLUSH_MOUNTED_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0013);
 
     /// Bluetooth Appearance UUID. (0x0554)
-    pub const CEILING_MOUNTED_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0014);
+    pub const CEILING_MOUNTED_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0014);
 
     /// Bluetooth Appearance UUID. (0x0555)
-    pub const WALL_MOUNTED_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0015);
+    pub const WALL_MOUNTED_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0015);
 
     /// Bluetooth Appearance UUID. (0x0556)
-    pub const MULTISENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0016);
+    pub const MULTISENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0016);
 
     /// Bluetooth Appearance UUID. (0x0557)
-    pub const ENERGY_METER: BleUuid = BleUuid::from_category(0x0015, 0x0017);
+    pub const ENERGY_METER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0017);
 
     /// Bluetooth Appearance UUID. (0x0558)
-    pub const FLAME_DETECTOR: BleUuid = BleUuid::from_category(0x0015, 0x0018);
+    pub const FLAME_DETECTOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0018);
 
     /// Bluetooth Appearance UUID. (0x0559)
-    pub const VEHICLE_TIRE_PRESSURE_SENSOR: BleUuid = BleUuid::from_category(0x0015, 0x0019);
+    pub const VEHICLE_TIRE_PRESSURE_SENSOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0015, 0x0019);
 }
 
 pub mod light_fixtures {
@@ -405,85 +405,85 @@ pub mod light_fixtures {
     //!
     //! Generic variant named `GENERIC_LIGHT_FIXTURES`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0580)
-    pub const GENERIC_LIGHT_FIXTURES: BleUuid = BleUuid::from_category(0x0016, 0x0000);
+    pub const GENERIC_LIGHT_FIXTURES: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0581)
-    pub const WALL_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0001);
+    pub const WALL_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0582)
-    pub const CEILING_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0002);
+    pub const CEILING_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0583)
-    pub const FLOOR_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0003);
+    pub const FLOOR_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0584)
-    pub const CABINET_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0004);
+    pub const CABINET_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0585)
-    pub const DESK_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0005);
+    pub const DESK_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0586)
-    pub const TROFFER_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0006);
+    pub const TROFFER_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x0587)
-    pub const PENDANT_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0007);
+    pub const PENDANT_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x0588)
-    pub const IN_GROUND_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0008);
+    pub const IN_GROUND_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x0589)
-    pub const FLOOD_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0009);
+    pub const FLOOD_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x058a)
-    pub const UNDERWATER_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x000a);
+    pub const UNDERWATER_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x000a);
 
     /// Bluetooth Appearance UUID. (0x058b)
-    pub const BOLLARD_WITH_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x000b);
+    pub const BOLLARD_WITH_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x000b);
 
     /// Bluetooth Appearance UUID. (0x058c)
-    pub const PATHWAY_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x000c);
+    pub const PATHWAY_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x000c);
 
     /// Bluetooth Appearance UUID. (0x058d)
-    pub const GARDEN_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x000d);
+    pub const GARDEN_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x000d);
 
     /// Bluetooth Appearance UUID. (0x058e)
-    pub const POLE_TOP_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x000e);
+    pub const POLE_TOP_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x000e);
 
     /// Bluetooth Appearance UUID. (0x058f)
-    pub const SPOTLIGHT: BleUuid = BleUuid::from_category(0x0016, 0x000f);
+    pub const SPOTLIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x000f);
 
     /// Bluetooth Appearance UUID. (0x0590)
-    pub const LINEAR_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0010);
+    pub const LINEAR_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0010);
 
     /// Bluetooth Appearance UUID. (0x0591)
-    pub const STREET_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0011);
+    pub const STREET_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0011);
 
     /// Bluetooth Appearance UUID. (0x0592)
-    pub const SHELVES_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0012);
+    pub const SHELVES_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0012);
 
     /// Bluetooth Appearance UUID. (0x0593)
-    pub const BAY_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0013);
+    pub const BAY_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0013);
 
     /// Bluetooth Appearance UUID. (0x0594)
-    pub const EMERGENCY_EXIT_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0014);
+    pub const EMERGENCY_EXIT_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0014);
 
     /// Bluetooth Appearance UUID. (0x0595)
-    pub const LIGHT_CONTROLLER: BleUuid = BleUuid::from_category(0x0016, 0x0015);
+    pub const LIGHT_CONTROLLER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0015);
 
     /// Bluetooth Appearance UUID. (0x0596)
-    pub const LIGHT_DRIVER: BleUuid = BleUuid::from_category(0x0016, 0x0016);
+    pub const LIGHT_DRIVER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0016);
 
     /// Bluetooth Appearance UUID. (0x0597)
-    pub const BULB: BleUuid = BleUuid::from_category(0x0016, 0x0017);
+    pub const BULB: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0017);
 
     /// Bluetooth Appearance UUID. (0x0598)
-    pub const LOW_BAY_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0018);
+    pub const LOW_BAY_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0018);
 
     /// Bluetooth Appearance UUID. (0x0599)
-    pub const HIGH_BAY_LIGHT: BleUuid = BleUuid::from_category(0x0016, 0x0019);
+    pub const HIGH_BAY_LIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0016, 0x0019);
 }
 
 pub mod fan {
@@ -491,28 +491,28 @@ pub mod fan {
     //!
     //! Generic variant named `GENERIC_FAN`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x05c0)
-    pub const GENERIC_FAN: BleUuid = BleUuid::from_category(0x0017, 0x0000);
+    pub const GENERIC_FAN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0017, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x05c1)
-    pub const CEILING_FAN: BleUuid = BleUuid::from_category(0x0017, 0x0001);
+    pub const CEILING_FAN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0017, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x05c2)
-    pub const AXIAL_FAN: BleUuid = BleUuid::from_category(0x0017, 0x0002);
+    pub const AXIAL_FAN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0017, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x05c3)
-    pub const EXHAUST_FAN: BleUuid = BleUuid::from_category(0x0017, 0x0003);
+    pub const EXHAUST_FAN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0017, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x05c4)
-    pub const PEDESTAL_FAN: BleUuid = BleUuid::from_category(0x0017, 0x0004);
+    pub const PEDESTAL_FAN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0017, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x05c5)
-    pub const DESK_FAN: BleUuid = BleUuid::from_category(0x0017, 0x0005);
+    pub const DESK_FAN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0017, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x05c6)
-    pub const WALL_FAN: BleUuid = BleUuid::from_category(0x0017, 0x0006);
+    pub const WALL_FAN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0017, 0x0006);
 }
 
 pub mod hvac {
@@ -520,81 +520,81 @@ pub mod hvac {
     //!
     //! Generic variant named `GENERIC_HVAC`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0600)
-    pub const GENERIC_HVAC: BleUuid = BleUuid::from_category(0x0018, 0x0000);
+    pub const GENERIC_HVAC: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0601)
-    pub const THERMOSTAT: BleUuid = BleUuid::from_category(0x0018, 0x0001);
+    pub const THERMOSTAT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0602)
-    pub const HUMIDIFIER: BleUuid = BleUuid::from_category(0x0018, 0x0002);
+    pub const HUMIDIFIER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0603)
-    pub const DE_HUMIDIFIER: BleUuid = BleUuid::from_category(0x0018, 0x0003);
+    pub const DE_HUMIDIFIER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0604)
-    pub const HEATER: BleUuid = BleUuid::from_category(0x0018, 0x0004);
+    pub const HEATER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0605)
-    pub const RADIATOR: BleUuid = BleUuid::from_category(0x0018, 0x0005);
+    pub const RADIATOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0606)
-    pub const BOILER: BleUuid = BleUuid::from_category(0x0018, 0x0006);
+    pub const BOILER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x0607)
-    pub const HEAT_PUMP: BleUuid = BleUuid::from_category(0x0018, 0x0007);
+    pub const HEAT_PUMP: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x0608)
-    pub const INFRARED_HEATER: BleUuid = BleUuid::from_category(0x0018, 0x0008);
+    pub const INFRARED_HEATER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x0609)
-    pub const RADIANT_PANEL_HEATER: BleUuid = BleUuid::from_category(0x0018, 0x0009);
+    pub const RADIANT_PANEL_HEATER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x060a)
-    pub const FAN_HEATER: BleUuid = BleUuid::from_category(0x0018, 0x000a);
+    pub const FAN_HEATER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x000a);
 
     /// Bluetooth Appearance UUID. (0x060b)
-    pub const AIR_CURTAIN: BleUuid = BleUuid::from_category(0x0018, 0x000b);
+    pub const AIR_CURTAIN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0018, 0x000b);
 }
 
 /// Bluetooth Appearance UUID. (0x0640)
-pub const AIR_CONDITIONING: BleUuid = BleUuid::from_category(0x0019, 0x0000);
+pub const AIR_CONDITIONING: BluetoothUuid16 = BluetoothUuid16::from_category(0x0019, 0x0000);
 
 /// Bluetooth Appearance UUID. (0x0680)
-pub const HUMIDIFIER: BleUuid = BleUuid::from_category(0x001a, 0x0000);
+pub const HUMIDIFIER: BluetoothUuid16 = BluetoothUuid16::from_category(0x001a, 0x0000);
 
 pub mod heating {
     //! Appearance heating with subcategories.
     //!
     //! Generic variant named `GENERIC_HEATING`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x06c0)
-    pub const GENERIC_HEATING: BleUuid = BleUuid::from_category(0x001b, 0x0000);
+    pub const GENERIC_HEATING: BluetoothUuid16 = BluetoothUuid16::from_category(0x001b, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x06c1)
-    pub const RADIATOR: BleUuid = BleUuid::from_category(0x001b, 0x0001);
+    pub const RADIATOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x001b, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x06c2)
-    pub const BOILER: BleUuid = BleUuid::from_category(0x001b, 0x0002);
+    pub const BOILER: BluetoothUuid16 = BluetoothUuid16::from_category(0x001b, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x06c3)
-    pub const HEAT_PUMP: BleUuid = BleUuid::from_category(0x001b, 0x0003);
+    pub const HEAT_PUMP: BluetoothUuid16 = BluetoothUuid16::from_category(0x001b, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x06c4)
-    pub const INFRARED_HEATER: BleUuid = BleUuid::from_category(0x001b, 0x0004);
+    pub const INFRARED_HEATER: BluetoothUuid16 = BluetoothUuid16::from_category(0x001b, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x06c5)
-    pub const RADIANT_PANEL_HEATER: BleUuid = BleUuid::from_category(0x001b, 0x0005);
+    pub const RADIANT_PANEL_HEATER: BluetoothUuid16 = BluetoothUuid16::from_category(0x001b, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x06c6)
-    pub const FAN_HEATER: BleUuid = BleUuid::from_category(0x001b, 0x0006);
+    pub const FAN_HEATER: BluetoothUuid16 = BluetoothUuid16::from_category(0x001b, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x06c7)
-    pub const AIR_CURTAIN: BleUuid = BleUuid::from_category(0x001b, 0x0007);
+    pub const AIR_CURTAIN: BluetoothUuid16 = BluetoothUuid16::from_category(0x001b, 0x0007);
 }
 
 pub mod access_control {
@@ -602,37 +602,37 @@ pub mod access_control {
     //!
     //! Generic variant named `GENERIC_ACCESS_CONTROL`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0700)
-    pub const GENERIC_ACCESS_CONTROL: BleUuid = BleUuid::from_category(0x001c, 0x0000);
+    pub const GENERIC_ACCESS_CONTROL: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0701)
-    pub const ACCESS_DOOR: BleUuid = BleUuid::from_category(0x001c, 0x0001);
+    pub const ACCESS_DOOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0702)
-    pub const GARAGE_DOOR: BleUuid = BleUuid::from_category(0x001c, 0x0002);
+    pub const GARAGE_DOOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0703)
-    pub const EMERGENCY_EXIT_DOOR: BleUuid = BleUuid::from_category(0x001c, 0x0003);
+    pub const EMERGENCY_EXIT_DOOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0704)
-    pub const ACCESS_LOCK: BleUuid = BleUuid::from_category(0x001c, 0x0004);
+    pub const ACCESS_LOCK: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0705)
-    pub const ELEVATOR: BleUuid = BleUuid::from_category(0x001c, 0x0005);
+    pub const ELEVATOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0706)
-    pub const WINDOW: BleUuid = BleUuid::from_category(0x001c, 0x0006);
+    pub const WINDOW: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x0707)
-    pub const ENTRANCE_GATE: BleUuid = BleUuid::from_category(0x001c, 0x0007);
+    pub const ENTRANCE_GATE: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x0708)
-    pub const DOOR_LOCK: BleUuid = BleUuid::from_category(0x001c, 0x0008);
+    pub const DOOR_LOCK: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x0709)
-    pub const LOCKER: BleUuid = BleUuid::from_category(0x001c, 0x0009);
+    pub const LOCKER: BluetoothUuid16 = BluetoothUuid16::from_category(0x001c, 0x0009);
 }
 
 pub mod motorized_device {
@@ -640,25 +640,25 @@ pub mod motorized_device {
     //!
     //! Generic variant named `GENERIC_MOTORIZED_DEVICE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0740)
-    pub const GENERIC_MOTORIZED_DEVICE: BleUuid = BleUuid::from_category(0x001d, 0x0000);
+    pub const GENERIC_MOTORIZED_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x001d, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0741)
-    pub const MOTORIZED_GATE: BleUuid = BleUuid::from_category(0x001d, 0x0001);
+    pub const MOTORIZED_GATE: BluetoothUuid16 = BluetoothUuid16::from_category(0x001d, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0742)
-    pub const AWNING: BleUuid = BleUuid::from_category(0x001d, 0x0002);
+    pub const AWNING: BluetoothUuid16 = BluetoothUuid16::from_category(0x001d, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0743)
-    pub const BLINDS_OR_SHADES: BleUuid = BleUuid::from_category(0x001d, 0x0003);
+    pub const BLINDS_OR_SHADES: BluetoothUuid16 = BluetoothUuid16::from_category(0x001d, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0744)
-    pub const CURTAINS: BleUuid = BleUuid::from_category(0x001d, 0x0004);
+    pub const CURTAINS: BluetoothUuid16 = BluetoothUuid16::from_category(0x001d, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0745)
-    pub const SCREEN: BleUuid = BleUuid::from_category(0x001d, 0x0005);
+    pub const SCREEN: BluetoothUuid16 = BluetoothUuid16::from_category(0x001d, 0x0005);
 }
 
 pub mod power_device {
@@ -666,37 +666,37 @@ pub mod power_device {
     //!
     //! Generic variant named `GENERIC_POWER_DEVICE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0780)
-    pub const GENERIC_POWER_DEVICE: BleUuid = BleUuid::from_category(0x001e, 0x0000);
+    pub const GENERIC_POWER_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0781)
-    pub const POWER_OUTLET: BleUuid = BleUuid::from_category(0x001e, 0x0001);
+    pub const POWER_OUTLET: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0782)
-    pub const POWER_STRIP: BleUuid = BleUuid::from_category(0x001e, 0x0002);
+    pub const POWER_STRIP: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0783)
-    pub const PLUG: BleUuid = BleUuid::from_category(0x001e, 0x0003);
+    pub const PLUG: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0784)
-    pub const POWER_SUPPLY: BleUuid = BleUuid::from_category(0x001e, 0x0004);
+    pub const POWER_SUPPLY: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0785)
-    pub const LED_DRIVER: BleUuid = BleUuid::from_category(0x001e, 0x0005);
+    pub const LED_DRIVER: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0786)
-    pub const FLUORESCENT_LAMP_GEAR: BleUuid = BleUuid::from_category(0x001e, 0x0006);
+    pub const FLUORESCENT_LAMP_GEAR: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x0787)
-    pub const HID_LAMP_GEAR: BleUuid = BleUuid::from_category(0x001e, 0x0007);
+    pub const HID_LAMP_GEAR: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x0788)
-    pub const CHARGE_CASE: BleUuid = BleUuid::from_category(0x001e, 0x0008);
+    pub const CHARGE_CASE: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x0789)
-    pub const POWER_BANK: BleUuid = BleUuid::from_category(0x001e, 0x0009);
+    pub const POWER_BANK: BluetoothUuid16 = BluetoothUuid16::from_category(0x001e, 0x0009);
 }
 
 pub mod light_source {
@@ -704,34 +704,34 @@ pub mod light_source {
     //!
     //! Generic variant named `GENERIC_LIGHT_SOURCE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x07c0)
-    pub const GENERIC_LIGHT_SOURCE: BleUuid = BleUuid::from_category(0x001f, 0x0000);
+    pub const GENERIC_LIGHT_SOURCE: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x07c1)
-    pub const INCANDESCENT_LIGHT_BULB: BleUuid = BleUuid::from_category(0x001f, 0x0001);
+    pub const INCANDESCENT_LIGHT_BULB: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x07c2)
-    pub const LED_LAMP: BleUuid = BleUuid::from_category(0x001f, 0x0002);
+    pub const LED_LAMP: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x07c3)
-    pub const HID_LAMP: BleUuid = BleUuid::from_category(0x001f, 0x0003);
+    pub const HID_LAMP: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x07c4)
-    pub const FLUORESCENT_LAMP: BleUuid = BleUuid::from_category(0x001f, 0x0004);
+    pub const FLUORESCENT_LAMP: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x07c5)
-    pub const LED_ARRAY: BleUuid = BleUuid::from_category(0x001f, 0x0005);
+    pub const LED_ARRAY: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x07c6)
-    pub const MULTI_COLOR_LED_ARRAY: BleUuid = BleUuid::from_category(0x001f, 0x0006);
+    pub const MULTI_COLOR_LED_ARRAY: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x07c7)
-    pub const LOW_VOLTAGE_HALOGEN: BleUuid = BleUuid::from_category(0x001f, 0x0007);
+    pub const LOW_VOLTAGE_HALOGEN: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x07c8)
-    pub const ORGANIC_LIGHT_EMITTING_DIODE_OLED: BleUuid = BleUuid::from_category(0x001f, 0x0008);
+    pub const ORGANIC_LIGHT_EMITTING_DIODE_OLED: BluetoothUuid16 = BluetoothUuid16::from_category(0x001f, 0x0008);
 }
 
 pub mod window_covering {
@@ -739,28 +739,28 @@ pub mod window_covering {
     //!
     //! Generic variant named `GENERIC_WINDOW_COVERING`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0800)
-    pub const GENERIC_WINDOW_COVERING: BleUuid = BleUuid::from_category(0x0020, 0x0000);
+    pub const GENERIC_WINDOW_COVERING: BluetoothUuid16 = BluetoothUuid16::from_category(0x0020, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0801)
-    pub const WINDOW_SHADES: BleUuid = BleUuid::from_category(0x0020, 0x0001);
+    pub const WINDOW_SHADES: BluetoothUuid16 = BluetoothUuid16::from_category(0x0020, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0802)
-    pub const WINDOW_BLINDS: BleUuid = BleUuid::from_category(0x0020, 0x0002);
+    pub const WINDOW_BLINDS: BluetoothUuid16 = BluetoothUuid16::from_category(0x0020, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0803)
-    pub const WINDOW_AWNING: BleUuid = BleUuid::from_category(0x0020, 0x0003);
+    pub const WINDOW_AWNING: BluetoothUuid16 = BluetoothUuid16::from_category(0x0020, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0804)
-    pub const WINDOW_CURTAIN: BleUuid = BleUuid::from_category(0x0020, 0x0004);
+    pub const WINDOW_CURTAIN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0020, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0805)
-    pub const EXTERIOR_SHUTTER: BleUuid = BleUuid::from_category(0x0020, 0x0005);
+    pub const EXTERIOR_SHUTTER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0020, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0806)
-    pub const EXTERIOR_SCREEN: BleUuid = BleUuid::from_category(0x0020, 0x0006);
+    pub const EXTERIOR_SCREEN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0020, 0x0006);
 }
 
 pub mod audio_sink {
@@ -768,25 +768,25 @@ pub mod audio_sink {
     //!
     //! Generic variant named `GENERIC_AUDIO_SINK`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0840)
-    pub const GENERIC_AUDIO_SINK: BleUuid = BleUuid::from_category(0x0021, 0x0000);
+    pub const GENERIC_AUDIO_SINK: BluetoothUuid16 = BluetoothUuid16::from_category(0x0021, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0841)
-    pub const STANDALONE_SPEAKER: BleUuid = BleUuid::from_category(0x0021, 0x0001);
+    pub const STANDALONE_SPEAKER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0021, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0842)
-    pub const SOUNDBAR: BleUuid = BleUuid::from_category(0x0021, 0x0002);
+    pub const SOUNDBAR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0021, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0843)
-    pub const BOOKSHELF_SPEAKER: BleUuid = BleUuid::from_category(0x0021, 0x0003);
+    pub const BOOKSHELF_SPEAKER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0021, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0844)
-    pub const STANDMOUNTED_SPEAKER: BleUuid = BleUuid::from_category(0x0021, 0x0004);
+    pub const STANDMOUNTED_SPEAKER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0021, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0845)
-    pub const SPEAKERPHONE: BleUuid = BleUuid::from_category(0x0021, 0x0005);
+    pub const SPEAKERPHONE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0021, 0x0005);
 }
 
 pub mod audio_source {
@@ -794,37 +794,37 @@ pub mod audio_source {
     //!
     //! Generic variant named `GENERIC_AUDIO_SOURCE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0880)
-    pub const GENERIC_AUDIO_SOURCE: BleUuid = BleUuid::from_category(0x0022, 0x0000);
+    pub const GENERIC_AUDIO_SOURCE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0881)
-    pub const MICROPHONE: BleUuid = BleUuid::from_category(0x0022, 0x0001);
+    pub const MICROPHONE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0882)
-    pub const ALARM: BleUuid = BleUuid::from_category(0x0022, 0x0002);
+    pub const ALARM: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0883)
-    pub const BELL: BleUuid = BleUuid::from_category(0x0022, 0x0003);
+    pub const BELL: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0884)
-    pub const HORN: BleUuid = BleUuid::from_category(0x0022, 0x0004);
+    pub const HORN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0885)
-    pub const BROADCASTING_DEVICE: BleUuid = BleUuid::from_category(0x0022, 0x0005);
+    pub const BROADCASTING_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0886)
-    pub const SERVICE_DESK: BleUuid = BleUuid::from_category(0x0022, 0x0006);
+    pub const SERVICE_DESK: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x0887)
-    pub const KIOSK: BleUuid = BleUuid::from_category(0x0022, 0x0007);
+    pub const KIOSK: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x0888)
-    pub const BROADCASTING_ROOM: BleUuid = BleUuid::from_category(0x0022, 0x0008);
+    pub const BROADCASTING_ROOM: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x0889)
-    pub const AUDITORIUM: BleUuid = BleUuid::from_category(0x0022, 0x0009);
+    pub const AUDITORIUM: BluetoothUuid16 = BluetoothUuid16::from_category(0x0022, 0x0009);
 }
 
 pub mod motorized_vehicle {
@@ -832,55 +832,55 @@ pub mod motorized_vehicle {
     //!
     //! Generic variant named `GENERIC_MOTORIZED_VEHICLE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x08c0)
-    pub const GENERIC_MOTORIZED_VEHICLE: BleUuid = BleUuid::from_category(0x0023, 0x0000);
+    pub const GENERIC_MOTORIZED_VEHICLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x08c1)
-    pub const CAR: BleUuid = BleUuid::from_category(0x0023, 0x0001);
+    pub const CAR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x08c2)
-    pub const LARGE_GOODS_VEHICLE: BleUuid = BleUuid::from_category(0x0023, 0x0002);
+    pub const LARGE_GOODS_VEHICLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x08c3)
-    pub const _2_WHEELED_VEHICLE: BleUuid = BleUuid::from_category(0x0023, 0x0003);
+    pub const _2_WHEELED_VEHICLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x08c4)
-    pub const MOTORBIKE: BleUuid = BleUuid::from_category(0x0023, 0x0004);
+    pub const MOTORBIKE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x08c5)
-    pub const SCOOTER: BleUuid = BleUuid::from_category(0x0023, 0x0005);
+    pub const SCOOTER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x08c6)
-    pub const MOPED: BleUuid = BleUuid::from_category(0x0023, 0x0006);
+    pub const MOPED: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x08c7)
-    pub const _3_WHEELED_VEHICLE: BleUuid = BleUuid::from_category(0x0023, 0x0007);
+    pub const _3_WHEELED_VEHICLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x08c8)
-    pub const LIGHT_VEHICLE: BleUuid = BleUuid::from_category(0x0023, 0x0008);
+    pub const LIGHT_VEHICLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x08c9)
-    pub const QUAD_BIKE: BleUuid = BleUuid::from_category(0x0023, 0x0009);
+    pub const QUAD_BIKE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x08ca)
-    pub const MINIBUS: BleUuid = BleUuid::from_category(0x0023, 0x000a);
+    pub const MINIBUS: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x000a);
 
     /// Bluetooth Appearance UUID. (0x08cb)
-    pub const BUS: BleUuid = BleUuid::from_category(0x0023, 0x000b);
+    pub const BUS: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x000b);
 
     /// Bluetooth Appearance UUID. (0x08cc)
-    pub const TROLLEY: BleUuid = BleUuid::from_category(0x0023, 0x000c);
+    pub const TROLLEY: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x000c);
 
     /// Bluetooth Appearance UUID. (0x08cd)
-    pub const AGRICULTURAL_VEHICLE: BleUuid = BleUuid::from_category(0x0023, 0x000d);
+    pub const AGRICULTURAL_VEHICLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x000d);
 
     /// Bluetooth Appearance UUID. (0x08ce)
-    pub const CAMPER_CARAVAN: BleUuid = BleUuid::from_category(0x0023, 0x000e);
+    pub const CAMPER_CARAVAN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x000e);
 
     /// Bluetooth Appearance UUID. (0x08cf)
-    pub const RECREATIONAL_VEHICLE_MOTOR_HOME: BleUuid = BleUuid::from_category(0x0023, 0x000f);
+    pub const RECREATIONAL_VEHICLE_MOTOR_HOME: BluetoothUuid16 = BluetoothUuid16::from_category(0x0023, 0x000f);
 }
 
 pub mod domestic_appliance {
@@ -888,55 +888,55 @@ pub mod domestic_appliance {
     //!
     //! Generic variant named `GENERIC_DOMESTIC_APPLIANCE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0900)
-    pub const GENERIC_DOMESTIC_APPLIANCE: BleUuid = BleUuid::from_category(0x0024, 0x0000);
+    pub const GENERIC_DOMESTIC_APPLIANCE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0901)
-    pub const REFRIGERATOR: BleUuid = BleUuid::from_category(0x0024, 0x0001);
+    pub const REFRIGERATOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0902)
-    pub const FREEZER: BleUuid = BleUuid::from_category(0x0024, 0x0002);
+    pub const FREEZER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0903)
-    pub const OVEN: BleUuid = BleUuid::from_category(0x0024, 0x0003);
+    pub const OVEN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0904)
-    pub const MICROWAVE: BleUuid = BleUuid::from_category(0x0024, 0x0004);
+    pub const MICROWAVE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0905)
-    pub const TOASTER: BleUuid = BleUuid::from_category(0x0024, 0x0005);
+    pub const TOASTER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x0906)
-    pub const WASHING_MACHINE: BleUuid = BleUuid::from_category(0x0024, 0x0006);
+    pub const WASHING_MACHINE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x0907)
-    pub const DRYER: BleUuid = BleUuid::from_category(0x0024, 0x0007);
+    pub const DRYER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x0908)
-    pub const COFFEE_MAKER: BleUuid = BleUuid::from_category(0x0024, 0x0008);
+    pub const COFFEE_MAKER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x0909)
-    pub const CLOTHES_IRON: BleUuid = BleUuid::from_category(0x0024, 0x0009);
+    pub const CLOTHES_IRON: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x090a)
-    pub const CURLING_IRON: BleUuid = BleUuid::from_category(0x0024, 0x000a);
+    pub const CURLING_IRON: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x000a);
 
     /// Bluetooth Appearance UUID. (0x090b)
-    pub const HAIR_DRYER: BleUuid = BleUuid::from_category(0x0024, 0x000b);
+    pub const HAIR_DRYER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x000b);
 
     /// Bluetooth Appearance UUID. (0x090c)
-    pub const VACUUM_CLEANER: BleUuid = BleUuid::from_category(0x0024, 0x000c);
+    pub const VACUUM_CLEANER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x000c);
 
     /// Bluetooth Appearance UUID. (0x090d)
-    pub const ROBOTIC_VACUUM_CLEANER: BleUuid = BleUuid::from_category(0x0024, 0x000d);
+    pub const ROBOTIC_VACUUM_CLEANER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x000d);
 
     /// Bluetooth Appearance UUID. (0x090e)
-    pub const RICE_COOKER: BleUuid = BleUuid::from_category(0x0024, 0x000e);
+    pub const RICE_COOKER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x000e);
 
     /// Bluetooth Appearance UUID. (0x090f)
-    pub const CLOTHES_STEAMER: BleUuid = BleUuid::from_category(0x0024, 0x000f);
+    pub const CLOTHES_STEAMER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0024, 0x000f);
 }
 
 pub mod wearable_audio_device {
@@ -944,22 +944,22 @@ pub mod wearable_audio_device {
     //!
     //! Generic variant named `GENERIC_WEARABLE_AUDIO_DEVICE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0940)
-    pub const GENERIC_WEARABLE_AUDIO_DEVICE: BleUuid = BleUuid::from_category(0x0025, 0x0000);
+    pub const GENERIC_WEARABLE_AUDIO_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0025, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0941)
-    pub const EARBUD: BleUuid = BleUuid::from_category(0x0025, 0x0001);
+    pub const EARBUD: BluetoothUuid16 = BluetoothUuid16::from_category(0x0025, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0942)
-    pub const HEADSET: BleUuid = BleUuid::from_category(0x0025, 0x0002);
+    pub const HEADSET: BluetoothUuid16 = BluetoothUuid16::from_category(0x0025, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0943)
-    pub const HEADPHONES: BleUuid = BleUuid::from_category(0x0025, 0x0003);
+    pub const HEADPHONES: BluetoothUuid16 = BluetoothUuid16::from_category(0x0025, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0944)
-    pub const NECK_BAND: BleUuid = BleUuid::from_category(0x0025, 0x0004);
+    pub const NECK_BAND: BluetoothUuid16 = BluetoothUuid16::from_category(0x0025, 0x0004);
 }
 
 pub mod aircraft {
@@ -967,22 +967,22 @@ pub mod aircraft {
     //!
     //! Generic variant named `GENERIC_AIRCRAFT`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0980)
-    pub const GENERIC_AIRCRAFT: BleUuid = BleUuid::from_category(0x0026, 0x0000);
+    pub const GENERIC_AIRCRAFT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0026, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0981)
-    pub const LIGHT_AIRCRAFT: BleUuid = BleUuid::from_category(0x0026, 0x0001);
+    pub const LIGHT_AIRCRAFT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0026, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0982)
-    pub const MICROLIGHT: BleUuid = BleUuid::from_category(0x0026, 0x0002);
+    pub const MICROLIGHT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0026, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0983)
-    pub const PARAGLIDER: BleUuid = BleUuid::from_category(0x0026, 0x0003);
+    pub const PARAGLIDER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0026, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x0984)
-    pub const LARGE_PASSENGER_AIRCRAFT: BleUuid = BleUuid::from_category(0x0026, 0x0004);
+    pub const LARGE_PASSENGER_AIRCRAFT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0026, 0x0004);
 }
 
 pub mod av_equipment {
@@ -990,40 +990,40 @@ pub mod av_equipment {
     //!
     //! Generic variant named `GENERIC_AV_EQUIPMENT`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x09c0)
-    pub const GENERIC_AV_EQUIPMENT: BleUuid = BleUuid::from_category(0x0027, 0x0000);
+    pub const GENERIC_AV_EQUIPMENT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x09c1)
-    pub const AMPLIFIER: BleUuid = BleUuid::from_category(0x0027, 0x0001);
+    pub const AMPLIFIER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x09c2)
-    pub const RECEIVER: BleUuid = BleUuid::from_category(0x0027, 0x0002);
+    pub const RECEIVER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x09c3)
-    pub const RADIO: BleUuid = BleUuid::from_category(0x0027, 0x0003);
+    pub const RADIO: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x09c4)
-    pub const TUNER: BleUuid = BleUuid::from_category(0x0027, 0x0004);
+    pub const TUNER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x09c5)
-    pub const TURNTABLE: BleUuid = BleUuid::from_category(0x0027, 0x0005);
+    pub const TURNTABLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x09c6)
-    pub const CD_PLAYER: BleUuid = BleUuid::from_category(0x0027, 0x0006);
+    pub const CD_PLAYER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x09c7)
-    pub const DVD_PLAYER: BleUuid = BleUuid::from_category(0x0027, 0x0007);
+    pub const DVD_PLAYER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x09c8)
-    pub const BLURAY_PLAYER: BleUuid = BleUuid::from_category(0x0027, 0x0008);
+    pub const BLURAY_PLAYER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x09c9)
-    pub const OPTICAL_DISC_PLAYER: BleUuid = BleUuid::from_category(0x0027, 0x0009);
+    pub const OPTICAL_DISC_PLAYER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x0009);
 
     /// Bluetooth Appearance UUID. (0x09ca)
-    pub const SET_TOP_BOX: BleUuid = BleUuid::from_category(0x0027, 0x000a);
+    pub const SET_TOP_BOX: BluetoothUuid16 = BluetoothUuid16::from_category(0x0027, 0x000a);
 }
 
 pub mod display_equipment {
@@ -1031,19 +1031,19 @@ pub mod display_equipment {
     //!
     //! Generic variant named `GENERIC_DISPLAY_EQUIPMENT`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0a00)
-    pub const GENERIC_DISPLAY_EQUIPMENT: BleUuid = BleUuid::from_category(0x0028, 0x0000);
+    pub const GENERIC_DISPLAY_EQUIPMENT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0028, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0a01)
-    pub const TELEVISION: BleUuid = BleUuid::from_category(0x0028, 0x0001);
+    pub const TELEVISION: BluetoothUuid16 = BluetoothUuid16::from_category(0x0028, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0a02)
-    pub const MONITOR: BleUuid = BleUuid::from_category(0x0028, 0x0002);
+    pub const MONITOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0028, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0a03)
-    pub const PROJECTOR: BleUuid = BleUuid::from_category(0x0028, 0x0003);
+    pub const PROJECTOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0028, 0x0003);
 }
 
 pub mod hearing_aid {
@@ -1051,19 +1051,19 @@ pub mod hearing_aid {
     //!
     //! Generic variant named `GENERIC_HEARING_AID`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0a40)
-    pub const GENERIC_HEARING_AID: BleUuid = BleUuid::from_category(0x0029, 0x0000);
+    pub const GENERIC_HEARING_AID: BluetoothUuid16 = BluetoothUuid16::from_category(0x0029, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0a41)
-    pub const IN_EAR_HEARING_AID: BleUuid = BleUuid::from_category(0x0029, 0x0001);
+    pub const IN_EAR_HEARING_AID: BluetoothUuid16 = BluetoothUuid16::from_category(0x0029, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0a42)
-    pub const BEHIND_EAR_HEARING_AID: BleUuid = BleUuid::from_category(0x0029, 0x0002);
+    pub const BEHIND_EAR_HEARING_AID: BluetoothUuid16 = BluetoothUuid16::from_category(0x0029, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x0a43)
-    pub const COCHLEAR_IMPLANT: BleUuid = BleUuid::from_category(0x0029, 0x0003);
+    pub const COCHLEAR_IMPLANT: BluetoothUuid16 = BluetoothUuid16::from_category(0x0029, 0x0003);
 }
 
 pub mod gaming {
@@ -1071,16 +1071,16 @@ pub mod gaming {
     //!
     //! Generic variant named `GENERIC_GAMING`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0a80)
-    pub const GENERIC_GAMING: BleUuid = BleUuid::from_category(0x002a, 0x0000);
+    pub const GENERIC_GAMING: BluetoothUuid16 = BluetoothUuid16::from_category(0x002a, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0a81)
-    pub const HOME_VIDEO_GAME_CONSOLE: BleUuid = BleUuid::from_category(0x002a, 0x0001);
+    pub const HOME_VIDEO_GAME_CONSOLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x002a, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0a82)
-    pub const PORTABLE_HANDHELD_CONSOLE: BleUuid = BleUuid::from_category(0x002a, 0x0002);
+    pub const PORTABLE_HANDHELD_CONSOLE: BluetoothUuid16 = BluetoothUuid16::from_category(0x002a, 0x0002);
 }
 
 pub mod signage {
@@ -1088,16 +1088,16 @@ pub mod signage {
     //!
     //! Generic variant named `GENERIC_SIGNAGE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0ac0)
-    pub const GENERIC_SIGNAGE: BleUuid = BleUuid::from_category(0x002b, 0x0000);
+    pub const GENERIC_SIGNAGE: BluetoothUuid16 = BluetoothUuid16::from_category(0x002b, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0ac1)
-    pub const DIGITAL_SIGNAGE: BleUuid = BleUuid::from_category(0x002b, 0x0001);
+    pub const DIGITAL_SIGNAGE: BluetoothUuid16 = BluetoothUuid16::from_category(0x002b, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0ac2)
-    pub const ELECTRONIC_LABEL: BleUuid = BleUuid::from_category(0x002b, 0x0002);
+    pub const ELECTRONIC_LABEL: BluetoothUuid16 = BluetoothUuid16::from_category(0x002b, 0x0002);
 }
 
 pub mod pulse_oximeter {
@@ -1105,76 +1105,76 @@ pub mod pulse_oximeter {
     //!
     //! Generic variant named `GENERIC_PULSE_OXIMETER`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0c40)
-    pub const GENERIC_PULSE_OXIMETER: BleUuid = BleUuid::from_category(0x0031, 0x0000);
+    pub const GENERIC_PULSE_OXIMETER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0031, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0c41)
-    pub const FINGERTIP_PULSE_OXIMETER: BleUuid = BleUuid::from_category(0x0031, 0x0001);
+    pub const FINGERTIP_PULSE_OXIMETER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0031, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0c42)
-    pub const WRIST_WORN_PULSE_OXIMETER: BleUuid = BleUuid::from_category(0x0031, 0x0002);
+    pub const WRIST_WORN_PULSE_OXIMETER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0031, 0x0002);
 }
 
 /// Bluetooth Appearance UUID. (0x0c80)
-pub const WEIGHT_SCALE: BleUuid = BleUuid::from_category(0x0032, 0x0000);
+pub const WEIGHT_SCALE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0032, 0x0000);
 
 pub mod personal_mobility_device {
     //! Appearance personal_mobility_device with subcategories.
     //!
     //! Generic variant named `GENERIC_PERSONAL_MOBILITY_DEVICE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0cc0)
-    pub const GENERIC_PERSONAL_MOBILITY_DEVICE: BleUuid = BleUuid::from_category(0x0033, 0x0000);
+    pub const GENERIC_PERSONAL_MOBILITY_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0033, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0cc1)
-    pub const POWERED_WHEELCHAIR: BleUuid = BleUuid::from_category(0x0033, 0x0001);
+    pub const POWERED_WHEELCHAIR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0033, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0cc2)
-    pub const MOBILITY_SCOOTER: BleUuid = BleUuid::from_category(0x0033, 0x0002);
+    pub const MOBILITY_SCOOTER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0033, 0x0002);
 }
 
 /// Bluetooth Appearance UUID. (0x0d00)
-pub const CONTINUOUS_GLUCOSE_MONITOR: BleUuid = BleUuid::from_category(0x0034, 0x0000);
+pub const CONTINUOUS_GLUCOSE_MONITOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0034, 0x0000);
 
 pub mod insulin_pump {
     //! Appearance insulin_pump with subcategories.
     //!
     //! Generic variant named `GENERIC_INSULIN_PUMP`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0d40)
-    pub const GENERIC_INSULIN_PUMP: BleUuid = BleUuid::from_category(0x0035, 0x0000);
+    pub const GENERIC_INSULIN_PUMP: BluetoothUuid16 = BluetoothUuid16::from_category(0x0035, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0d41)
-    pub const INSULIN_PUMP_DURABLE_PUMP: BleUuid = BleUuid::from_category(0x0035, 0x0001);
+    pub const INSULIN_PUMP_DURABLE_PUMP: BluetoothUuid16 = BluetoothUuid16::from_category(0x0035, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x0d44)
-    pub const INSULIN_PUMP_PATCH_PUMP: BleUuid = BleUuid::from_category(0x0035, 0x0004);
+    pub const INSULIN_PUMP_PATCH_PUMP: BluetoothUuid16 = BluetoothUuid16::from_category(0x0035, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x0d48)
-    pub const INSULIN_PEN: BleUuid = BleUuid::from_category(0x0035, 0x0008);
+    pub const INSULIN_PEN: BluetoothUuid16 = BluetoothUuid16::from_category(0x0035, 0x0008);
 }
 
 /// Bluetooth Appearance UUID. (0x0d80)
-pub const MEDICATION_DELIVERY: BleUuid = BleUuid::from_category(0x0036, 0x0000);
+pub const MEDICATION_DELIVERY: BluetoothUuid16 = BluetoothUuid16::from_category(0x0036, 0x0000);
 
 pub mod spirometer {
     //! Appearance spirometer with subcategories.
     //!
     //! Generic variant named `GENERIC_SPIROMETER`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x0dc0)
-    pub const GENERIC_SPIROMETER: BleUuid = BleUuid::from_category(0x0037, 0x0000);
+    pub const GENERIC_SPIROMETER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0037, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x0dc1)
-    pub const HANDHELD_SPIROMETER: BleUuid = BleUuid::from_category(0x0037, 0x0001);
+    pub const HANDHELD_SPIROMETER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0037, 0x0001);
 }
 
 pub mod outdoor_sports_activity {
@@ -1182,22 +1182,22 @@ pub mod outdoor_sports_activity {
     //!
     //! Generic variant named `GENERIC_OUTDOOR_SPORTS_ACTIVITY`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x1440)
-    pub const GENERIC_OUTDOOR_SPORTS_ACTIVITY: BleUuid = BleUuid::from_category(0x0051, 0x0000);
+    pub const GENERIC_OUTDOOR_SPORTS_ACTIVITY: BluetoothUuid16 = BluetoothUuid16::from_category(0x0051, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x1441)
-    pub const LOCATION_DISPLAY: BleUuid = BleUuid::from_category(0x0051, 0x0001);
+    pub const LOCATION_DISPLAY: BluetoothUuid16 = BluetoothUuid16::from_category(0x0051, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x1442)
-    pub const LOCATION_AND_NAVIGATION_DISPLAY: BleUuid = BleUuid::from_category(0x0051, 0x0002);
+    pub const LOCATION_AND_NAVIGATION_DISPLAY: BluetoothUuid16 = BluetoothUuid16::from_category(0x0051, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x1443)
-    pub const LOCATION_POD: BleUuid = BleUuid::from_category(0x0051, 0x0003);
+    pub const LOCATION_POD: BluetoothUuid16 = BluetoothUuid16::from_category(0x0051, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x1444)
-    pub const LOCATION_AND_NAVIGATION_POD: BleUuid = BleUuid::from_category(0x0051, 0x0004);
+    pub const LOCATION_AND_NAVIGATION_POD: BluetoothUuid16 = BluetoothUuid16::from_category(0x0051, 0x0004);
 }
 
 pub mod industrial_measurement_device {
@@ -1205,28 +1205,28 @@ pub mod industrial_measurement_device {
     //!
     //! Generic variant named `GENERIC_INDUSTRIAL_MEASUREMENT_DEVICE`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x1480)
-    pub const GENERIC_INDUSTRIAL_MEASUREMENT_DEVICE: BleUuid = BleUuid::from_category(0x0052, 0x0000);
+    pub const GENERIC_INDUSTRIAL_MEASUREMENT_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0052, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x1481)
-    pub const TORQUE_TESTING_DEVICE: BleUuid = BleUuid::from_category(0x0052, 0x0001);
+    pub const TORQUE_TESTING_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0052, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x1482)
-    pub const CALIPER: BleUuid = BleUuid::from_category(0x0052, 0x0002);
+    pub const CALIPER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0052, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x1483)
-    pub const DIAL_INDICATOR: BleUuid = BleUuid::from_category(0x0052, 0x0003);
+    pub const DIAL_INDICATOR: BluetoothUuid16 = BluetoothUuid16::from_category(0x0052, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x1484)
-    pub const MICROMETER: BleUuid = BleUuid::from_category(0x0052, 0x0004);
+    pub const MICROMETER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0052, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x1485)
-    pub const HEIGHT_GAUGE: BleUuid = BleUuid::from_category(0x0052, 0x0005);
+    pub const HEIGHT_GAUGE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0052, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x1486)
-    pub const FORCE_GAUGE: BleUuid = BleUuid::from_category(0x0052, 0x0006);
+    pub const FORCE_GAUGE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0052, 0x0006);
 }
 
 pub mod industrial_tools {
@@ -1234,35 +1234,35 @@ pub mod industrial_tools {
     //!
     //! Generic variant named `GENERIC_INDUSTRIAL_TOOLS`.
 
-    use super::super::BleUuid;
+    use super::super::BluetoothUuid16;
 
     /// Bluetooth Appearance UUID. (0x14c0)
-    pub const GENERIC_INDUSTRIAL_TOOLS: BleUuid = BleUuid::from_category(0x0053, 0x0000);
+    pub const GENERIC_INDUSTRIAL_TOOLS: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0000);
 
     /// Bluetooth Appearance UUID. (0x14c1)
-    pub const MACHINE_TOOL_HOLDER: BleUuid = BleUuid::from_category(0x0053, 0x0001);
+    pub const MACHINE_TOOL_HOLDER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0001);
 
     /// Bluetooth Appearance UUID. (0x14c2)
-    pub const GENERIC_CLAMPING_DEVICE: BleUuid = BleUuid::from_category(0x0053, 0x0002);
+    pub const GENERIC_CLAMPING_DEVICE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0002);
 
     /// Bluetooth Appearance UUID. (0x14c3)
-    pub const CLAMPING_JAWSJAW_CHUCK: BleUuid = BleUuid::from_category(0x0053, 0x0003);
+    pub const CLAMPING_JAWSJAW_CHUCK: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0003);
 
     /// Bluetooth Appearance UUID. (0x14c4)
-    pub const CLAMPING_COLLET_CHUCK: BleUuid = BleUuid::from_category(0x0053, 0x0004);
+    pub const CLAMPING_COLLET_CHUCK: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0004);
 
     /// Bluetooth Appearance UUID. (0x14c5)
-    pub const CLAMPING_MANDREL: BleUuid = BleUuid::from_category(0x0053, 0x0005);
+    pub const CLAMPING_MANDREL: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0005);
 
     /// Bluetooth Appearance UUID. (0x14c6)
-    pub const VISE: BleUuid = BleUuid::from_category(0x0053, 0x0006);
+    pub const VISE: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0006);
 
     /// Bluetooth Appearance UUID. (0x14c7)
-    pub const ZERO_POINT_CLAMPING_SYSTEM: BleUuid = BleUuid::from_category(0x0053, 0x0007);
+    pub const ZERO_POINT_CLAMPING_SYSTEM: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0007);
 
     /// Bluetooth Appearance UUID. (0x14c8)
-    pub const TORQUE_WRENCH: BleUuid = BleUuid::from_category(0x0053, 0x0008);
+    pub const TORQUE_WRENCH: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0008);
 
     /// Bluetooth Appearance UUID. (0x14c9)
-    pub const TORQUE_SCREWDRIVER: BleUuid = BleUuid::from_category(0x0053, 0x0009);
+    pub const TORQUE_SCREWDRIVER: BluetoothUuid16 = BluetoothUuid16::from_category(0x0053, 0x0009);
 }

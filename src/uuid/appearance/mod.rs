@@ -10,7 +10,7 @@ mod categories;
 
 pub use categories::*;
 
-use super::BleUuid;
+use super::BluetoothUuid16;
 
 #[cfg(test)]
 mod test {
@@ -18,13 +18,13 @@ mod test {
 
     #[test]
     fn test_appearance() {
-        const CUSTOM_UUID: BleUuid = BleUuid::from_category(0x002, 0x007);
+        const CUSTOM_UUID: BluetoothUuid16 = BluetoothUuid16::from_category(0x002, 0x007);
         assert_eq!(u16::from(CUSTOM_UUID), 0x0087);
         let uuid: u16 = aircraft::LARGE_PASSENGER_AIRCRAFT.into();
         assert_eq!(uuid, 0x0984);
         const LABEL_BYTES: [u8; 2] = signage::ELECTRONIC_LABEL.to_le_bytes();
         assert_eq!(LABEL_BYTES, [0xc2, 0x0a]);
-        const GAMEPAD: BleUuid = power_device::GENERIC_POWER_DEVICE;
+        const GAMEPAD: BluetoothUuid16 = power_device::GENERIC_POWER_DEVICE;
         assert_eq!(u16::from(GAMEPAD), 0x780);
     }
 }
