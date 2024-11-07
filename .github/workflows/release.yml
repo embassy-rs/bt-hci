@@ -4,8 +4,8 @@ on:
   workflow_run:
     workflows: 
       - Check Rust
-    branches: 
-      - add-ci-publish-workflow
+    # branches: 
+    #   - add-ci-publish-workflow
     types:
       - completed
     tags:
