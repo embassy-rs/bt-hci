@@ -1,12 +1,9 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: ["Check Rust"]
-    types:
-      - completed
-    
-
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   debug:
