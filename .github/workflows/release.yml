@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: 
+      - Check Rust
+    branches: 
+      - add-ci-publish-workflow
+    types:
+      - completed
+    tags:
+      - 'v*.*.*' 
+
+jobs:
+  release:
+    # Check to see if the Tests have passed
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+
+    - name: Build project
+      run: cargo build --release
+    
+    - name: Verify Version
+      id: verify_version
+      run: |
+        TAG_VERSION=${GITHUB_REF#refs/tags/v}
+        CARGO_VERSION=$(grep '^version =' Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
+        if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
+          echo "Version mismatch: tag is $TAG_VERSION but Cargo.toml is $CARGO_VERSION"
+          exit 1  # Exits with a non-zero status to fail the workflow
+        fi
+      shell: bash
+    
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Publish to crates.io
+      env:
+        CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      run: |
+        echo "Publishing to crates.io"  
