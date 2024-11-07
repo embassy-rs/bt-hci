@@ -2,10 +2,9 @@ name: Release
 
 on:
   workflow_run:
-    workflows: 
-      - Check Rust
+    workflows: [Check Rust]
     # branches: 
-    #   - add-ci-publish-workflow
+    #   - main
     types:
       - completed
     tags:
