@@ -1,21 +1,15 @@
 name: Release
 
 on:
-  workflow_run:
+  workflow_run: # Only runs on main branch
       workflows: ["Check Rust"]
       types:
-        - requested
+        - completed
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Debug
-        run: echo "Debugging"
   release:
     name: Publish to crates.io
     runs-on: ubuntu-latest
-    # Ensure that the workflow only runs on the main branch
-    # if: startsWith(github.ref, 'refs/tags/v') && github.ref == 'refs/heads/main' && github.event.workflow_run.conclusion == 'success'
+    if: github.event.workflow_run.conclusion == 'success'
     timeout-minutes: 10
     steps:
     - name: Checkout code
@@ -30,7 +24,6 @@ jobs:
       run: cargo build --release
     
     - name: Verify Version
-      id: verify_version
       run: |
         TAG_VERSION=${GITHUB_REF#refs/tags/v}
         CARGO_VERSION=$(grep '^version =' Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
