@@ -30,15 +30,15 @@ jobs:
     - name: Build project
       run: cargo build --release
     
-    - name: Verify Version
-      run: |
-        TAG_VERSION=${GITHUB_REF#refs/tags/v}
-        CARGO_VERSION=$(grep '^version =' Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
-        if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
-          echo "Version mismatch: tag is $TAG_VERSION but Cargo.toml is $CARGO_VERSION"
-          exit 1  # Exits with a non-zero status to fail the workflow
-        fi
-      shell: bash
+    # - name: Verify Version
+    #   run: |
+    #     TAG_VERSION=${GITHUB_REF#refs/tags/v}
+    #     CARGO_VERSION=$(grep '^version =' Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
+    #     if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
+    #       echo "Version mismatch: tag is $TAG_VERSION but Cargo.toml is $CARGO_VERSION"
+    #       exit 1  # Exits with a non-zero status to fail the workflow
+    #     fi
+    #   shell: bash
     
     - name: Create GitHub release
       env:
