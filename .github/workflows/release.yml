@@ -2,18 +2,25 @@ name: Release
 
 on:
   workflow_run:
-    workflows: [Check Rust]
+    workflows: ["Check Rust"]
     types:
       - completed
+    
+
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: echo "Debugging"
+
   release:
-    # Check to see if the Tests have passed
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Publish to crates.io
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
+    # Check to see if the Tests have passed
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
