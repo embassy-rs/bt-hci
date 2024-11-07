@@ -3,12 +3,8 @@ name: Release
 on:
   workflow_run:
     workflows: [Check Rust]
-    # branches: 
-    #   - main
     types:
       - completed
-    tags:
-      - 'v*.*.*' 
 
 jobs:
   release:
