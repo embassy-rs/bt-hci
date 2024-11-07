@@ -6,12 +6,6 @@ on:
       - 'v*'
 
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Debug
-        run: echo "Debugging"
-
   release:
     name: Publish to crates.io
     runs-on: ubuntu-latest
