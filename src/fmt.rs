@@ -1,7 +1,7 @@
 #![macro_use]
 #![allow(unused_macros)]
 
-use core::fmt::{Debug, Display, LowerHex};
+use core::fmt::{ Debug, Display, LowerHex };
 
 #[cfg(all(feature = "defmt", feature = "log"))]
 compile_error!("You may not enable both `defmt` and `log` features.");
@@ -190,14 +190,14 @@ macro_rules! unwrap {
             }
         }
     };
-    ($arg:expr, $($msg:expr),+ $(,)? ) => {
+    ($arg:expr, $($msg:expr),+ $(,)?) => {
         match $crate::fmt::Try::into_result($arg) {
             ::core::result::Result::Ok(t) => t,
             ::core::result::Result::Err(e) => {
                 ::core::panic!("unwrap of `{}` failed: {}: {:?}", ::core::stringify!($arg), ::core::format_args!($($msg,)*), e);
             }
         }
-    }
+    };
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -232,19 +232,19 @@ impl<T, E> Try for Result<T, E> {
 #[allow(unused)]
 pub(crate) struct Bytes<'a>(pub &'a [u8]);
 
-impl<'a> Debug for Bytes<'a> {
+impl Debug for Bytes<'_> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{:#02x?}", self.0)
     }
 }
 
-impl<'a> Display for Bytes<'a> {
+impl Display for Bytes<'_> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{:#02x?}", self.0)
     }
 }
 
-impl<'a> LowerHex for Bytes<'a> {
+impl LowerHex for Bytes<'_> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{:#02x?}", self.0)
     }
