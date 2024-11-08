@@ -58,7 +58,7 @@ impl WriteHci for RemainingBytes<'_> {
     }
 }
 
-impl<'a> AsHciBytes for RemainingBytes<'a> {
+impl AsHciBytes for RemainingBytes<'_> {
     fn as_hci_bytes(&self) -> &[u8] {
         self.0
     }
