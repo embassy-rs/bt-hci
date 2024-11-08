@@ -1165,7 +1165,7 @@ pub struct LeSetPeriodicAdvSubeventDataParams<'a, 'b> {
     pub subevent: &'b [LePeriodicAdvSubeventData<'a>],
 }
 
-impl<'a, 'b> WriteHci for LeSetPeriodicAdvSubeventDataParams<'a, 'b> {
+impl WriteHci for LeSetPeriodicAdvSubeventDataParams<'_, '_> {
     #[inline(always)]
     fn size(&self) -> usize {
         self.adv_handle.size() + self.subevent.size()
