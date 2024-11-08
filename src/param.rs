@@ -1,13 +1,6 @@
 //! Parameter types for HCI command and event packets [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8af7a4d8-7a08-0895-b041-fdf9e27d6508)
 
-use crate::{
-    AsHciBytes,
-    ByteAlignedValue,
-    FixedSizeValue,
-    FromHciBytes,
-    FromHciBytesError,
-    WriteHci,
-};
+use crate::{AsHciBytes, ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
 
 mod cmd_mask;
 mod event_masks;
@@ -21,7 +14,7 @@ pub use cmd_mask::*;
 pub use event_masks::*;
 pub use feature_masks::*;
 pub use le::*;
-pub(crate) use macros::{ param, param_slice };
+pub(crate) use macros::{param, param_slice};
 pub use status::*;
 
 /// A special parameter which takes all remaining bytes in the buffer
@@ -50,10 +43,7 @@ impl WriteHci for RemainingBytes<'_> {
     }
 
     #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(
-        &self,
-        mut writer: W
-    ) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         writer.write_all(self.0).await
     }
 }

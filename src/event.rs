@@ -1,17 +1,10 @@
 //! HCI events [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d21276b6-83d0-cbc3-8295-6ff23b70a0c5)
 
-use crate::cmd::{ Opcode, SyncCmd };
+use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
-    param,
-    ConnHandle,
-    ConnHandleCompletedPackets,
-    CoreSpecificationVersion,
-    Error,
-    LinkType,
-    RemainingBytes,
-    Status,
+    param, ConnHandle, ConnHandleCompletedPackets, CoreSpecificationVersion, Error, LinkType, RemainingBytes, Status,
 };
-use crate::{ FromHciBytes, FromHciBytesError, ReadHci, ReadHciError };
+use crate::{FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
 pub mod le;
 
@@ -207,10 +200,7 @@ impl<'de> FromHciBytes<'de> for Event<'de> {
 impl<'de> ReadHci<'de> for Event<'de> {
     const MAX_LEN: usize = 257;
 
-    fn read_hci<R: embedded_io::Read>(
-        mut reader: R,
-        buf: &'de mut [u8]
-    ) -> Result<Self, ReadHciError<R::Error>> {
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 2];
         reader.read_exact(&mut header)?;
         let (header, _) = EventPacketHeader::from_hci_bytes(&header)?;
@@ -227,7 +217,7 @@ impl<'de> ReadHci<'de> for Event<'de> {
 
     async fn read_hci_async<R: embedded_io_async::Read>(
         mut reader: R,
-        buf: &'de mut [u8]
+        buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
         let mut header = [0; 2];
         reader.read_exact(&mut header).await?;
@@ -274,7 +264,11 @@ impl CommandComplete<'_> {
     pub fn return_params<C: SyncCmd>(&self) -> Result<C::Return, FromHciBytesError> {
         assert_eq!(self.cmd_opcode, C::OPCODE);
         C::Return::from_hci_bytes(&self.return_param_bytes).and_then(|(params, rest)| {
-            if rest.is_empty() { Ok(params) } else { Err(FromHciBytesError::InvalidSize) }
+            if rest.is_empty() {
+                Ok(params)
+            } else {
+                Err(FromHciBytesError::InvalidSize)
+            }
         })
     }
 }

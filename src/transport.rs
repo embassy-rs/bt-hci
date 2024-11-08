@@ -4,30 +4,17 @@ use core::future::Future;
 
 use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
-use embedded_io::{ ErrorType, ReadExactError };
+use embedded_io::{ErrorType, ReadExactError};
 
 use crate::controller::blocking::TryError;
-use crate::{
-    ControllerToHostPacket,
-    FromHciBytesError,
-    HostToControllerPacket,
-    ReadHci,
-    ReadHciError,
-    WriteHci,
-};
+use crate::{ControllerToHostPacket, FromHciBytesError, HostToControllerPacket, ReadHci, ReadHciError, WriteHci};
 
 /// A packet-oriented HCI Transport Layer
 pub trait Transport: embedded_io::ErrorType {
     /// Read a complete HCI packet into the rx buffer
-    fn read<'a>(
-        &self,
-        rx: &'a mut [u8]
-    ) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
+    fn read<'a>(&self, rx: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
     /// Write a complete HCI packet from the tx buffer
-    fn write<T: HostToControllerPacket>(
-        &self,
-        val: &T
-    ) -> impl Future<Output = Result<(), Self::Error>>;
+    fn write<T: HostToControllerPacket>(&self, val: &T) -> impl Future<Output = Result<(), Self::Error>>;
 }
 
 /// HCI transport layer for a split serial bus using the UART transport layer protocol [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/uart-transport-layer.html)
@@ -79,11 +66,7 @@ impl<E: embedded_io::Error> From<FromHciBytesError> for Error<E> {
     }
 }
 
-impl<M: RawMutex, R: embedded_io_async::Read, W: embedded_io_async::Write> SerialTransport<
-    M,
-    R,
-    W
-> {
+impl<M: RawMutex, R: embedded_io_async::Read, W: embedded_io_async::Write> SerialTransport<M, R, W> {
     /// Create a new instance.
     pub fn new(reader: R, writer: W) -> Self {
         Self {
@@ -94,45 +77,46 @@ impl<M: RawMutex, R: embedded_io_async::Read, W: embedded_io_async::Write> Seria
 }
 
 impl<
-    M: RawMutex,
-    R: embedded_io::ErrorType<Error = E>,
-    W: embedded_io::ErrorType<Error = E>,
-    E: embedded_io::Error
-> ErrorType for SerialTransport<M, R, W> {
+        M: RawMutex,
+        R: embedded_io::ErrorType<Error = E>,
+        W: embedded_io::ErrorType<Error = E>,
+        E: embedded_io::Error,
+    > ErrorType for SerialTransport<M, R, W>
+{
     type Error = Error<E>;
 }
 
 impl<
-    M: RawMutex,
-    R: embedded_io_async::Read<Error = E>,
-    W: embedded_io_async::Write<Error = E>,
-    E: embedded_io::Error
-> Transport for SerialTransport<M, R, W> {
+        M: RawMutex,
+        R: embedded_io_async::Read<Error = E>,
+        W: embedded_io_async::Write<Error = E>,
+        E: embedded_io::Error,
+    > Transport for SerialTransport<M, R, W>
+{
     async fn read<'a>(&self, rx: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, Self::Error> {
         let mut r = self.reader.lock().await;
-        ControllerToHostPacket::read_hci_async(&mut *r, rx).await.map_err(Error::Read)
+        ControllerToHostPacket::read_hci_async(&mut *r, rx)
+            .await
+            .map_err(Error::Read)
     }
 
     async fn write<T: HostToControllerPacket>(&self, tx: &T) -> Result<(), Self::Error> {
         let mut w = self.writer.lock().await;
         WithIndicator(tx)
-            .write_hci_async(&mut *w).await
+            .write_hci_async(&mut *w)
+            .await
             .map_err(|e| Error::Write(e))
     }
 }
 
-impl<
-    M: RawMutex,
-    R: embedded_io::Read<Error = E>,
-    W: embedded_io::Write<Error = E>,
-    E: embedded_io::Error
-> blocking::Transport for SerialTransport<M, R, W> {
-    fn read<'a>(
-        &self,
-        rx: &'a mut [u8]
-    ) -> Result<ControllerToHostPacket<'a>, TryError<Self::Error>> {
+impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error = E>, E: embedded_io::Error>
+    blocking::Transport for SerialTransport<M, R, W>
+{
+    fn read<'a>(&self, rx: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, TryError<Self::Error>> {
         let mut r = self.reader.try_lock().map_err(|_| TryError::Busy)?;
-        ControllerToHostPacket::read_hci(&mut *r, rx).map_err(Error::Read).map_err(TryError::Error)
+        ControllerToHostPacket::read_hci(&mut *r, rx)
+            .map_err(Error::Read)
+            .map_err(TryError::Error)
     }
 
     fn write<T: HostToControllerPacket>(&self, tx: &T) -> Result<(), TryError<Self::Error>> {
@@ -170,10 +154,7 @@ impl<T: HostToControllerPacket> WriteHci for WithIndicator<'_, T> {
     }
 
     #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(
-        &self,
-        mut writer: W
-    ) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
         T::KIND.write_hci_async(&mut writer).await?;
         self.0.write_hci_async(writer).await
     }
@@ -187,10 +168,7 @@ pub mod blocking {
     /// A packet-oriented HCI Transport Layer
     pub trait Transport: embedded_io::ErrorType {
         /// Read a complete HCI packet into the rx buffer
-        fn read<'a>(
-            &self,
-            rx: &'a mut [u8]
-        ) -> Result<ControllerToHostPacket<'a>, TryError<Self::Error>>;
+        fn read<'a>(&self, rx: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, TryError<Self::Error>>;
         /// Write a complete HCI packet from the tx buffer
         fn write<T: HostToControllerPacket>(&self, val: &T) -> Result<(), TryError<Self::Error>>;
     }
