@@ -32,7 +32,7 @@ impl<'de> FromHciBytes<'de> for &'de bool {
     }
 }
 
-impl<'a> WriteHci for &'a [u8] {
+impl WriteHci for &[u8] {
     #[inline(always)]
     fn size(&self) -> usize {
         self.len()

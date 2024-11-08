@@ -556,7 +556,7 @@ param! {
     }
 }
 
-impl<'a> LeAdvReports<'a> {
+impl LeAdvReports<'_> {
     /// Check if there are more reports available.
     pub fn is_empty(&self) -> bool {
         self.num_reports == 0
@@ -608,13 +608,13 @@ impl<'a> Iterator for LeAdvReportsIter<'a> {
     }
 }
 
-impl<'a> ExactSizeIterator for LeAdvReportsIter<'a> {
+impl ExactSizeIterator for LeAdvReportsIter<'_> {
     fn len(&self) -> usize {
         self.len
     }
 }
 
-impl<'a> FusedIterator for LeAdvReportsIter<'a> {}
+impl FusedIterator for LeAdvReportsIter<'_> {}
 
 param! {
     struct LeExtAdvReport<'a> {
@@ -633,7 +633,7 @@ param! {
     }
 }
 
-impl<'a> LeExtAdvReports<'a> {
+impl LeExtAdvReports<'_> {
     /// Check if there are more reports available.
     pub fn is_empty(&self) -> bool {
         self.num_reports == 0
@@ -685,13 +685,13 @@ impl<'a> Iterator for LeExtAdvReportsIter<'a> {
     }
 }
 
-impl<'a> ExactSizeIterator for LeExtAdvReportsIter<'a> {
+impl ExactSizeIterator for LeExtAdvReportsIter<'_> {
     fn len(&self) -> usize {
         self.len
     }
 }
 
-impl<'a> FusedIterator for LeExtAdvReportsIter<'a> {}
+impl FusedIterator for LeExtAdvReportsIter<'_> {}
 
 param! {
     struct LePeriodicAdvSubeventData<'a> {

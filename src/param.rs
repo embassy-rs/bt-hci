@@ -23,7 +23,7 @@ pub use status::*;
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct RemainingBytes<'a>(&'a [u8]);
 
-impl<'a> core::ops::Deref for RemainingBytes<'a> {
+impl core::ops::Deref for RemainingBytes<'_> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {
@@ -31,7 +31,7 @@ impl<'a> core::ops::Deref for RemainingBytes<'a> {
     }
 }
 
-impl<'a> WriteHci for RemainingBytes<'a> {
+impl WriteHci for RemainingBytes<'_> {
     #[inline(always)]
     fn size(&self) -> usize {
         self.0.len()
@@ -48,7 +48,7 @@ impl<'a> WriteHci for RemainingBytes<'a> {
     }
 }
 
-impl<'a> AsHciBytes for RemainingBytes<'a> {
+impl AsHciBytes for RemainingBytes<'_> {
     fn as_hci_bytes(&self) -> &[u8] {
         self.0
     }
@@ -195,7 +195,7 @@ impl<const US: u16> ExtDuration<US> {
     /// Create a new instance from raw value.
     #[inline(always)]
     pub fn from_u32(val: u32) -> Self {
-        assert!(val < (1 << 24));
+        assert!(val < 1 << 24);
         Self(*unwrap!(val.to_le_bytes().first_chunk()))
     }
 
@@ -291,10 +291,10 @@ impl CoreSpecificationVersion {
     pub const VERSION_4_1: CoreSpecificationVersion = CoreSpecificationVersion(0x07);
     pub const VERSION_4_2: CoreSpecificationVersion = CoreSpecificationVersion(0x08);
     pub const VERSION_5_0: CoreSpecificationVersion = CoreSpecificationVersion(0x09);
-    pub const VERSION_5_1: CoreSpecificationVersion = CoreSpecificationVersion(0x0A);
-    pub const VERSION_5_2: CoreSpecificationVersion = CoreSpecificationVersion(0x0B);
-    pub const VERSION_5_3: CoreSpecificationVersion = CoreSpecificationVersion(0x0C);
-    pub const VERSION_5_4: CoreSpecificationVersion = CoreSpecificationVersion(0x0D);
+    pub const VERSION_5_1: CoreSpecificationVersion = CoreSpecificationVersion(0x0a);
+    pub const VERSION_5_2: CoreSpecificationVersion = CoreSpecificationVersion(0x0b);
+    pub const VERSION_5_3: CoreSpecificationVersion = CoreSpecificationVersion(0x0c);
+    pub const VERSION_5_4: CoreSpecificationVersion = CoreSpecificationVersion(0x0d);
 }
 
 unsafe impl ByteAlignedValue for CoreSpecificationVersion {}

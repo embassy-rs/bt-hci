@@ -141,7 +141,7 @@ impl<'a, T: HostToControllerPacket> WithIndicator<'a, T> {
     }
 }
 
-impl<'a, T: HostToControllerPacket> WriteHci for WithIndicator<'a, T> {
+impl<T: HostToControllerPacket> WriteHci for WithIndicator<'_, T> {
     #[inline(always)]
     fn size(&self) -> usize {
         1 + self.0.size()
