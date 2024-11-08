@@ -1,6 +1,13 @@
 //! Parameter types for HCI command and event packets [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8af7a4d8-7a08-0895-b041-fdf9e27d6508)
 
-use crate::{AsHciBytes, ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{
+    AsHciBytes,
+    ByteAlignedValue,
+    FixedSizeValue,
+    FromHciBytes,
+    FromHciBytesError,
+    WriteHci,
+};
 
 mod cmd_mask;
 mod event_masks;
@@ -14,7 +21,7 @@ pub use cmd_mask::*;
 pub use event_masks::*;
 pub use feature_masks::*;
 pub use le::*;
-pub(crate) use macros::{param, param_slice};
+pub(crate) use macros::{ param, param_slice };
 pub use status::*;
 
 /// A special parameter which takes all remaining bytes in the buffer
@@ -23,7 +30,7 @@ pub use status::*;
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct RemainingBytes<'a>(&'a [u8]);
 
-impl<'a> core::ops::Deref for RemainingBytes<'a> {
+impl core::ops::Deref for RemainingBytes<'_> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {
@@ -31,7 +38,7 @@ impl<'a> core::ops::Deref for RemainingBytes<'a> {
     }
 }
 
-impl<'a> WriteHci for RemainingBytes<'a> {
+impl WriteHci for RemainingBytes<'_> {
     #[inline(always)]
     fn size(&self) -> usize {
         self.0.len()
@@ -43,7 +50,10 @@ impl<'a> WriteHci for RemainingBytes<'a> {
     }
 
     #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(
+        &self,
+        mut writer: W
+    ) -> Result<(), W::Error> {
         writer.write_all(self.0).await
     }
 }
@@ -195,7 +205,7 @@ impl<const US: u16> ExtDuration<US> {
     /// Create a new instance from raw value.
     #[inline(always)]
     pub fn from_u32(val: u32) -> Self {
-        assert!(val < (1 << 24));
+        assert!(val < 1 << 24);
         Self(*unwrap!(val.to_le_bytes().first_chunk()))
     }
 
@@ -291,10 +301,10 @@ impl CoreSpecificationVersion {
     pub const VERSION_4_1: CoreSpecificationVersion = CoreSpecificationVersion(0x07);
     pub const VERSION_4_2: CoreSpecificationVersion = CoreSpecificationVersion(0x08);
     pub const VERSION_5_0: CoreSpecificationVersion = CoreSpecificationVersion(0x09);
-    pub const VERSION_5_1: CoreSpecificationVersion = CoreSpecificationVersion(0x0A);
-    pub const VERSION_5_2: CoreSpecificationVersion = CoreSpecificationVersion(0x0B);
-    pub const VERSION_5_3: CoreSpecificationVersion = CoreSpecificationVersion(0x0C);
-    pub const VERSION_5_4: CoreSpecificationVersion = CoreSpecificationVersion(0x0D);
+    pub const VERSION_5_1: CoreSpecificationVersion = CoreSpecificationVersion(0x0a);
+    pub const VERSION_5_2: CoreSpecificationVersion = CoreSpecificationVersion(0x0b);
+    pub const VERSION_5_3: CoreSpecificationVersion = CoreSpecificationVersion(0x0c);
+    pub const VERSION_5_4: CoreSpecificationVersion = CoreSpecificationVersion(0x0d);
 }
 
 unsafe impl ByteAlignedValue for CoreSpecificationVersion {}

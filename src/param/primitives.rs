@@ -1,4 +1,4 @@
-use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci};
+use crate::{ ByteAlignedValue, FixedSizeValue, FromHciBytes, FromHciBytesError, WriteHci };
 
 unsafe impl FixedSizeValue for () {
     #[inline(always)]
@@ -32,7 +32,7 @@ impl<'de> FromHciBytes<'de> for &'de bool {
     }
 }
 
-impl<'a> WriteHci for &'a [u8] {
+impl WriteHci for &[u8] {
     #[inline(always)]
     fn size(&self) -> usize {
         self.len()
@@ -45,7 +45,10 @@ impl<'a> WriteHci for &'a [u8] {
     }
 
     #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(
+        &self,
+        mut writer: W
+    ) -> Result<(), W::Error> {
         writer.write_all(&[self.size() as u8]).await?;
         writer.write_all(self).await
     }
@@ -70,7 +73,9 @@ impl<'de, T: ByteAlignedValue, const N: usize> FromHciBytes<'de> for &'de [T; N]
 impl<T: WriteHci> WriteHci for Option<T> {
     #[inline(always)]
     fn size(&self) -> usize {
-        self.as_ref().map(|x| x.size()).unwrap_or_default()
+        self.as_ref()
+            .map(|x| x.size())
+            .unwrap_or_default()
     }
 
     #[inline(always)]
@@ -82,7 +87,10 @@ impl<T: WriteHci> WriteHci for Option<T> {
     }
 
     #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
+    async fn write_hci_async<W: embedded_io_async::Write>(
+        &self,
+        writer: W
+    ) -> Result<(), W::Error> {
         match self {
             Some(val) => val.write_hci_async(writer).await,
             None => Ok(()),
