@@ -61,7 +61,6 @@ jobs:
 
     - name: Publish to crates.io
       env:
-        CARGO_REGISTRIES_STAGING_TOKEN: ${{ secrets.CARGO_REGISTRIES_STAGING_TOKEN }}
         CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
       # Publish to the main registry
       run: |
