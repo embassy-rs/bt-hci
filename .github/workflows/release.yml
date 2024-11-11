@@ -69,5 +69,6 @@ jobs:
         cargo publish
       # To publish to the staging/testing registry, uncomment the following lines
       # run: |
-      #   echo "Publishing to staging"
-      #   cargo publish --registry=staging
+      #   echo "Performing dry-run publish to crates.io"
+      #   cargo publish --dry-run
+  
