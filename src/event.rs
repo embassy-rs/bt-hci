@@ -28,9 +28,7 @@ macro_rules! events {
     (
         $(
             $(#[$attrs:meta])*
-            struct $name:ident $(< $life:lifetime >)?
-            ($code:expr)
-            {
+            struct $name:ident $(< $life:lifetime >)?($code:expr) {
                 $(
                     $(#[$field_attrs:meta])*
                     $field:ident: $ty:ty
