@@ -1,9 +1,11 @@
-[![crates.io][crates-badge]][crates-url] [![docs.rs][docs-badge]][docs-url]
+[![crates.io][crates-badge]][crates-url] [![ci][ci-badge]][ci-url] [![docs.rs][docs-badge]][docs-url]
 
 [crates-badge]: https://img.shields.io/crates/v/bt-hci
 [crates-url]: https://crates.io/crates/bt-hci
 [docs-badge]: https://docs.rs/bt-hci/badge.svg
 [docs-url]: https://docs.rs/bt-hci
+[ci-badge]: https://github.com/embassy-rs/bt-hci/actions/workflows/check.yml/badge.svg
+[ci-url]: https://github.com/embassy-rs/bt-hci/actions/workflows/check.yml
 
 # bt-hci
 
