@@ -232,7 +232,7 @@ impl<'de> ReadHci<'de> for Event<'de> {
     }
 }
 
-impl<'a> CommandComplete<'a> {
+impl CommandComplete<'_> {
     /// Gets the connection handle associated with the command that has completed.
     ///
     /// For commands that return the connection handle provided as a parameter as

@@ -23,7 +23,7 @@ pub use status::*;
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct RemainingBytes<'a>(&'a [u8]);
 
-impl<'a> core::ops::Deref for RemainingBytes<'a> {
+impl core::ops::Deref for RemainingBytes<'_> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {
@@ -31,7 +31,7 @@ impl<'a> core::ops::Deref for RemainingBytes<'a> {
     }
 }
 
-impl<'a> WriteHci for RemainingBytes<'a> {
+impl WriteHci for RemainingBytes<'_> {
     #[inline(always)]
     fn size(&self) -> usize {
         self.0.len()
@@ -48,7 +48,7 @@ impl<'a> WriteHci for RemainingBytes<'a> {
     }
 }
 
-impl<'a> AsHciBytes for RemainingBytes<'a> {
+impl AsHciBytes for RemainingBytes<'_> {
     fn as_hci_bytes(&self) -> &[u8] {
         self.0
     }

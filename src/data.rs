@@ -186,7 +186,7 @@ impl<'de> ReadHci<'de> for AclPacket<'de> {
     }
 }
 
-impl<'a> WriteHci for AclPacket<'a> {
+impl WriteHci for AclPacket<'_> {
     #[inline(always)]
     fn size(&self) -> usize {
         4 + self.data.len()
@@ -213,7 +213,7 @@ impl<'a> WriteHci for AclPacket<'a> {
     }
 }
 
-impl<'a> HostToControllerPacket for AclPacket<'a> {
+impl HostToControllerPacket for AclPacket<'_> {
     const KIND: PacketKind = PacketKind::AclData;
 }
 
@@ -364,7 +364,7 @@ impl<'de> ReadHci<'de> for SyncPacket<'de> {
     }
 }
 
-impl<'a> WriteHci for SyncPacket<'a> {
+impl WriteHci for SyncPacket<'_> {
     #[inline(always)]
     fn size(&self) -> usize {
         4 + self.data.len()
@@ -391,7 +391,7 @@ impl<'a> WriteHci for SyncPacket<'a> {
     }
 }
 
-impl<'a> HostToControllerPacket for SyncPacket<'a> {
+impl HostToControllerPacket for SyncPacket<'_> {
     const KIND: PacketKind = PacketKind::SyncData;
 }
 
@@ -647,7 +647,7 @@ impl<'de> ReadHci<'de> for IsoPacket<'de> {
     }
 }
 
-impl<'a> WriteHci for IsoPacket<'a> {
+impl WriteHci for IsoPacket<'_> {
     #[inline(always)]
     fn size(&self) -> usize {
         4 + self.data_load_len()
@@ -680,7 +680,7 @@ impl<'a> WriteHci for IsoPacket<'a> {
     }
 }
 
-impl<'a> HostToControllerPacket for IsoPacket<'a> {
+impl HostToControllerPacket for IsoPacket<'_> {
     const KIND: PacketKind = PacketKind::IsoData;
 }
 
