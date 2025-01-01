@@ -104,11 +104,10 @@ mod test {
     #[cfg(feature = "uuid")]
     #[test]
     fn test_uuid_conversion() {
-        use core::str::FromStr;
+        let result = uuid::Uuid::from(BluetoothUuid16::new(0x1234));
+        let expected = "00001234-0000-0010-8000-00805f9b34fb".parse::<uuid::Uuid>().unwrap();
 
-        const BLE_UUID: BluetoothUuid16 = BluetoothUuid16::new(0x1234);
-        let result: uuid::Uuid = BLE_UUID.into();
-        let expected = uuid::Uuid::from_str("00001234-0000-0010-8000-00805f9b34fb").unwrap();
-        assert_eq!(result, expected);
+        // defmt::Format not implemented on uuid::Uuid
+        assert_eq!(result.into_bytes(), expected.into_bytes());
     }
 }
