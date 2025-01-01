@@ -380,7 +380,7 @@ param! {
 param! {
     bitfield LeDataRelatedAddrChangeReasons[1] {
         (0, change_on_adv_data_change, set_change_addr_on_adv_data_changes);
-        (1, change_on_scan_repsonse_data_change, set_change_addr_on_scan_response_data_changes);
+        (1, change_on_scan_response_data_change, set_change_addr_on_scan_response_data_changes);
     }
 }
 

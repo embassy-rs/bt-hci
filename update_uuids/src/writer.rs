@@ -48,7 +48,7 @@ pub const {}: BluetoothUuid16 = BluetoothUuid16::new(0x{:x});",
 
 /// Update the Appearance values in the source code
 ///
-/// Subcatagories are dealt with as submodules.
+/// Subcategories are dealt with as submodules.
 pub fn update_appearance(output_folder: &Path, input: &[Category], commit_hash: &str) -> Result<(), Box<dyn Error>> {
     let output_folder = output_folder.join("appearance");
     let (module_name, mut file) = setup_rust_file("categories", output_folder)?;
