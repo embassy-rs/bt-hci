@@ -98,7 +98,7 @@ impl ConnHandle {
     }
 }
 
-/// A 16-bit duration. The `US` generic paramter indicates the timebase in µs.
+/// A 16-bit duration. The `US` generic parameter indicates the timebase in µs.
 #[repr(transparent)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
