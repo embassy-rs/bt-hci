@@ -21,7 +21,7 @@ log = { version = "0.4", optional = true }
 embedded-io = "0.6.0"
 embedded-io-async = "0.6.0"
 embassy-sync = "0.6"
-embassy-time = { version = "0.4", optional = true }
+embassy-time = { version = ">=0.3, <=0.5", optional = true }
 heapless = "0.8"
 futures-intrusive = { version = "0.5.0", default-features = false }
 uuid = { version = "1.11.0", default-features = false, optional = true }
