@@ -19,7 +19,7 @@ impl<'de> FromHciBytes<'de> for &'static () {
 unsafe impl FixedSizeValue for bool {
     #[inline(always)]
     fn is_valid(data: &[u8]) -> bool {
-        data.len() == 1 && data[0] < 2
+        !data.is_empty() && data[0] < 2
     }
 }
 
