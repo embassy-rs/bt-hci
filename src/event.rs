@@ -59,16 +59,17 @@ macro_rules! events {
 
         impl<'a> Event<'a> {
             fn from_header_hci_bytes(header: EventPacketHeader, data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
+                let (data, rest) = if data.len() < usize::from(header.params_len) {
+                    return Err(FromHciBytesError::InvalidSize);
+                } else {
+                    data.split_at(usize::from(header.params_len))
+                };
+
                 match header.code {
-                    $($code => $name::from_hci_bytes(data).map(|(x, rest)| (Self::$name(x), rest)),)+
-                    0x3e => LeEvent::from_hci_bytes(data).map(|(x, rest)| (Self::Le(x), rest)),
+                    $($code => $name::from_hci_bytes_complete(data).map(|x| (Self::$name(x), rest)),)+
+                    0x3e => LeEvent::from_hci_bytes_complete(data).map(|x| (Self::Le(x), rest)),
                     _ => {
-                        if data.len() < usize::from(header.params_len) {
-                            Err(FromHciBytesError::InvalidSize)
-                        } else {
-                            let (data, rest) = data.split_at(usize::from(header.params_len));
-                            Ok((Self::Unknown { code: header.code, params: data }, rest))
-                        }
+                        Ok((Self::Unknown { code: header.code, params: data }, rest))
                     }
                 }
             }
