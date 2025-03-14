@@ -15,4 +15,6 @@ cargo clippy --features defmt,embassy-time
 cargo clippy --features log
 cargo clippy --features log,embassy-time
 
-cargo test --features embassy-time
+cargo clippy --features serde
+
+cargo test --features embassy-time,serde
