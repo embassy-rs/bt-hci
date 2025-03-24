@@ -114,6 +114,14 @@ impl<'a> AclPacket<'a> {
         ConnHandle::new(self.handle & 0xfff)
     }
 
+    /// Raw handle value including the `Packet_Boundary_Flag` and `Broadcast_Flag`.
+    pub fn header(&self) -> AclPacketHeader {
+        AclPacketHeader {
+            handle: self.handle,
+            data_len: self.data.len() as u16,
+        }
+    }
+
     /// The `Packet_Boundary_Flag` of the packet
     pub fn boundary_flag(&self) -> AclPacketBoundary {
         match (self.handle >> 12) & 0x03 {
