@@ -335,6 +335,9 @@ impl ConnHandleCompletedPackets {
 
 #[cfg(test)]
 mod tests {
+    #[cfg(feature = "serde")]
+    use postcard;
+
     use super::*;
 
     #[test]
@@ -343,5 +346,30 @@ mod tests {
 
         assert_eq!(completed.handle().unwrap(), ConnHandle::new(42));
         assert_eq!(completed.num_completed_packets().unwrap(), 2334);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_serialize_bdaddr() {
+        let bytes = [0x01, 0xaa, 0x55, 0x04, 0x05, 0xfe];
+
+        let address = BdAddr::new(bytes);
+
+        let mut buffer = [0u8; 32];
+        let vykort = postcard::to_slice(&address, &mut buffer).unwrap();
+
+        assert_eq!(vykort, &bytes);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_deserialize_bdaddr() {
+        let bytes = [0xff, 0x5a, 0xa5, 0x00, 0x05, 0xfe];
+
+        let address = postcard::from_bytes::<BdAddr>(&bytes).unwrap();
+
+        let expected = BdAddr::new(bytes);
+
+        assert_eq!(address, expected);
     }
 }

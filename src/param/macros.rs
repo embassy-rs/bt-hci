@@ -44,6 +44,7 @@ macro_rules! param {
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
         /// $name
         pub struct $name($wrapped);
 
