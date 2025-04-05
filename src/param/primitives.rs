@@ -40,7 +40,7 @@ impl WriteHci for &[u8] {
 
     #[inline(always)]
     fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&[self.size() as u8])?;
+        writer.write_all(&[self.len() as u8])?;
         writer.write_all(self)
     }
 
