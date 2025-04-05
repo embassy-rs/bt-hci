@@ -35,7 +35,7 @@ impl<'de> FromHciBytes<'de> for &'de bool {
 impl WriteHci for &[u8] {
     #[inline(always)]
     fn size(&self) -> usize {
-        self.len()
+        self.len() + 1
     }
 
     #[inline(always)]
