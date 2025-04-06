@@ -126,6 +126,18 @@ param! {
 }
 
 param! {
+    #[derive(Default)]
+    enum SecondaryReportPhyKind {
+        #[default]
+        None = 0,
+        Le1M = 1,
+        Le2M = 2,
+        LeCoded = 3,
+        LeCodedS2 = 4,
+    }
+}
+
+param! {
     bitfield AllPhys[1] {
         (0, has_no_tx_phy_preference, set_has_no_tx_phy_preference);
         (1, has_no_rx_phy_preference, set_has_no_rx_phy_preference);
@@ -622,7 +634,7 @@ param! {
         addr_kind: AddrKind,
         addr: BdAddr,
         primary_adv_phy: PhyKind,
-        secondary_adv_phy: PhyKind,
+        secondary_adv_phy: SecondaryReportPhyKind,
         adv_sid: u8,
         tx_power: i8,
         rssi: i8,
