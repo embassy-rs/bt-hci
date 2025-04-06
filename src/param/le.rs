@@ -621,8 +621,15 @@ param! {
         event_kind: LeExtAdvEventKind,
         addr_kind: AddrKind,
         addr: BdAddr,
-        data: &'a [u8],
+        primary_adv_phy: PhyKind,
+        secondary_adv_phy: PhyKind,
+        adv_sid: u8,
+        tx_power: i8,
         rssi: i8,
+        adv_interval: Duration<1_250>,
+        direct_addr_kind: AddrKind,
+        direct_addr: BdAddr,
+        data: &'a [u8],
     }
 }
 
