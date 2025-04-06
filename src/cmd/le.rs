@@ -1,8 +1,8 @@
 //! LE Controller commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0f07d2b9-81e3-6508-ee08-8c808e468fed)
 
 use crate::param::{
-    AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvSet, AllPhys, BdAddr, ChannelMap,
-    ConnHandle, CteKind, CteMask, Duration, ExtDuration, FilterDuplicates, InitiatingPhy,
+    AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllPhys,
+    BdAddr, ChannelMap, ConnHandle, CteKind, CteMask, Duration, ExtDuration, FilterDuplicates, InitiatingPhy,
     LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions,
     LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData, LePeriodicAdvSyncTransferMode, LeScanKind, Operation,
     PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode, ScanningFilterPolicy, ScanningPhy,
@@ -469,6 +469,32 @@ cmd! {
                 secondary_adv_phy: PhyKind,
                 adv_sid: u8,
                 scan_request_notification_enable: bool,
+        }
+        Return = i8;
+    }
+}
+
+cmd! {
+    /// LE Set Extended Advertising Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2d5f3e1f-6666-baa9-dcc2-5d8af3709dac)
+    LeSetExtAdvParamsV2(LE, 0x007F) {
+        LeSetExtAdvParamsV2Params {
+                adv_handle: AdvHandle,
+                adv_event_props: AdvEventProps,
+                primary_adv_interval_min: ExtDuration<625>,
+                primary_adv_interval_max: ExtDuration<625>,
+                primary_adv_channel_map: AdvChannelMap,
+                own_addr_kind: AddrKind,
+                peer_addr_kind: AddrKind,
+                peer_addr: BdAddr,
+                adv_filter_policy: AdvFilterPolicy,
+                adv_tx_power: i8,
+                primary_adv_phy: PhyKind,
+                secondary_adv_max_skip: u8,
+                secondary_adv_phy: PhyKind,
+                adv_sid: u8,
+                scan_request_notification_enable: bool,
+                primary_adv_phy_options: AdvPhyOptions,
+                secondary_adv_phy_options: AdvPhyOptions,
         }
         Return = i8;
     }
