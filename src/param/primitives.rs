@@ -35,12 +35,13 @@ impl<'de> FromHciBytes<'de> for &'de bool {
 impl WriteHci for &[u8] {
     #[inline(always)]
     fn size(&self) -> usize {
-        self.len()
+        // Slice length is incremented to account for the prepended length byte
+        self.len() + 1
     }
 
     #[inline(always)]
     fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&[self.size() as u8])?;
+        writer.write_all(&[self.len() as u8])?;
         writer.write_all(self)
     }
 
