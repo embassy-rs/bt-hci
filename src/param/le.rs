@@ -616,20 +616,117 @@ impl ExactSizeIterator for LeAdvReportsIter<'_> {
 
 impl FusedIterator for LeAdvReportsIter<'_> {}
 
-param! {
-    struct LeExtAdvReport<'a> {
-        event_kind: LeExtAdvEventKind,
-        addr_kind: AddrKind,
-        addr: BdAddr,
-        primary_adv_phy: PhyKind,
-        secondary_adv_phy: PhyKind,
-        adv_sid: u8,
-        tx_power: i8,
-        rssi: i8,
-        adv_interval: Duration<1_250>,
-        direct_addr_kind: AddrKind,
-        direct_addr: BdAddr,
-        data: &'a [u8],
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[allow(missing_docs)]
+pub struct LeExtAdvReport<'a> {
+    pub event_kind: LeExtAdvEventKind,
+    pub addr_kind: AddrKind,
+    pub addr: BdAddr,
+    pub primary_adv_phy: PhyKind,
+    pub secondary_adv_phy: Option<PhyKind>,
+    pub adv_sid: u8,
+    pub tx_power: i8,
+    pub rssi: i8,
+    pub adv_interval: Duration<1_250>,
+    pub direct_addr_kind: AddrKind,
+    pub direct_addr: BdAddr,
+    pub data: &'a [u8],
+}
+
+impl<'a> WriteHci for LeExtAdvReport<'a> {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        WriteHci::size(&self.event_kind)
+            + WriteHci::size(&self.addr_kind)
+            + WriteHci::size(&self.addr)
+            + WriteHci::size(&self.primary_adv_phy)
+            + 1 //secondary_adv_phy
+            + WriteHci::size(&self.adv_sid)
+            + WriteHci::size(&self.tx_power)
+            + WriteHci::size(&self.rssi)
+            + WriteHci::size(&self.adv_interval)
+            + WriteHci::size(&self.direct_addr_kind)
+            + WriteHci::size(&self.direct_addr)
+            + WriteHci::size(&self.data)
+    }
+    #[inline(always)]
+    fn write_hci<W: ::embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.event_kind.write_hci(&mut writer)?;
+        self.addr_kind.write_hci(&mut writer)?;
+        self.addr.write_hci(&mut writer)?;
+        self.primary_adv_phy.write_hci(&mut writer)?;
+        match self.secondary_adv_phy {
+            None => 0u8.write_hci(&mut writer)?,
+            Some(val) => val.write_hci(&mut writer)?,
+        };
+        self.adv_sid.write_hci(&mut writer)?;
+        self.tx_power.write_hci(&mut writer)?;
+        self.rssi.write_hci(&mut writer)?;
+        self.adv_interval.write_hci(&mut writer)?;
+        self.direct_addr_kind.write_hci(&mut writer)?;
+        self.direct_addr.write_hci(&mut writer)?;
+        self.data.write_hci(&mut writer)?;
+        Ok(())
+    }
+    #[inline(always)]
+    async fn write_hci_async<W: ::embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.event_kind.write_hci_async(&mut writer).await?;
+        self.addr_kind.write_hci_async(&mut writer).await?;
+        self.addr.write_hci_async(&mut writer).await?;
+        self.primary_adv_phy.write_hci_async(&mut writer).await?;
+        match self.secondary_adv_phy {
+            None => 0u8.write_hci_async(&mut writer).await?,
+            Some(val) => val.write_hci_async(&mut writer).await?,
+        };
+        self.adv_sid.write_hci_async(&mut writer).await?;
+        self.tx_power.write_hci_async(&mut writer).await?;
+        self.rssi.write_hci_async(&mut writer).await?;
+        self.adv_interval.write_hci_async(&mut writer).await?;
+        self.direct_addr_kind.write_hci_async(&mut writer).await?;
+        self.direct_addr.write_hci_async(&mut writer).await?;
+        self.data.write_hci_async(&mut writer).await?;
+        Ok(())
+    }
+}
+
+impl<'de> crate::FromHciBytes<'de> for LeExtAdvReport<'de> {
+    #[allow(unused_variables)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        let (event_kind, data) = <LeExtAdvEventKind as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (addr_kind, data) = <AddrKind as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (addr, data) = <BdAddr as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (primary_adv_phy, data) = <PhyKind as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (secondary_adv_phy, data) = if data[0] == 0 {
+            (None, &data[1..])
+        } else {
+            let (ret, rest) = <PhyKind as crate::FromHciBytes>::from_hci_bytes(data)?;
+            (Some(ret), rest)
+        };
+        let (adv_sid, data) = <u8 as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (tx_power, data) = <i8 as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (rssi, data) = <i8 as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (adv_interval, data) = <Duration<1_250> as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (direct_addr_kind, data) = <AddrKind as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (direct_addr, data) = <BdAddr as crate::FromHciBytes>::from_hci_bytes(data)?;
+        let (data, rest) = <&'de [u8] as crate::FromHciBytes>::from_hci_bytes(data)?;
+        Ok((
+            Self {
+                event_kind,
+                addr_kind,
+                addr,
+                primary_adv_phy,
+                secondary_adv_phy,
+                adv_sid,
+                tx_power,
+                rssi,
+                adv_interval,
+                direct_addr_kind,
+                direct_addr,
+                data,
+            },
+            rest,
+        ))
     }
 }
 
