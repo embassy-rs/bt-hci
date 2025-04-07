@@ -169,6 +169,37 @@ impl<'de> FromHciBytes<'de> for &'de PhyOptions {
     }
 }
 
+/// PHY preference or requirement during extended advertisement (BLE5.4)
+#[derive(Default)]
+#[repr(u16, align(1))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[allow(missing_docs)]
+pub enum AdvPhyOptions {
+    #[default]
+    NoPreferredCoding = 0,
+    S2CodingPreferred = 1,
+    S8CodingPreferred = 2,
+    S2CodingRequired = 3,
+    S8CodingRequired = 4,
+}
+
+unsafe impl FixedSizeValue for AdvPhyOptions {
+    #[inline(always)]
+    fn is_valid(data: &[u8]) -> bool {
+        data[0] == 0 || data[0] == 1 || data[0] == 2 || data[0] == 3 || data[0] == 4
+    }
+}
+
+unsafe impl ByteAlignedValue for AdvPhyOptions {}
+
+impl<'de> FromHciBytes<'de> for &'de AdvPhyOptions {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        <AdvPhyOptions as ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
+
 param! {
     struct ScanningPhy {
         active_scan: bool,
