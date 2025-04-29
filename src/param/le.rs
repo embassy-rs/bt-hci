@@ -665,7 +665,7 @@ pub struct LeExtAdvReport<'a> {
     pub data: &'a [u8],
 }
 
-impl<'a> WriteHci for LeExtAdvReport<'a> {
+impl WriteHci for LeExtAdvReport<'_> {
     #[inline(always)]
     fn size(&self) -> usize {
         WriteHci::size(&self.event_kind)
