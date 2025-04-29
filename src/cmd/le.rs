@@ -1092,6 +1092,17 @@ cmd! {
 }
 
 cmd! {
+    /// LE Set Host Feature command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-873282cd-6e49-e9aa-cf6f-02fb4c0ea924)
+    LeSetHostFeature(LE, 0x0074) {
+        LeSetHostFeatureParams {
+            bit_number: u8,
+            bit_value: u8,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
     /// LE Enhanced Read Transmit Power Level command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9460c908-2c3d-5915-e04b-25ce98dda7a8)
     LeEnhancedReadTransmitPowerLevel(LE, 0x0076) {
         LeEnhancedReadTransmitPowerLevelParams {
@@ -1236,5 +1247,16 @@ cmd! {
             subevents: &'a [u8],
         }
         Return = SyncHandle;
+    }
+}
+
+cmd! {
+    /// LE Set Host Feature V2 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c8e1603a-50b7-6ba6-2867-d9c78fd5c89d)
+    LeSetHostFeatureV2(LE, 0x0097) {
+        LeSetHostFeatureV2Params {
+            bit_number: u16,
+            bit_value: u8,
+        }
+        Return = ();
     }
 }
