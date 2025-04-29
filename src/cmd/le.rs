@@ -1214,7 +1214,7 @@ impl WriteHci for LeSetPeriodicAdvSubeventDataParams<'_, '_> {
 
 cmd! {
     /// LE Set Periodic Advertising Response Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8ada75aa-8e1f-c742-6441-8dd1164fc646)
-    LeSetPeriodicAdvResponseData(LE, 0x007c) {
+    LeSetPeriodicAdvResponseData(LE, 0x0083) {
         LeSetPeriodicAdvResponseDataParams<'a> {
             adv_handle: SyncHandle,
             request_event: u16,
@@ -1229,7 +1229,7 @@ cmd! {
 
 cmd! {
     /// LE Set Periodic Sync Subevent command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e3b9bdd9-b435-9adf-2516-ad94e14ece70)
-    LeSetPeriodicSyncSubevent(LE, 0x007c) {
+    LeSetPeriodicSyncSubevent(LE, 0x0084) {
         LeSetPeriodicSyncSubeventParams<'a> {
             adv_handle: SyncHandle,
             periodic_adv_props: PeriodicAdvProps,
