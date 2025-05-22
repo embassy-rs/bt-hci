@@ -42,12 +42,9 @@ pub const SERVICE_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2a05);
 ///
 /// The Alert Level characteristic is used to represent the level of an alert.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -59,11 +56,8 @@ pub const SERVICE_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2a05);
 /// ### Description
 ///
 /// 0x00: No Alert
-///
 /// 0x01: Mild Alert
-///
 /// 0x02: High Alert
-///
 /// 0x03–0xFF: Reserved for Future Use
 ///
 /// ----
@@ -77,12 +71,9 @@ pub const ALERT_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a06);
 ///
 /// The Tx Power Level characteristic is used to represent the current radiated transmit power level.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -94,9 +85,7 @@ pub const ALERT_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a06);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.logarithmic_radio_quantity.decibel
-///
 /// Allowed range is -100 to 20.
-///
 /// All other values are reserved for future use.
 ///
 /// ----
@@ -110,12 +99,9 @@ pub const TX_POWER_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a07);
 ///
 /// The Date Time characteristic is used to represent date and time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -128,7 +114,7 @@ pub const TX_POWER_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a07);
 ///
 /// Year as defined by the Gregorian calendar. Valid range 1582 to 9999. A value of 0 means that the year is not known. All other values are Reserved for Future Use.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -141,7 +127,7 @@ pub const TX_POWER_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a07);
 ///
 /// Month of the year as defined by the Gregorian calendar. Valid range 1 (January) to 12 (December). A value of 0 means that the month is not known. All other values are Reserved for Future Use.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -154,7 +140,7 @@ pub const TX_POWER_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a07);
 ///
 /// Day of the month as defined by the Gregorian calendar. Valid range 1 to 31. A value of 0 means that the day of month is not known. All other values are Reserved for Future Use.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -167,7 +153,7 @@ pub const TX_POWER_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a07);
 ///
 /// Number of hours past midnight. Valid range 0 to 23. All other values are Reserved for Future Use.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -180,7 +166,7 @@ pub const TX_POWER_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a07);
 ///
 /// Number of minutes since the start of the hour. Valid range 0 to 59. All other values are Reserved for Future Use.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -202,14 +188,11 @@ pub const DATE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a08);
 ///
 /// `0x2a09` Day of Week
 ///
-/// The Day of Week characteristic is used to represent the day within a seven-day week as specified in ISO 8601 \RefRef{iso_8601}.
-///
-/// 
+/// The Day of Week characteristic is used to represent the day within a seven-day week as specified in ISO 8601 \RefRef{iso_8601`.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -221,21 +204,13 @@ pub const DATE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a08);
 /// ### Description
 ///
 /// 0: Unknown
-///
 /// 1: Monday
-///
 /// 2: Tuesday
-///
 /// 3: Wednesday
-///
 /// 4: Thursday
-///
 /// 5: Friday
-///
 /// 6: Saturday
-///
 /// 7: Sunday
-///
 /// 8–255: Reserved for Future Use
 ///
 /// ----
@@ -249,12 +224,9 @@ pub const DAY_OF_WEEK: BluetoothUuid16 = BluetoothUuid16::new(0x2a09);
 ///
 /// The Day Date Time characteristic is used to represent weekday, date, and time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -267,7 +239,7 @@ pub const DAY_OF_WEEK: BluetoothUuid16 = BluetoothUuid16::new(0x2a09);
 ///
 /// Refer to the Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -291,12 +263,9 @@ pub const DAY_DATE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a0a);
 ///
 /// The Exact Time 256 characteristic is used to represent the day, date, and time, including fractions of seconds.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -309,7 +278,7 @@ pub const DAY_DATE_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a0a);
 ///
 /// Refer to the Day Date Time characteristic in `sec:org.bluetooth.characteristic.day_date_time`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -333,12 +302,9 @@ pub const EXACT_TIME_256: BluetoothUuid16 = BluetoothUuid16::new(0x2a0c);
 ///
 /// The DST Offset characteristic is used to represent daylight saving time information associated with time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -350,15 +316,10 @@ pub const EXACT_TIME_256: BluetoothUuid16 = BluetoothUuid16::new(0x2a0c);
 /// ### Description
 ///
 /// 0: Standard Time
-///
 /// 2: Half an hour Daylight Time (+ 0.5h)
-///
 /// 4: Daylight Time (+ 1h)
-///
 /// 8: Double Daylight Time (+ 2h)
-///
 /// 255: DST offset unknown
-///
 /// All other values: Reserved for Future Use
 ///
 /// ----
@@ -372,12 +333,9 @@ pub const DST_OFFSET: BluetoothUuid16 = BluetoothUuid16::new(0x2a0d);
 ///
 /// The Time Zone characteristic is used to represent the time difference in 15-minute increments between local standard time and UTC.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -389,13 +347,9 @@ pub const DST_OFFSET: BluetoothUuid16 = BluetoothUuid16::new(0x2a0d);
 /// ### Description
 ///
 /// This field represents the offset from UTC in number of 15-minute increments.
-///
 /// Valid range from -48 to +56.
-///
 /// A value of -128 means that the time zone offset is not known.
-///
 /// All other values are Reserved for Future Use.
-///
 /// The offset defined in this characteristic is constant regardless of whether daylight savings is in effect.
 ///
 /// ----
@@ -409,12 +363,9 @@ pub const TIME_ZONE: BluetoothUuid16 = BluetoothUuid16::new(0x2a0e);
 ///
 /// The Local Time Information characteristic is used to represent the relation (offset) between local time and UTC. It contains time zone and Daylight Savings Time (DST) offset information.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -427,7 +378,7 @@ pub const TIME_ZONE: BluetoothUuid16 = BluetoothUuid16::new(0x2a0e);
 ///
 /// Refer to Time Zone characteristic in `sec:org.bluetooth.characteristic.time_zone`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -451,12 +402,9 @@ pub const LOCAL_TIME_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a0f)
 ///
 /// The Time with DST characteristic is used to represent information about a DST change event.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -469,7 +417,7 @@ pub const LOCAL_TIME_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a0f)
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -493,12 +441,9 @@ pub const TIME_WITH_DST: BluetoothUuid16 = BluetoothUuid16::new(0x2a11);
 ///
 /// The Time Accuracy characteristic is used to represent the accuracy (drift) of time information compared to a reference time source.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -510,15 +455,10 @@ pub const TIME_WITH_DST: BluetoothUuid16 = BluetoothUuid16::new(0x2a11);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.time.second
-///
 /// Represented values: M = 1, d = 0, b = -3
-///
 /// This field represents accuracy (drift) of time information in steps of 1/8 of a second (125ms) compared to a reference time source.
-///
 /// Valid range from 0 to 253 (0s to 31.625s).
-///
 /// A value of 254 means drift is larger than 31.625s.
-///
 /// A value of 255 means drift is unknown.
 ///
 /// ----
@@ -532,12 +472,9 @@ pub const TIME_ACCURACY: BluetoothUuid16 = BluetoothUuid16::new(0x2a12);
 ///
 /// The Time Source characteristic is used to represent the type of time source that is used for reference time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -561,12 +498,9 @@ pub const TIME_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a13);
 ///
 /// The Reference Time Information characteristic is used to represent information about the reference time source.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -579,7 +513,7 @@ pub const TIME_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a13);
 ///
 /// Refer to Time Source characteristic in `sec:org.bluetooth.characteristic.time_source`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -592,7 +526,7 @@ pub const TIME_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a13);
 ///
 /// Refer to Time Accuracy characteristic in `sec:org.bluetooth.characteristic.time_accuracy`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -604,12 +538,10 @@ pub const TIME_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a13);
 /// ### Description
 ///
 /// Number of days portion of the time span since the last update from the reference.
-///
 /// Valid range is 0 to 254 days
-///
 /// A value of 255 is used when the time span is greater than or equal to 255 days
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -621,9 +553,7 @@ pub const TIME_SOURCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a13);
 /// ### Description
 ///
 /// Number of hours portion of the time span since the last update from the reference.
-///
 /// Valid range is 0 to 23 hours
-///
 /// A value of 255 is used when the time span is greater than or equal to 255 days
 ///
 /// ----
@@ -637,12 +567,9 @@ pub const REFERENCE_TIME_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The Time Update Control Point characteristic is used to enable device-specific procedures related to a time server.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -654,9 +581,7 @@ pub const REFERENCE_TIME_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// 1: Get Reference Update
-///
 /// 2: Cancel Reference Update
-///
 /// All other values: Reserved for Future Use
 ///
 /// ----
@@ -670,12 +595,9 @@ pub const TIME_UPDATE_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 ///
 /// The Time Update State characteristic is used to represent the status of the time update process and the result of the last update in a time server.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -687,12 +609,10 @@ pub const TIME_UPDATE_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 /// ### Description
 ///
 /// 0: Idle
-///
 /// 1: Update Pending
-///
 /// 2–255: Reserved for Future Use
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -704,17 +624,11 @@ pub const TIME_UPDATE_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 /// ### Description
 ///
 /// 0: Successful
-///
 /// 1: Cancelled
-///
 /// 2: No connection to reference
-///
 /// 3: Reference responded with an error
-///
 /// 4: Timeout
-///
 /// 5: Update not attempted after reset
-///
 /// 6–255: Reserved for Future Use
 ///
 /// ----
@@ -728,12 +642,9 @@ pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 ///
 /// The Glucose Measurement characteristic is used to represent data related to a glucose measurement record.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -746,7 +657,7 @@ pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -759,7 +670,7 @@ pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 ///
 /// Contains a sequence number of the record. It is used to number a sequence of measurements as defined by the service.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -772,7 +683,7 @@ pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -784,14 +695,11 @@ pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 /// ### Description
 ///
 /// Specifies the time difference from the value of the Base Time field.
-///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement/field/time_offset`
-///
 /// unit: org.bluetooth.unit.time.minute
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -803,16 +711,12 @@ pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 /// ### Description
 ///
 /// If bit 2 of Flags field is set to 0,
-///
 /// unit: org.bluetooth.unit.mass_density.kilogram_per_liter
-///
 /// If bit 2 of Flags field is set to 1,
-///
 /// unit: org.bluetooth.unit.mass_density.mole_per_litre
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -824,10 +728,9 @@ pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement/field/type-sample_location`
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -839,7 +742,6 @@ pub const TIME_UPDATE_STATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a17);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement/field/sensor_status_annunciation`
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
 /// ----
@@ -853,12 +755,9 @@ pub const GLUCOSE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a18);
 ///
 /// The Battery Level characteristic is used to represent the charge level of a battery.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -870,11 +769,8 @@ pub const GLUCOSE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a18);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage.
-///
 /// Allowed range is 0 to 100.
-///
 /// 100% represents fully charged; 0% represents fully discharged.
-///
 /// All other values are reserved for future use.
 ///
 /// ----
@@ -888,12 +784,9 @@ pub const BATTERY_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a19);
 ///
 /// The Temperature Measurement characteristic is used to represent data related to a temperature measurement.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -906,7 +799,7 @@ pub const BATTERY_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a19);
 ///
 /// See `sec:org.bluetooth.characteristic.temperature_measurement/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -918,12 +811,10 @@ pub const BATTERY_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a19);
 /// ### Description
 ///
 /// This field contains a measurement value.
-///
 /// Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -935,12 +826,10 @@ pub const BATTERY_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a19);
 /// ### Description
 ///
 /// This field contains a measurement value.
-///
 /// Unit: org.bluetooth.unit.thermodynamic_temperature.degree_fahrenheit.
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -952,10 +841,9 @@ pub const BATTERY_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a19);
 /// ### Description
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -967,7 +855,6 @@ pub const BATTERY_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2a19);
 /// ### Description
 ///
 /// The format of this field is the same as the format of the Temperature Type characteristic in `sec:org.bluetooth.characteristic.temperature_type`.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
 /// ----
@@ -979,14 +866,11 @@ pub const TEMPERATURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a1c
 ///
 /// `0x2a1d` Temperature Type
 ///
-/// The Temperature Type characteristic is used to represent the location of a temperature measurement. These values correspond to the Temperature Type descriptions used in IEEE 11073-10408-2008 \RefRef{ieee_11073_10408}.
-///
-/// 
+/// The Temperature Type characteristic is used to represent the location of a temperature measurement. These values correspond to the Temperature Type descriptions used in IEEE 11073-10408-2008 \RefRef{ieee_11073_10408`.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1008,14 +892,11 @@ pub const TEMPERATURE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1d);
 ///
 /// `0x2a1e` Intermediate Temperature
 ///
-/// The Intermediate Temperature characteristic is used to send intermediate temperature values to a device for display purposes while a measurement is in progress. The Intermediate Temperature characteristic has the same format as the Temperature Measurement characteristic in \autoref{sec:org.bluetooth.characteristic.temperature_measurement} except that, due to a different context, the Measurement Value field is referred to as the Intermediate Temperature field.
-///
-/// 
+/// The Intermediate Temperature characteristic is used to send intermediate temperature values to a device for display purposes while a measurement is in progress. The Intermediate Temperature characteristic has the same format as the Temperature Measurement characteristic in `sec:org.bluetooth.characteristic.temperature_measurement` except that, due to a different context, the Measurement Value field is referred to as the Intermediate Temperature field.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1028,7 +909,7 @@ pub const TEMPERATURE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1d);
 ///
 /// See `sec:org.bluetooth.characteristic.intermediate_temperature/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1040,12 +921,10 @@ pub const TEMPERATURE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1d);
 /// ### Description
 ///
 /// This field contains a measurement value.
-///
 /// Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1057,12 +936,10 @@ pub const TEMPERATURE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1d);
 /// ### Description
 ///
 /// This field contains a measurement value.
-///
 /// Unit: org.bluetooth.unit.thermodynamic_temperature.degree_fahrenheit.
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1074,10 +951,9 @@ pub const TEMPERATURE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1d);
 /// ### Description
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1089,7 +965,6 @@ pub const TEMPERATURE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1d);
 /// ### Description
 ///
 /// The format of this field is the same as the format of the Temperature Type characteristic in `sec:org.bluetooth.characteristic.temperature_type`.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
 /// ----
@@ -1103,12 +978,9 @@ pub const INTERMEDIATE_TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a1
 ///
 /// The Measurement Interval characteristic is used to represent the time between measurements.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1136,19 +1008,13 @@ pub const BOOT_KEYBOARD_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// `0x2a23` System ID
 ///
 /// The System ID characteristic is used to represent an extended unique identifier (EUI) of the system implementing the service that contains this characteristic.
-///
-/// This 64-bit structure is an EUI-64 which consists of an Organizationally Unique Identifier (OUI) concatenated with a manufacturer-defined identifier. The OUI is issued by the IEEE Registration Authority (RA) \RefRef{ieee_registration} and should be used in accordance with the guidelines in \RefRef{ieee_tutorial}. Supported lengths for IEEE-issued OUIs include 24 and 36 bits. In those cases, the remaining least significant 40 or 28 bits are manufacturer assigned.
-///
+/// This 64-bit structure is an EUI-64 which consists of an Organizationally Unique Identifier (OUI) concatenated with a manufacturer-defined identifier. The OUI is issued by the IEEE Registration Authority (RA) \RefRef{ieee_registration` and should be used in accordance with the guidelines in \RefRef{ieee_tutorial`. Supported lengths for IEEE-issued OUIs include 24 and 36 bits. In those cases, the remaining least significant 40 or 28 bits are manufacturer assigned.
 /// A Bluetooth Device Address is an EUI-48, is 48 bits in length, and can be based on an OUI as well, but this is not required. See Core Spec, volume 2, part B, section 1.2. Historically an EUI-48 could be mapped to an EUI-64 by inserting either the value 0xFFFE or the value 0xFF-FF in the middle of the 6-octet EUI-48. This mapping is deprecated.
-///
 /// Note that the order of transmission of the EUI-64 octets in a Characteristic is LSO-MSO and also the bit order is little endian. In the System ID characteristic the uint64 starts with the manufacturer-defined identifier, whereas the representation of an EUI-64 in the IEEE-RA guidelines is MSO-LSO, starts with the OUI, and uses the big endian bit order.
-///
-/// 
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1172,12 +1038,9 @@ pub const SYSTEM_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2a23);
 ///
 /// The Model Number String characteristic is used to represent the model number assigned by the device vendor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1201,12 +1064,9 @@ pub const MODEL_NUMBER_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a24);
 ///
 /// The Serial Number String characteristic is used to represent the serial number for a device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1230,12 +1090,9 @@ pub const SERIAL_NUMBER_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a25);
 ///
 /// The Firmware Revision String characteristic is used to represent the revision of the firmware within the device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1259,12 +1116,9 @@ pub const FIRMWARE_REVISION_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a2
 ///
 /// The Hardware Revision String characteristic is used to represent the hardware revision for the hardware within the device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1288,12 +1142,9 @@ pub const HARDWARE_REVISION_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a2
 ///
 /// The Software Revision String characteristic is used to represent the revision of the software within the device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1317,12 +1168,9 @@ pub const SOFTWARE_REVISION_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a2
 ///
 /// The Manufacturer Name String characteristic is used to represent the name of the manufacturer of the device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1344,16 +1192,12 @@ pub const MANUFACTURER_NAME_STRING: BluetoothUuid16 = BluetoothUuid16::new(0x2a2
 ///
 /// `0x2a2a` IEEE 11073-20601 Regulatory Certification Data List
 ///
-/// The IEEE 11073-20601 Regulatory Certification Data List characteristic is used to represent regulatory and certification information for a product in a list defined in IEEE 11073-20601 \RefRef{ieee_11073_20601}.
-///
+/// The IEEE 11073-20601 Regulatory Certification Data List characteristic is used to represent regulatory and certification information for a product in a list defined in IEEE 11073-20601 \RefRef{ieee_11073_20601`.
 /// The content of this characteristic is determined by the authorizing organization that provides certifications.
-///
-/// 
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1377,12 +1221,9 @@ pub const IEEE_11073_20601_REGULATORY_CERTIFICATION_DATA_LIST: BluetoothUuid16 =
 ///
 /// The Current Time characteristic is used to represent the exact time and the reason for adjustment.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1395,7 +1236,7 @@ pub const IEEE_11073_20601_REGULATORY_CERTIFICATION_DATA_LIST: BluetoothUuid16 =
 ///
 /// Refer to the Exact Time 256 characteristic in `sec:org.bluetooth.characteristic.exact_time_256`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1407,15 +1248,10 @@ pub const IEEE_11073_20601_REGULATORY_CERTIFICATION_DATA_LIST: BluetoothUuid16 =
 /// ### Description
 ///
 /// This field represents reason(s) for adjusting time.
-///
 /// 0: Manual Time Update
-///
 /// 1: External Reference Time Update
-///
 /// 2: Change of Time Zone
-///
 /// 3: Change of DST
-///
 /// 4–7: Reserved for Future Use
 ///
 /// ----
@@ -1429,12 +1265,9 @@ pub const CURRENT_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a2b);
 ///
 /// The Magnetic Declination characteristic is used to represent the magnetic declination. The magnetic declination is the angle on the horizontal plane between the direction of True North (geographic) and the direction of Magnetic North, measured clockwise from True North to Magnetic North.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1446,9 +1279,7 @@ pub const CURRENT_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2a2b);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree. Minimum value: 0 Maximum value: 359.99
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is degrees with a resolution of 0.01 degrees.
 ///
 /// ----
@@ -1477,12 +1308,9 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 ///
 /// The Glucose Measurement Context characteristic is used to represent context information associated with a glucose measurement record.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1495,7 +1323,7 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement_context/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1508,7 +1336,7 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 ///
 /// Contains the sequence number of the corresponding Glucose Measurement as defined by the service.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1520,10 +1348,9 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement_context/field/extended_flags`
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1535,10 +1362,9 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement_context/field/carbohydrate_id`
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1550,10 +1376,9 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.mass.kilogram
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1565,10 +1390,9 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement_context/field/meal`
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1580,10 +1404,9 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement_context/field/tester-health`
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1595,12 +1418,10 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement_context/field/exercise_duration`
-///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1612,10 +1433,9 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.percentage
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1627,10 +1447,9 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.glucose_measurement_context/field/medication_id`
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1642,16 +1461,12 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// If bit 5 of Flags field is set to 0,
-///
 /// Unit: org.bluetooth.unit.mass.kilogram
-///
 /// If bit 5 of Flags field is set to 1,
-///
 /// Unit: org.bluetooth.unit.volume.litre
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1663,7 +1478,6 @@ pub const BOOT_MOUSE_INPUT_REPORT: BluetoothUuid16 = BluetoothUuid16::new(0x2a33
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.percentage
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
 /// ----
@@ -1677,12 +1491,9 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// The Blood Pressure Measurement characteristic is used to represent blood pressure measurement data.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1695,7 +1506,7 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_measurement/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1707,10 +1518,9 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.pressure.millimetre_of_mercury
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1722,10 +1532,9 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.pressure.millimetre_of_mercury
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1737,10 +1546,9 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.pressure.millimetre_of_mercury
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1752,12 +1560,10 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.pressure.pascal;
-///
 /// M = 1, d = 3, and b = 0
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1769,12 +1575,10 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.pressure.pascal;
-///
 /// M = 1, d = 3, and b = 0
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1786,12 +1590,10 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.pressure.pascal;
-///
 /// M = 1, d = 3, and b = 0
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1803,10 +1605,9 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1818,10 +1619,9 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1833,10 +1633,9 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_measurement/field/user_id`.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1848,7 +1647,6 @@ pub const GLUCOSE_MEASUREMENT_CONTEXT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_measurement/field/measurement_status`.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
 /// ----
@@ -1860,14 +1658,11 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// `0x2a36` Intermediate Cuff Pressure
 ///
-/// The Intermediate Cuff Pressure characteristic is used to send intermediate Cuff Pressure values to a device for display purposes while a measurement is in progress. The Intermediate Cuff Pressure characteristic has the same format as the Blood Pressure Measurement characteristic in \autoref{sec:org.bluetooth.characteristic.blood_pressure_measurement}. However, due to a different context, the Blood Pressure Measurement Compound Value field is used for the Intermediate Cuff Pressure Compound Value field and the Systolic sub-field is used for the Current Cuff Pressure sub-field. The Diastolic and Mean Arterial Pressure fields are unused.
-///
-/// 
+/// The Intermediate Cuff Pressure characteristic is used to send intermediate Cuff Pressure values to a device for display purposes while a measurement is in progress. The Intermediate Cuff Pressure characteristic has the same format as the Blood Pressure Measurement characteristic in `sec:org.bluetooth.characteristic.blood_pressure_measurement`. However, due to a different context, the Blood Pressure Measurement Compound Value field is used for the Intermediate Cuff Pressure Compound Value field and the Systolic sub-field is used for the Current Cuff Pressure sub-field. The Diastolic and Mean Arterial Pressure fields are unused.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -1880,7 +1675,7 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// See `sec:org.bluetooth.characteristic.intermediate_cuff_pressure/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1892,10 +1687,9 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.pressure.millimetre_of_mercury
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1907,12 +1701,10 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.pressure.pascal;
-///
 /// M = 1, d = 3, and b = 0
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1925,7 +1717,7 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// This subfield is not used and is set to the special value NaN.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1938,7 +1730,7 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// This subfield is not used and is set to the special value NaN.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1950,10 +1742,9 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1965,10 +1756,9 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1980,10 +1770,9 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.intermediate_cuff_pressure/field/user_id`.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -1995,7 +1784,6 @@ pub const BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.intermediate_cuff_pressure/field/measurement_status`.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
 /// ----
@@ -2009,12 +1797,9 @@ pub const INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The Heart Rate Measurement characteristic is used to represent data related to a heart rate measurement.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2027,7 +1812,7 @@ pub const INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// See `sec:org.bluetooth.characteristic.heart_rate_measurement/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2039,10 +1824,9 @@ pub const INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2054,10 +1838,9 @@ pub const INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2069,10 +1852,9 @@ pub const INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.joule
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2084,7 +1866,6 @@ pub const INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.heart_rate_measurement/field/rr-interval`
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
 /// ----
@@ -2098,12 +1879,9 @@ pub const HEART_RATE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a37)
 ///
 /// The Body Sensor Location characteristic is used to represent the location of a sensor on a human body.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2127,12 +1905,9 @@ pub const BODY_SENSOR_LOCATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a38);
 ///
 /// The Heart Rate Control Point characteristic is used to enable device-specific procedures related to a heart rate sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2156,12 +1931,9 @@ pub const HEART_RATE_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a3
 ///
 /// The Alert Status characteristic is used to represent the status of a phone alert.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2185,12 +1957,9 @@ pub const ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2a3f);
 ///
 /// The Ringer Control Point characteristic is used to enable device-specific procedures for a ringer in a phone.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2202,11 +1971,8 @@ pub const ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2a3f);
 /// ### Description
 ///
 /// 1: Silent Mode
-///
 /// 2: Mute Once
-///
 /// 3: Cancel Silent Mode
-///
 /// All other values: Reserved for Future Use
 ///
 /// ----
@@ -2220,12 +1986,9 @@ pub const RINGER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a40);
 ///
 /// The Ringer Setting characteristic is used to represent the setting of the ringer.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2237,9 +2000,7 @@ pub const RINGER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a40);
 /// ### Description
 ///
 /// 0: Ringer Silent
-///
 /// 1: Ringer Normal
-///
 /// 2–255: Reserved for Future Use
 ///
 /// ----
@@ -2253,12 +2014,9 @@ pub const RINGER_SETTING: BluetoothUuid16 = BluetoothUuid16::new(0x2a41);
 ///
 /// The Alert Category ID Bit Mask characteristic is used to represent support for predefined Category IDs.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2282,12 +2040,9 @@ pub const ALERT_CATEGORY_ID_BIT_MASK: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The Alert Category ID characteristic is used to represent predefined categories of alerts and messages.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2311,12 +2066,9 @@ pub const ALERT_CATEGORY_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2a43);
 ///
 /// The Alert Notification Control Point characteristic is used to enable device-specific procedures related to alert notification.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2328,20 +2080,14 @@ pub const ALERT_CATEGORY_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2a43);
 /// ### Description
 ///
 /// 0: Enable New Incoming Alert Notification
-///
 /// 1: Enable Unread Category Status Notification
-///
 /// 2: Disable New Incoming Alert Notification
-///
 /// 3: Disable Unread Category Status Notification
-///
 /// 4: Notify New Incoming Alert immediately
-///
 /// 5: Notify Unread Category Status immediately
-///
 /// 6–255: Reserved for Future Use
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2365,12 +2111,9 @@ pub const ALERT_NOTIFICATION_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// The Unread Alert Status characteristic is used to represent the number of unread alerts in the specific category.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2383,7 +2126,7 @@ pub const ALERT_NOTIFICATION_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// Refer to Alert Category ID characteristic in `sec:org.bluetooth.characteristic.alert_category_id`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2395,9 +2138,7 @@ pub const ALERT_NOTIFICATION_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::n
 /// ### Description
 ///
 /// This field provides the number of unread alerts in the server.
-///
 /// The range is 0–254.
-///
 /// The value of 255 means that there are more than 254 unread alerts in the server.
 ///
 /// ----
@@ -2411,12 +2152,9 @@ pub const UNREAD_ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2a45);
 ///
 /// The New Alert characteristic is used to represent the category of the alert, how many new alerts of that category have occurred in a device and brief text information for the last alert.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2429,7 +2167,7 @@ pub const UNREAD_ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2a45);
 ///
 /// Refer to Alert Category ID characteristic in `sec:org.bluetooth.characteristic.alert_category_id`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2442,7 +2180,7 @@ pub const UNREAD_ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2a45);
 ///
 /// This field provides the number of new alerts in the server ranging from 0 to 255.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2454,7 +2192,6 @@ pub const UNREAD_ALERT_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2a45);
 /// ### Description
 ///
 /// This field provides brief text information for the last alert.
-///
 /// See `sec:org.bluetooth.characteristic.new_alert/field/text_string_information`
 ///
 /// ----
@@ -2468,12 +2205,9 @@ pub const NEW_ALERT: BluetoothUuid16 = BluetoothUuid16::new(0x2a46);
 ///
 /// The Supported New Alert Category characteristic is used to represent the category that the server supports for a new alert.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2497,12 +2231,9 @@ pub const SUPPORTED_NEW_ALERT_CATEGORY: BluetoothUuid16 = BluetoothUuid16::new(0
 ///
 /// The Supported Unread Alert Category characteristic is used to represent the category that the server supports for an unread alert.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2526,12 +2257,9 @@ pub const SUPPORTED_UNREAD_ALERT_CATEGORY: BluetoothUuid16 = BluetoothUuid16::ne
 ///
 /// The Blood Pressure Feature characteristic is used to represent the supported features of a blood pressure sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2585,12 +2313,9 @@ pub const SCAN_INTERVAL_WINDOW: BluetoothUuid16 = BluetoothUuid16::new(0x2a4f);
 ///
 /// The PnP ID characteristic is used to represent a set of values that are used to create a device ID value that is unique for this device. These values are used to identify all devices of a given type/model/version using numbers.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2603,7 +2328,7 @@ pub const SCAN_INTERVAL_WINDOW: BluetoothUuid16 = BluetoothUuid16::new(0x2a4f);
 ///
 /// See `sec:org.bluetooth.characteristic.pnp_id/field/vendor_id_source`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2616,7 +2341,7 @@ pub const SCAN_INTERVAL_WINDOW: BluetoothUuid16 = BluetoothUuid16::new(0x2a4f);
 ///
 /// Identifies the product vendor from the namespace in the Vendor ID Source
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2629,7 +2354,7 @@ pub const SCAN_INTERVAL_WINDOW: BluetoothUuid16 = BluetoothUuid16::new(0x2a4f);
 ///
 /// Manufacturer managed identifier for this product
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2653,12 +2378,9 @@ pub const PNP_ID: BluetoothUuid16 = BluetoothUuid16::new(0x2a50);
 ///
 /// The Glucose Feature characteristic is used to represent the supported features of a glucose sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2682,12 +2404,9 @@ pub const GLUCOSE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a51);
 ///
 /// The Record Access Control Point is used to enable service-specific procedures for management of a set of data records.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2700,7 +2419,7 @@ pub const GLUCOSE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a51);
 ///
 /// See `sec:org.bluetooth.characteristic.record_access_control_point/field/op_code`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2713,7 +2432,7 @@ pub const GLUCOSE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a51);
 ///
 /// See `sec:org.bluetooth.characteristic.record_access_control_point/field/op_code` and `sec:org.bluetooth.characteristic.record_access_control_point/field/operator`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2737,12 +2456,9 @@ pub const RECORD_ACCESS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// The RSC Measurement characteristic is used to represent data related to a running speed and cadence (RSC) measurement.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2755,7 +2471,7 @@ pub const RECORD_ACCESS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// See `sec:org.bluetooth.characteristic.rsc_measurement/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2767,12 +2483,10 @@ pub const RECORD_ACCESS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.metres_per_second
-///
 /// Represented values: M = 1, d = 0, b = -8
-///
 /// Unit is 1/256th of a m/s
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2785,7 +2499,7 @@ pub const RECORD_ACCESS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// Unit is 1/min
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2797,14 +2511,11 @@ pub const RECORD_ACCESS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is Centimeter
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2816,11 +2527,8 @@ pub const RECORD_ACCESS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 m
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
 /// ----
@@ -2834,12 +2542,9 @@ pub const RSC_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a53);
 ///
 /// The RSC Feature characteristic is used to represent the supported features of a running speed and cadence (RSC) sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2863,12 +2568,9 @@ pub const RSC_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a54);
 ///
 /// The SC Control Point characteristic is used to enable device-specific procedures related to a speed and cadence (SC) sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2881,7 +2583,7 @@ pub const RSC_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a54);
 ///
 /// See `sec:org.bluetooth.characteristic.sc_control_point/field/op_code_and_parameter`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2910,12 +2612,9 @@ pub const AGGREGATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a5a);
 ///
 /// The CSC Measurement characteristic is used to represent data related to a cycling speed and cadence (CSC) sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2928,7 +2627,7 @@ pub const AGGREGATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a5a);
 ///
 /// See `sec:org.bluetooth.characteristic.csc_measurement/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2940,10 +2639,9 @@ pub const AGGREGATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a5a);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.csc_measurement/field/wheel_revolution_data`
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -2955,7 +2653,6 @@ pub const AGGREGATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a5a);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.csc_measurement/field/crank_revolution_data`
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
 /// ----
@@ -2969,12 +2666,9 @@ pub const CSC_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a5b);
 ///
 /// The CSC Feature characteristic is used to represent the supported features of a cycling speed and cadence (CSC) sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -2998,12 +2692,9 @@ pub const CSC_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a5c);
 ///
 /// The Sensor Location characteristic is used to represent the location of the sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3042,12 +2733,9 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 ///
 /// The Cycling Power Measurement characteristic is used to represent data related to a cycling power sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3060,7 +2748,7 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_measurement/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3073,7 +2761,7 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 ///
 /// Unit: org.bluetooth.unit.power.watt
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3085,14 +2773,11 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = 0, b = -1
-///
 /// Unit is 1/2 of a percent
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3104,14 +2789,11 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.moment_of_force.newton_metre
-///
 /// Represented values: M = 1, d = 0, b = -5
-///
 /// Unit is 1/32 Newton meter
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3123,10 +2805,9 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_measurement/field/wheel_revolution_data`
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3138,10 +2819,9 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_measurement/field/crank_revolution_data`
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3153,10 +2833,9 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_measurement/field/extreme_force_magnitudes`
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3168,10 +2847,9 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_measurement/field/extreme_torque_magnitudes`
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3183,10 +2861,9 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_measurement/field/extreme_angles`
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3198,12 +2875,10 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_measurement/field/top_and_bottom_dead_spot_angles`
-///
 /// Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Present if bit 9 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3215,12 +2890,10 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_measurement/field/top_and_bottom_dead_spot_angles`
-///
 /// Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Present if bit 10 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3232,11 +2905,8 @@ pub const PLX_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2a60);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.energy.joule
-///
 /// Represented values: M = 1, d = 3, b = 0
-///
 /// Unit is kilojoule
-///
 /// Present if bit 11 of Flags field is set to 1
 ///
 /// ----
@@ -3250,12 +2920,9 @@ pub const CYCLING_POWER_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 ///
 /// The Cycling Power Vector characteristic is used to represent power vector data related to a cycling power sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3268,7 +2935,7 @@ pub const CYCLING_POWER_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_vector/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3280,10 +2947,9 @@ pub const CYCLING_POWER_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_vector/field/crank_revolution_data`
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3295,12 +2961,10 @@ pub const CYCLING_POWER_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_vector/field/first_crank_measurement_angle`
-///
 /// Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3312,10 +2976,9 @@ pub const CYCLING_POWER_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.force.newton
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3327,11 +2990,8 @@ pub const CYCLING_POWER_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.moment_of_force.newton_metre
-///
 /// Represented values: M = 1, d = 0, b = -5
-///
 /// Unit is 1/32 Newton meter
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
 /// ----
@@ -3345,12 +3005,9 @@ pub const CYCLING_POWER_VECTOR: BluetoothUuid16 = BluetoothUuid16::new(0x2a64);
 ///
 /// The Cycling Power Feature characteristic is used to represent the supported features of a cycling power sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3374,12 +3031,9 @@ pub const CYCLING_POWER_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a65);
 ///
 /// The Cycling Power Control Point characteristic is used to enable device-specific procedures related to a cycling power sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3392,7 +3046,7 @@ pub const CYCLING_POWER_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a65);
 ///
 /// See `sec:org.bluetooth.characteristic.cycling_power_control_point/field/op_code_and_parameter`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3416,12 +3070,9 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// The Location and Speed characteristic is used to represent data related to a location and speed sensor. Note that it is possible for this characteristic to exceed the default LE ATT_MTU size.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3434,7 +3085,7 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// See `sec:org.bluetooth.characteristic.location_and_speed/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3446,14 +3097,11 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.metres_per_second
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a m/s
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3465,14 +3113,11 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 m
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3484,14 +3129,11 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Represented values: M = 1, d = -7, b = 0
-///
 /// Unit is 1*10\textsuperscript{-7` degrees
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3503,14 +3145,11 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Represented values: M = 1, d = -7, b = 0
-///
 /// Unit is 1*10\textsuperscript{-7` degrees
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3522,14 +3161,11 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 m
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3541,14 +3177,11 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1*10\textsuperscript{-2` degrees
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3560,10 +3193,9 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3575,7 +3207,6 @@ pub const CYCLING_POWER_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`.
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
 /// ----
@@ -3589,12 +3220,9 @@ pub const LOCATION_AND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a67);
 ///
 /// The Navigation characteristic is used to represent data related to a navigation sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3607,7 +3235,7 @@ pub const LOCATION_AND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a67);
 ///
 /// See `sec:org.bluetooth.characteristic.navigation/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3619,12 +3247,10 @@ pub const LOCATION_AND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a67);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1*10\textsuperscript{-2` degrees
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3636,12 +3262,10 @@ pub const LOCATION_AND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a67);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1*10\textsuperscript{-2` degrees
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3653,14 +3277,11 @@ pub const LOCATION_AND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a67);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 m
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3672,14 +3293,11 @@ pub const LOCATION_AND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a67);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 m
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3691,7 +3309,6 @@ pub const LOCATION_AND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a67);
 /// ### Description
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
 /// ----
@@ -3705,12 +3322,9 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 ///
 /// The Position Quality characteristic is used to represent data related to the quality of a position measurement.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3723,7 +3337,7 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 ///
 /// See `sec:org.bluetooth.characteristic.position_quality/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3735,10 +3349,9 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3750,10 +3363,9 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3765,14 +3377,11 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.time.second
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 seconds
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3784,14 +3393,11 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 m
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3803,14 +3409,11 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 m
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3822,12 +3425,10 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 2, d = -1, b = 0
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3839,9 +3440,7 @@ pub const NAVIGATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a68);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 2, d = -1, b = 0
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
 /// ----
@@ -3855,12 +3454,9 @@ pub const POSITION_QUALITY: BluetoothUuid16 = BluetoothUuid16::new(0x2a69);
 ///
 /// The LN Feature characteristic is used to represent the supported features of a location and navigation (LN) sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3884,12 +3480,9 @@ pub const LN_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6a);
 ///
 /// The LN Control Point characteristic is used to enable device-specific procedures related to the exchange of location and navigation (LN) information.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3902,7 +3495,7 @@ pub const LN_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6a);
 ///
 /// See `sec:org.bluetooth.characteristic.ln_control_point/field/op_code_and_parameter`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -3926,12 +3519,9 @@ pub const LN_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a6b);
 ///
 /// The Elevation characteristic is used to represent the elevation. The elevation is relative to sea level unless otherwise specified in the service.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3943,9 +3533,7 @@ pub const LN_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2a6b);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.meter
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is in meters with a resolution of 0.01 m.
 ///
 /// ----
@@ -3959,12 +3547,9 @@ pub const ELEVATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a6c);
 ///
 /// The Pressure characteristic is used to represent pressure.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -3976,9 +3561,7 @@ pub const ELEVATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a6c);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.pressure.pascal
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is Pascals with a resolution of 0.1 Pa
 ///
 /// ----
@@ -3992,12 +3575,9 @@ pub const PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6d);
 ///
 /// The Temperature characteristic is used to represent a temperature.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4009,15 +3589,10 @@ pub const PRESSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6d);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is degrees Celsius with a resolution of 0.01 degrees Celsius.
-///
 /// Allowed range is: -273.15 to 327.67.
-///
 /// A value of 0x8000 represents "value is not known".
-///
 /// All other values are prohibited.
 ///
 /// ----
@@ -4031,12 +3606,9 @@ pub const TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6e);
 ///
 /// The Humidity characteristic is used to represent the humidity.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4048,15 +3620,10 @@ pub const TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a6e);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is in percent with a resolution of 0.01 percent.
-///
 /// Allowed range is: 0.00 to 100.00
-///
 /// A value of 0xFFFF represents "value is not known".
-///
 /// All other values are prohibited.
 ///
 /// ----
@@ -4070,12 +3637,9 @@ pub const HUMIDITY: BluetoothUuid16 = BluetoothUuid16::new(0x2a6f);
 ///
 /// The True Wind Speed characteristic is used to represent the true wind speed.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4087,9 +3651,7 @@ pub const HUMIDITY: BluetoothUuid16 = BluetoothUuid16::new(0x2a6f);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.metres_per_second
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is in meters per second with a resolution of 0.01 m/s.
 ///
 /// ----
@@ -4103,12 +3665,9 @@ pub const TRUE_WIND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a70);
 ///
 /// The True Wind Direction characteristic is used to represent the true wind direction. Wind direction is reported by the direction from which it originates and is an angle measured clockwise relative to Geographic North. For example, a wind coming from the north is given as 0 degrees, a wind coming from the south is given as 180 degrees, a wind coming from the east is given as 90 degrees, and a wind coming from the west is given as 270 degrees.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4119,14 +3678,10 @@ pub const TRUE_WIND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a70);
 ///
 /// ### Description
 ///
-/// Base Unit: org.bluetooth.unit.plane_angle.degree 
-///
-/// Minimum value: 0 
-///
+/// Base Unit: org.bluetooth.unit.plane_angle.degree
+/// Minimum value: 0
 /// Maximum value: 359.99
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is degrees with a resolution of 0.01 degrees.
 ///
 /// ----
@@ -4140,12 +3695,9 @@ pub const TRUE_WIND_DIRECTION: BluetoothUuid16 = BluetoothUuid16::new(0x2a71);
 ///
 /// The Apparent Wind Speed characteristic is used to represent the apparent wind speed. The apparent wind speed is the wind experienced by an observer in motion and is the relative speed of the wind in relation to the observer.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4157,9 +3709,7 @@ pub const TRUE_WIND_DIRECTION: BluetoothUuid16 = BluetoothUuid16::new(0x2a71);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.metres_per_second
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is in meters per second with a resolution of 0.01 m/s.
 ///
 /// ----
@@ -4173,12 +3723,9 @@ pub const APPARENT_WIND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a72);
 ///
 /// The Apparent Wind Direction characteristic is used to represent the apparent wind direction. The apparent wind direction is the wind experienced by an observer in motion and is the relative direction of the wind in relation to the observer. For example, the apparent wind direction aboard a boat is given in degrees relative to the heading of the boat. The apparent wind direction is reported by the direction from which it appears to originate. For example, an apparent wind coming from a direction that is 45 degrees clockwise relative to the heading of the observer is given as 45 degrees; one that is from a direction 45 degrees anti-clockwise relative to the heading of the observer is given as 315 degrees.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4190,13 +3737,9 @@ pub const APPARENT_WIND_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2a72);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Minimum value: 0
-///
 /// Maximum value: 359.99
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is degrees with a resolution of 0.01 degrees.
 ///
 /// ----
@@ -4210,12 +3753,9 @@ pub const APPARENT_WIND_DIRECTION: BluetoothUuid16 = BluetoothUuid16::new(0x2a73
 ///
 /// The Gust Factor characteristic is used to represent the gust factor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4227,9 +3767,7 @@ pub const APPARENT_WIND_DIRECTION: BluetoothUuid16 = BluetoothUuid16::new(0x2a73
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
-/// Represented values: M = 1, d = -1, b = 0 
-///
+/// Represented values: M = 1, d = -1, b = 0
 /// The factor has a fixed-point representation, where the actual factor is (attribute value * 0.1).
 ///
 /// ----
@@ -4243,12 +3781,9 @@ pub const GUST_FACTOR: BluetoothUuid16 = BluetoothUuid16::new(0x2a74);
 ///
 /// The Pollen Concentration characteristic is used to represent the pollen count.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4272,12 +3807,9 @@ pub const POLLEN_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2a75);
 ///
 /// The UV Index characteristic is used to represent the UV Index.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4301,12 +3833,9 @@ pub const UV_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2a76);
 ///
 /// The Irradiance characteristic is used to represent the irradiance, the radiant flux received by a surface per unit area.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4318,9 +3847,7 @@ pub const UV_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2a76);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.irradiance.watt_per_square_metre
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is in watt per square meter with a resolution of 0.1 W/m\textsuperscript{2`.
 ///
 /// ----
@@ -4334,12 +3861,9 @@ pub const IRRADIANCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a77);
 ///
 /// The Rainfall characteristic is used to represent the amount of rain that has fallen.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4351,9 +3875,7 @@ pub const IRRADIANCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a77);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.meter
-///
 /// Represented values: M = 1, d = -3, b = 0
-///
 /// Unit is meters with a resolution of 1mm
 ///
 /// ----
@@ -4367,12 +3889,9 @@ pub const RAINFALL: BluetoothUuid16 = BluetoothUuid16::new(0x2a78);
 ///
 /// The Wind Chill characteristic is used to represent the wind chill factor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4396,12 +3915,9 @@ pub const WIND_CHILL: BluetoothUuid16 = BluetoothUuid16::new(0x2a79);
 ///
 /// The Heat Index characteristic is used to represent the heat index.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4425,12 +3941,9 @@ pub const HEAT_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2a7a);
 ///
 /// The Dew Point characteristic is used to represent the dew point.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4442,9 +3955,7 @@ pub const HEAT_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2a7a);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit is in degrees Celsius with a resolution of 1 degree Celsius.
 ///
 /// ----
@@ -4463,12 +3974,9 @@ pub const DESCRIPTOR_VALUE_CHANGED: BluetoothUuid16 = BluetoothUuid16::new(0x2a7
 ///
 /// The Aerobic Heart Rate Lower Limit characteristic is used to represent the desired lower limit of the heart rate, where a user enhances his or her endurance while exercising.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4492,12 +4000,9 @@ pub const AEROBIC_HEART_RATE_LOWER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// The Aerobic Threshold characteristic is used to represent the aerobic threshold of a user. Aerobic Threshold and Anaerobic Threshold characteristics together with the Sport Type For Aerobic And Anaerobic Thresholds characteristic describe the metabolic thresholds of the user. The Sport Type For Aerobic And Anaerobic Thresholds characteristic value identifies how the measurement was performed.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4521,12 +4026,9 @@ pub const AEROBIC_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::new(0x2a7f);
 ///
 /// The Age characteristic is used to represent the age of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4550,12 +4052,9 @@ pub const AGE: BluetoothUuid16 = BluetoothUuid16::new(0x2a80);
 ///
 /// The Anaerobic Heart Rate Lower Limit characteristic is used to represent the desired lower limit of the heart rate, where a user enhances his or her anaerobic tolerance while exercising.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4579,12 +4078,9 @@ pub const ANAEROBIC_HEART_RATE_LOWER_LIMIT: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// The Anaerobic Heart Rate Upper Limit characteristic is used to represent the desired upper limit of the heart rate, where a user enhances his or her anaerobic tolerance while exercising.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4608,12 +4104,9 @@ pub const ANAEROBIC_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// The Anaerobic Threshold characteristic is used to represent the anaerobic threshold of a user. The Aerobic Threshold and Anaerobic Threshold characteristics together with the Sport Type For Aerobic And Anaerobic Thresholds characteristic describe the metabolic thresholds of the user. The Sport Type For Aerobic And Anaerobic Thresholds characteristic value identifies how the measurement was performed.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4637,12 +4130,9 @@ pub const ANAEROBIC_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::new(0x2a83);
 ///
 /// The Aerobic Heart Rate Upper Limit characteristic is used to represent the desired upper limit of the heart rate, where a user enhances his or her endurance while exercising.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4666,12 +4156,9 @@ pub const AEROBIC_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// The Date of Birth characteristic is used to represent the date of birth of a user as defined by the Gregorian calendar.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4682,17 +4169,13 @@ pub const AEROBIC_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// ### Description
 ///
-/// Unit: org.bluetooth.unit.time.year 
-///
-/// The Year is an integer value. 
-///
-/// Minimum value: 1582 
-///
-/// Maximum value: 9999 
-///
+/// Unit: org.bluetooth.unit.time.year
+/// The Year is an integer value.
+/// Minimum value: 1582
+/// Maximum value: 9999
 /// In addition to the above range, a special value is defined: 0 = Year is not known
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -4705,7 +4188,7 @@ pub const AEROBIC_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// See `sec:org.bluetooth.characteristic.date_of_birth/field/month`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -4716,14 +4199,10 @@ pub const AEROBIC_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// ### Description
 ///
-/// Unit: org.bluetooth.unit.time.day  
-///
-/// The Day is an integer value.  
-///
-/// Minimum value: 1 
-///
-/// Maximum value: 31  
-///
+/// Unit: org.bluetooth.unit.time.day
+/// The Day is an integer value.
+/// Minimum value: 1
+/// Maximum value: 31
 /// In addition to the above range, a special value is defined: 0 = Day of Month is not known
 ///
 /// ----
@@ -4737,12 +4216,9 @@ pub const DATE_OF_BIRTH: BluetoothUuid16 = BluetoothUuid16::new(0x2a85);
 ///
 /// The Date of Threshold Assessment characteristic is used to represent the date of threshold assessment of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4754,18 +4230,13 @@ pub const DATE_OF_BIRTH: BluetoothUuid16 = BluetoothUuid16::new(0x2a85);
 /// ### Description
 ///
 /// Year as defined by the Gregorian calendar.
-///
 /// Unit; org.bluetooth.unit.time.year
-///
 /// The Year is an integer value.
-///
 /// Minimum value: 1582
-///
 /// Maximum value: 9999
-///
 /// In addition to the above range, a special value is defined: 0 = Year is not known
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -4778,7 +4249,7 @@ pub const DATE_OF_BIRTH: BluetoothUuid16 = BluetoothUuid16::new(0x2a85);
 ///
 /// See `sec:org.bluetooth.characteristic.date_of_threshold_assessment/field/month`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -4789,14 +4260,10 @@ pub const DATE_OF_BIRTH: BluetoothUuid16 = BluetoothUuid16::new(0x2a85);
 ///
 /// ### Description
 ///
-/// Unit: org.bluetooth.unit.time.day 
-///
-/// The Day is an integer value. 
-///
-/// Minimum value: 1 
-///
-/// Maximum value: 31 
-///
+/// Unit: org.bluetooth.unit.time.day
+/// The Day is an integer value.
+/// Minimum value: 1
+/// Maximum value: 31
 /// In addition to the above range, a special value is defined: 0 = Day of Month is not known
 ///
 /// ----
@@ -4810,12 +4277,9 @@ pub const DATE_OF_THRESHOLD_ASSESSMENT: BluetoothUuid16 = BluetoothUuid16::new(0
 ///
 /// The Email Address characteristic is used to represent the email address of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4839,12 +4303,9 @@ pub const EMAIL_ADDRESS: BluetoothUuid16 = BluetoothUuid16::new(0x2a87);
 ///
 /// The Fat Burn Heart Rate Lower Limit characteristic is used to represent the desired lower limit of the heart rate, where a user maximizes the fat burn while exercising.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4868,12 +4329,9 @@ pub const FAT_BURN_HEART_RATE_LOWER_LIMIT: BluetoothUuid16 = BluetoothUuid16::ne
 ///
 /// The Fat Burn Heart Rate Upper Limit characteristic is used to represent the desired upper limit of the heart rate, where a user maximizes the fat burn while exercising.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4897,12 +4355,9 @@ pub const FAT_BURN_HEART_RATE_UPPER_LIMIT: BluetoothUuid16 = BluetoothUuid16::ne
 ///
 /// The First Name characteristic is used to represent the first name of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4926,12 +4381,9 @@ pub const FIRST_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2a8a);
 ///
 /// The Five Zone Heart Rate Limits characteristic is used to represent the limits between the heart rate zones for the five-zone heart rate definition (Maximum, Hard, Moderate, Light, and Very Light) of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -4944,7 +4396,7 @@ pub const FIRST_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2a8a);
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -4957,7 +4409,7 @@ pub const FIRST_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2a8a);
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -4970,7 +4422,7 @@ pub const FIRST_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2a8a);
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -4994,12 +4446,9 @@ pub const FIVE_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// The Gender characteristic is used to represent the gender of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5011,11 +4460,8 @@ pub const FIVE_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// 0: Male
-///
 /// 1: Female
-///
 /// 2: Unspecified
-///
 /// 3–255: Reserved for Future Use
 ///
 /// ----
@@ -5029,12 +4475,9 @@ pub const GENDER: BluetoothUuid16 = BluetoothUuid16::new(0x2a8c);
 ///
 /// The Heart Rate Max characteristic is used to represent the maximum heart rate of a user which the user intends not to exceed.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5058,12 +4501,9 @@ pub const HEART_RATE_MAX: BluetoothUuid16 = BluetoothUuid16::new(0x2a8d);
 ///
 /// The Height characteristic is used to represent the height of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5075,9 +4515,7 @@ pub const HEART_RATE_MAX: BluetoothUuid16 = BluetoothUuid16::new(0x2a8d);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.meter
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 0.01 meter.
 ///
 /// ----
@@ -5091,12 +4529,9 @@ pub const HEIGHT: BluetoothUuid16 = BluetoothUuid16::new(0x2a8e);
 ///
 /// The Hip Circumference characteristic is used to represent the hip circumference measurement of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5108,9 +4543,7 @@ pub const HEIGHT: BluetoothUuid16 = BluetoothUuid16::new(0x2a8e);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.meter
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 0.01 meter.
 ///
 /// ----
@@ -5124,12 +4557,9 @@ pub const HIP_CIRCUMFERENCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a8f);
 ///
 /// The Last Name characteristic is used to represent the last name of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5153,12 +4583,9 @@ pub const LAST_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2a90);
 ///
 /// The Maximum Recommended Heart Rate characteristic is used to represent the maximum recommended heart rate of a user. Maximum recommended heart rate is a threshold that is intended to be set to limit exertion. The maximum recommended heart rate is less than or equal to the maximum heart rate recommended for a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5182,12 +4609,9 @@ pub const MAXIMUM_RECOMMENDED_HEART_RATE: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// The Resting Heart Rate characteristic is used to represent the resting heart rate of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5211,12 +4635,9 @@ pub const RESTING_HEART_RATE: BluetoothUuid16 = BluetoothUuid16::new(0x2a92);
 ///
 /// The Sport Type for Aerobic and Anaerobic Thresholds characteristic is used to represent the sport type applicable to aerobic and anaerobic thresholds for a user. The value identifies how the measurement(s) were performed. The Aerobic Threshold and Anaerobic Threshold characteristics together with the Sport Type For Aerobic And Anaerobic Thresholds characteristic describe the metabolic thresholds of the user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5240,12 +4661,9 @@ pub const SPORT_TYPE_FOR_AEROBIC_AND_ANAEROBIC_THRESHOLDS: BluetoothUuid16 = Blu
 ///
 /// The Three Zone Heart Rate Limits characteristic is used to represent the limits between the heart rate zones for the three-zone heart rate definition (Hard, Moderate, and Light) of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5258,7 +4676,7 @@ pub const SPORT_TYPE_FOR_AEROBIC_AND_ANAEROBIC_THRESHOLDS: BluetoothUuid16 = Blu
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5282,12 +4700,9 @@ pub const THREE_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0
 ///
 /// The Two Zone Heart Rate Limits characteristic is used to represent the heart rate limit between the heart rate zones for the two-zone heart rate definition (Fitness and Fat Burn) of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5311,12 +4726,9 @@ pub const TWO_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The VO2 Max characteristic is used to represent the maximal oxygen uptake of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5340,12 +4752,9 @@ pub const VO2_MAX: BluetoothUuid16 = BluetoothUuid16::new(0x2a96);
 ///
 /// The Waist Circumference characteristic is used to represent the waist measurement of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5357,9 +4766,7 @@ pub const VO2_MAX: BluetoothUuid16 = BluetoothUuid16::new(0x2a96);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.meter
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 0.01 meter.
 ///
 /// ----
@@ -5373,12 +4780,9 @@ pub const WAIST_CIRCUMFERENCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a97);
 ///
 /// The Weight characteristic is used to represent the weight of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5390,9 +4794,7 @@ pub const WAIST_CIRCUMFERENCE: BluetoothUuid16 = BluetoothUuid16::new(0x2a97);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.mass.kilogram
-///
 /// Represented values: M = 5, d = -3, b = 0
-///
 /// Unit is 0.005 kilogram.
 ///
 /// ----
@@ -5406,12 +4808,9 @@ pub const WEIGHT: BluetoothUuid16 = BluetoothUuid16::new(0x2a98);
 ///
 /// The Database Change Increment characteristic is used to represent a count of the changes made to a set of related characteristic(s) as defined by the containing service. It is used to determine the need to synchronize this set between a Server and a Client.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5423,7 +4822,6 @@ pub const WEIGHT: BluetoothUuid16 = BluetoothUuid16::new(0x2a98);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// The Database Change Increment is a unitless integer value.
 ///
 /// ----
@@ -5437,12 +4835,9 @@ pub const DATABASE_CHANGE_INCREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 ///
 /// The User Index characteristic is used to represent the index of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5466,12 +4861,9 @@ pub const USER_INDEX: BluetoothUuid16 = BluetoothUuid16::new(0x2a9a);
 ///
 /// The Body Composition Feature characteristic is used to represent the supported features of a body composition sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5495,12 +4887,9 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 ///
 /// The Body Composition Measurement characteristic is used to represent data related to a body composition measurement.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5513,7 +4902,7 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 ///
 /// See `sec:org.bluetooth.characteristic.body_composition_measurement/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5525,12 +4914,10 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a percent
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5542,10 +4929,9 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// Refer to the Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5557,10 +4943,9 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.body_composition_measurement/field/user_id`
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5572,14 +4957,11 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.energy.joule
-///
 /// Represented values: M = 1, d = 3, b = 0
-///
 /// Unit is kilojoules
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5591,14 +4973,11 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a percent
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5610,10 +4989,9 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.body_composition_measurement/field/muscle_mass`
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5625,10 +5003,9 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.body_composition_measurement/field/fat_free_mass`
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5640,10 +5017,9 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.body_composition_measurement/field/soft_lean_mass`
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5655,10 +5031,9 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.body_composition_measurement/field/body_water_mass`
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5670,14 +5045,11 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.electric_resistance.ohm
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/10 of an Ohm
-///
 /// Present if bit 9 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5689,10 +5061,9 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.body_composition_measurement/field/weight`
-///
 /// Present if bit 10 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5704,7 +5075,6 @@ pub const BODY_COMPOSITION_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2a9
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.body_composition_measurement/field/height`
-///
 /// Present if bit 11 of Flags field is set to 1
 ///
 /// ----
@@ -5718,12 +5088,9 @@ pub const BODY_COMPOSITION_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0
 ///
 /// The Weight Measurement characteristic is used to represent data related to a weight measurement.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5736,7 +5103,7 @@ pub const BODY_COMPOSITION_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0
 ///
 /// See `sec:org.bluetooth.characteristic.weight_measurement/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5749,7 +5116,7 @@ pub const BODY_COMPOSITION_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0
 ///
 /// This field is in kilograms with resolution 0.005 if the bit 0 of the Flag field is 0 or in pounds with a resolution of 0.01 if the bit 0 of the Flag field is 1.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5761,10 +5128,9 @@ pub const BODY_COMPOSITION_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0
 /// ### Description
 ///
 /// Refer to Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5776,10 +5142,9 @@ pub const BODY_COMPOSITION_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0
 /// ### Description
 ///
 /// The special value of 0xFF for User ID represents "unknown user".
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5791,12 +5156,10 @@ pub const BODY_COMPOSITION_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0
 /// ### Description
 ///
 /// Unit is 0.1 kg/m2 or org.bluetooth.unit.kilogram_per_square_metre
-///
 /// Represented values: M = 1, d = -1, b = 0.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -5808,7 +5171,6 @@ pub const BODY_COMPOSITION_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0
 /// ### Description
 ///
 /// This field is in meters with a resolution of 0.001 if the bit 0 of the Flag field is 0 or in inches with a resolution of 0.1 if the bit 0 of the Flag field is 1.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
 /// ----
@@ -5822,12 +5184,9 @@ pub const WEIGHT_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2a9d);
 ///
 /// The Weight Scale Feature characteristic is used to represent the supported features of a weight scale.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5865,15 +5224,11 @@ pub const MAGNETIC_FLUX_DENSITY_3D: BluetoothUuid16 = BluetoothUuid16::new(0x2aa
 /// `0x2aa2` Language
 ///
 /// The Language characteristic is used to represent the preferred language of a user.
-///
-/// The Language definition is based on ISO 639-1 \RefRef{iso_639_1}.
-///
-/// 
+/// The Language definition is based on ISO 639-1 \RefRef{iso_639_1`.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5897,12 +5252,9 @@ pub const LANGUAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2aa2);
 ///
 /// The Barometric Pressure Trend characteristic is used to represent the trend observed for barometric pressure.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5941,12 +5293,9 @@ pub const CENTRAL_ADDRESS_RESOLUTION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The CGM Measurement characteristic is used to represent one or more CGM Measurement Records.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5958,7 +5307,6 @@ pub const CENTRAL_ADDRESS_RESOLUTION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// A sequence of one or more CGM Measurement Records, concatenated as defined by the service.
-///
 /// The structure of a CGM Measurement Record is defined in `sec:org.bluetooth.characteristic.cgm_measurement/field/cgm_measurement_record`.
 ///
 /// ----
@@ -5972,12 +5320,9 @@ pub const CGM_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2aa7);
 ///
 /// The CGM Feature characteristic is used to represent the supported features of a continuous glucose monitor (CGM).
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -5990,7 +5335,7 @@ pub const CGM_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2aa7);
 ///
 /// See `sec:org.bluetooth.characteristic.cgm_feature/field/cgm_feature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6003,7 +5348,7 @@ pub const CGM_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2aa7);
 ///
 /// See `sec:org.bluetooth.characteristic.cgm_feature/field/cgm_type-sample_location`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6015,7 +5360,6 @@ pub const CGM_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16::new(0x2aa7);
 /// ### Description
 ///
 /// CRC calculated over all data except the E2E-CRC field itself. See `sec:crc_calculation` for details.
-///
 /// If the service containing this characteristic does not support the E2E-CRC, this field typically has a value defined by the service such as 0xFFFF or any other value.
 ///
 /// ----
@@ -6029,12 +5373,9 @@ pub const CGM_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2aa8);
 ///
 /// The CGM Status characteristic is used to represent the current status of a continuous glucose monitor (CGM) sensor.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6047,7 +5388,7 @@ pub const CGM_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2aa8);
 ///
 /// The Time Offset field specifies the time since the Session Start Time (see `sec:org.bluetooth.characteristic.cgm_session_start_time`).
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6060,7 +5401,7 @@ pub const CGM_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2aa8);
 ///
 /// The structure of this field is identical to the structure of the combined Status fields as defined in `sec:org.bluetooth.characteristic.cgm_measurement/field/sensor_status_annunciation`, but it always consists of three octets regardless of the value.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6072,7 +5413,6 @@ pub const CGM_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2aa8);
 /// ### Description
 ///
 /// CRC calculated over all fields except the E2E-CRC field itself. See `sec:crc_calculation` for details.
-///
 /// Present if E2E-CRC Supported bit in CGM Feature characteristic is set to 1
 ///
 /// ----
@@ -6086,12 +5426,9 @@ pub const CGM_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2aa9);
 ///
 /// The CGM Session Start Time characteristic is used to represent the time the continuous glucose monitor (CGM) session is started.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6104,7 +5441,7 @@ pub const CGM_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2aa9);
 ///
 /// Refer to the Date Time characteristic in `sec:org.bluetooth.characteristic.date_time`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6117,7 +5454,7 @@ pub const CGM_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2aa9);
 ///
 /// Refer to the Time Zone characteristic in `sec:org.bluetooth.characteristic.time_zone`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6130,7 +5467,7 @@ pub const CGM_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2aa9);
 ///
 /// Refer to the DST Offset characteristic in `sec:org.bluetooth.characteristic.dst_offset`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6142,7 +5479,6 @@ pub const CGM_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2aa9);
 /// ### Description
 ///
 /// CRC calculated over all fields. See `sec:crc_calculation` for details.
-///
 /// Present if E2E-CRC Supported bit in CGM Feature characteristic is set to 1
 ///
 /// ----
@@ -6156,12 +5492,9 @@ pub const CGM_SESSION_START_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aaa)
 ///
 /// The CGM Session Run Time characteristic is used to represent the expected run time of the continuous glucose monitor (CGM) session.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6173,10 +5506,9 @@ pub const CGM_SESSION_START_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aaa)
 /// ### Description
 ///
 /// The expected run time of the CGM session in hours.
-///
 /// Unit: org.bluetooth.unit.time.hour
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6188,7 +5520,6 @@ pub const CGM_SESSION_START_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aaa)
 /// ### Description
 ///
 /// CRC calculated over all fields. See `sec:crc_calculation` for details.
-///
 /// Present if E2E-CRC Supported bit in CGM Feature characteristic is set to 1
 ///
 /// ----
@@ -6202,12 +5533,9 @@ pub const CGM_SESSION_RUN_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aab);
 ///
 /// The CGM Specific Ops Control Point characteristic is used to enable procedures related to a continuous glucose monitor (CGM).
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6220,7 +5548,7 @@ pub const CGM_SESSION_RUN_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aab);
 ///
 /// See `sec:org.bluetooth.characteristic.cgm_specific_ops_control_point/field/op_code_and_operand`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6233,7 +5561,7 @@ pub const CGM_SESSION_RUN_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aab);
 ///
 /// See `sec:org.bluetooth.characteristic.cgm_specific_ops_control_point/field/op_code_and_operand`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6245,7 +5573,6 @@ pub const CGM_SESSION_RUN_TIME: BluetoothUuid16 = BluetoothUuid16::new(0x2aab);
 /// ### Description
 ///
 /// CRC calculated over all fields except the E2E-CRC field itself. See `sec:crc_calculation` for details.
-///
 /// Present if E2E-CRC Supported bit in CGM Feature characteristic is set to 1
 ///
 /// ----
@@ -6344,12 +5671,9 @@ pub const OTS_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2abd);
 ///
 /// The Object Name characteristic is used to represent the name of the associated object.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6372,15 +5696,11 @@ pub const OBJECT_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2abe);
 /// `0x2abf` Object Type
 ///
 /// The Object Type characteristic is used to represent the type of the associated object, representing this with a UUID. The Object Type characteristic has two possible lengths, depending on whether the UUID conveyed is a 16-bit or 128-bit UUID.
-///
 /// The term gatt_uuid is not a defined Data Type but is either a 16-bit UUID using the uint16 Data Type or a 128-bit UUID using the uint128 Data Type.
-///
-/// 
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6392,7 +5712,6 @@ pub const OBJECT_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2abe);
 /// ### Description
 ///
 /// Object Type UUIDs that use the 16-bit format are defined in the Bluetooth SIG Assigned Numbers \RefRef{assigned_numbers`.
-///
 /// Object Type UUIDs that use the 128-bit format are proprietary UUIDs.
 ///
 /// ----
@@ -6421,12 +5740,9 @@ pub const OBJECT_LAST_MODIFIED: BluetoothUuid16 = BluetoothUuid16::new(0x2ac2);
 ///
 /// The Object ID characteristic is used to represent an object ID for the associated object.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6485,12 +5801,9 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 ///
 /// The Treadmill Data characteristic is used to represent data related to a treadmill.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6503,7 +5816,7 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 ///
 /// See `sec:org.bluetooth.characteristic.treadmill_data/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6515,16 +5828,12 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
-///
 /// The Instantaneous Speed field represents the instantaneous speed of the belt of the treadmill.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6536,16 +5845,12 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
-///
 /// The Average Speed field represents the average speed since the beginning of the training session.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6557,12 +5862,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.length.metre
-///
 /// The Total Distance field represents the total distance reported by the Server since the beginning of the training session.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6574,16 +5877,12 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a percent
-///
 /// The Inclination field represents the current inclination of the Server. A positive value means that the user feels as if they are going uphill and a negative value means that the user feels as if they are going downhill.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6595,16 +5894,12 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a degree
-///
 /// The Ramp Angle Setting field represents the current setting of the ramp angle of the Server.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6616,16 +5911,12 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a meter
-///
 /// The Positive Elevation Gain field represents the positive elevation gain since the training session has started.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6637,16 +5928,12 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a meter
-///
 /// The Negative Elevation Gain field represents the negative elevation gain since the training session has started.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6658,12 +5945,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Instantaneous Pace field represents the instantaneous pace of a user while exercising. This value is directly related to the instantaneous speed of the treadmill but is presented with different units.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6675,12 +5960,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Average Pace field represents the average pace of a user since the beginning of the training session. This value is directly related to the average speed of the treadmill but is presented with different units.
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6692,12 +5975,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Total Energy field represents the total expended energy of a user since the training session has started.
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6709,12 +5990,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Hour field represents the average expended energy of a user during a period of one hour.
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6726,12 +6005,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Minute field represents the average expended energy of a user during a period of one minute.
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6743,12 +6020,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// The Heart Rate field represents the current heart rate value of the user (e.g., measured via the contact heart rate or any other means).
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6760,12 +6035,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.metabolic_equivalent
-///
 /// The Metabolic Equivalent field represents the metabolic equivalent of the user.
-///
 /// Present if bit 9 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6777,12 +6050,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Elapsed Time field represents the elapsed time of a training session since the training session has started.
-///
 /// Present if bit 10 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6794,12 +6065,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Remaining Time field represents the remaining time of a training session that has been selected.
-///
 /// Present if bit 11 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6811,12 +6080,10 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.force.newton
-///
 /// The Force on Belt field represents the force being applied to the treadmill belt by the user’s steps. A positive value means that the user is accelerating the belt and a negative value means that the user is slowing down the belt
-///
 /// Present if bit 12 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6828,9 +6095,7 @@ pub const FITNESS_MACHINE_FEATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2acc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.power.watt
-///
 /// The Power Output field represents the power being applied to the treadmill by the user’s steps. A positive value means that the user is accelerating the belt and a negative value means that the user is slowing down the belt.
-///
 /// Present if bit 12 of Flags field is set to 1
 ///
 /// ----
@@ -6844,12 +6109,9 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 ///
 /// The Cross Trainer Data characteristic is used to represent data related to cross trainer activity.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -6862,7 +6124,7 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 ///
 /// See `sec:org.bluetooth.characteristic.cross_trainer_data/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6874,14 +6136,11 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6893,16 +6152,12 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
-///
 /// The Average Speed field represents the average speed since the beginning of the training session.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6914,12 +6169,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.length.metre
-///
 /// The Total Distance field represents the total distance reported by the Server since the beginning of the training session.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6931,12 +6184,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.step_per_minute
-///
 /// The Step per Minute Rate field represents the average step rate of a user during a period of one minute.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6948,12 +6199,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.step_per_minute
-///
 /// The Average Step Rate field represents the average step rate since the beginning of the training session.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6965,18 +6214,13 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10
-///
 /// A stride is a pair of steps
-///
 /// The Stride Count field represents the total number of strides since the beginning of the training session.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -6988,12 +6232,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.length.metre
-///
 /// The Positive Elevation Gain field represents the positive elevation gain since the training session has started.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7005,12 +6247,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.length.metre
-///
 /// The Negative Elevation Gain field represents the negative elevation gain since the training session has started.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7022,16 +6262,12 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a percent
-///
 /// The Inclination field represents the current inclination of the Server. A positive value means that the user feels as if they are going uphill and a negative value means that the user feels as if they are going downhill.
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7043,16 +6279,12 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.plane_angle.degree
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a degree
-///
 /// The Ramp Angle Setting field represents the current setting of the ramp angle of the Server.
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7064,16 +6296,12 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 1, d = 1, b = 0
-///
 /// Unit is 1
-///
 /// The Resistance Level field represents the value of the current value of the resistance level of the Server.
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7085,12 +6313,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.power.watt
-///
 /// The Instantaneous Power field represents the value of the instantaneous power measured by the Server.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7102,12 +6328,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.power.watt
-///
 /// The Average Power field represents the value of the average power measured by the Server since the beginning of the training session.
-///
 /// Present if bit 9 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7119,12 +6343,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Total Energy field represents the total expended energy of a user since the training session has started.
-///
 /// Present if bit 10 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7136,12 +6358,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Hour field represents the average expended energy of a user during a period of one hour.
-///
 /// Present if bit 10 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7153,12 +6373,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Minute field represents the average expended energy of a user during a period of one minute.
-///
 /// Present if bit 10 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7170,12 +6388,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// The Heart Rate field represents the current heart rate value of the user (e.g., measured via the contact heart rate or any other means).
-///
 /// Present if bit 11 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7187,16 +6403,12 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.metabolic_equivalent
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 metabolic equivalent
-///
 /// The Metabolic Equivalent field represents the metabolic equivalent of the user.
-///
 /// Present if bit 12 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7208,12 +6420,10 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Elapsed Time field represents the elapsed time of a training session since the training session has started.
-///
 /// Present if bit 13 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7225,9 +6435,7 @@ pub const TREADMILL_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acd);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Remaining Time field represents the remaining time of a training session that has been selected.
-///
 /// Present if bit 14 of Flags field is set to 1
 ///
 /// ----
@@ -7241,12 +6449,9 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 ///
 /// The Step Climber Data characteristic is used to represent data related to a step climber device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -7259,7 +6464,7 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 ///
 /// See `sec:org.bluetooth.characteristic.step_climber_data/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7271,12 +6476,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// The Floors field represents the total number of floors counted by the Server since the beginning of the training session.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7288,12 +6491,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// The Step Count field represents the total number of steps counted by the Server since the beginning of the training session
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7305,12 +6506,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.step_per_minute
-///
 /// The Step per Minute Rate field represents the average step rate of a user during a period of one minute.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7322,12 +6521,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.step_per_minute
-///
 /// The Average Step Rate field represents the average step rate since the beginning of the training session.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7339,12 +6536,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.length.metre
-///
 /// The Positive Elevation Gain field represents the positive elevation gain since the beginning of the training session.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7356,12 +6551,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Total Energy field represents the total expended energy of a user since the training session has started.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7373,12 +6566,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Hour field represents the average expended energy of a user during a period of one hour.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7390,12 +6581,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Minute field represents the average expended energy of a user during a period of one minute.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7407,12 +6596,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// The Heart Rate field represents the current heart rate value of the user (e.g., measured via the contact heart rate or any other means).
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7424,16 +6611,12 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.metabolic_equivalent
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 metabolic equivalent
-///
 /// The Metabolic Equivalent field represents the metabolic equivalent of the user.
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7445,12 +6628,10 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Elapsed Time field represents the elapsed time of a training session since the training session has started.
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7462,9 +6643,7 @@ pub const CROSS_TRAINER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ace);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Remaining Time field represents the remaining time of a selected training session.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
 /// ----
@@ -7478,12 +6657,9 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 ///
 /// The Stair Climber Data characteristic is used to represent data related to a stair climber device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -7496,7 +6672,7 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 ///
 /// See `sec:org.bluetooth.characteristic.stair_climber_data/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7508,12 +6684,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// The Floors field represents the total number of floors counted by the Server since the beginning of the training session.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7525,12 +6699,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.step_per_minute
-///
 /// The Step per Minute Rate field represents the average step rate of a user during a period of one minute.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7542,12 +6714,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.step_per_minute
-///
 /// The Average Step Rate field represents the average step rate since the beginning of the training session.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7559,12 +6729,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.length.metre
-///
 /// The Positive Elevation Gain field represents the positive elevation gain since the beginning of the training session.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7576,14 +6744,11 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// A stride is a pair of steps.
-///
 /// The Stride Count field represents the total number of strides since the beginning of the training session.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7595,12 +6760,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Total Energy field represents the total expended energy of a user since the training session has started.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7612,12 +6775,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Hour field represents the average expended energy of a user during a period of one hour.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7629,12 +6790,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Minute field represents the average expended energy of a user during a period of one minute.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7646,12 +6805,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// The Heart Rate field represents the current heart rate value of the user (e.g., measured via the contact heart rate or any other means).
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7663,16 +6820,12 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.metabolic_equivalent
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 metabolic equivalent
-///
 /// The Metabolic Equivalent field represents the metabolic equivalent of the user.
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7684,12 +6837,10 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Elapsed Time field represents the elapsed time of a training session since the training session has started.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7701,9 +6852,7 @@ pub const STEP_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2acf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Remaining Time field represents the remaining time of a training session that has been selected.
-///
 /// Present if bit 9 of Flags field is set to 1
 ///
 /// ----
@@ -7717,12 +6866,9 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 ///
 /// The Rower Data characteristic is used to represent data related to a rowing device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -7735,7 +6881,7 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 ///
 /// See `sec:org.bluetooth.characteristic.rower_data/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7747,16 +6893,12 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.stroke_per_minute
-///
 /// Represented values: M = 1, d = 0, b = -1
-///
 /// Unit is 1/2 of a stroke per minute
-///
 /// The Stroke Rate field represents the instantaneous stroke rate measured by the Server.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7768,12 +6910,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// The Stroke Count field represents the total number of strokes since the beginning of the training session.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7785,16 +6925,12 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.stroke_per_minute
-///
 /// Represented values: M = 1, d = 0, b = -1
-///
 /// Unit is 1/2 of a stroke per minute
-///
 /// The Average Stroke Rate field represents the average speed since the beginning of the training session
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7806,12 +6942,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.length.metre
-///
 /// The Total Distance field represents the total distance reported by the Server since the beginning of the training session.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7823,12 +6957,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Instantaneous Pace field represents the value of the pace (time per 500 meters) of the user while exercising.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7840,12 +6972,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Average Pace field represents the value of the average pace (time per 500 meters) since the beginning of the training session.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7857,12 +6987,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.power.watt
-///
 /// The Instantaneous Power field represents the value of the instantaneous power measured by the Server.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7874,12 +7002,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.power.watt
-///
 /// The Average Power field represents the value of the average power measured by the Server since the beginning of the training session.
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7891,16 +7017,12 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 1, d = 1, b = 0
-///
 /// Unit is 1
-///
 /// The Resistance Level field represents the value of the current value of the resistance level of the Server.
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7912,12 +7034,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Total Energy field represents the total expended energy of a user since the training session has started.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7929,12 +7049,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Hour field represents the average expended energy of a user during a period of one hour.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7946,12 +7064,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Minute field represents the average expended energy of a user during a period of one minute.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7963,12 +7079,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// The Heart Rate field represents the current heart rate value of the user (e.g., measured via the contact heart rate or any other means).
-///
 /// Present if bit 9 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -7980,16 +7094,12 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.metabolic_equivalent
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 metabolic equivalent
-///
 /// The Metabolic Equivalent field represents the metabolic equivalent of the user.
-///
 /// Present if bit 10 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8001,12 +7111,10 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Elapsed Time field represents the elapsed time of a training session since the training session has started.
-///
 /// Present if bit 11 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8018,9 +7126,7 @@ pub const STAIR_CLIMBER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad0);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Remaining Time field represents the remaining time of a selected training session.
-///
 /// Present if bit 12 of Flags field is set to 1
 ///
 /// ----
@@ -8034,12 +7140,9 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 ///
 /// The Indoor Bike Data characteristic is used to represent data related to the use of an indoor bike.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8052,7 +7155,7 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 ///
 /// See `sec:org.bluetooth.characteristic.indoor_bike_data/field/flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8064,16 +7167,12 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
-///
 /// The Instantaneous Speed field represents the instantaneous speed of the user.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8085,16 +7184,12 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
-///
 /// The Average Speed field represents the average speed since the beginning of the training session.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8106,16 +7201,12 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.angular_velocity.revolution_per_minute
-///
 /// Represented values: M = 1, d = 0, b = -1
-///
 /// Unit is 1/2 of a revolution per minute
-///
 /// The Instantaneous Cadence field represents the instantaneous cadence of the user.
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8127,16 +7218,12 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.angular_velocity.revolution_per_minute
-///
 /// Represented values: M = 1, d = 0, b = -1
-///
 /// Unit is 1/2 of a revolution per minute
-///
 /// The Average Speed field represents the average cadence since the beginning of the training session.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8148,12 +7235,10 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.length.metre
-///
 /// The Total Distance field represents the total distance reported by the Server since the beginning of the training session.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8165,16 +7250,12 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 1, d = 1, b = 0
-///
 /// Unit is 1
-///
 /// The Resistance Level field represents the value of the current value of the resistance level of the Server.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8186,12 +7267,10 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.power.watt
-///
 /// The Instantaneous Power field represents the value of the instantaneous power measured by the Server.
-///
 /// Present if bit 6 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8203,12 +7282,10 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.power.watt
-///
 /// The Average Power field represents the value of the average power measured by the Server since the beginning of the training session.
-///
 /// Present if bit 7 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8220,12 +7297,10 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Total Energy field represents the total expended energy of a user since the training session has started.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8237,12 +7312,10 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Hour field represents the average expended energy of a user during a period of one hour.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8254,12 +7327,10 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.energy.kilogram_calorie
-///
 /// The Energy per Minute field represents the average expended energy of a user during a period of one minute.
-///
 /// Present if bit 8 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8271,12 +7342,10 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// The Heart Rate field represents the current heart rate value of the user (e.g., measured via the contact heart rate or any other means).
-///
 /// Present if bit 9 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8288,16 +7357,12 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.metabolic_equivalent
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 metabolic equivalent
-///
 /// The Metabolic Equivalent field represents the metabolic equivalent of the user.
-///
 /// Present if bit 10 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8309,12 +7374,10 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Elapsed Time field represents the elapsed time of a training session since the training session has started.
-///
 /// Present if bit 11 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8326,9 +7389,7 @@ pub const ROWER_DATA: BluetoothUuid16 = BluetoothUuid16::new(0x2ad1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// The Remaining Time field represents the remaining time of a selected training session.
-///
 /// Present if bit 12 of Flags field is set to 1
 ///
 /// ----
@@ -8347,12 +7408,9 @@ pub const TRAINING_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2ad3);
 ///
 /// The Supported Speed Range characteristic is used to represent the speed range supported by a fitness machine.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8364,12 +7422,10 @@ pub const TRAINING_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2ad3);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8381,12 +7437,10 @@ pub const TRAINING_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2ad3);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8398,9 +7452,7 @@ pub const TRAINING_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2ad3);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.velocity.kilometre_per_hour
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit is 1/100 of a kilometer per hour
 ///
 /// ----
@@ -8414,12 +7466,9 @@ pub const SUPPORTED_SPEED_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad4);
 ///
 /// The Supported Inclination Range characteristic is used to represent the inclination range supported by a fitness machine.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8431,12 +7480,10 @@ pub const SUPPORTED_SPEED_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad4);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a percent
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8448,12 +7495,10 @@ pub const SUPPORTED_SPEED_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad4);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a percent
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8465,9 +7510,7 @@ pub const SUPPORTED_SPEED_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ad4);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.percentage
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is 1/10 of a percent
 ///
 /// ----
@@ -8481,12 +7524,9 @@ pub const SUPPORTED_INCLINATION_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// The Supported Resistance Level Range characteristic is used to represent the resistance level range supported by a fitness machine.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8498,12 +7538,10 @@ pub const SUPPORTED_INCLINATION_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 1, d = 1, b = 0
-///
 /// Unit is 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8515,12 +7553,10 @@ pub const SUPPORTED_INCLINATION_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 1, d = 1, b = 0
-///
 /// Unit is 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8532,9 +7568,7 @@ pub const SUPPORTED_INCLINATION_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.unitless
-///
 /// Represented values: M = 1, d = 1, b = 0
-///
 /// Unit is 1
 ///
 /// ----
@@ -8548,12 +7582,9 @@ pub const SUPPORTED_RESISTANCE_LEVEL_RANGE: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// The Supported Heart Rate Range characteristic is used to represent the heart rate range supported by a fitness machine.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8566,7 +7597,7 @@ pub const SUPPORTED_RESISTANCE_LEVEL_RANGE: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8579,7 +7610,7 @@ pub const SUPPORTED_RESISTANCE_LEVEL_RANGE: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8603,12 +7634,9 @@ pub const SUPPORTED_HEART_RATE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The Supported Power Range characteristic is used to represent the power range supported by a fitness machine.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8621,7 +7649,7 @@ pub const SUPPORTED_HEART_RATE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// Unit: org.bluetooth.unit.power.watt
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8634,7 +7662,7 @@ pub const SUPPORTED_HEART_RATE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// Unit: org.bluetooth.unit.power.watt
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8688,12 +7716,9 @@ pub const MESH_PROXY_DATA_OUT: BluetoothUuid16 = BluetoothUuid16::new(0x2ade);
 ///
 /// The Average Current characteristic is used to represent average electric current over a period of time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8706,7 +7731,7 @@ pub const MESH_PROXY_DATA_OUT: BluetoothUuid16 = BluetoothUuid16::new(0x2ade);
 ///
 /// Refer to the Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8730,12 +7755,9 @@ pub const AVERAGE_CURRENT: BluetoothUuid16 = BluetoothUuid16::new(0x2ae0);
 ///
 /// The Average Voltage characteristic is used to represent average voltage over a period of time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8748,7 +7770,7 @@ pub const AVERAGE_CURRENT: BluetoothUuid16 = BluetoothUuid16::new(0x2ae0);
 ///
 /// Refer to the Voltage characteristic in `sec:org.bluetooth.characteristic.voltage`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8772,12 +7794,9 @@ pub const AVERAGE_VOLTAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2ae1);
 ///
 /// The Boolean characteristic is used to represent the predefined Boolean values.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8799,16 +7818,12 @@ pub const BOOLEAN: BluetoothUuid16 = BluetoothUuid16::new(0x2ae2);
 ///
 /// `0x2ae3` Chromatic Distance from Planckian
 ///
-/// The Chromatic Distance from Planckian characteristic is used to represent a distance of a chromaticity coordinate from the Planckian locus in the (u′, 2/3v′) diagram as defined by ANSI standard C78.377-2008 \RefRef{ansi_anslg_c78}.
-///
+/// The Chromatic Distance from Planckian characteristic is used to represent a distance of a chromaticity coordinate from the Planckian locus in the (u′, 2/3v′) diagram as defined by ANSI standard C78.377-2008 \RefRef{ansi_anslg_c78`.
 /// The distance is positive if the chromaticity coordinate is located above the Planckian locus (i.e., has a higher y value than the Planckian), and negative if it is located below.
-///
-/// 
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8820,17 +7835,11 @@ pub const BOOLEAN: BluetoothUuid16 = BluetoothUuid16::new(0x2ae2);
 /// ### Description
 ///
 /// Unit is unitless with a resolution of 0.00001.
-///
 /// Minimum: -0.05
-///
 /// Maximum: 0.05
-///
 /// Represented values: M = 1, d = -5, b = 0
-///
 /// A value of 0x7FFF represents "value is not valid".
-///
 /// A value of 0x7FFE represents "value is not known".
-///
 /// All other values are prohibited.
 ///
 /// ----
@@ -8844,12 +7853,9 @@ pub const CHROMATIC_DISTANCE_FROM_PLANCKIAN: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// The Chromaticity Coordinates characteristic is used to represent a chromaticity coordinate.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8862,7 +7868,7 @@ pub const CHROMATIC_DISTANCE_FROM_PLANCKIAN: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// Refer to the Chromaticity Coordinate characteristic in `sec:org.bluetooth.characteristic.chromaticity_coordinate`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8886,12 +7892,9 @@ pub const CHROMATICITY_COORDINATES: BluetoothUuid16 = BluetoothUuid16::new(0x2ae
 ///
 /// The Chromaticity in CCT and Duv Values characteristic is used to represent the combination of the Correlated Color Temperature characteristic and the Chromatic Distance From Planckian characteristic.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8904,7 +7907,7 @@ pub const CHROMATICITY_COORDINATES: BluetoothUuid16 = BluetoothUuid16::new(0x2ae
 ///
 /// Refer to the Correlated Color Temperature characteristic in `sec:org.bluetooth.characteristic.correlated_color_temperature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -8926,14 +7929,11 @@ pub const CHROMATICITY_IN_CCT_AND_DUV_VALUES: BluetoothUuid16 = BluetoothUuid16:
 ///
 /// `0x2ae6` Chromaticity Tolerance
 ///
-/// The Chromaticity Tolerance characteristic is used to represent the tolerance of a tuple of chromaticity values. This tolerance represents the value of a radius of a circle in the CIE 1976 \RefRef{cie_1976} (u’,v’) diagram. This tolerance value corresponds to the 3-sigma values of the expected chromaticity deviations.
-///
-/// 
+/// The Chromaticity Tolerance characteristic is used to represent the tolerance of a tuple of chromaticity values. This tolerance represents the value of a radius of a circle in the CIE 1976 \RefRef{cie_1976` (u’,v’) diagram. This tolerance value corresponds to the 3-sigma values of the expected chromaticity deviations.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8945,11 +7945,8 @@ pub const CHROMATICITY_IN_CCT_AND_DUV_VALUES: BluetoothUuid16 = BluetoothUuid16:
 /// ### Description
 ///
 /// Unit is unitless with a resolution of 0.0001
-///
 /// Minimum: 0
-///
 /// Maximum: 0.0255
-///
 /// Represented values: M = 1, d = -4, b = 0
 ///
 /// ----
@@ -8968,12 +7965,9 @@ pub const CIE_133_1995_COLOR_RENDERING_INDEX: BluetoothUuid16 = BluetoothUuid16:
 ///
 /// The Coefficient characteristic is used to represent a general coefficient value.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -8997,12 +7991,9 @@ pub const COEFFICIENT: BluetoothUuid16 = BluetoothUuid16::new(0x2ae8);
 ///
 /// The Correlated Color Temperature characteristic is used to represent correlated color temperature.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9014,13 +8005,9 @@ pub const COEFFICIENT: BluetoothUuid16 = BluetoothUuid16::new(0x2ae8);
 /// ### Description
 ///
 /// Unit is Kelvin with a resolution of 1.
-///
 /// Minimum: 800
-///
 /// Maximum: 65534
-///
 /// Unit: org.bluetooth.unit.thermodynamic_temperature.kelvin
-///
 /// A value of 0xFFFF represents "value is not known".
 ///
 /// ----
@@ -9034,12 +8021,9 @@ pub const CORRELATED_COLOR_TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0
 ///
 /// The Count 16 characteristic is used to represent a general count value.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9051,13 +8035,9 @@ pub const CORRELATED_COLOR_TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0
 /// ### Description
 ///
 /// Unit is unitless with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 65534
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// A value of 0xFFFF represents "value is not known".
 ///
 /// ----
@@ -9071,12 +8051,9 @@ pub const COUNT_16: BluetoothUuid16 = BluetoothUuid16::new(0x2aea);
 ///
 /// The Count 24 characteristic is used to represent a general count value.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9088,13 +8065,9 @@ pub const COUNT_16: BluetoothUuid16 = BluetoothUuid16::new(0x2aea);
 /// ### Description
 ///
 /// Unit is unitless with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 16777214
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// A value of 0xFFFFFF represents "value is not known".
 ///
 /// ----
@@ -9106,14 +8079,11 @@ pub const COUNT_24: BluetoothUuid16 = BluetoothUuid16::new(0x2aeb);
 ///
 /// `0x2aec` Country Code
 ///
-/// The Country Code characteristic is used to represent a country or dependent areas in accordance with the ISO 3166-1 Numeric standard \RefRef{iso_3166_1}.
-///
-/// 
+/// The Country Code characteristic is used to represent a country or dependent areas in accordance with the ISO 3166-1 Numeric standard \RefRef{iso_3166_1`.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9125,13 +8095,9 @@ pub const COUNT_24: BluetoothUuid16 = BluetoothUuid16::new(0x2aeb);
 /// ### Description
 ///
 /// Unit is unitless with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 4095
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// A value of 0xFFFF represents "value is not known".
 ///
 /// ----
@@ -9145,12 +8111,9 @@ pub const COUNTRY_CODE: BluetoothUuid16 = BluetoothUuid16::new(0x2aec);
 ///
 /// The Date UTC characteristic is used to represent the date as days elapsed since the Epoch (Jan 1, 1970) in the Coordinated Universal Time (UTC) time zone.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9162,15 +8125,10 @@ pub const COUNTRY_CODE: BluetoothUuid16 = BluetoothUuid16::new(0x2aec);
 /// ### Description
 ///
 /// Unit is a day with a resolution of 1.
-///
 /// Minimum: 1
-///
 /// Maximum: 16777214
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.time.day
-///
 /// A value of 0x000000 represents "value is not known".
 ///
 /// ----
@@ -9184,12 +8142,9 @@ pub const DATE_UTC: BluetoothUuid16 = BluetoothUuid16::new(0x2aed);
 ///
 /// The Electric Current characteristic is used to represent an electric current.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9201,15 +8156,10 @@ pub const DATE_UTC: BluetoothUuid16 = BluetoothUuid16::new(0x2aed);
 /// ### Description
 ///
 /// Unit is ampere with a resolution of 0.01.
-///
 /// Minimum: 0
-///
 /// Maximum: 655.34
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit: org.bluetooth.unit.electric_current.ampere
-///
 /// A value of 0xFFFF represents "value is not known".
 ///
 /// ----
@@ -9223,12 +8173,9 @@ pub const ELECTRIC_CURRENT: BluetoothUuid16 = BluetoothUuid16::new(0x2aee);
 ///
 /// The Electric Current Range characteristic is used to represent a range of electric current values.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9241,7 +8188,7 @@ pub const ELECTRIC_CURRENT: BluetoothUuid16 = BluetoothUuid16::new(0x2aee);
 ///
 /// Refer to the Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9265,12 +8212,9 @@ pub const ELECTRIC_CURRENT_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2aef)
 ///
 /// The Electric Current Specification characteristic is used to represent a specification of an electric current value.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9283,7 +8227,7 @@ pub const ELECTRIC_CURRENT_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2aef)
 ///
 /// Refer to the Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9296,7 +8240,7 @@ pub const ELECTRIC_CURRENT_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2aef)
 ///
 /// Refer to the Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9320,12 +8264,9 @@ pub const ELECTRIC_CURRENT_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// The Electric Current Statistics characteristic is used to represent a set of statistical electric current values.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9338,7 +8279,7 @@ pub const ELECTRIC_CURRENT_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// Refer to the Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9351,7 +8292,7 @@ pub const ELECTRIC_CURRENT_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// Refer to the Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9364,7 +8305,7 @@ pub const ELECTRIC_CURRENT_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// Refer to the Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9377,7 +8318,7 @@ pub const ELECTRIC_CURRENT_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// Refer to the Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9401,12 +8342,9 @@ pub const ELECTRIC_CURRENT_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// The Energy characteristic is used to represent a measure of energy.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9418,15 +8356,10 @@ pub const ELECTRIC_CURRENT_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit is kilowatt-hour with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 16777214
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.energy.kilowatt_hour
-///
 /// A value of 0xFFFFFF represents "value is not known".
 ///
 /// ----
@@ -9440,12 +8373,9 @@ pub const ENERGY: BluetoothUuid16 = BluetoothUuid16::new(0x2af2);
 ///
 /// The Energy in a Period of Day characteristic is used to represent energy use in a period of a day.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9458,7 +8388,7 @@ pub const ENERGY: BluetoothUuid16 = BluetoothUuid16::new(0x2af2);
 ///
 /// Refer to the Energy characteristic in `sec:org.bluetooth.characteristic.energy`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9471,7 +8401,7 @@ pub const ENERGY: BluetoothUuid16 = BluetoothUuid16::new(0x2af2);
 ///
 /// Refer to the Time Decihour 8 characteristic in `sec:org.bluetooth.characteristic.time_decihour_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9494,13 +8424,11 @@ pub const ENERGY_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 /// `0x2af4` Event Statistics
 ///
 /// The Event Statistics characteristic is used to represent statistical values of events.
-///
 /// The structure of this characteristic is defined below
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9513,7 +8441,7 @@ pub const ENERGY_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 ///
 /// Refer to the Count 16 characteristic in `sec:org.bluetooth.characteristic.count_16`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9526,7 +8454,7 @@ pub const ENERGY_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 ///
 /// Refer to the Time Second 16 characteristic in `sec:org.bluetooth.characteristic.time_second_16`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9539,7 +8467,7 @@ pub const ENERGY_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::new(0x2a
 ///
 /// Refer to the Time Exponential 8 characteristic in `sec:org.bluetooth.characteristic.time_exponential_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9563,12 +8491,9 @@ pub const EVENT_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2af4);
 ///
 /// The Fixed String 16 characteristic is used to represent a variable-length UTF-8 string with a maximum length of 16 octets, see Volume 1, Part E, Section 2.9.3 in [1].
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9592,12 +8517,9 @@ pub const FIXED_STRING_16: BluetoothUuid16 = BluetoothUuid16::new(0x2af5);
 ///
 /// The Fixed String 24 characteristic is used to represent a variable-length UTF-8 string with a maximum length of 24 octets, see Volume 1, Part E, Section 2.9.3 in [1].
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9621,12 +8543,9 @@ pub const FIXED_STRING_24: BluetoothUuid16 = BluetoothUuid16::new(0x2af6);
 ///
 /// The Fixed String 36 characteristic is used to represent a variable-length UTF-8 string with a maximum length of 36 octets, see Volume 1, Part E, Section 2.9.3 in [1].
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9650,12 +8569,9 @@ pub const FIXED_STRING_36: BluetoothUuid16 = BluetoothUuid16::new(0x2af7);
 ///
 /// The Fixed String 8 characteristic is used to represent a variable-length UTF-8 string with a maximum length of 8 octets, see Volume 1, Part E, Section 2.9.3 in [1].
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9679,12 +8595,9 @@ pub const FIXED_STRING_8: BluetoothUuid16 = BluetoothUuid16::new(0x2af8);
 ///
 /// The Generic Level characteristic is used to represent a general level value of a setting of a device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9696,11 +8609,8 @@ pub const FIXED_STRING_8: BluetoothUuid16 = BluetoothUuid16::new(0x2af8);
 /// ### Description
 ///
 /// Unit is unitless with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 65535
-///
 /// Represented values: M = 1, d = 0, b = 0
 ///
 /// ----
@@ -9712,14 +8622,11 @@ pub const GENERIC_LEVEL: BluetoothUuid16 = BluetoothUuid16::new(0x2af9);
 ///
 /// `0x2afa` Global Trade Item Number
 ///
-/// The Global Trade Item Number characteristic is used to represent an identifier as defined by GS1 \RefRef{gs1}, with up to 14 digits.
-///
-/// 
+/// The Global Trade Item Number characteristic is used to represent an identifier as defined by GS1 \RefRef{gs1`, with up to 14 digits.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9743,12 +8650,9 @@ pub const GLOBAL_TRADE_ITEM_NUMBER: BluetoothUuid16 = BluetoothUuid16::new(0x2af
 ///
 /// The Illuminance characteristic is used to represent a measure of illuminance.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9760,17 +8664,11 @@ pub const GLOBAL_TRADE_ITEM_NUMBER: BluetoothUuid16 = BluetoothUuid16::new(0x2af
 /// ### Description
 ///
 /// Unit is lux with a resolution of 0.01.
-///
 /// Minimum: 0
-///
 /// Maximum: 167772.14
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// Unit: org.bluetooth.unit.illuminance.lux
-///
 /// A value of 0xFFFFFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -9784,12 +8682,9 @@ pub const ILLUMINANCE: BluetoothUuid16 = BluetoothUuid16::new(0x2afb);
 ///
 /// The Luminous Efficacy characteristic is used to represent a measure of luminous efficacy.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9801,17 +8696,11 @@ pub const ILLUMINANCE: BluetoothUuid16 = BluetoothUuid16::new(0x2afb);
 /// ### Description
 ///
 /// Unit is lumen per watt with a resolution of 0.1.
-///
 /// Minimum: 0
-///
 /// Maximum: 1800
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit: org.bluetooth.unit.luminous_efficacy.lumen_per_watt
-///
 /// A value of 0xFFFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -9825,12 +8714,9 @@ pub const LUMINOUS_EFFICACY: BluetoothUuid16 = BluetoothUuid16::new(0x2afc);
 ///
 /// The Luminous Energy characteristic is used to represent a measure of luminous energy.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9842,17 +8728,11 @@ pub const LUMINOUS_EFFICACY: BluetoothUuid16 = BluetoothUuid16::new(0x2afc);
 /// ### Description
 ///
 /// Unit is lumen hour with a resolution of 1000.
-///
 /// Minimum: 0
-///
 /// Maximum: 16777214000
-///
 /// Represented values: M = 1, d = 3, b = 0
-///
 /// Unit: org.bluetooth.unit.luminous_energy.lumen_per_hour
-///
 /// A value of 0xFFFFFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -9866,12 +8746,9 @@ pub const LUMINOUS_ENERGY: BluetoothUuid16 = BluetoothUuid16::new(0x2afd);
 ///
 /// The Luminous Exposure characteristic is used to represent a measure of luminous exposure.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9883,17 +8760,11 @@ pub const LUMINOUS_ENERGY: BluetoothUuid16 = BluetoothUuid16::new(0x2afd);
 /// ### Description
 ///
 /// Unit is lux hour with a resolution of 1000.
-///
 /// Minimum: 0
-///
 /// Maximum: 16777214000
-///
 /// Represented values: M = 1, d = 3, b = 0
-///
 /// Unit: org.bluetooth.unit.luminous_exposure.lux_hour
-///
 /// A value of 0xFFFFFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -9907,12 +8778,9 @@ pub const LUMINOUS_EXPOSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2afe);
 ///
 /// The Luminous Flux characteristic is used to represent a measure of luminous flux.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9924,17 +8792,11 @@ pub const LUMINOUS_EXPOSURE: BluetoothUuid16 = BluetoothUuid16::new(0x2afe);
 /// ### Description
 ///
 /// Unit is lumen with a resolution of 1
-///
 /// Minimum: 0
-///
 /// Maximum: 65534
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.luminous_flux.lumen
-///
 /// A value of 0xFFFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -9948,12 +8810,9 @@ pub const LUMINOUS_FLUX: BluetoothUuid16 = BluetoothUuid16::new(0x2aff);
 ///
 /// The Luminous Flux Range characteristic is used to represent a luminous flux range.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -9966,7 +8825,7 @@ pub const LUMINOUS_FLUX: BluetoothUuid16 = BluetoothUuid16::new(0x2aff);
 ///
 /// Refer to Luminous Flux characteristic in `sec:org.bluetooth.characteristic.luminous_flux`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -9990,12 +8849,9 @@ pub const LUMINOUS_FLUX_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b00);
 ///
 /// The Luminous Intensity characteristic is used to represent the luminous intensity of a beam of light.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10007,17 +8863,11 @@ pub const LUMINOUS_FLUX_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b00);
 /// ### Description
 ///
 /// Unit is candela with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 65534
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.luminous_intensity.candela
-///
 /// A value of 0xFFFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -10031,12 +8881,9 @@ pub const LUMINOUS_INTENSITY: BluetoothUuid16 = BluetoothUuid16::new(0x2b01);
 ///
 /// The Mass Flow characteristic is used to represent a flow of mass.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10048,17 +8895,11 @@ pub const LUMINOUS_INTENSITY: BluetoothUuid16 = BluetoothUuid16::new(0x2b01);
 /// ### Description
 ///
 /// Unit is gram/second with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 65534
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.mass_flow.gram_per_second
-///
 /// A value of 0xFFFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -10072,12 +8913,9 @@ pub const MASS_FLOW: BluetoothUuid16 = BluetoothUuid16::new(0x2b02);
 ///
 /// The Perceived Lightness characteristic is used to represent the perceived lightness of a light.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10089,11 +8927,8 @@ pub const MASS_FLOW: BluetoothUuid16 = BluetoothUuid16::new(0x2b02);
 /// ### Description
 ///
 /// Unit is unitless with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 65535
-///
 /// Represented values: M = 1, d = 0, b = 0
 ///
 /// ----
@@ -10107,12 +8942,9 @@ pub const PERCEIVED_LIGHTNESS: BluetoothUuid16 = BluetoothUuid16::new(0x2b03);
 ///
 /// The Percentage 8 characteristic is used to represent a percentage.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10124,17 +8956,11 @@ pub const PERCEIVED_LIGHTNESS: BluetoothUuid16 = BluetoothUuid16::new(0x2b03);
 /// ### Description
 ///
 /// Unit is a percentage with a resolution of 0.5.
-///
 /// Minimum: 0
-///
 /// Maximum: 100
-///
 /// Represented values: M = 1, d = 0, b = -1
-///
 /// Unit: org.bluetooth.unit.percentage
-///
 /// A value of 0xFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -10148,12 +8974,9 @@ pub const PERCENTAGE_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b04);
 ///
 /// The Power characteristic is used to represent a measure of power.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10165,17 +8988,11 @@ pub const PERCENTAGE_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b04);
 /// ### Description
 ///
 /// Unit is watt with a resolution of 0.1.
-///
 /// Minimum: 0
-///
 /// Maximum: 1677721.3
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit: org.bluetooth.unit.power.watt
-///
 /// A value of 0xFFFFFE represents "value is not valid".
-///
 /// A value of 0xFFFFFF represents "value is not known".
 ///
 /// ----
@@ -10189,12 +9006,9 @@ pub const POWER: BluetoothUuid16 = BluetoothUuid16::new(0x2b05);
 ///
 /// The Power Specification characteristic is used to represent a specification of power values.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10207,7 +9021,7 @@ pub const POWER: BluetoothUuid16 = BluetoothUuid16::new(0x2b05);
 ///
 /// Refer to Power characteristic in `sec:org.bluetooth.characteristic.power`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10220,7 +9034,7 @@ pub const POWER: BluetoothUuid16 = BluetoothUuid16::new(0x2b05);
 ///
 /// Refer to Power characteristic in `sec:org.bluetooth.characteristic.power`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10244,12 +9058,9 @@ pub const POWER_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b06);
 ///
 /// The Relative Runtime in a Current Range characteristic is used to represent a relative value in an electric current range.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10262,7 +9073,7 @@ pub const POWER_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b06);
 ///
 /// Refer to Percentage 8 characteristic in `sec:org.bluetooth.characteristic.percentage_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10275,7 +9086,7 @@ pub const POWER_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b06);
 ///
 /// Refer to Electric Current characteristic in `sec:org.bluetooth.characteristic.electric_current`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10299,12 +9110,9 @@ pub const RELATIVE_RUNTIME_IN_A_CURRENT_RANGE: BluetoothUuid16 = BluetoothUuid16
 ///
 /// The Relative Runtime in a Generic Level Range characteristic is used to represent a runtime in a generic level range.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10317,7 +9125,7 @@ pub const RELATIVE_RUNTIME_IN_A_CURRENT_RANGE: BluetoothUuid16 = BluetoothUuid16
 ///
 /// Refer to Percentage 8 characteristic in `sec:org.bluetooth.characteristic.percentage_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10330,7 +9138,7 @@ pub const RELATIVE_RUNTIME_IN_A_CURRENT_RANGE: BluetoothUuid16 = BluetoothUuid16
 ///
 /// Refer to Generic Level characteristic in `sec:org.bluetooth.characteristic.generic_level`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10354,12 +9162,9 @@ pub const RELATIVE_RUNTIME_IN_A_GENERIC_LEVEL_RANGE: BluetoothUuid16 = Bluetooth
 ///
 /// The Relative Value in a Voltage Range characteristic is used to represent a relative value in a voltage range.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10372,7 +9177,7 @@ pub const RELATIVE_RUNTIME_IN_A_GENERIC_LEVEL_RANGE: BluetoothUuid16 = Bluetooth
 ///
 /// Refer to Percentage 8 characteristic in `sec:org.bluetooth.characteristic.percentage_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10385,7 +9190,7 @@ pub const RELATIVE_RUNTIME_IN_A_GENERIC_LEVEL_RANGE: BluetoothUuid16 = Bluetooth
 ///
 /// Refer to Voltage characteristic in `sec:org.bluetooth.characteristic.voltage`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10409,12 +9214,9 @@ pub const RELATIVE_VALUE_IN_A_VOLTAGE_RANGE: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// The Relative Value in an Illuminance Range characteristic is used to represent a relative value in an illuminance range.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10427,7 +9229,7 @@ pub const RELATIVE_VALUE_IN_A_VOLTAGE_RANGE: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// Refer to Percentage 8 characteristic in `sec:org.bluetooth.characteristic.percentage_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10440,7 +9242,7 @@ pub const RELATIVE_VALUE_IN_A_VOLTAGE_RANGE: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// Refer to Illuminance characteristic in `sec:org.bluetooth.characteristic.illuminance`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10464,12 +9266,9 @@ pub const RELATIVE_VALUE_IN_AN_ILLUMINANCE_RANGE: BluetoothUuid16 = BluetoothUui
 ///
 /// The Relative Value in a Period of Day characteristic is used to represent the combination of the Percentage 8 characteristic and two instances of the Time Decihour 8 characteristic.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10482,7 +9281,7 @@ pub const RELATIVE_VALUE_IN_AN_ILLUMINANCE_RANGE: BluetoothUuid16 = BluetoothUui
 ///
 /// Refer to Percentage 8 characteristic in `sec:org.bluetooth.characteristic.percentage_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10495,7 +9294,7 @@ pub const RELATIVE_VALUE_IN_AN_ILLUMINANCE_RANGE: BluetoothUuid16 = BluetoothUui
 ///
 /// Refer to Time Decihour 8 characteristic in `sec:org.bluetooth.characteristic.time_decihour_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10519,12 +9318,9 @@ pub const RELATIVE_VALUE_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// The Relative Value in a Temperature Range characteristic is used to represent the combination of the Percentage 8 characteristic and two instances of the Temperature characteristic.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10537,7 +9333,7 @@ pub const RELATIVE_VALUE_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// Refer to Percentage 8 characteristic in `sec:org.bluetooth.characteristic.percentage_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10550,7 +9346,7 @@ pub const RELATIVE_VALUE_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// Refer to Temperature characteristic in `sec:org.bluetooth.characteristic.temperature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10574,12 +9370,9 @@ pub const RELATIVE_VALUE_IN_A_TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid
 ///
 /// The Temperature 8 characteristic is used to represent a measure of temperature with a limited range.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10591,15 +9384,10 @@ pub const RELATIVE_VALUE_IN_A_TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid
 /// ### Description
 ///
 /// Unit is degree Celsius with a resolution of 0.5.
-///
 /// Minimum: -64.0
-///
 /// Maximum: 63.0
-///
 /// Represented values: M = 1, d = 0, b = -1
-///
 /// Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius
-///
 /// A value of 0x7F represents "value is not known".
 ///
 /// ----
@@ -10613,12 +9401,9 @@ pub const TEMPERATURE_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b0d);
 ///
 /// The Temperature 8 in a Period of Day characteristic is used to represent a temperature setting over a period of time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10631,7 +9416,7 @@ pub const TEMPERATURE_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b0d);
 ///
 /// Refer to Temperature 8 characteristic in `sec:org.bluetooth.characteristic.temperature_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10644,7 +9429,7 @@ pub const TEMPERATURE_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b0d);
 ///
 /// Refer to Time Decihour 8 characteristic in `sec:org.bluetooth.characteristic.time_decihour_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10668,12 +9453,9 @@ pub const TEMPERATURE_8_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// The Temperature 8 Statistics characteristic is used to represent temperature statistics over a period of time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10686,7 +9468,7 @@ pub const TEMPERATURE_8_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// Refer to Temperature 8 characteristic in `sec:org.bluetooth.characteristic.temperature_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10699,7 +9481,7 @@ pub const TEMPERATURE_8_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// Refer to Temperature 8 characteristic in `sec:org.bluetooth.characteristic.temperature_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10712,7 +9494,7 @@ pub const TEMPERATURE_8_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// Refer to Temperature 8 characteristic in `sec:org.bluetooth.characteristic.temperature_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10725,7 +9507,7 @@ pub const TEMPERATURE_8_IN_A_PERIOD_OF_DAY: BluetoothUuid16 = BluetoothUuid16::n
 ///
 /// Refer to Temperature 8 characteristic in `sec:org.bluetooth.characteristic.temperature_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10749,12 +9531,9 @@ pub const TEMPERATURE_8_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b0
 ///
 /// The Temperature Range characteristic is used to represent a temperature range.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10767,7 +9546,7 @@ pub const TEMPERATURE_8_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b0
 ///
 /// Refer to Temperature characteristic in `sec:org.bluetooth.characteristic.temperature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10791,12 +9570,9 @@ pub const TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b10);
 ///
 /// The Temperature Statistics characteristic is used to represent temperature statistics over a period of time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10809,7 +9585,7 @@ pub const TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b10);
 ///
 /// Refer to Temperature characteristic in `sec:org.bluetooth.characteristic.temperature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10822,7 +9598,7 @@ pub const TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b10);
 ///
 /// Refer to Temperature characteristic in `sec:org.bluetooth.characteristic.temperature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10835,7 +9611,7 @@ pub const TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b10);
 ///
 /// Refer to Temperature characteristic in `sec:org.bluetooth.characteristic.temperature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10848,7 +9624,7 @@ pub const TEMPERATURE_RANGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b10);
 ///
 /// Refer to Temperature characteristic in `sec:org.bluetooth.characteristic.temperature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -10872,12 +9648,9 @@ pub const TEMPERATURE_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b11)
 ///
 /// The Time Decihour 8 characteristic is used to represent a period of time in tenths of an hour.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10889,17 +9662,11 @@ pub const TEMPERATURE_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b11)
 /// ### Description
 ///
 /// Unit is hour with a resolution of 0.1.
-///
 /// Minimum: 0.0
-///
 /// Maximum: 23.9
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit: org.bluetooth.unit.time.hour
-///
 /// A value of 0xFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -10913,12 +9680,9 @@ pub const TIME_DECIHOUR_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b12);
 ///
 /// The Time Exponential 8 characteristic is used to represent a measure of a period of time in seconds.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10930,17 +9694,11 @@ pub const TIME_DECIHOUR_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b12);
 /// ### Description
 ///
 /// The time duration is given by the value 1.1\textsuperscript{N–64` in seconds, with N being the raw 8-bit value.
-///
 /// Minimum: 0.0
-///
 /// Maximum: 66560641
-///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// A raw value of 0x00 represents 0 seconds.
-///
 /// A raw value of 0xFE represents the total life of the device.
-///
 /// A raw value of 0xFF represents "value is not known".
 ///
 /// ----
@@ -10954,12 +9712,9 @@ pub const TIME_EXPONENTIAL_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b13);
 ///
 /// The Time Hour 24 characteristic is used to represent a period of time in hours.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -10971,13 +9726,9 @@ pub const TIME_EXPONENTIAL_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b13);
 /// ### Description
 ///
 /// Unit is hour with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 16777214
-///
 /// Unit: org.bluetooth.unit.time.hour
-///
 /// A value of 0xFFFFFF represents "value is not known".
 ///
 /// ----
@@ -10991,12 +9742,9 @@ pub const TIME_HOUR_24: BluetoothUuid16 = BluetoothUuid16::new(0x2b14);
 ///
 /// The Time Millisecond 24 characteristic is used to represent a period of time with a resolution of 1 millisecond.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11008,15 +9756,10 @@ pub const TIME_HOUR_24: BluetoothUuid16 = BluetoothUuid16::new(0x2b14);
 /// ### Description
 ///
 /// Unit is second with a resolution of 0.001.
-///
 /// Minimum: 0
-///
 /// Maximum: 16777.214
-///
 /// Represented values: M = 1, d = -3, b = 0
-///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// A value of 0xFFFFFF represents "value is not known".
 ///
 /// ----
@@ -11030,12 +9773,9 @@ pub const TIME_MILLISECOND_24: BluetoothUuid16 = BluetoothUuid16::new(0x2b15);
 ///
 /// The Time Second 16 characteristic is used to represent a period of time with a unit of 1 second.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11047,13 +9787,9 @@ pub const TIME_MILLISECOND_24: BluetoothUuid16 = BluetoothUuid16::new(0x2b15);
 /// ### Description
 ///
 /// Unit is second with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 65534
-///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// A value of 0xFFFF represents "value is not known".
 ///
 /// ----
@@ -11067,12 +9803,9 @@ pub const TIME_SECOND_16: BluetoothUuid16 = BluetoothUuid16::new(0x2b16);
 ///
 /// The Time Second 8 characteristic is used to represent a period of time with a unit of 1 second.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11084,13 +9817,9 @@ pub const TIME_SECOND_16: BluetoothUuid16 = BluetoothUuid16::new(0x2b16);
 /// ### Description
 ///
 /// Unit is second with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 254
-///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// A value of 0xFF represents "value is not known".
 ///
 /// ----
@@ -11104,12 +9833,9 @@ pub const TIME_SECOND_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b17);
 ///
 /// The Voltage characteristic is used to represent a measure of positive electric potential difference.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11121,17 +9847,11 @@ pub const TIME_SECOND_8: BluetoothUuid16 = BluetoothUuid16::new(0x2b17);
 /// ### Description
 ///
 /// Unit is volt with a resolution of 1/64V.
-///
 /// Minimum: 0.0
-///
 /// Maximum: 1022.0
-///
 /// Represented values: M = 1, d = 0, b = -6
-///
 /// Unit: org.bluetooth.unit.electric_potential_difference.volt
-///
 /// A value of 0xFFFF represents "value is not known".
-///
 /// The minimum representable value represents the minimum value or lower, the maximum representable value represents the maximum value or higher.
 ///
 /// ----
@@ -11145,12 +9865,9 @@ pub const VOLTAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b18);
 ///
 /// The Voltage Specification characteristic is used to represent a specification of voltage values.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11163,7 +9880,7 @@ pub const VOLTAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b18);
 ///
 /// Refer to Voltage characteristic in `sec:org.bluetooth.characteristic.voltage`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11176,7 +9893,7 @@ pub const VOLTAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2b18);
 ///
 /// Refer to Voltage characteristic in `sec:org.bluetooth.characteristic.voltage`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11200,12 +9917,9 @@ pub const VOLTAGE_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b19);
 ///
 /// The Voltage Statistics characteristic is used to represent a set of statistical voltage values over a period of time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11218,7 +9932,7 @@ pub const VOLTAGE_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b19);
 ///
 /// Refer to Voltage characteristic in `sec:org.bluetooth.characteristic.voltage`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11231,7 +9945,7 @@ pub const VOLTAGE_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b19);
 ///
 /// Refer to Voltage characteristic in `sec:org.bluetooth.characteristic.voltage`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11244,7 +9958,7 @@ pub const VOLTAGE_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b19);
 ///
 /// Refer to Voltage characteristic in `sec:org.bluetooth.characteristic.voltage`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11257,7 +9971,7 @@ pub const VOLTAGE_SPECIFICATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b19);
 ///
 /// Refer to Voltage characteristic in `sec:org.bluetooth.characteristic.voltage`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11281,12 +9995,9 @@ pub const VOLTAGE_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b1a);
 ///
 /// The Volume Flow characteristic is used to represent a flow of a general volume such as a volume of material or gas.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11298,17 +10009,11 @@ pub const VOLTAGE_STATISTICS: BluetoothUuid16 = BluetoothUuid16::new(0x2b1a);
 /// ### Description
 ///
 /// Unit is liter/second with a resolution of 0.001 (1 milliliter).
-///
 /// Minimum: 0
-///
 /// Maximum: 65534
-///
 /// Represented values: M = 1, d = -3, b = 0
-///
 /// Unit: org.bluetooth.unit.volume_flow.litre_per_second
-///
 /// A value of 0xFFFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -11320,14 +10025,11 @@ pub const VOLUME_FLOW: BluetoothUuid16 = BluetoothUuid16::new(0x2b1b);
 ///
 /// `0x2b1c` Chromaticity Coordinate
 ///
-/// The Chromaticity Coordinate characteristic is used to represent an x- or y-coordinate in a color diagram such as the CIE1931 diagram \RefRef{cie_1931}.
-///
-/// 
+/// The Chromaticity Coordinate characteristic is used to represent an x- or y-coordinate in a color diagram such as the CIE1931 diagram \RefRef{cie_1931`.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11339,11 +10041,8 @@ pub const VOLUME_FLOW: BluetoothUuid16 = BluetoothUuid16::new(0x2b1b);
 /// ### Description
 ///
 /// Unit is unitless with a resolution of 1/65535
-///
 /// Minimum: 0
-///
 /// Maximum: 1.0
-///
 /// Represented values: M = 1, d = 0, b = -16
 ///
 /// ----
@@ -11472,12 +10171,9 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 ///
 /// The Enhanced Blood Pressure Measurement characteristic is used to represent data related to a blood pressure measurement that includes a UTC time stamp and a user facing time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11490,7 +10186,7 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 ///
 /// See `sec:org.bluetooth.characteristic.enhanced_blood_pressure_measurement/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11502,10 +10198,9 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.enhanced_blood_pressure_measurement/field/blood_pressure_measurement_compound_value_(mmhg)`.
-///
 /// Present if bit 0 of Flags field is set to 0
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11517,10 +10212,9 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.enhanced_blood_pressure_measurement/field/blood_pressure_measurement_compound_value_(kpa)`.
-///
 /// Present if bit 0 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11532,12 +10226,10 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 /// ### Description
 ///
 /// Unit: Seconds, since Epoch Start
-///
 /// See `sec:org.bluetooth.characteristic.enhanced_blood_pressure_measurement/field/time_stamp`.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11549,10 +10241,9 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11564,10 +10255,9 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_measurement/field/user_id`.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11579,10 +10269,9 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_measurement/field/measurement_status`.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11594,9 +10283,7 @@ pub const ACS_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2b33);
 /// ### Description
 ///
 /// Unit: Seconds, since Epoch Start
-///
 /// See `sec:org.bluetooth.characteristic.enhanced_blood_pressure_measurement/field/user_facing_time`.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
 /// ----
@@ -11610,12 +10297,9 @@ pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16
 ///
 /// The Enhanced Intermediate Cuff Pressure characteristic is used to represent enhanced intermediate Cuff Pressure values for display purposes while a measurement is in progress and includes a UTC time stamp and a user facing time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11628,7 +10312,7 @@ pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16
 ///
 /// See `sec:org.bluetooth.characteristic.enhanced_intermediate_cuff_pressure/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11640,16 +10324,12 @@ pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.pressure.millimetre_of_mercury
-///
 /// or
-///
 /// Base Unit: org.bluetooth.unit.pressure.pascal;
-///
 /// M = 1, d = 3, and b = 0
-///
 /// If bit 0 of the Flags field is set to 0, units are mmHG, else units are kPa.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11661,12 +10341,10 @@ pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// Unit: Seconds since Epoch Start
-///
 /// See `sec:org.bluetooth.characteristic.enhanced_blood_pressure_measurement/field/time_stamp`.
-///
 /// Present if bit 1 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11678,10 +10356,9 @@ pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// Present if bit 2 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11693,10 +10370,9 @@ pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_measurement/field/user_id`.
-///
 /// Present if bit 3 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11708,10 +10384,9 @@ pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_measurement/field/measurement_status`.
-///
 /// Present if bit 4 of Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11723,9 +10398,7 @@ pub const ENHANCED_BLOOD_PRESSURE_MEASUREMENT: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// Unit: Seconds since Epoch Start
-///
 /// See `sec:org.bluetooth.characteristic.enhanced_blood_pressure_measurement/field/user_facing_time`.
-///
 /// Present if bit 5 of Flags field is set to 1
 ///
 /// ----
@@ -11739,12 +10412,9 @@ pub const ENHANCED_INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16
 ///
 /// The Blood Pressure Record characteristic is a container that represents a stored value of a blood pressure measurement or of any other characteristic as specified by the service using the characteristic.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11757,7 +10427,7 @@ pub const ENHANCED_INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16
 ///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_record/field/segmentation_header`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11769,10 +10439,9 @@ pub const ENHANCED_INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// Contains a sequence number of the record. The sequence number starts at 0 and loops back to 0 after 65536 records (per user).
-///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_record/field/sequence_number`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11784,10 +10453,9 @@ pub const ENHANCED_INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// Contains the UUID of the contained characteristic value.
-///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_record/field/uuid`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11799,10 +10467,9 @@ pub const ENHANCED_INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// Contains a part of or a complete characteristic value.
-///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_record/field/recorded_characteristic`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -11814,9 +10481,7 @@ pub const ENHANCED_INTERMEDIATE_CUFF_PRESSURE: BluetoothUuid16 = BluetoothUuid16
 /// ### Description
 ///
 /// Contains the CRC over all the data of a complete single or multi-message record.
-///
 /// See `sec:org.bluetooth.characteristic.blood_pressure_record/field/e2e-crc`.
-///
 /// The presence of this field is defined by the service using this characteristic.
 ///
 /// ----
@@ -11905,12 +10570,9 @@ pub const PHYSICAL_ACTIVITY_SESSION_DESCRIPTOR: BluetoothUuid16 = BluetoothUuid1
 ///
 /// The Preferred Units characteristic is the list of units the user prefers.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11934,12 +10596,9 @@ pub const PREFERRED_UNITS: BluetoothUuid16 = BluetoothUuid16::new(0x2b46);
 ///
 /// The High Resolution Height characteristic is used to represent the height of a user and is used when a resolution of 0.1 mm is required.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11951,9 +10610,7 @@ pub const PREFERRED_UNITS: BluetoothUuid16 = BluetoothUuid16::new(0x2b46);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.meter
-///
 /// Represented values: M = 1, d = -4, b = 0
-///
 /// Unit is meter with 0.0001 m (e.g., 0.1 mm)
 ///
 /// ----
@@ -11967,12 +10624,9 @@ pub const HIGH_RESOLUTION_HEIGHT: BluetoothUuid16 = BluetoothUuid16::new(0x2b47)
 ///
 /// The Middle Name characteristic is used to represent the middle name of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -11996,12 +10650,9 @@ pub const MIDDLE_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2b48);
 ///
 /// The Stride Length characteristic is used to represent the stride length of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12013,9 +10664,7 @@ pub const MIDDLE_NAME: BluetoothUuid16 = BluetoothUuid16::new(0x2b48);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = -3, b = 0
-///
 /// Unit is meter with a resolution of 0.001 m (e.g., 1 mm)
 ///
 /// ----
@@ -12029,12 +10678,9 @@ pub const STRIDE_LENGTH: BluetoothUuid16 = BluetoothUuid16::new(0x2b49);
 ///
 /// The Handedness characteristic is used to represent the handedness of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12058,12 +10704,9 @@ pub const HANDEDNESS: BluetoothUuid16 = BluetoothUuid16::new(0x2b4a);
 ///
 /// The Device Wearing Position characteristic is used to represent the position where a user is wearing the device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12087,12 +10730,9 @@ pub const DEVICE_WEARING_POSITION: BluetoothUuid16 = BluetoothUuid16::new(0x2b4b
 ///
 /// The Four Zone Heart Rate Limits characteristic is used to represent the limits between the heart rate zones for the four-zone heart rate definition (Maximum, Hard, Moderate, and Light) of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12105,7 +10745,7 @@ pub const DEVICE_WEARING_POSITION: BluetoothUuid16 = BluetoothUuid16::new(0x2b4b
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12118,7 +10758,7 @@ pub const DEVICE_WEARING_POSITION: BluetoothUuid16 = BluetoothUuid16::new(0x2b4b
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12142,12 +10782,9 @@ pub const FOUR_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// The High Intensity Exercise Threshold characteristic is used to represent the high intensity exercise threshold of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12160,7 +10797,7 @@ pub const FOUR_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// See `sec:org.bluetooth.characteristic.high_intensity_exercise_threshold/field/field_selector`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12172,14 +10809,11 @@ pub const FOUR_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.energy.joule
-///
 /// Represented values: M = 1, d = 3, b = 0
-///
 /// Unit is joule with a resolution of 1000 joules
-///
 /// Present if value of Field Selector field is 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12191,14 +10825,11 @@ pub const FOUR_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.metabolic_equivalent
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit is MET with a resolution of 0.1 MET (i.e., kcal/kg/hour)
-///
 /// Present if value of Field Selector field is 2
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12210,10 +10841,9 @@ pub const FOUR_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.percentage
-///
 /// Present if value of Field Selector field is 3
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12225,7 +10855,6 @@ pub const FOUR_ZONE_HEART_RATE_LIMITS: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.period.beats_per_minute
-///
 /// Present if value of Field Selector field is 4
 ///
 /// ----
@@ -12239,12 +10868,9 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// The Activity Goal characteristic is used to represent the goal or target of a user, such as number of steps or total energy expenditure, related to a physical activity session.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12257,7 +10883,7 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 ///
 /// See `sec:org.bluetooth.characteristic.activity_goal/field/presence_flags`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12269,14 +10895,11 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.energy.joule
-///
 /// Represented values: M = 1, d = 3, b = 0
-///
 /// Unit is joule with a resolution of 1000 J.
-///
 /// Present if bit 0 of Presence Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12288,10 +10911,9 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// Present if bit 1 of Presence Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12303,10 +10925,9 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// Present if bit 2 of Presence Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12318,10 +10939,9 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// Present if bit 3 of Presence Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12333,14 +10953,11 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = 1, b = 0
-///
 /// Unit is meter with a resolution of 1 m.
-///
 /// Present if bit 4 of Presence Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12352,10 +10969,9 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// Present if bit 5 of Presence Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -12367,7 +10983,6 @@ pub const HIGH_INTENSITY_EXERCISE_THRESHOLD: BluetoothUuid16 = BluetoothUuid16::
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// Present if bit 6 of Presence Flags field is set to 1
 ///
 /// ----
@@ -12381,12 +10996,9 @@ pub const ACTIVITY_GOAL: BluetoothUuid16 = BluetoothUuid16::new(0x2b4e);
 ///
 /// The Sedentary Interval Notification characteristic is used to represent the sedentary interval notification of a user. The sedentary interval notification is the sedentary time interval after which a user wants to be notified.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12398,7 +11010,6 @@ pub const ACTIVITY_GOAL: BluetoothUuid16 = BluetoothUuid16::new(0x2b4e);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// See `sec:org.bluetooth.characteristic.sedentary_interval_notification/field/sedentary_interval_notification`
 ///
 /// ----
@@ -12412,12 +11023,9 @@ pub const SEDENTARY_INTERVAL_NOTIFICATION: BluetoothUuid16 = BluetoothUuid16::ne
 ///
 /// The Caloric Intake characteristic is used to represent the calorie intake per day of a user.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12536,12 +11144,9 @@ pub const ENCRYPTED_DATA_KEY_MATERIAL: BluetoothUuid16 = BluetoothUuid16::new(0x
 ///
 /// The Apparent Energy 32 characteristic is used to represent the integral of Apparent Power over a time interval.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12553,17 +11158,11 @@ pub const ENCRYPTED_DATA_KEY_MATERIAL: BluetoothUuid16 = BluetoothUuid16::new(0x
 /// ### Description
 ///
 /// Unit is kilovolt ampere hour with resolution of 1 volt ampere hour.
-///
 /// Minimum: 0
-///
 /// Maximum: 4294967.293
-///
 /// Represented values: M = 1, d = -3, b = 0
-///
 /// Unit: org.bluetooth.unit. electrical_apparent_energy.kilovolt_ampere_hour
-///
 /// A value of 0xFFFFFFFE represents "value is not valid".
-///
 /// A value of 0xFFFFFFFF represents "value is not known".
 ///
 /// ----
@@ -12577,12 +11176,9 @@ pub const APPARENT_ENERGY_32: BluetoothUuid16 = BluetoothUuid16::new(0x2b89);
 ///
 /// The Apparent Power characteristic is used to represent the product of the quadratic mean values of voltage and current.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12594,17 +11190,11 @@ pub const APPARENT_ENERGY_32: BluetoothUuid16 = BluetoothUuid16::new(0x2b89);
 /// ### Description
 ///
 /// Unit is volt ampere with resolution of 0.1.
-///
-/// Minimum: 0 
-///
+/// Minimum: 0
 /// Maximum: 1677721.3
-///
 /// Represented values: M = 1, d = -1, b = 0
-///
 /// Unit: org.bluetooth.unit. electrical_apparent_power.volt_ampere
-///
 /// A value of 0xFFFFFE represents "value is not valid".
-///
 /// A value of 0xFFFFFF represents "value is not known".
 ///
 /// ----
@@ -12621,14 +11211,11 @@ pub const LIVE_HEALTH_OBSERVATIONS: BluetoothUuid16 = BluetoothUuid16::new(0x2b8
 ///
 /// `0x2b8c` CO\textsubscript{2} Concentration
 ///
-/// The CO\textsubscript{2} Concentration characteristic is used to represent a measure of carbon dioxide concentration.
-///
-/// 
+/// The CO\textsubscript{2` Concentration characteristic is used to represent a measure of carbon dioxide concentration.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12640,15 +11227,10 @@ pub const LIVE_HEALTH_OBSERVATIONS: BluetoothUuid16 = BluetoothUuid16::new(0x2b8
 /// ### Description
 ///
 /// Unit is parts per million (ppm) with a resolution of 1.
-///
 /// Unit: org.bluetooth.unit.ppm
-///
 /// Represented values: M = 1, d = 0, b =0
-///
 /// Allowed range is: 0 to 65533.
-///
 /// A value of 0xFFFE represents "value is 65534 or greater".
-///
 /// A value of 0xFFFF represents "value is not known".
 ///
 /// ----
@@ -12662,12 +11244,9 @@ pub const CO2_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b8c);
 ///
 /// The Cosine of the Angle characteristic represents a value of the cosine of an angle.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12679,17 +11258,11 @@ pub const CO2_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2b8c);
 /// ### Description
 ///
 /// This is a unitless value, expressed as Cos(θ) x 100, with a resolution of 1.
-///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// Minimum: -100
-///
 /// Maximum: 100
-///
 /// Represented values: M = 1, d = -2, b = 0
-///
 /// A raw value of 0x7F represents "value is not known".
-///
 /// All other values are prohibited.
 ///
 /// ----
@@ -12833,12 +11406,9 @@ pub const SEARCH_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2ba7);
 ///
 /// The Energy 32 characteristic is used to represent a measure of energy.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -12850,17 +11420,11 @@ pub const SEARCH_CONTROL_POINT: BluetoothUuid16 = BluetoothUuid16::new(0x2ba7);
 /// ### Description
 ///
 /// Unit is kilowatt-hour with a resolution of 1 Watt–hour.
-///
 /// Minimum: 0
-///
 /// Maximum: 4294967.293
-///
 /// Represented values: M = 1, d = -3, b = 0
-///
 /// Unit: org.bluetooth.unit.energy.kilowatt_hour
-///
 /// A value of 0xFFFFFFFE represents "value is not valid".
-///
 /// A value of 0xFFFFFFFF represents "value is not known".
 ///
 /// ----
@@ -12939,12 +11503,9 @@ pub const BEARER_LIST_CURRENT_CALLS: BluetoothUuid16 = BluetoothUuid16::new(0x2b
 ///
 /// The Content Control ID (CCID) characteristic is used to represent a unique instance of a service that either controls or provides status information on an audio-related feature. Examples of audio-related features include media players and telephone bearers. The value of a CCID characteristic is a unique identifier for each instance of the characteristic on the device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13066,14 +11627,11 @@ pub const SUPPORTED_AUDIO_CONTEXTS: BluetoothUuid16 = BluetoothUuid16::new(0x2bc
 ///
 /// `0x2bcf` Ammonia Concentration
 ///
-/// The Ammonia Concentration characteristic is used to represent a measure of ammonia (NH\textsubscript{3}) concentration.
-///
-/// 
+/// The Ammonia Concentration characteristic is used to represent a measure of ammonia (NH\textsubscript{3`) concentration.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13085,9 +11643,7 @@ pub const SUPPORTED_AUDIO_CONTEXTS: BluetoothUuid16 = BluetoothUuid16::new(0x2bc
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.density.kilogram_per_cubic_meter
-///
 /// The special value NRes is used to report a value outside the available range and resolution, possibly resulting from an overflow or underflow situation.
-///
 /// The special value NaN is used to report an invalid result from a computation step or to indicate missing data due to the hardware’s inability to provide a valid measurement, perhaps from sensor perturbation.
 ///
 /// ----
@@ -13101,12 +11657,9 @@ pub const AMMONIA_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bcf);
 ///
 /// The Carbon Monoxide Concentration characteristic is used to represent a measure of carbon monoxide (CO) concentration.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13118,9 +11671,7 @@ pub const AMMONIA_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bcf);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.density.kilogram_per_cubic_meter
-///
 /// The special value NRes is used to report a value outside the available range and resolution, possibly resulting from an overflow or underflow situation.
-///
 /// The special value NaN is used to report an invalid result from a computation step or to indicate missing data due to the hardware’s inability to provide a valid measurement, perhaps from sensor perturbation.
 ///
 /// ----
@@ -13132,14 +11683,11 @@ pub const CARBON_MONOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(
 ///
 /// `0x2bd1` Methane Concentration
 ///
-/// The Methane Concentration characteristic is used to represent a measure of methane (CH\textsubscript{4}) concentration.
-///
-/// 
+/// The Methane Concentration characteristic is used to represent a measure of methane (CH\textsubscript{4`) concentration.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13151,9 +11699,7 @@ pub const CARBON_MONOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.concentration.parts_per_billion
-///
 /// The special value NRes is used to report a value outside the available range and resolution, possibly resulting from an overflow or underflow situation.
-///
 /// The special value NaN is used to report an invalid result from a computation step or to indicate missing data due to the hardware’s inability to provide a valid measurement, perhaps from sensor perturbation.
 ///
 /// ----
@@ -13165,14 +11711,11 @@ pub const METHANE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd1);
 ///
 /// `0x2bd2` Nitrogen Dioxide Concentration
 ///
-/// The Nitrogen Dioxide Concentration characteristic is used to represent a measure of nitrogen dioxide (NO\textsubscript{2}) concentration.
-///
-/// 
+/// The Nitrogen Dioxide Concentration characteristic is used to represent a measure of nitrogen dioxide (NO\textsubscript{2`) concentration.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13184,9 +11727,7 @@ pub const METHANE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bd1);
 /// ### Description
 ///
 /// Unit: org.bluetooth.unit.density.kilogram_per_cubic_meter
-///
 /// The special value NRes is used to report a value outside the available range and resolution, possibly resulting from an overflow or underflow situation.
-///
 /// The special value NaN is used to report an invalid result from a computation step or to indicate missing data due to the hardware’s inability to provide a valid measurement, perhaps from sensor perturbation.
 ///
 /// ----
@@ -13200,12 +11741,9 @@ pub const NITROGEN_DIOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new
 ///
 /// The Non-Methane Volatile Organic Compounds Concentration characteristic is used to represent a measure of non-methane volatile organic compounds (NMVOCs) concentration.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13217,9 +11755,7 @@ pub const NITROGEN_DIOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.density.kilogram_per_cubic_meter
-///
 /// The special value NRes is used to report a value outside the available range and resolution, possibly resulting from an overflow or underflow situation.
-///
 /// The special value NaN is used to report an invalid result from a computation step or to indicate missing data due to the hardware’s inability to provide a valid measurement, perhaps from sensor perturbation.
 ///
 /// ----
@@ -13231,14 +11767,11 @@ pub const NON_METHANE_VOLATILE_ORGANIC_COMPOUNDS_CONCENTRATION: BluetoothUuid16 
 ///
 /// `0x2bd4` Ozone Concentration
 ///
-/// The Ozone Concentration characteristic is used to represent a measure of ozone (O\textsubscript{3}) concentration.
-///
-/// 
+/// The Ozone Concentration characteristic is used to represent a measure of ozone (O\textsubscript{3`) concentration.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13250,9 +11783,7 @@ pub const NON_METHANE_VOLATILE_ORGANIC_COMPOUNDS_CONCENTRATION: BluetoothUuid16 
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.density.kilogram_per_cubic_meter
-///
 /// The special value NRes is used to report a value outside the available range and resolution, possibly resulting from an overflow or underflow situation.
-///
 /// The special value NaN is used to report an invalid result from a computation step or to indicate missing data due to the hardware’s inability to provide a valid measurement, perhaps from sensor perturbation.
 ///
 /// ----
@@ -13279,14 +11810,11 @@ pub const PARTICULATE_MATTER_PM10_CONCENTRATION: BluetoothUuid16 = BluetoothUuid
 ///
 /// `0x2bd8` Sulfur Dioxide Concentration
 ///
-/// The Sulfur Dioxide Concentration characteristic is used to represent a measure of sulfur dioxide (SO\textsubscript{2}) concentration.
-///
-/// 
+/// The Sulfur Dioxide Concentration characteristic is used to represent a measure of sulfur dioxide (SO\textsubscript{2`) concentration.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13298,9 +11826,7 @@ pub const PARTICULATE_MATTER_PM10_CONCENTRATION: BluetoothUuid16 = BluetoothUuid
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.density.kilogram_per_cubic_meter
-///
 /// The special value NRes is used to report a value outside the available range and resolution, possibly resulting from an overflow or underflow situation.
-///
 /// The special value NaN is used to report an invalid result from a computation step or to indicate missing data due to the hardware’s inability to provide a valid measurement, perhaps from sensor perturbation.
 ///
 /// ----
@@ -13312,14 +11838,11 @@ pub const SULFUR_DIOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0
 ///
 /// `0x2bd9` Sulfur Hexafluoride Concentration
 ///
-/// The Sulfur Hexafluoride Concentration characteristic is used to represent a measure of sulfur hexafluoride (SF\textsubscript{6}) concentration.
-///
-/// 
+/// The Sulfur Hexafluoride Concentration characteristic is used to represent a measure of sulfur hexafluoride (SF\textsubscript{6`) concentration.
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13331,9 +11854,7 @@ pub const SULFUR_DIOXIDE_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.density.kilogram_per_cubic_meter
-///
 /// The special value NRes is used to report a value outside the available range and resolution, possibly resulting from an overflow or underflow situation.
-///
 /// The special value NaN is used to report an invalid result from a computation step or to indicate missing data due to the hardware’s inability to provide a valid measurement, perhaps from sensor perturbation.
 ///
 /// ----
@@ -13367,12 +11888,9 @@ pub const STORED_HEALTH_OBSERVATIONS: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The Fixed String 64 characteristic is used to represent a variable-length UTF-8 string with a maximum length of 64 octets, see Volume 1, Part E, Section 2.9.3 in [1].
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13396,12 +11914,9 @@ pub const FIXED_STRING_64: BluetoothUuid16 = BluetoothUuid16::new(0x2bde);
 ///
 /// The High Temperature characteristic is used to represent a temperature within a wide range of possible temperatures.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13413,19 +11928,12 @@ pub const FIXED_STRING_64: BluetoothUuid16 = BluetoothUuid16::new(0x2bde);
 /// ### Description
 ///
 /// Unit is degree Celsius with a resolution of 0.5.
-///
 /// Minimum value: -273
-///
 /// Maximum value: 16383.5
-///
 /// Represented values: M = 1, d = 0, b = -1
-///
 /// Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius
-///
 /// A value of 0x8001 represents "value is not valid".
-///
 /// A value of 0x8000 represents "value is not known".
-///
 /// All other values are prohibited.
 ///
 /// ----
@@ -13439,12 +11947,9 @@ pub const HIGH_TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2bdf);
 ///
 /// The High Voltage characteristic is used to represent a measure of positive electric potential difference.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13456,15 +11961,10 @@ pub const HIGH_TEMPERATURE: BluetoothUuid16 = BluetoothUuid16::new(0x2bdf);
 /// ### Description
 ///
 /// Unit is volt with a resolution of 1/64V.
-///
 /// Minimum: 0.0
-///
 /// Maximum: 262143.97
-///
 /// Represented values: M = 1, d = 0, b = 6
-///
 /// Unit: org.bluetooth.unit.electric_potential_difference.volt
-///
 /// A value of 0xFFFFFF represents "value is not known".
 ///
 /// ----
@@ -13477,15 +11977,11 @@ pub const HIGH_VOLTAGE: BluetoothUuid16 = BluetoothUuid16::new(0x2be0);
 /// `0x2be1` Light Distribution
 ///
 /// The Light Distribution characteristic is used to represent the projected pattern of outdoor light that a fixture disperses onto a surface. This type of lighting is used in the middle of a pathway and is great for narrow pathways. Type II is commonly used on larger walkways and in roadway lighting because it is good for a larger but still narrow areas. This type is often used on side streets or jogging paths. Type III is very commonly used in roadway lighting, because it gives a bit more coverage further from the point source outward. Type III lighting needs to be placed to the side of the area, allowing the light to project outward and fill the area. Type IV light distribution produces a semicircular light that is intended to be used on the sides of buildings and walls. This type also does a great job lighting up a parking area perimeter.
-///
 /// Type V, the widest distribution pattern, is excellent for illuminating the inside portions of a parking lot, or for a 4-way intersection.
-///
-/// 
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13509,12 +12005,9 @@ pub const LIGHT_DISTRIBUTION: BluetoothUuid16 = BluetoothUuid16::new(0x2be1);
 ///
 /// The Light Output characteristic is used to represent a measure of the total quantity of visible light emitted by a source per unit of time.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13526,17 +12019,11 @@ pub const LIGHT_DISTRIBUTION: BluetoothUuid16 = BluetoothUuid16::new(0x2be1);
 /// ### Description
 ///
 /// Unit is Lumen with resolution of 1.
-///
 /// Minimum is 0
-///
 /// Maximum 16777213
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.illuminance.lumen
-///
 /// A value of 0xFFFFFE represents "value is not valid".
-///
 /// A value of 0xFFFFFF represents "value is not known".
 ///
 /// ----
@@ -13550,12 +12037,9 @@ pub const LIGHT_OUTPUT: BluetoothUuid16 = BluetoothUuid16::new(0x2be2);
 ///
 /// The Light Source Type characteristic is used to represent the means by which a luminaire generates light.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13579,12 +12063,9 @@ pub const LIGHT_SOURCE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2be3);
 ///
 /// The Noise characteristic is used to represent a measure of sound pressure level.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13596,13 +12077,9 @@ pub const LIGHT_SOURCE_TYPE: BluetoothUuid16 = BluetoothUuid16::new(0x2be3);
 /// ### Description
 ///
 /// Unit is decibel with a resolution of 1.
-///
 /// Unit: org.bluetooth.unit.sound_pressure.decibel_spl
-///
 /// Allowed range is: 0 to 253.
-///
 /// A value of 0xFE represents ‘value is 254 or greater’.
-///
 /// A value of 0xFF represents "value is not known".
 ///
 /// ----
@@ -13616,12 +12093,9 @@ pub const NOISE: BluetoothUuid16 = BluetoothUuid16::new(0x2be4);
 ///
 /// The Relative Runtime in a Correlated Color Temperature Range characteristic is used to represent a relative runtime in a correlated color temperature range.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13634,7 +12108,7 @@ pub const NOISE: BluetoothUuid16 = BluetoothUuid16::new(0x2be4);
 ///
 /// Refer to Percentage 8 characteristic in `sec:org.bluetooth.characteristic.percentage_8`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13647,7 +12121,7 @@ pub const NOISE: BluetoothUuid16 = BluetoothUuid16::new(0x2be4);
 ///
 /// Refer to Correlated Color Temperature characteristic in `sec:org.bluetooth.characteristic.correlated_color_temperature`
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13671,12 +12145,9 @@ pub const RELATIVE_RUNTIME_IN_A_CORRELATED_COLOR_TEMPERATURE_RANGE: BluetoothUui
 ///
 /// The Time Second 32 characteristic is used to represent a period of time with a unit of 1 second.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13688,15 +12159,10 @@ pub const RELATIVE_RUNTIME_IN_A_CORRELATED_COLOR_TEMPERATURE_RANGE: BluetoothUui
 /// ### Description
 ///
 /// Unit is second with a resolution of 1.
-///
 /// Minimum: 0
-///
 /// Maximum: 4294967294
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.time.second
-///
 /// A value of 0xFFFFFFFF represents "value is not known".
 ///
 /// ----
@@ -13710,12 +12176,9 @@ pub const TIME_SECOND_32: BluetoothUuid16 = BluetoothUuid16::new(0x2be6);
 ///
 /// The VOC Concentration characteristic is used to represent a measure of volatile organic compounds concentration.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13727,15 +12190,10 @@ pub const TIME_SECOND_32: BluetoothUuid16 = BluetoothUuid16::new(0x2be6);
 /// ### Description
 ///
 /// Unit is parts per billion (ppb) with a resolution of 1.
-///
 /// Unit: org.bluetooth.unit.ppb
-///
 /// Represented values: M = 1, d = 0, b =0
-///
 /// Allowed range is: 0 to 65533.
-///
 /// A value of 0xFFFE represents "value is 65534 or greater".
-///
 /// A value of 0xFFFF represents "value is not known".
 ///
 /// ----
@@ -13749,12 +12207,9 @@ pub const VOC_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2be7);
 ///
 /// The Voltage Frequency characteristic is used to represent power supply voltage frequency.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13766,19 +12221,12 @@ pub const VOC_CONCENTRATION: BluetoothUuid16 = BluetoothUuid16::new(0x2be7);
 /// ### Description
 ///
 /// Unit is hertz with resolution of 1.
-///
 /// Minimum: 1
-///
 /// Maximum: 65533
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.hertz
-///
 /// A value of 0 represents DC power supply.
-///
 /// A value of 0xFFFE represents "value is not valid".
-///
 /// A value of 0xFFFF represents "value is not known".
 ///
 /// ----
@@ -13792,12 +12240,9 @@ pub const VOLTAGE_FREQUENCY: BluetoothUuid16 = BluetoothUuid16::new(0x2be8);
 ///
 /// The Battery Critical Status characteristic is used to represent that the device will possibly not function as expected due to low energy or service required.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13821,12 +12266,9 @@ pub const BATTERY_CRITICAL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2be9
 ///
 /// The Battery Health Status characteristic is used to represent several aspects of battery health.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13839,7 +12281,7 @@ pub const BATTERY_CRITICAL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2be9
 ///
 /// See `sec:org.bluetooth.characteristic.battery_health_status/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13851,16 +12293,12 @@ pub const BATTERY_CRITICAL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2be9
 /// ### Description
 ///
 /// Represents aggregation of the overall health of the battery where 100% represents new working condition and 0% represents the end of its expected lifetime when replacement is required. The value within this range is determined by the implementation.
-///
 /// Unit is percentage with a resolution of 1.
-///
 /// Allowed range is 0 to 100.
-///
 /// Base unit: org.bluetooth.unit.percentage
-///
 /// Present if bit 0 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13872,12 +12310,10 @@ pub const BATTERY_CRITICAL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2be9
 /// ### Description
 ///
 /// Represents the count value of charge cycles where one charge cycle is a discharge equivalent to the capacity of the battery at full charge in its current condition.
-///
 /// Unit is unitless with a resolution of 1.
-///
 /// Present if bit 1 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13889,16 +12325,12 @@ pub const BATTERY_CRITICAL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2be9
 /// ### Description
 ///
 /// Represents the current temperature of the battery.
-///
 /// Base Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius
-///
 /// A raw value of 0x7F represents: Greater than 126.
-///
 /// A raw value of 0x80 represents: Less than -127.
-///
 /// Present if bit 2 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13910,9 +12342,7 @@ pub const BATTERY_CRITICAL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2be9
 /// ### Description
 ///
 /// Represents the number of times the battery was completely discharged.
-///
 /// Unit is unitless with a resolution of 1.
-///
 /// Present if bit 3 of the Flags field is set to 1
 ///
 /// ----
@@ -13926,12 +12356,9 @@ pub const BATTERY_HEALTH_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bea);
 ///
 /// The Battery Health Information characteristic is used to represent the health of a battery.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -13944,7 +12371,7 @@ pub const BATTERY_HEALTH_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bea);
 ///
 /// See `sec:org.bluetooth.characteristic.battery_health_information/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13956,12 +12383,10 @@ pub const BATTERY_HEALTH_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bea);
 /// ### Description
 ///
 /// Represents the designed number of charge cycles supported by the device where one charge cycle is a discharge equivalent to the capacity of the battery at full charge in its current condition.
-///
 /// Unit is unitless with a resolution of 1.
-///
 /// Present if bit 0 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13973,16 +12398,12 @@ pub const BATTERY_HEALTH_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bea);
 /// ### Description
 ///
 /// Represents the minimum designed operating temperature of the battery.
-///
 /// Base Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius
-///
 /// A raw value of 0x7F represents: Greater than 126.
-///
 /// A raw value of 0x80 represents: Less than -127.
-///
 /// Present if bit 1 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -13994,13 +12415,9 @@ pub const BATTERY_HEALTH_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bea);
 /// ### Description
 ///
 /// Represents the maximum designed operating temperature of the battery.
-///
 /// Base Unit: org.bluetooth.unit.thermodynamic_temperature.degree_celsius
-///
 /// A raw value of 0x7F represents: Greater than 126.
-///
 /// A raw value of 0x80 represents: Less than -127.
-///
 /// Present if bit 1 of the Flags field is set to 1
 ///
 /// ----
@@ -14014,12 +12431,9 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The Battery Information characteristic is used to represent the physical characteristics of a battery in the context of the battery’s connection in a device.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14032,7 +12446,7 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// See `sec:org.bluetooth.characteristic.battery_information/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14045,7 +12459,7 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 ///
 /// The supported features of the battery. See `sec:org.bluetooth.characteristic.battery_information/field/battery_features`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14057,14 +12471,11 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Battery date of manufacture specified as days elapsed since the Epoch (Jan 1, 1970) in the Coordinated Universal Time (UTC) time zone.
-///
 /// Refer to the Date UTC characteristic in `sec:org.bluetooth.characteristic.date_utc`.
-///
 /// Base unit: org.bluetooth.unit.time.day
-///
 /// Present if bit 0 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14076,14 +12487,11 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Battery expiration date specified as days elapsed since the Epoch (Jan 1, 1970) in the Coordinated Universal Time (UTC) time zone.
-///
 /// Refer to the Date UTC characteristic in `sec:org.bluetooth.characteristic.date_utc`.
-///
 /// Base unit: org.bluetooth.unit.time.day
-///
 /// Present if bit 1 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14095,14 +12503,11 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// The capacity of the battery in kilowatt-hours at full charge in original (new) condition.
-///
 /// Base unit: org.bluetooth.unit.energy.kilowatt_hour
-///
 /// Allowed values are all positive real numbers.
-///
 /// Present if bit 2 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14114,14 +12519,11 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// The battery energy value in kilowatt-hours when the battery is low.
-///
 /// Base unit: org.bluetooth.unit.energy.kilowatt_hour
-///
 /// Allowed values are all positive real numbers.
-///
 /// Present if bit 3 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14133,14 +12535,11 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// The battery energy value in kilowatt-hours when the battery is critical.
-///
 /// Base unit: org.bluetooth.unit.energy.kilowatt_hour
-///
 /// Allowed values are all positive real numbers.
-///
 /// Present if bit 4 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14152,10 +12551,9 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// See `sec:org.bluetooth.characteristic.battery_information/field/battery_chemistry`.
-///
 /// Present if bit 5 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14167,14 +12565,11 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Nominal voltage of the battery in units of volts.
-///
 /// Base unit: org.bluetooth.unit.electric_potential_difference.volt
-///
 /// Allowed values are all real numbers.
-///
 /// Present if bit 6 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14186,13 +12581,9 @@ pub const BATTERY_HEALTH_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2
 /// ### Description
 ///
 /// Indicates the Battery Aggregation Group to which this instance of the battery service is associated.
-///
 /// 0: Not in an aggregation group
-///
 /// 1–254: Battery Aggregation Group Number
-///
 /// 255: RFU
-///
 /// Present if bit 7 of the Flags field is set to 1
 ///
 /// ----
@@ -14206,12 +12597,9 @@ pub const BATTERY_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bec);
 ///
 /// The Battery Level Status characteristic is used to represent the power state of a battery, an identifier used to identify the specific battery associated with the data, and the battery level.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14224,7 +12612,7 @@ pub const BATTERY_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bec);
 ///
 /// See `sec:org.bluetooth.characteristic.battery_level_status/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14237,7 +12625,7 @@ pub const BATTERY_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bec);
 ///
 /// See `sec:org.bluetooth.characteristic.battery_level_status/field/power_state`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14249,10 +12637,9 @@ pub const BATTERY_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bec);
 /// ### Description
 ///
 /// Used as an identifier for a service instance. Populated with a valid value from the GATT Bluetooth Namespace Descriptions \RefRef{assigned_numbers`.
-///
 /// Present if bit 0 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14264,10 +12651,9 @@ pub const BATTERY_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bec);
 /// ### Description
 ///
 /// Refer to the Battery Level characteristic in `sec:org.bluetooth.characteristic.battery_level`.
-///
 /// Present if bit 1 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14279,9 +12665,7 @@ pub const BATTERY_INFORMATION: BluetoothUuid16 = BluetoothUuid16::new(0x2bec);
 /// ### Description
 ///
 /// Contains additional status information such as whether or not service is required.
-///
 /// See `sec:org.bluetooth.characteristic.battery_level_status/field/additional_status`.
-///
 /// Present if bit 2 of the Flags field is set to 1
 ///
 /// ----
@@ -14295,12 +12679,9 @@ pub const BATTERY_LEVEL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bed);
 ///
 /// The Battery Time Status characteristic is used to represent time estimates for discharging and charging.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14313,7 +12694,7 @@ pub const BATTERY_LEVEL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bed);
 ///
 /// See `sec:org.bluetooth.characteristic.battery_time_status/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14325,14 +12706,11 @@ pub const BATTERY_LEVEL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bed);
 /// ### Description
 ///
 /// Estimated time in minutes until discharged.
-///
 /// Base unit: org.bluetooth.unit.time.minute
-///
 /// A value of 0xFFFFFF represents: Unknown
-///
 /// A value of 0xFFFFFE represents: Greater than 0xFFFFFD
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14344,16 +12722,12 @@ pub const BATTERY_LEVEL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bed);
 /// ### Description
 ///
 /// Estimated time in minutes until discharged assuming for the remaining time the device is in standby.
-///
 /// Base unit: org.bluetooth.unit.time.minute
-///
 /// A value of 0xFFFFFF represents: Unknown
-///
 /// A value of 0xFFFFFE: represents: Greater than 0xFFFFFD
-///
 /// Present if bit 0 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14365,13 +12739,9 @@ pub const BATTERY_LEVEL_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bed);
 /// ### Description
 ///
 /// Estimated time in minutes until recharged.
-///
 /// Base unit: org.bluetooth.unit.time.minute
-///
 /// A value of 0xFFFFFF represents: Unknown
-///
 /// A value of 0xFFFFFE represents: Greater than 0xFFFFFD
-///
 /// Present if bit 1 of the Flags field is set to 1
 ///
 /// ----
@@ -14385,12 +12755,9 @@ pub const BATTERY_TIME_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bee);
 ///
 /// The Estimated Service Date characteristic is used to represent the estimated date when replacement or servicing is required.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14402,9 +12769,7 @@ pub const BATTERY_TIME_STATUS: BluetoothUuid16 = BluetoothUuid16::new(0x2bee);
 /// ### Description
 ///
 /// Estimated service date specified as days elapsed since the Epoch (Jan 1, 1970) in the Coordinated Universal Time (UTC) time zone.
-///
 /// Refer to the Date UTC characteristic in `sec:org.bluetooth.characteristic.date_utc`.
-///
 /// Base unit: org.bluetooth.unit.time.day
 ///
 /// ----
@@ -14418,12 +12783,9 @@ pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef)
 ///
 /// The Battery Energy Status characteristic is used to represent details about the energy status of the battery.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14436,7 +12798,7 @@ pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef)
 ///
 /// See `sec:org.bluetooth.characteristic.battery_energy_status/field/flags`.
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14448,14 +12810,11 @@ pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef)
 /// ### Description
 ///
 /// The total power being consumed from an external power source in watts for its Battery Aggregation Group.
-///
 /// Base unit: org.bluetooth.unit.power.watt
-///
 /// Allowed values are 0 and all positive real numbers.
-///
 /// Present if bit 0 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14467,14 +12826,11 @@ pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef)
 /// ### Description
 ///
 /// The present terminal voltage of the battery in volts.
-///
 /// Base unit: org.bluetooth.unit.electric_potential_difference.volt
-///
 /// Allowed values are all real numbers.
-///
 /// Present if bit 1 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14486,14 +12842,11 @@ pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef)
 /// ### Description
 ///
 /// The available energy of the battery in kilowatt-hours in its current charge state.
-///
 /// Base unit: org.bluetooth.unit.energy.kilowatt_hour
-///
 /// Allowed values are 0 and all positive real numbers.
-///
 /// Present if bit 2 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14505,14 +12858,11 @@ pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef)
 /// ### Description
 ///
 /// The capacity of the battery in kilowatt-hours at full charge in its current condition.
-///
 /// Base unit: org.bluetooth.unit.energy.kilowatt_hour
-///
 /// Allowed values are 0 and all positive real numbers.
-///
 /// Present if bit 3 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14524,14 +12874,11 @@ pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef)
 /// ### Description
 ///
 /// The energy flowing into the battery in watts. Positive values indicate charging, and negative values indicate discharging.
-///
 /// Base unit: org.bluetooth.unit.power.watt
-///
 /// Allowed values are all real numbers.
-///
 /// Present if bit 4 of the Flags field is set to 1
 ///
-/// ----
+/// ----///
 /// ### Data Type
 ///
 /// |  |  |
@@ -14543,11 +12890,8 @@ pub const ESTIMATED_SERVICE_DATE: BluetoothUuid16 = BluetoothUuid16::new(0x2bef)
 /// ### Description
 ///
 /// The available energy of the battery in kilowatt-hours in its last charge state.
-///
 /// Base unit: org.bluetooth.unit.energy.kilowatt_hour
-///
 /// Allowed values are 0 and all positive real numbers.
-///
 /// Present if bit 5 of the Flags field is set to 1
 ///
 /// ----
@@ -14659,24 +13003,17 @@ pub const BGR_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2c04);
 ///
 /// `0x2c05` Percentage 8 Steps
 ///
-/// The Percentage 8 Steps characteristic is used to represent a number of steps between 0% and 100% when configuring a Percentage 8 characteristic value (see \autoref{sec:org.bluetooth.characteristic.percentage_8}).
-///
+/// The Percentage 8 Steps characteristic is used to represent a number of steps between 0% and 100% when configuring a Percentage 8 characteristic value (see `sec:org.bluetooth.characteristic.percentage_8`).
 /// For example:
-///
-/// \begin{itemize}
-///
+/// \begin{itemize`
 /// \item A value of 1 represents one step: 0% to 100% in one 100% step.
-///
 /// \item A value of 5 represents five steps: 0% to 100% in five 20% steps.
-///
 /// \item A value of 200 represents 200 steps: 0% to 100% in 200 0.5% steps.
-///
-/// \end{itemize}
+/// \end{itemize`
 ///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14688,17 +13025,11 @@ pub const BGR_FEATURES: BluetoothUuid16 = BluetoothUuid16::new(0x2c04);
 /// ### Description
 ///
 /// Unit is the number of steps from the minimum to the maximum value.
-///
 /// Minimum: 1
-///
 /// Maximum: 200
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit: org.bluetooth.unit.unitless
-///
 /// A value of 0xFF represents "value is not known".
-///
 /// All other values are Prohibited.
 ///
 /// ----
@@ -14712,12 +13043,9 @@ pub const PERCENTAGE_8_STEPS: BluetoothUuid16 = BluetoothUuid16::new(0x2c05);
 ///
 /// The Acceleration characteristic is used to represent the acceleration of an object along a given axis as determined by the service.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14729,13 +13057,9 @@ pub const PERCENTAGE_8_STEPS: BluetoothUuid16 = BluetoothUuid16::new(0x2c05);
 /// ### Description
 ///
 /// Base Unit:
-///
 /// org.bluetooth.unit.acceleration.metres_per_seconds_squared
-///
 /// Represented values: M = 1, d = -3, b = 0
-///
 /// Unit is meter per second squared with a resolution of 1mm per second squared.
-///
 /// A value of 0x7FFFFFFF represents "value is not known".
 ///
 /// ----
@@ -14749,12 +13073,9 @@ pub const ACCELERATION: BluetoothUuid16 = BluetoothUuid16::new(0x2c06);
 ///
 /// The Force characteristic is used to represent the force being applied to an object along a given axis.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14766,11 +13087,8 @@ pub const ACCELERATION: BluetoothUuid16 = BluetoothUuid16::new(0x2c06);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.force.newton
-///
 /// Represented values: M = 1, d = -3, b = 0
-///
 /// Unit is Newton with a resolution of 1/1000 N (1 mN).
-///
 /// A value of 0x7FFFFFFF represents "value is not known".
 ///
 /// ----
@@ -14784,12 +13102,9 @@ pub const FORCE: BluetoothUuid16 = BluetoothUuid16::new(0x2c07);
 ///
 /// The Linear Position characteristic is used to represent the linear position of an object along a given axis and referencing to the device-specific zero point.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14801,11 +13116,8 @@ pub const FORCE: BluetoothUuid16 = BluetoothUuid16::new(0x2c07);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = - 7, b = 0
-///
 /// Unit is meter with a resolution of 1/10000000 m (100 nm).
-///
 /// A value of 0x7FFFFFFF represents "value is not known".
 ///
 /// ----
@@ -14819,12 +13131,9 @@ pub const LINEAR_POSITION: BluetoothUuid16 = BluetoothUuid16::new(0x2c08);
 ///
 /// The Rotational Speed characteristic is used to represent the rotational speed of an object rotating around a device-specific axis.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14836,17 +13145,11 @@ pub const LINEAR_POSITION: BluetoothUuid16 = BluetoothUuid16::new(0x2c08);
 /// ### Description
 ///
 /// Base Unit:
-///
 /// org.bluetooth.unit.rotational_speed.revolutions_per_minute
-///
 /// Represented values: M = 1, d = 0, b = 0
-///
 /// Unit is revolutions per minute (RPM) with a resolution of 1 RPM.
-///
 /// Negative values indicate counter-clockwise rotation.
-///
 /// Positive values indicate clockwise rotation.
-///
 /// A value of 0x7FFFFFFF represents "value is not known".
 ///
 /// ----
@@ -14860,12 +13163,9 @@ pub const ROTATIONAL_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2c09);
 ///
 /// The Length characteristic is used to represent the measured dimension of an object along a given axis.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14877,11 +13177,8 @@ pub const ROTATIONAL_SPEED: BluetoothUuid16 = BluetoothUuid16::new(0x2c09);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.length.metre
-///
 /// Represented values: M = 1, d = - 7, b = 0
-///
 /// Unit is meters with a resolution of 1/10000000 m (100 nm).
-///
 /// A value of 0xFFFFFFFF represents "value is not known".
 ///
 /// ----
@@ -14895,12 +13192,9 @@ pub const LENGTH: BluetoothUuid16 = BluetoothUuid16::new(0x2c0a);
 ///
 /// The Torque characteristic is used to represent the measured magnitude of torque (or moment of force) around a device-specific axis.
 ///
-/// 
-///
 /// ----
 /// ## Structure
 ///
-/// 
 /// ### Data Type
 ///
 /// |  |  |
@@ -14912,13 +13206,9 @@ pub const LENGTH: BluetoothUuid16 = BluetoothUuid16::new(0x2c0a);
 /// ### Description
 ///
 /// Base Unit: org.bluetooth.unit.moment_of_force.newton_metre
-///
 /// Represented values: M = 1, d = - 2, b = 0
-///
 /// Unit is Newton meters with a resolution of 0.01 Nm.
-///
 /// Torque is positive when the force is applied in the clockwise direction around the given axis.
-///
 /// A value of 0x7FFFFFFF represents "value is not known".
 ///
 /// ----
