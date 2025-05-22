@@ -99,11 +99,14 @@ impl GattSpecSupplement {
     pub fn print_docstring(&self) -> String {
         let description: String = self
             .description
-            .replace("\n", "\n///\n/// ")
-            .replace("The structure of this characteristic is defined below.", "");
+            .lines()
+            .map(|line| format!("/// {}", line.replace("\\autoref{", "`").replace("}", "`").trim_end()))
+            .filter(|line| !line.contains("The structure of this characteristic is defined below."))
+            .collect::<Vec<_>>()
+            .join("\n");
         let structure: String = self.structure.iter().fold(String::new(), |mut acc, v| {
             let field_string: String = format!(
-                "
+                "///
 /// ### Data Type
 ///
 /// |  |  |
@@ -114,16 +117,17 @@ impl GattSpecSupplement {
 ///
 /// ### Description
 ///
-/// {}
+{}
 ///
 /// ----",
                 v.field,
                 v.ty.replace("[", "").replace("]", ""),
                 v.size.replace("\n", " - "),
                 v.description
-                    .replace("\n", "\n///\n/// ")
-                    .replace("\\autoref{", "`")
-                    .replace("}", "`")
+                    .lines()
+                    .map(|line| { format!("/// {}", line.replace("\\autoref{", "`").replace("}", "`").trim_end()) })
+                    .collect::<Vec<_>>()
+                    .join("\n")
             );
             acc.push_str(&field_string);
             acc
@@ -131,12 +135,11 @@ impl GattSpecSupplement {
         format!(
             "
 ///
-/// {}
+{}
 ///
 /// ----
 /// ## Structure
-///
-/// {}
+{}
 ///
 /// [more information](https://bitbucket.org/bluetooth-SIG/public/src/main/gss/{}.yaml)",
             description, structure, self.identifier
