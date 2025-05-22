@@ -120,20 +120,26 @@ pub enum FieldValueDefinition {
 
 impl GattSpecSupplement {
     pub fn print_docstring(&self) -> String {
-        let description: String = self.description.replace("\n", "\n///\n/// ");
+        let description: String = self
+            .description
+            .replace("\n", "\n///\n/// ")
+            .replace("The structure of this characteristic is defined below.", "");
         let structure: String = self.structure.iter().fold(String::new(), |mut acc, (k, v)| {
             let field_string: String = format!(
                 "
-///
+/// ### Data Type
+/// 
 /// |  |  |
 /// |---|---|
-/// | Field | {} |
-/// | Type | {} |
-/// | Size | {} |
+/// | **Field** | {} |
+/// | **Type** | {} |
+/// | **Size** | {} |
 /// 
-/// ----
+/// ### Description
 /// 
-/// {}",
+/// {}
+/// 
+/// ----",
                 k,
                 v.ty.replace("[", "").replace("]", ""),
                 v.size.replace("\n", " - "),
@@ -151,6 +157,8 @@ impl GattSpecSupplement {
 /// {}
 /// 
 /// ----
+/// ## Structure
+/// 
 /// {}
 /// 
 /// [more information](https://bitbucket.org/bluetooth-SIG/public/src/main/gss/{}.yaml)",
