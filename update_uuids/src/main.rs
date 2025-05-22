@@ -5,6 +5,7 @@
 //! to define the UUIDs for services, characteristics, and other
 //! Bluetooth related values.
 
+mod gss;
 mod utils;
 mod writer;
 mod yaml;
@@ -13,6 +14,7 @@ use std::error::Error;
 use std::path::Path;
 
 use git2::Repository;
+use yaml::load_gss;
 
 fn main() -> Result<(), Box<dyn Error>> {
     // Download the latest assigned numbers from the Bluetooth SIG
@@ -22,6 +24,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let local_folder = Path::new("bluetooth-sig");
     let output_folder = Path::new("../src/uuid");
     let commit_hash = fetch_repo(SIG_URL, local_folder)?;
+
+    // load the Gatt Spec Supplement information
+    let gss = load_gss(&local_folder.join("gss"))?;
 
     write_uuids(local_folder, output_folder, &commit_hash)?; // assigned_numbers/uuids
 
@@ -36,6 +41,7 @@ fn write_uuids(local_folder: &Path, output_folder: &Path, commit_hash: &str) -> 
     // Load the YAML data from ./bluetooth-sig/assigned_numbers/uuids*
     let path = local_folder.join("assigned_numbers").join("uuids");
     let uuid_map = yaml::load_uuid_data(&path)?;
+
     // Update the assigned numbers in the source code
     writer::update_uuids(output_folder, uuid_map, commit_hash)?;
     Ok(())
@@ -48,7 +54,7 @@ fn write_appearance(local_folder: &Path, output_folder: &Path, commit_hash: &str
     let file_name = "appearance_values.yaml";
     let path = local_folder.join("assigned_numbers").join("core").join(file_name);
     let appearance_data = yaml::load_appearance_data(&path)?;
-    println!("{:?}", appearance_data);
+
     // Update the appearance values in the source code
     writer::update_appearance(output_folder, &appearance_data, commit_hash)?;
     Ok(())
