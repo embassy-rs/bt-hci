@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use std::collections::HashMap;
 
 use serde::{Deserialize, Deserializer};
@@ -7,9 +9,10 @@ pub struct GssCharacteristic {
     pub characteristic: GattSpecSupplement,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 /// The official identifier, e.g., "org.bluetooth.characteristic.activity_goal"
 pub struct GattSpecSupplement {
+    pub identifier: String, // Primary Key
     pub name: String,
     pub description: String,
     #[serde(deserialize_with = "deserialize_structure_list_to_map")]
@@ -33,7 +36,7 @@ pub struct GattSpecStructure {
 /// This is an intermediate helper struct for deserialization.
 #[derive(Debug, Deserialize)]
 struct StructureListItem {
-    field: String, // This will become the key in the HashMap
+    field: String, // Primary Key
     #[serde(rename = "type")]
     ty: String,
     size: String,
@@ -65,7 +68,7 @@ where
 
 /// Represents the detailed information for a field, often used for flags.
 /// Corresponds to items in the 'fields' list in the YAML.
-#[derive(Debug, Deserialize, Default)]
+#[derive(Debug, Deserialize, Default, Clone)]
 pub struct FieldInformation {
     pub name: String, // Name of the field being described (e.g., "Flags", "Presence Flags")
     pub description: String,
@@ -75,7 +78,7 @@ pub struct FieldInformation {
     pub values: Vec<FieldValueDefinition>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(untagged)]
 pub enum FieldValueDefinition {
     Bit {
@@ -113,4 +116,45 @@ pub enum FieldValueDefinition {
         response_parameter: Option<String>,
         description: String,
     },
+}
+
+impl GattSpecSupplement {
+    pub fn print_docstring(&self) -> String {
+        let description: String = self.description.replace("\n", "\n///\n/// ");
+        let structure: String = self.structure.iter().fold(String::new(), |mut acc, (k, v)| {
+            let field_string: String = format!(
+                "
+///
+/// |  |  |
+/// |---|---|
+/// | Field | {} |
+/// | Type | {} |
+/// | Size | {} |
+/// 
+/// ----
+/// 
+/// {}",
+                k,
+                v.ty.replace("[", "").replace("]", ""),
+                v.size.replace("\n", " - "),
+                v.description
+                    .replace("\n", "\n///\n/// ")
+                    .replace("\\autoref{", "`")
+                    .replace("}", "`")
+            );
+            acc.push_str(&field_string);
+            acc
+        });
+        format!(
+            "
+/// 
+/// {}
+/// 
+/// ----
+/// {}
+/// 
+/// [more information](https://bitbucket.org/bluetooth-SIG/public/src/main/gss/{}.yaml)",
+            description, structure, self.identifier
+        )
+    }
 }
