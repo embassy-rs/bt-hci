@@ -26,14 +26,19 @@ pub fn update_uuids(
         let constants: Vec<_> = uuids
             .iter()
             .map(|uuid| {
+                let supplement = match &uuid.gss {
+                    Some(gss) => gss.print_docstring(),
+                    None => "".to_string(),
+                };
                 format!(
                     "/// Bluetooth {} UUID.
 ///
-/// `0x{:04x}` {}
+/// `0x{:04x}` {}{}
 pub const {}: BluetoothUuid16 = BluetoothUuid16::new(0x{:x});",
                     module_name,
                     uuid.uuid,
                     uuid.name,
+                    supplement,
                     screaming_snake_case(&uuid.name),
                     uuid.uuid,
                 )

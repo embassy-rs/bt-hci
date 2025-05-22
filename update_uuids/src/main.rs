@@ -10,10 +10,12 @@ mod utils;
 mod writer;
 mod yaml;
 
+use std::collections::HashMap;
 use std::error::Error;
 use std::path::Path;
 
 use git2::Repository;
+use gss::GattSpecSupplement;
 use yaml::load_gss;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -28,7 +30,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     // load the Gatt Spec Supplement information
     let gss = load_gss(&local_folder.join("gss"))?;
 
-    write_uuids(local_folder, output_folder, &commit_hash)?; // assigned_numbers/uuids
+    write_uuids(local_folder, output_folder, &commit_hash, gss)?; // assigned_numbers/uuids
 
     write_appearance(local_folder, output_folder, &commit_hash)?; // assigned_numbers/core/appearance
 
@@ -37,10 +39,26 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 /// Parse and write the UUIDs to the source code
 /// The UUIDs are loaded from the YAML files in the assigned_numbers/uuids folder
-fn write_uuids(local_folder: &Path, output_folder: &Path, commit_hash: &str) -> Result<(), Box<dyn Error>> {
+fn write_uuids(
+    local_folder: &Path,
+    output_folder: &Path,
+    commit_hash: &str,
+    gss: HashMap<String, GattSpecSupplement>,
+) -> Result<(), Box<dyn Error>> {
     // Load the YAML data from ./bluetooth-sig/assigned_numbers/uuids*
     let path = local_folder.join("assigned_numbers").join("uuids");
-    let uuid_map = yaml::load_uuid_data(&path)?;
+    let mut uuid_map = yaml::load_uuid_data(&path)?;
+
+    // Add the Gatt Spec Supplement information to the UUIDs
+    uuid_map.iter_mut().for_each(|(_uuid_group, uuids)| {
+        uuids.iter_mut().for_each(|uuid| {
+            if let Some(id) = &uuid.id {
+                if let Some(supplement) = gss.get(id) {
+                    uuid.gss = Some(supplement.clone());
+                }
+            }
+        });
+    });
 
     // Update the assigned numbers in the source code
     writer::update_uuids(output_folder, uuid_map, commit_hash)?;

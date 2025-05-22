@@ -16,6 +16,8 @@ pub struct UuidData {
     pub name: String,
     /// reference id such as: org.bluetooth.characteristic.acceleration
     pub id: Option<String>,
+    /// Additional information about this Uuid
+    pub gss: Option<GattSpecSupplement>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -89,7 +91,7 @@ pub fn load_gss(path: &PathBuf) -> Result<HashMap<String, GattSpecSupplement>, B
                 match serde_yaml::from_str(&data) {
                     Ok(GssCharacteristic {
                         characteristic: gss_data,
-                    }) => map.insert(file_name, gss_data),
+                    }) => map.insert(gss_data.identifier.clone(), gss_data),
                     Err(e) => panic!("error: {e} parsing file: {path:?} \n{data}"),
                 };
             }
