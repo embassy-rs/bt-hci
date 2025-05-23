@@ -5,7 +5,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 name = "bt-hci"
 repository = "https://github.com/embassy-rs/bt-hci"
-version = "0.3.1"
+version = "0.3.2"
 documentation = "https://docs.rs/bt-hci"
 keywords = ["bluetooth", "hci", "BLE"]
 categories = ["embedded", "hardware-support", "no-std"]
@@ -24,16 +24,16 @@ defmt = ["dep:defmt", "embedded-io/defmt-03", "embedded-io-async/defmt-03"]
 serde = ["dep:serde"]
 
 [dependencies]
-defmt = { version = "0.3", optional = true }
-log = { version = "0.4", optional = true }
+defmt = { version = "^1", optional = true }
+log = { version = "^0.4", optional = true }
 embedded-io = "0.6.0"
 embedded-io-async = "0.6.0"
 embassy-sync = "0.6"
 embassy-time = { version = ">=0.3, <0.5", optional = true }
 heapless = "0.8"
 futures-intrusive = { version = "0.5.0", default-features = false }
-uuid = { version = "1.11.0", default-features = false, optional = true }
-serde = { version = "1.0", optional = true, features = [
+uuid = { version = "^1", default-features = false, optional = true }
+serde = { version = "^1", optional = true, features = [
     "derive",
 ], default-features = false }
 
