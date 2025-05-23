@@ -7,8 +7,15 @@
 
 # bt-hci
 
-Rust types for the Bluetooth HCI (Host Controller Interface) specification, and traits for implementing the `Controller` part
-of the interface.
+Rust types for the Bluetooth HCI (Host Controller Interface) specification, and traits for implementing the `Controller` part of the interface.
+
+See [Trouble](https://github.com/embassy-rs/trouble) for an example of using this crate.
+
+## Bluetooth UUIDs
+
+The bluetooth specification includes [reference information](https://bitbucket.org/bluetooth-SIG/public/src/main/) for pre-defined UUIDs that can be used to communicate specific services, characteristics, properties, etc of a device.  These are also made available as constants from this crate through the [uuid module](./src/uuid/) for users of this crate.
+
+For crate maintainers, to update these constants run the [update_uuids](./update_uuids/) binary, which will redownload the bluetooth-sig yaml spec and rebuild the uuids module based on the latest version.
 
 ## License
 
