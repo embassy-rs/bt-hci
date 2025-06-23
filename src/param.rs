@@ -333,6 +333,53 @@ impl ConnHandleCompletedPackets {
     }
 }
 
+param! {
+    /// Parameters for Read Stored Link Key command
+    struct ReadStoredLinkKeyParams {
+        bd_addr: BdAddr,
+        read_all_flag: u8,
+    }
+}
+
+param! {
+    /// Return parameters for Read Stored Link Key command
+    struct ReadStoredLinkKeyReturn {
+        max_num_keys: u8,
+        num_keys_read: u8,
+    }
+}
+
+param! {
+    /// Parameters for Remote Name Request command
+    struct RemoteNameRequestParams {
+        bd_addr: BdAddr,
+        page_scan_repetition_mode: u8,
+        reserved: u8,
+        clock_offset: u16,
+    }
+}
+
+param! {
+    /// Parameters for Create Connection command
+    struct CreateConnectionParams {
+        bd_addr: BdAddr,
+        packet_type: u16,
+        page_scan_repetition_mode: u8,
+        reserved: u8,
+        clock_offset: u16,
+        allow_role_switch: u8,
+    }
+}
+
+param! {
+    /// Parameters for Pin Code Request Reply command
+    struct PinCodeRequestReplyParams {
+        bd_addr: BdAddr,
+        pin_code_len: u8,
+        pin_code: [u8; 16],
+    }
+}
+
 #[cfg(test)]
 mod tests {
     #[cfg(feature = "serde")]
