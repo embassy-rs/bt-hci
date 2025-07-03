@@ -547,7 +547,7 @@ pub enum LeExtAdvDataStatus {
 impl LeExtAdvEventKind {
     /// Get data status.
     pub fn data_status(&self) -> LeExtAdvDataStatus {
-        let data_status = self.0[0] >> 5 & 0x03;
+        let data_status = (self.0[0] >> 5) & 0x03;
         match data_status {
             0 => LeExtAdvDataStatus::Complete,
             1 => LeExtAdvDataStatus::IncompleteMoreExpected,
