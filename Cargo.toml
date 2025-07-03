@@ -9,7 +9,7 @@ version = "0.3.3"
 documentation = "https://docs.rs/bt-hci"
 keywords = ["bluetooth", "hci", "BLE"]
 categories = ["embedded", "hardware-support", "no-std"]
-rust-version = "1.77"
+rust-version = "1.85"
 exclude = [
     ".github",
     ".vscode",
@@ -20,10 +20,11 @@ exclude = [
 ]
 
 [features]
-defmt = ["dep:defmt", "embedded-io/defmt-03", "embedded-io-async/defmt-03"]
-serde = ["dep:serde"]
+defmt = ["dep:defmt", "embedded-io/defmt-03", "embedded-io-async/defmt-03", "btuuid/defmt"]
+serde = ["dep:serde", "btuuid/serde"]
 
 [dependencies]
+btuuid = { version = "0.1.0" }
 defmt = { version = "^1", optional = true }
 log = { version = "^0.4", optional = true }
 embedded-io = "0.6.0"
@@ -39,6 +40,3 @@ serde = { version = "^1", optional = true, features = [
 
 [dev-dependencies]
 postcard = "1.1"
-
-[workspace]
-members = ["update_uuids"]
