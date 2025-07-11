@@ -2,8 +2,8 @@
 
 use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
-    param, BdAddr, ConnHandle, ConnHandleCompletedPackets, CoreSpecificationVersion, Error, LinkType, RemainingBytes,
-    Status,
+    param, BdAddr, ClockOffset, ConnHandle, ConnHandleCompletedPackets, ConnectionLinkType, CoreSpecificationVersion,
+    Error, LinkKeyType, LinkType, LmpFeatureMask, PageScanRepetitionMode, RemainingBytes, Status,
 };
 use crate::{FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
@@ -112,6 +112,11 @@ macro_rules! events {
 }
 
 events! {
+    /// Inquiry Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cde759f8-6c4d-2dd4-7053-1657125ded74)
+    struct InquiryComplete(0x01) {
+        status: Status,
+    }
+
     /// Disconnection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-332adb1f-b5ac-5289-82a2-c51a59d533e7)
     struct DisconnectionComplete(0x05) {
         status: Status,
@@ -122,21 +127,18 @@ events! {
     /// Inquiry Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3467df70-1d7a-73c5-5a3e-8689dba5523f)
     struct InquiryResult<'a>(0x02) {
         num_responses: u8,
-        bd_addr: RemainingBytes<'a>,
-        page_scan_repetition_mode: RemainingBytes<'a>,
-        reserved: RemainingBytes<'a>,
-        class_of_device: RemainingBytes<'a>,
-        clock_offset: RemainingBytes<'a>,
+        /// All remaining bytes for this event (contains all fields for all responses)
+        bytes: RemainingBytes<'a>,
     }
 
     /// Extended Inquiry Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e3e8c7bc-2262-14f4-b6f5-2eeb0b25aa4f)
     struct ExtendedInquiryResult<'a>(0x2f) {
         num_responses: u8,
-        bd_addr: [u8; 6],
-        page_scan_repetition_mode: u8,
+        bd_addr: BdAddr,
+        page_scan_repetition_mode: PageScanRepetitionMode,
         reserved: u8,
         class_of_device: [u8; 3],
-        clock_offset: u16,
+        clock_offset: ClockOffset,
         rssi: i8,
         eir_data: RemainingBytes<'a>,
     }
@@ -144,12 +146,8 @@ events! {
     /// Inquiry Result with RSSI event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c2550565-1c65-a514-6cf0-3d55c8943dab)
     struct InquiryResultWithRssi<'a>(0x22) {
         num_responses: u8,
-        bd_addr: RemainingBytes<'a>,
-        page_scan_repetition_mode: RemainingBytes<'a>,
-        reserved: RemainingBytes<'a>,
-        class_of_device: RemainingBytes<'a>,
-        clock_offset: RemainingBytes<'a>,
-        rssi: RemainingBytes<'a>,
+        /// All remaining bytes for this event (contains all fields for all responses)
+        bytes: RemainingBytes<'a>,
     }
 
     /// Encryption Change (v1) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
@@ -239,7 +237,7 @@ events! {
     /// Remote Host Supported Features Notification event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ba740ba0-44d8-d028-0a67-1abab648f6dd)
     struct RemoteHostSupportedFeaturesNotification(0x3d) {
         bd_addr: BdAddr,
-        features: [u8; 8],
+        features: LmpFeatureMask,
     }
 
     /// Connection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebb06dd7-356e-605c-cbc1-d06dc00f1d2b)
@@ -247,8 +245,8 @@ events! {
         status: Status,
         handle: ConnHandle,
         bd_addr: BdAddr,
-        link_type: u8,
-        encryption_enabled: u8,
+        link_type: ConnectionLinkType,
+        encryption_enabled: bool,
     }
 
     /// Link Key Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-58400663-f69d-a482-13af-ec558a3f4c03)
@@ -265,7 +263,7 @@ events! {
     struct LinkKeyNotification(0x18) {
         bd_addr: BdAddr,
         link_key: [u8; 16],
-        key_type: u8,
+        key_type: LinkKeyType,
     }
 
     /// Authentication Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-00ede464-d351-7076-e82a-d8f4b30ee594)
