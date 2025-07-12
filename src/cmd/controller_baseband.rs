@@ -2,8 +2,8 @@
 
 use crate::cmd;
 use crate::param::{
-    ConnHandle, ConnHandleCompletedPackets, ControllerToHostFlowControl, Duration, EventMask, EventMaskPage2,
-    PowerLevelKind, ReadStoredLinkKeyParams, ReadStoredLinkKeyReturn,
+    BdAddr, ConnHandle, ConnHandleCompletedPackets, ControllerToHostFlowControl, Duration, EventMask, EventMaskPage2,
+    PowerLevelKind, Status,
 };
 
 cmd! {
@@ -100,11 +100,16 @@ cmd! {
     /// Read Stored Link Key command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9c3e0da9-138b-7641-6e84-d2d17c1f082e)
     ///
     /// Reads stored link keys for one or more devices, or all devices.
-    ///
-    /// * `bd_addr`: Bluetooth device address to read the key for, or all devices if set to all 0xFF.
-    /// * `read_all_flag`: 0x00 = read for specified device, 0x01 = read for all devices.
     ReadStoredLinkKey(CONTROL_BASEBAND, 0x000d) {
-        Params = ReadStoredLinkKeyParams;
-        Return = ReadStoredLinkKeyReturn;
+        ReadStoredLinkKeyParams {
+            bd_addr: BdAddr,
+            read_all: bool,
+        }
+        ReadStoredLinkKeyReturn {
+            status: Status,
+            max_num_keys: u8,
+            num_keys_read: u8,
+        }
+
     }
 }

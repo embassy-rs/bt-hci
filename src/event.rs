@@ -2,10 +2,10 @@
 
 use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
-    param, BdAddr, ConnHandle, ConnHandleCompletedPackets, CoreSpecificationVersion, Error, LinkType, RemainingBytes,
-    Status,
+    param, BdAddr, ClockOffset, ConnHandle, ConnHandleCompletedPackets, ConnectionLinkType, CoreSpecificationVersion,
+    Error, LinkKeyType, LinkType, LmpFeatureMask, PageScanRepetitionMode, RemainingBytes, Status,
 };
-use crate::{FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
+use crate::{AsHciBytes, FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
 pub mod le;
 
@@ -111,6 +111,11 @@ macro_rules! events {
 }
 
 events! {
+    /// Inquiry Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cde759f8-6c4d-2dd4-7053-1657125ded74)
+    struct InquiryComplete(0x01) {
+        status: Status,
+    }
+
     /// Disconnection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-332adb1f-b5ac-5289-82a2-c51a59d533e7)
     struct DisconnectionComplete(0x05) {
         status: Status,
@@ -121,21 +126,18 @@ events! {
     /// Inquiry Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3467df70-1d7a-73c5-5a3e-8689dba5523f)
     struct InquiryResult<'a>(0x02) {
         num_responses: u8,
-        bd_addr: RemainingBytes<'a>,
-        page_scan_repetition_mode: RemainingBytes<'a>,
-        reserved: RemainingBytes<'a>,
-        class_of_device: RemainingBytes<'a>,
-        clock_offset: RemainingBytes<'a>,
+        /// All remaining bytes for this event (contains all fields for all responses)
+        bytes: RemainingBytes<'a>,
     }
 
     /// Extended Inquiry Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e3e8c7bc-2262-14f4-b6f5-2eeb0b25aa4f)
     struct ExtendedInquiryResult<'a>(0x2f) {
         num_responses: u8,
-        bd_addr: [u8; 6],
-        page_scan_repetition_mode: u8,
+        bd_addr: BdAddr,
+        page_scan_repetition_mode: PageScanRepetitionMode,
         reserved: u8,
         class_of_device: [u8; 3],
-        clock_offset: u16,
+        clock_offset: ClockOffset,
         rssi: i8,
         eir_data: RemainingBytes<'a>,
     }
@@ -143,12 +145,8 @@ events! {
     /// Inquiry Result with RSSI event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c2550565-1c65-a514-6cf0-3d55c8943dab)
     struct InquiryResultWithRssi<'a>(0x22) {
         num_responses: u8,
-        bd_addr: RemainingBytes<'a>,
-        page_scan_repetition_mode: RemainingBytes<'a>,
-        reserved: RemainingBytes<'a>,
-        class_of_device: RemainingBytes<'a>,
-        clock_offset: RemainingBytes<'a>,
-        rssi: RemainingBytes<'a>,
+        /// All remaining bytes for this event (contains all fields for all responses)
+        bytes: RemainingBytes<'a>,
     }
 
     /// Encryption Change (v1) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
@@ -238,7 +236,7 @@ events! {
     /// Remote Host Supported Features Notification event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ba740ba0-44d8-d028-0a67-1abab648f6dd)
     struct RemoteHostSupportedFeaturesNotification(0x3d) {
         bd_addr: BdAddr,
-        features: [u8; 8],
+        features: LmpFeatureMask,
     }
 
     /// Connection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebb06dd7-356e-605c-cbc1-d06dc00f1d2b)
@@ -246,8 +244,8 @@ events! {
         status: Status,
         handle: ConnHandle,
         bd_addr: BdAddr,
-        link_type: u8,
-        encryption_enabled: u8,
+        link_type: ConnectionLinkType,
+        encryption_enabled: bool,
     }
 
     /// Link Key Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-58400663-f69d-a482-13af-ec558a3f4c03)
@@ -264,7 +262,7 @@ events! {
     struct LinkKeyNotification(0x18) {
         bd_addr: BdAddr,
         link_key: [u8; 16],
-        key_type: u8,
+        key_type: LinkKeyType,
     }
 
     /// Authentication Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-00ede464-d351-7076-e82a-d8f4b30ee594)
@@ -354,5 +352,245 @@ impl CommandComplete<'_> {
                 Err(FromHciBytesError::InvalidSize)
             }
         })
+    }
+}
+
+/// Struct representing a single parsed inquiry result item
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InquiryResultItem {
+    /// Bluetooth Device Address (BD_ADDR) of the device found
+    pub bd_addr: BdAddr,
+    /// Page scan repetition mode of the device
+    pub page_scan_repetition_mode: Option<PageScanRepetitionMode>,
+    /// Class of device (CoD) of the device found
+    pub class_of_device: Option<[u8; 3]>,
+    /// Clock offset of the device found
+    pub clock_offset: Option<ClockOffset>,
+    /// Received Signal Strength Indicator (RSSI) of the device found
+    /// This field is only present in `InquiryResultWithRssi`
+    pub rssi: Option<i8>,
+}
+
+/// Iterator over inquiry result items
+pub struct InquiryResultIter<'a> {
+    bytes: &'a [u8],
+    num_responses: usize,
+    idx: usize,
+    kind: InquiryResultKind,
+}
+
+/// Kind of inquiry result, indicating whether it includes RSSI or not
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum InquiryResultKind {
+    /// Standard inquiry result without RSSI
+    Standard,
+    /// Inquiry result with RSSI
+    WithRssi,
+}
+
+impl<'a> InquiryResultIter<'a> {
+    /// Creates a new iterator for standard inquiry results
+    pub fn new_standard(bytes: &'a [u8], num_responses: usize) -> Self {
+        InquiryResultIter {
+            bytes,
+            num_responses,
+            idx: 0,
+            kind: InquiryResultKind::Standard,
+        }
+    }
+
+    /// Creates a new iterator for inquiry results with RSSI
+    pub fn new_with_rssi(bytes: &'a [u8], num_responses: usize) -> Self {
+        InquiryResultIter {
+            bytes,
+            num_responses,
+            idx: 0,
+            kind: InquiryResultKind::WithRssi,
+        }
+    }
+}
+
+impl Iterator for InquiryResultIter<'_> {
+    type Item = InquiryResultItem;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.idx >= self.num_responses {
+            return None;
+        }
+
+        let i = self.idx;
+        let n = self.num_responses;
+
+        let bd_addr_size = n * 6;
+        let page_scan_size = n;
+        let class_size = n * 3;
+        let clock_size = n * 2;
+
+        let reserved_size = match self.kind {
+            InquiryResultKind::Standard => n * 2,
+            InquiryResultKind::WithRssi => n,
+        };
+
+        let bd_addr_off = i * 6;
+        let page_scan_off = bd_addr_size + i;
+        let class_off = bd_addr_size + page_scan_size + reserved_size + i * 3;
+        let clock_off = bd_addr_size + page_scan_size + reserved_size + class_size + i * 2;
+
+        if self.bytes.len() < bd_addr_off + 6 {
+            return None;
+        }
+
+        let bd_addr = BdAddr::new([
+            self.bytes[bd_addr_off],
+            self.bytes[bd_addr_off + 1],
+            self.bytes[bd_addr_off + 2],
+            self.bytes[bd_addr_off + 3],
+            self.bytes[bd_addr_off + 4],
+            self.bytes[bd_addr_off + 5],
+        ]);
+
+        let page_scan_repetition_mode = self
+            .bytes
+            .get(page_scan_off)
+            .and_then(|b| PageScanRepetitionMode::from_hci_bytes(&[*b]).ok().map(|(m, _)| m));
+
+        let class_of_device = self.bytes.get(class_off..class_off + 3).map(|s| [s[0], s[1], s[2]]);
+
+        let clock_offset = self
+            .bytes
+            .get(clock_off..clock_off + 2)
+            .and_then(|s| ClockOffset::from_hci_bytes(s).ok().map(|(c, _)| c));
+
+        let rssi = if self.kind == InquiryResultKind::WithRssi {
+            let rssi_off = bd_addr_size + page_scan_size + reserved_size + class_size + clock_size + i;
+            self.bytes.get(rssi_off).map(|b| *b as i8)
+        } else {
+            None
+        };
+
+        self.idx += 1;
+
+        Some(InquiryResultItem {
+            bd_addr,
+            page_scan_repetition_mode,
+            class_of_device,
+            clock_offset,
+            rssi,
+        })
+    }
+}
+
+/// Inquiry result event containing multiple responses
+impl InquiryResult<'_> {
+    /// Returns an iterator over all valid inquiry result items.
+    pub fn iter(&self) -> InquiryResultIter {
+        let bytes = self.bytes.as_hci_bytes();
+        let n = self.num_responses as usize;
+        InquiryResultIter::new_standard(bytes, n)
+    }
+}
+
+/// Inquiry result event containing multiple responses with RSSI
+impl InquiryResultWithRssi<'_> {
+    /// Returns an iterator over all valid inquiry result items.
+    pub fn iter(&self) -> InquiryResultIter {
+        let bytes = self.bytes.as_hci_bytes();
+        let n = self.num_responses as usize;
+        InquiryResultIter::new_with_rssi(bytes, n)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::param::PageScanRepetitionMode;
+
+    #[test]
+    fn test_inquiry_result() {
+        let data = [
+            0x02, // num_responses = 2
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // addr 1
+            0x11, 0x12, 0x13, 0x14, 0x15, 0x16, // addr 2
+            0x01, 0x02, // R1, R2
+            0x00, 0x00, 0x00, 0x00, // reserved
+            0x20, 0x04, 0x00, 0x30, 0x05, 0x01, // class of device
+            0x34, 0x12, 0x78, 0x56, // clock offsets
+        ];
+        let (inquiry_result, _) = InquiryResult::from_hci_bytes(&data).unwrap();
+
+        let mut iter = inquiry_result.iter();
+
+        let item1 = iter.next().unwrap();
+        assert_eq!(item1.bd_addr.as_hci_bytes(), &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06]);
+        assert_eq!(item1.page_scan_repetition_mode, Some(PageScanRepetitionMode::R1));
+        assert_eq!(item1.class_of_device, Some([0x20, 0x04, 0x00]));
+        assert_eq!(item1.clock_offset.unwrap().as_hci_bytes(), &[0x34, 0x12]);
+        assert_eq!(item1.rssi, None);
+
+        let item2 = iter.next().unwrap();
+        assert_eq!(item2.bd_addr.as_hci_bytes(), &[0x11, 0x12, 0x13, 0x14, 0x15, 0x16]);
+        assert_eq!(item2.page_scan_repetition_mode, Some(PageScanRepetitionMode::R2));
+        assert_eq!(item2.class_of_device, Some([0x30, 0x05, 0x01]));
+        assert_eq!(item2.clock_offset.unwrap().as_hci_bytes(), &[0x78, 0x56]);
+        assert_eq!(item2.rssi, None);
+        assert!(iter.next().is_none());
+    }
+
+    #[test]
+    fn test_inquiry_result_with_rssi() {
+        let data = [
+            0x02, // num_responses = 2
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // addr 1
+            0x11, 0x12, 0x13, 0x14, 0x15, 0x16, // addr 2
+            0x01, 0x02, // R1, R2
+            0x00, 0x00, // reserved
+            0x20, 0x04, 0x00, 0x30, 0x05, 0x01, // class of device
+            0x34, 0x12, 0x78, 0x56, // clock offsets
+            0xF0, 0xE8, // RSSI
+        ];
+        let (inquiry_result, _) = InquiryResultWithRssi::from_hci_bytes(&data).unwrap();
+
+        let mut iter = inquiry_result.iter();
+
+        let item1 = iter.next().unwrap();
+        assert_eq!(item1.bd_addr.as_hci_bytes(), &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06]);
+        assert_eq!(item1.page_scan_repetition_mode, Some(PageScanRepetitionMode::R1));
+        assert_eq!(item1.class_of_device, Some([0x20, 0x04, 0x00]));
+        assert_eq!(item1.clock_offset.unwrap().as_hci_bytes(), &[0x34, 0x12]);
+        assert_eq!(item1.rssi, Some(-16));
+
+        let item2 = iter.next().unwrap();
+        assert_eq!(item2.bd_addr.as_hci_bytes(), &[0x11, 0x12, 0x13, 0x14, 0x15, 0x16]);
+        assert_eq!(item2.page_scan_repetition_mode, Some(PageScanRepetitionMode::R2));
+        assert_eq!(item2.class_of_device, Some([0x30, 0x05, 0x01]));
+        assert_eq!(item2.clock_offset.unwrap().as_hci_bytes(), &[0x78, 0x56]);
+        assert_eq!(item2.rssi, Some(-24));
+        assert!(iter.next().is_none());
+    }
+
+    #[test]
+    fn test_extended_inquiry_result() {
+        let data = [
+            0x01, // num_responses = 1
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+            0x01, // page_scan_repetition_mode (R1)
+            0x00, // reserved
+            0x20, 0x04, 0x00, // class_of_device
+            0x34, 0x12, // clock_offset
+            0xF0, // rssi (-16)
+            0x09, 0x08, 0x54, 0x65, 0x73, 0x74, 0x20, 0x44, 0x65, 0x76, // eir_data (sample EIR data)
+        ];
+        let (eir_result, _) = ExtendedInquiryResult::from_hci_bytes(&data).unwrap();
+
+        assert_eq!(eir_result.num_responses, 1);
+        assert_eq!(eir_result.bd_addr.as_hci_bytes(), &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06]);
+        assert_eq!(eir_result.page_scan_repetition_mode, PageScanRepetitionMode::R1);
+        assert_eq!(eir_result.reserved, 0x00);
+        assert_eq!(eir_result.class_of_device, [0x20, 0x04, 0x00]);
+        assert_eq!(eir_result.clock_offset.as_hci_bytes(), &[0x34, 0x12]);
+        assert_eq!(eir_result.rssi, -16);
+        assert_eq!(
+            eir_result.eir_data.as_hci_bytes(),
+            &[0x09, 0x08, 0x54, 0x65, 0x73, 0x74, 0x20, 0x44, 0x65, 0x76]
+        );
     }
 }
