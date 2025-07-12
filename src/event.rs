@@ -80,10 +80,9 @@ macro_rules! events {
             $(#[$attrs])*
             #[derive(Debug, Clone, Copy, Hash)]
             #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-            /// $name
             pub struct $name$(<$life>)? {
                 $(
-                    /// $field
+                    #[doc = stringify!($field)]
                     $(#[$field_attrs])*
                     pub $field: $ty,
                 )*

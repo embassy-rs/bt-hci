@@ -48,7 +48,7 @@ macro_rules! cmds {
         impl CmdMask {
             $(
                 $(
-                    /// Getter for $getter
+                    #[doc = concat!("Getter for ", stringify!($getter))]
                     pub fn $getter(&self) -> bool {
                         (self.0[$octet] & (1 << $bit)) != 0
                     }

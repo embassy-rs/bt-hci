@@ -394,7 +394,6 @@ macro_rules! cmd {
         #[repr(transparent)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        /// $name command.
         pub struct $name$(<$life>)?($params);
 
         #[automatically_derived]

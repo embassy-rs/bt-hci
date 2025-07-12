@@ -45,7 +45,7 @@ macro_rules! param {
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-        /// $name
+        #[doc = stringify!($name)]
         pub struct $name($wrapped);
 
         impl $name {
@@ -73,7 +73,7 @@ macro_rules! param {
         $(#[$attrs])*
         #[repr(C, packed)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        /// $name parameter
+        #[doc = stringify!($name)]
         #[allow(missing_docs)]
         pub struct $name {
             $(pub $field: $ty,)*
@@ -122,7 +122,7 @@ macro_rules! param {
         $(#[$attrs])*
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        /// $name parameter
+        #[doc = concat!(stringify!($name), " parameter")]
         #[allow(missing_docs)]
         pub struct $name$(<$life>)? {
             $(pub $field: $ty,)*
@@ -175,7 +175,7 @@ macro_rules! param {
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         #[allow(missing_docs)]
-        /// $name.
+        #[doc = stringify!($name)]
         pub enum $name {
             $(
                 $(#[$variant_attrs])*
@@ -210,7 +210,7 @@ macro_rules! param {
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        /// $name.
+        #[doc = stringify!($name)]
         pub struct $name(u8);
 
         impl $name {
@@ -263,7 +263,7 @@ macro_rules! param {
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        /// $name
+        #[doc = stringify!($name)]
         pub struct $name([u8; $octets]);
 
         impl $name {
@@ -351,12 +351,12 @@ macro_rules! param_slice {
         $(#[$attrs])*
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        /// $name
+        #[doc = stringify!($name)]
         pub struct $name([u8; $octets]);
 
         impl $name {
             $(
-                /// Get value of $field
+                #[doc = concat!("Get value of ", stringify!($field))]
                 pub fn $field(&self) -> Result<$ty, $crate::FromHciBytesError> {
                     <$ty as $crate::FromHciBytes>::from_hci_bytes(&self.0[$off..]).map(|(x, _)| x)
                 }

@@ -38,7 +38,6 @@ dependencies = [
  "log",
  "postcard",
  "serde",
- "uuid",
 ]
 
 [[package]]
@@ -49,6 +48,7 @@ checksum = "b0acfef8a77a02866e04f7e2ad3f4c7b32d575696c49c4bbad742b4aecb8e4a3"
 dependencies = [
  "defmt 0.3.100",
  "serde",
+ "uuid",
 ]
 
 [[package]]
