@@ -147,3 +147,23 @@ param! {
         // All other values reserved for future use
     }
 }
+
+param! {
+    enum Role {
+        /// Become the Central for this connection. The LM will perform the role switch.
+        Central = 0x00,
+        /// Remain the Peripheral for this connection. The LM will NOT perform the role switch.
+        Peripheral = 0x01,
+    }
+}
+
+param! {
+    enum RejectReason {
+        /// Connection Rejected due to Limited Resources
+        LimitedResources = 0x0D,
+        /// Connection Rejected Due To Security Reasons
+        SecurityReasons = 0x0E,
+        /// Connection Rejected due to Unacceptable BD_ADDR
+        UnacceptableBdAddr = 0x0F,
+    }
+}

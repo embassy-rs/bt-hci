@@ -3,7 +3,7 @@
 use crate::cmd;
 use crate::param::{
     AllowRoleSwitch, AuthenticationRequirements, BdAddr, ClockOffset, ConnHandle, DisconnectReason, IoCapability,
-    OobDataPresent, PacketType, PageScanRepetitionMode, Status,
+    OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, Role,
 };
 
 // 0x0001 - 0x000F
@@ -26,7 +26,17 @@ cmd! {
     /// Stops the current Inquiry if the BR/EDR Controller is in Inquiry Mode.
     InquiryCancel(LINK_CONTROL, 0x0002) {
         Params = ();
-        Return = Status;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Exit Periodic Inquiry Mode command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-dc524a7f-f72a-d8dd-32db-de9c963078b0)
+    ///
+    /// Ends the Periodic Inquiry mode when the local device is in Periodic Inquiry Mode.
+    ExitPeriodicInquiryMode(LINK_CONTROL, 0x0004) {
+        Params = ();
+        Return = ();
     }
 }
 
@@ -53,6 +63,42 @@ cmd! {
         DisconnectParams {
             handle: ConnHandle,
             reason: DisconnectReason,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Create Connection Cancel command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d16958d4-6ba2-3c28-2a24-3b6170aa73e0)
+    ///
+    /// Cancels the Create Connection command that was previously issued.
+    CreateConnectionCancel(LINK_CONTROL, 0x0008) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Accept Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0404fc5c-fe34-1754-0c80-99eebcd27435)
+    ///
+    /// Used to accept a new incoming connection request
+    AcceptConnectionRequest(LINK_CONTROL, 0x0009) {
+        AcceptConnectionRequestParams {
+            bd_addr: BdAddr,
+            role: Role,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Reject Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8bf88653-3ade-d1c3-400a-dc463f79e81c)
+    ///
+    /// Used to reject an incoming connection request.
+    RejectConnectionRequest(LINK_CONTROL, 0x000a) {
+        RejectConnectionRequestParams {
+            bd_addr: BdAddr,
+            reason: RejectReason,
         }
         Return = ();
     }
@@ -92,6 +138,19 @@ cmd! {
             pin_code: [u8; 16],
         }
         Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Change Connection Packet Type command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ba6ba228-088f-6cc6-cd19-f12fc6fe1473)
+    ///
+    /// Changes which packet types can be used for a connection that is currently established.
+    ChangeConnectionPacketType(LINK_CONTROL, 0x000f) {
+        ChangeConnectionPacketTypeParams {
+            handle: ConnHandle,
+            packet_type: PacketType,
+        }
+        Return = ();
     }
 }
 
@@ -175,6 +234,7 @@ mod tests {
     use crate::cmd::{Cmd, OpcodeGroup};
     use crate::param::{
         AllowRoleSwitch, BdAddr, ClockOffset, ConnHandle, DisconnectReason, PacketType, PageScanRepetitionMode,
+        RejectReason, Role,
     };
 
     #[test]
@@ -309,5 +369,50 @@ mod tests {
         let _cmd = UserConfirmationRequestReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
         assert_eq!(UserConfirmationRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
         assert_eq!(UserConfirmationRequestReply::OPCODE.cmd(), 0x002c);
+    }
+
+    #[test]
+    fn test_exit_periodic_inquiry_mode() {
+        let _cmd = ExitPeriodicInquiryMode::new();
+        assert_eq!(ExitPeriodicInquiryMode::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ExitPeriodicInquiryMode::OPCODE.cmd(), 0x0004);
+    }
+
+    #[test]
+    fn test_create_connection_cancel() {
+        let bd_addr = BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]);
+        let _cmd = CreateConnectionCancel::new(bd_addr);
+        assert_eq!(CreateConnectionCancel::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(CreateConnectionCancel::OPCODE.cmd(), 0x0008);
+    }
+
+    #[test]
+    fn test_accept_connection_request() {
+        let _cmd = AcceptConnectionRequest::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]), Role::Central);
+        assert_eq!(AcceptConnectionRequest::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(AcceptConnectionRequest::OPCODE.cmd(), 0x0009);
+    }
+
+    #[test]
+    fn test_reject_connection_request() {
+        let _cmd = RejectConnectionRequest::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            RejectReason::LimitedResources,
+        );
+        assert_eq!(RejectConnectionRequest::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(RejectConnectionRequest::OPCODE.cmd(), 0x000a);
+    }
+
+    #[test]
+    fn test_change_connection_packet_type() {
+        let _cmd = ChangeConnectionPacketType::new(
+            ConnHandle::new(0x0001),
+            PacketType::new()
+                .set_dh1_may_be_used(true)
+                .set_dm3_may_be_used(true)
+                .set_dh3_may_be_used(true),
+        );
+        assert_eq!(ChangeConnectionPacketType::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ChangeConnectionPacketType::OPCODE.cmd(), 0x000f);
     }
 }
