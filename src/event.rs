@@ -209,6 +209,20 @@ events! {
         handle: ConnHandle,
     }
 
+
+
+    /// IO Capability Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-343681e1-ca08-8d4c-79c3-e4b2c86ecba1)
+    struct IoCapabilityRequest(0x31) {
+        bd_addr: BdAddr,
+    }
+
+
+    /// User Confirmation Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e7014a9e-718f-6aa8-d657-35b547e9c5d6)
+    struct UserConfirmationRequest(0x33) {
+        bd_addr: BdAddr,
+        numeric_value: u32,
+    }
+
     /// Authenticated Payload Timeout Expired event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6cfdff94-ace8-294c-6af9-d90d94653e19)
     struct AuthenticatedPayloadTimeoutExpired(0x57) {
         handle: ConnHandle,
@@ -592,5 +606,22 @@ mod tests {
             eir_result.eir_data.as_hci_bytes(),
             &[0x09, 0x08, 0x54, 0x65, 0x73, 0x74, 0x20, 0x44, 0x65, 0x76]
         );
+    }
+
+    #[test]
+    fn test_io_capability_request() {
+        let data = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06];
+        let (evt, rest) = IoCapabilityRequest::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_user_confirmation_request() {
+        let data = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x78, 0x56, 0x34, 0x12];
+        let (evt, rest) = UserConfirmationRequest::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert_eq!(evt.numeric_value, 0x1234_5678);
+        assert!(rest.is_empty());
     }
 }

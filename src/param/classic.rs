@@ -1,5 +1,4 @@
 use crate::param::macros::param;
-use crate::param::{BdAddr, Status};
 
 param! {
     bitfield PacketType[2] {
@@ -104,9 +103,67 @@ param! {
 }
 
 param! {
-    /// Common return parameters for commands that return a status and a Bluetooth device address
-    struct StatusBdAddrReturn {
-        status: Status,
-        bd_addr: BdAddr,
+    enum IoCapability{
+        /// Display Only
+        DisplayOnly = 0x00,
+        /// Display Yes/No
+        DisplayYesNo = 0x01,
+        /// Keyboard Only
+        KeyboardOnly = 0x02,
+        /// No Input No Output
+        NoInputNoOutput = 0x03,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum OobDataPresent {
+        /// OOB authentication data not present
+        NotPresent = 0x00,
+        /// P-192 OOB authentication data from remote device present
+        P192Present = 0x01,
+        /// P-256 OOB authentication data from remote device present
+        P256Present = 0x02,
+        /// P-192 and P-256 OOB authentication data from remote device present
+        P192AndP256Present = 0x03,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum AuthenticationRequirements {
+        /// MITM Protection Not Required – No Bonding. Numeric comparison with automatic accept allowed.
+        MitmNotRequiredNoBonding = 0x00,
+        /// MITM Protection Required – No Bonding. Use IO Capabilities to determine authentication procedure
+        MitmRequiredNoBonding = 0x01,
+        /// MITM Protection Not Required – Dedicated Bonding. Numeric comparison with automatic accept allowed.
+        MitmNotRequiredDedicatedBonding = 0x02,
+        /// MITM Protection Required – Dedicated Bonding. Use IO Capabilities to determine authentication procedure
+        MitmRequiredDedicatedBonding = 0x03,
+        /// MITM Protection Not Required – General Bonding. Numeric Comparison with automatic accept allowed.
+        MitmNotRequiredGeneralBonding = 0x04,
+        /// MITM Protection Required – General Bonding. Use IO capabilities to determine authentication procedure.
+        MitmRequiredGeneralBonding = 0x05,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum Role {
+        /// Become the Central for this connection. The LM will perform the role switch.
+        Central = 0x00,
+        /// Remain the Peripheral for this connection. The LM will NOT perform the role switch.
+        Peripheral = 0x01,
+    }
+}
+
+param! {
+    enum RejectReason {
+        /// Connection Rejected due to Limited Resources
+        LimitedResources = 0x0D,
+        /// Connection Rejected Due To Security Reasons
+        SecurityReasons = 0x0E,
+        /// Connection Rejected due to Unacceptable BD_ADDR
+        UnacceptableBdAddr = 0x0F,
     }
 }

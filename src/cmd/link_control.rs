@@ -2,9 +2,11 @@
 
 use crate::cmd;
 use crate::param::{
-    AllowRoleSwitch, BdAddr, ClockOffset, ConnHandle, DisconnectReason, PacketType, PageScanRepetitionMode, Status,
-    StatusBdAddrReturn,
+    AllowRoleSwitch, AuthenticationRequirements, BdAddr, ClockOffset, ConnHandle, DisconnectReason, IoCapability,
+    OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, Role,
 };
+
+// 0x0001 - 0x000F
 
 cmd! {
     /// Inquiry command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2db7bf11-f361-99bd-6161-dc9696f86c6b)
@@ -24,39 +26,16 @@ cmd! {
     /// Stops the current Inquiry if the BR/EDR Controller is in Inquiry Mode.
     InquiryCancel(LINK_CONTROL, 0x0002) {
         Params = ();
-        Return = Status;
-    }
-}
-
-cmd! {
-    /// Disconnect command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6bb8119e-aa67-d517-db2a-7470c35fbf4a)
-    Disconnect(LINK_CONTROL, 0x0006) {
-        DisconnectParams {
-            handle: ConnHandle,
-            reason: DisconnectReason,
-        }
         Return = ();
     }
 }
 
 cmd! {
-    /// Read Remote Version Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebf3c9ac-0bfa-0ed0-c014-8f8691ea3fe5)
-    ReadRemoteVersionInformation(LINK_CONTROL, 0x001d) {
-        Params = ConnHandle;
-    }
-}
-
-cmd! {
-    /// Remote Name Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cbd9cb09-59fd-9739-2570-8fae93d45bd7)
+    /// Exit Periodic Inquiry Mode command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-dc524a7f-f72a-d8dd-32db-de9c963078b0)
     ///
-    /// Initiates a remote name request procedure for the specified Bluetooth device.
-    RemoteNameRequest(LINK_CONTROL, 0x0019) {
-        RemoteNameRequestParams {
-            bd_addr: BdAddr,
-            page_scan_repetition_mode: PageScanRepetitionMode,
-            reserved: u8, // Reserved, shall be set to 0x00.
-            clock_offset: ClockOffset,
-        }
+    /// Ends the Periodic Inquiry mode when the local device is in Periodic Inquiry Mode.
+    ExitPeriodicInquiryMode(LINK_CONTROL, 0x0004) {
+        Params = ();
         Return = ();
     }
 }
@@ -79,12 +58,62 @@ cmd! {
 }
 
 cmd! {
-    /// Authentication Requested command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-904095aa-072e-02c1-023a-e16571079cd2)
-    ///
-    /// Initiates authentication (pairing) for the given connection handle.
-    AuthenticationRequested(LINK_CONTROL, 0x0011) {
-        Params = ConnHandle;
+    /// Disconnect command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6bb8119e-aa67-d517-db2a-7470c35fbf4a)
+    Disconnect(LINK_CONTROL, 0x0006) {
+        DisconnectParams {
+            handle: ConnHandle,
+            reason: DisconnectReason,
+        }
         Return = ();
+    }
+}
+
+cmd! {
+    /// Create Connection Cancel command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d16958d4-6ba2-3c28-2a24-3b6170aa73e0)
+    ///
+    /// Cancels the Create Connection command that was previously issued.
+    CreateConnectionCancel(LINK_CONTROL, 0x0008) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Accept Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0404fc5c-fe34-1754-0c80-99eebcd27435)
+    ///
+    /// Used to accept a new incoming connection request
+    AcceptConnectionRequest(LINK_CONTROL, 0x0009) {
+        AcceptConnectionRequestParams {
+            bd_addr: BdAddr,
+            role: Role,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Reject Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8bf88653-3ade-d1c3-400a-dc463f79e81c)
+    ///
+    /// Used to reject an incoming connection request.
+    RejectConnectionRequest(LINK_CONTROL, 0x000a) {
+        RejectConnectionRequestParams {
+            bd_addr: BdAddr,
+            reason: RejectReason,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Link Key Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fcc241d3-b098-3bb3-3885-a1897a0252d2)
+    ///
+    /// Used to respond to a Link Key Request event with the stored link key.
+    LinkKeyRequestReply(LINK_CONTROL, 0x000b) {
+        LinkKeyRequestReplyParams {
+            bd_addr: BdAddr,
+            link_key: [u8; 16],
+        }
+        Return = BdAddr;
     }
 }
 
@@ -108,7 +137,94 @@ cmd! {
             pin_code_len: u8,
             pin_code: [u8; 16],
         }
-        Return = StatusBdAddrReturn;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Change Connection Packet Type command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ba6ba228-088f-6cc6-cd19-f12fc6fe1473)
+    ///
+    /// Changes which packet types can be used for a connection that is currently established.
+    ChangeConnectionPacketType(LINK_CONTROL, 0x000f) {
+        ChangeConnectionPacketTypeParams {
+            handle: ConnHandle,
+            packet_type: PacketType,
+        }
+        Return = ();
+    }
+}
+
+// 0x0011 - 0x001F
+
+cmd! {
+    /// Authentication Requested command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-904095aa-072e-02c1-023a-e16571079cd2)
+    ///
+    /// Initiates authentication (pairing) for the given connection handle.
+    AuthenticationRequested(LINK_CONTROL, 0x0011) {
+        Params = ConnHandle;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Set Connection Encryption command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0dd32c20-9eda-0ee0-b15f-cf896c9a1df5)
+    ///
+    /// Used to enable or disable encryption on a connection after authentication.
+    SetConnectionEncryption(LINK_CONTROL, 0x0013) {
+        SetConnectionEncryptionParams {
+            handle: ConnHandle,
+            encryption_enable: bool,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Remote Name Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cbd9cb09-59fd-9739-2570-8fae93d45bd7)
+    ///
+    /// Initiates a remote name request procedure for the specified Bluetooth device.
+    RemoteNameRequest(LINK_CONTROL, 0x0019) {
+        RemoteNameRequestParams {
+            bd_addr: BdAddr,
+            page_scan_repetition_mode: PageScanRepetitionMode,
+            reserved: u8, // Reserved, shall be set to 0x00.
+            clock_offset: ClockOffset,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Read Remote Version Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebf3c9ac-0bfa-0ed0-c014-8f8691ea3fe5)
+    ReadRemoteVersionInformation(LINK_CONTROL, 0x001d) {
+        Params = ConnHandle;
+    }
+}
+
+// 0x0020 - 0x002F
+
+cmd! {
+    /// IO Capability Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-063323a1-51b0-a373-8e29-84f9d0e0263e)
+    ///
+    /// Reply to an IO Capability Request event with the current I/O capabilities of the Host.
+    IoCapabilityRequestReply(LINK_CONTROL, 0x002b) {
+        IoCapabilityRequestReplyParams {
+            bd_addr: BdAddr,
+            io_capability: IoCapability,
+            oob_data_present: OobDataPresent,
+            authentication_requirements: AuthenticationRequirements,
+        }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// User Confirmation Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b88e1ed6-d8d8-6472-4b4e-c8467f4b0d9c)
+    ///
+    /// Reply to a User Confirmation Request event indicating that the user selected "yes".
+    UserConfirmationRequestReply(LINK_CONTROL, 0x002c) {
+        Params = BdAddr;
+        Return = BdAddr;
     }
 }
 
@@ -118,6 +234,7 @@ mod tests {
     use crate::cmd::{Cmd, OpcodeGroup};
     use crate::param::{
         AllowRoleSwitch, BdAddr, ClockOffset, ConnHandle, DisconnectReason, PacketType, PageScanRepetitionMode,
+        RejectReason, Role,
     };
 
     #[test]
@@ -211,5 +328,91 @@ mod tests {
 
         assert_eq!(PinCodeRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
         assert_eq!(PinCodeRequestReply::OPCODE.cmd(), 0x000d);
+    }
+
+    #[test]
+    fn test_set_connection_encryption() {
+        let _cmd = SetConnectionEncryption::new(
+            ConnHandle::new(0x0001),
+            true, // Enable encryption
+        );
+        assert_eq!(SetConnectionEncryption::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(SetConnectionEncryption::OPCODE.cmd(), 0x0013);
+    }
+
+    #[test]
+    fn test_link_key_request_reply() {
+        let _cmd = LinkKeyRequestReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            [
+                0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
+            ],
+        );
+        assert_eq!(LinkKeyRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(LinkKeyRequestReply::OPCODE.cmd(), 0x000b);
+    }
+
+    #[test]
+    fn test_io_capability_request_reply() {
+        let _cmd = IoCapabilityRequestReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            IoCapability::DisplayYesNo,
+            OobDataPresent::NotPresent,
+            AuthenticationRequirements::MitmRequiredGeneralBonding,
+        );
+        assert_eq!(IoCapabilityRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(IoCapabilityRequestReply::OPCODE.cmd(), 0x002b);
+    }
+
+    #[test]
+    fn test_user_confirmation_request_reply() {
+        let _cmd = UserConfirmationRequestReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
+        assert_eq!(UserConfirmationRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(UserConfirmationRequestReply::OPCODE.cmd(), 0x002c);
+    }
+
+    #[test]
+    fn test_exit_periodic_inquiry_mode() {
+        let _cmd = ExitPeriodicInquiryMode::new();
+        assert_eq!(ExitPeriodicInquiryMode::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ExitPeriodicInquiryMode::OPCODE.cmd(), 0x0004);
+    }
+
+    #[test]
+    fn test_create_connection_cancel() {
+        let bd_addr = BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]);
+        let _cmd = CreateConnectionCancel::new(bd_addr);
+        assert_eq!(CreateConnectionCancel::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(CreateConnectionCancel::OPCODE.cmd(), 0x0008);
+    }
+
+    #[test]
+    fn test_accept_connection_request() {
+        let _cmd = AcceptConnectionRequest::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]), Role::Central);
+        assert_eq!(AcceptConnectionRequest::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(AcceptConnectionRequest::OPCODE.cmd(), 0x0009);
+    }
+
+    #[test]
+    fn test_reject_connection_request() {
+        let _cmd = RejectConnectionRequest::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            RejectReason::LimitedResources,
+        );
+        assert_eq!(RejectConnectionRequest::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(RejectConnectionRequest::OPCODE.cmd(), 0x000a);
+    }
+
+    #[test]
+    fn test_change_connection_packet_type() {
+        let _cmd = ChangeConnectionPacketType::new(
+            ConnHandle::new(0x0001),
+            PacketType::new()
+                .set_dh1_may_be_used(true)
+                .set_dm3_may_be_used(true)
+                .set_dh3_may_be_used(true),
+        );
+        assert_eq!(ChangeConnectionPacketType::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ChangeConnectionPacketType::OPCODE.cmd(), 0x000f);
     }
 }
