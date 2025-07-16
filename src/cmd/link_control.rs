@@ -2,8 +2,9 @@
 
 use crate::cmd;
 use crate::param::{
-    AllowRoleSwitch, AuthenticationRequirements, BdAddr, ClockOffset, ConnHandle, DisconnectReason, IoCapability,
-    KeyFlag, OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, RetransmissionEffort, Role,
+    AllowRoleSwitch, AuthenticationRequirements, BdAddr, ClockOffset, ConnHandle, DisconnectReason,
+    EnhancedAcceptSynchronousConnectionRequestParams, EnhancedSetupSynchronousConnectionParams, IoCapability, KeyFlag,
+    OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, RetransmissionEffort, Role, Status,
     SyncPacketType, VoiceSetting,
 };
 
@@ -390,6 +391,79 @@ cmd! {
     }
 }
 
+// 0x0030 - 0x003F
+
+cmd! {
+    /// Remote OOB Data Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-161bcaad-0f08-d936-9e30-53e9043f9ccc)
+    ///
+    /// Reply to a Remote OOB Data Request event with the C and R values received via OOB transfer.
+    RemoteOobDataRequestReply(LINK_CONTROL, 0x0030) {
+        RemoteOobDataRequestReplyParams {
+            bd_addr: BdAddr,
+            c: [u8; 16],
+            r: [u8; 16],
+        }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Remote OOB Data Request Negative Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a9f09c32-e2e6-81ba-29e7-25a123c98d14)
+    ///
+    /// Reply to a Remote OOB Data Request event that the Host does not have the C and R values.
+    RemoteOobDataRequestNegativeReply(LINK_CONTROL, 0x0033) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// IO Capability Request Negative Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7bf12908-76d8-4e5a-d728-ada028167713)
+    ///
+    /// Reject a pairing attempt after an IO Capability Request event has been received.
+    IoCapabilityRequestNegativeReply(LINK_CONTROL, 0x0034) {
+        IoCapabilityRequestNegativeReplyParams {
+            bd_addr: BdAddr,
+            reason: Status,
+        }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Enhanced Setup Synchronous Connection command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-78100e4f-3531-ee07-671a-69ad93fbe6e4)
+    ///
+    /// Adds a new or modifies an existing synchronous logical transport (SCO or eSCO) on a physical link with enhanced parameters.
+    EnhancedSetupSynchronousConnection(LINK_CONTROL, 0x003d) {
+        Params = EnhancedSetupSynchronousConnectionParams;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Enhanced Accept Synchronous Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a0023a66-07b5-2ffc-05d3-7c39ee1cc9c5)
+    ///
+    /// Accepts an incoming request for a synchronous connection with enhanced parameters.
+    EnhancedAcceptSynchronousConnectionRequest(LINK_CONTROL, 0x003e) {
+        Params = EnhancedAcceptSynchronousConnectionRequestParams;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Truncated Page command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c1936c59-ec3d-6e85-9038-56afa8d0fc45)
+    ///
+    /// Pages the BR/EDR Controller and then aborts the paging sequence after an ID response.
+    TruncatedPage(LINK_CONTROL, 0x003f) {
+       TruncatedPageParams {
+            bd_addr: BdAddr,
+            page_scan_repetition_mode: PageScanRepetitionMode,
+            clock_offset: ClockOffset,
+        }
+        Return = ();
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -696,5 +770,123 @@ mod tests {
         let _cmd = UserPasskeyRequestNegativeReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
         assert_eq!(UserPasskeyRequestNegativeReply::OPCODE.group(), OpcodeGroup::new(0x01));
         assert_eq!(UserPasskeyRequestNegativeReply::OPCODE.cmd(), 0x002f);
+    }
+
+    #[test]
+    fn test_remote_oob_data_request_reply() {
+        let _cmd = RemoteOobDataRequestReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            [
+                0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
+            ], // c
+            [
+                0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20,
+            ], // r
+        );
+        assert_eq!(RemoteOobDataRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(RemoteOobDataRequestReply::OPCODE.cmd(), 0x0030);
+    }
+
+    #[test]
+    fn test_remote_oob_data_request_negative_reply() {
+        let _cmd = RemoteOobDataRequestNegativeReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
+        assert_eq!(
+            RemoteOobDataRequestNegativeReply::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(RemoteOobDataRequestNegativeReply::OPCODE.cmd(), 0x0033);
+    }
+
+    #[test]
+    fn test_io_capability_request_negative_reply() {
+        let _cmd = IoCapabilityRequestNegativeReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            Status::PAIRING_NOT_ALLOWED,
+        );
+        assert_eq!(IoCapabilityRequestNegativeReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(IoCapabilityRequestNegativeReply::OPCODE.cmd(), 0x0034);
+    }
+
+    #[test]
+    fn test_enhanced_setup_synchronous_connection() {
+        let params = EnhancedSetupSynchronousConnectionParams {
+            handle: ConnHandle::new(0x0001),
+            transmit_bandwidth: 8000,
+            receive_bandwidth: 8000,
+            transmit_coding_format: Default::default(),
+            receive_coding_format: Default::default(),
+            transmit_codec_frame_size: 60,
+            receive_codec_frame_size: 60,
+            input_bandwidth: 8000,
+            output_bandwidth: 8000,
+            input_coding_format: Default::default(),
+            output_coding_format: Default::default(),
+            input_coded_data_size: 8,
+            output_coded_data_size: 8,
+            input_pcm_data_format: 0,
+            output_pcm_data_format: 0,
+            input_pcm_sample_payload_msb_position: 0,
+            output_pcm_sample_payload_msb_position: 0,
+            input_data_path: 0,
+            output_data_path: 0,
+            input_transport_unit_size: 0,
+            output_transport_unit_size: 0,
+            max_latency: 10,
+            packet_type: SyncPacketType::new(),
+            retransmission_effort: RetransmissionEffort::NoRetransmissions,
+        };
+        let _cmd = EnhancedSetupSynchronousConnection::new(params);
+        assert_eq!(
+            EnhancedSetupSynchronousConnection::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(EnhancedSetupSynchronousConnection::OPCODE.cmd(), 0x003d);
+    }
+
+    #[test]
+    fn test_enhanced_accept_synchronous_connection_request() {
+        let params = EnhancedAcceptSynchronousConnectionRequestParams {
+            bd_addr: BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            transmit_bandwidth: 8000,
+            receive_bandwidth: 8000,
+            transmit_coding_format: Default::default(),
+            receive_coding_format: Default::default(),
+            transmit_codec_frame_size: 60,
+            receive_codec_frame_size: 60,
+            input_bandwidth: 8000,
+            output_bandwidth: 8000,
+            input_coding_format: Default::default(),
+            output_coding_format: Default::default(),
+            input_coded_data_size: 8,
+            output_coded_data_size: 8,
+            input_pcm_data_format: 0,
+            output_pcm_data_format: 0,
+            input_pcm_sample_payload_msb_position: 0,
+            output_pcm_sample_payload_msb_position: 0,
+            input_data_path: 0,
+            output_data_path: 0,
+            input_transport_unit_size: 0,
+            output_transport_unit_size: 0,
+            max_latency: 10,
+            packet_type: SyncPacketType::new(),
+            retransmission_effort: RetransmissionEffort::NoRetransmissions,
+        };
+        let _cmd = EnhancedAcceptSynchronousConnectionRequest::new(params);
+        assert_eq!(
+            EnhancedAcceptSynchronousConnectionRequest::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(EnhancedAcceptSynchronousConnectionRequest::OPCODE.cmd(), 0x003e);
+    }
+
+    #[test]
+    fn test_truncated_page() {
+        let _cmd = TruncatedPage::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            PageScanRepetitionMode::R2,
+            ClockOffset::new(),
+        );
+        assert_eq!(TruncatedPage::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(TruncatedPage::OPCODE.cmd(), 0x003f);
     }
 }
