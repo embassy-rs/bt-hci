@@ -464,6 +464,105 @@ cmd! {
     }
 }
 
+// 0x0040 - 0x004F
+
+cmd! {
+    /// Truncated Page Cancel command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4ace6cc5-f527-8a3d-fa2b-21e9908dd10f)
+    ///
+    /// Requests cancellation of an ongoing Truncated Page process.
+    TruncatedPageCancel(LINK_CONTROL, 0x0040) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Set Connectionless Peripheral Broadcast command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5f51425b-b5b3-6ae6-00e6-0c7d09352035)
+    ///
+    /// Used to enable or disable Connectionless Peripheral Broadcast mode in the BR/EDR Controller.
+    SetConnectionlessPeripheralBroadcast(LINK_CONTROL, 0x0041) {
+        SetConnectionlessPeripheralBroadcastParams {
+            enable: bool,
+            lt_addr: u8,
+            lpo_allowed: bool,
+            packet_type: PacketType,
+            interval_min: u16,
+            interval_max: u16,
+            supervision_timeout: u16,
+        }
+        SetConnectionlessPeripheralBroadcastReturn {
+            lt_addr: u8,
+            interval: u16,
+        }
+    }
+}
+
+cmd! {
+    /// Set Connectionless Peripheral Broadcast Receive command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d4a2f59e-1c08-3d28-1b3d-0b1519dd4b5a)
+    ///
+    /// Used to enable or disable the reception of Connectionless Peripheral Broadcast packets.
+    SetConnectionlessPeripheralBroadcastReceive(LINK_CONTROL, 0x0042) {
+        SetConnectionlessPeripheralBroadcastReceiveParams {
+            enable: bool,
+            bd_addr: BdAddr,
+            lt_addr: u8,
+            interval: u16,
+            clock_offset: u32,
+            next_broadcast_instant: u32,
+            supervision_timeout: u16,
+            remote_timing_accuracy: u8,
+            skip: u8,
+            packet_type: PacketType,
+            afh_channel_map: [u8; 10],
+        }
+        SetConnectionlessPeripheralBroadcastReceiveReturn {
+            bd_addr: BdAddr,
+            lt_addr: u8,
+        }
+    }
+}
+
+cmd! {
+    /// Start Synchronization Train command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-55896f81-cd4b-f318-c3b8-85f369feac6a)
+    ///
+    /// Used to start the synchronization train.
+    StartSynchronizationTrain(LINK_CONTROL, 0x0043) {
+        Params = ();
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Receive Synchronization Train command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8dda9429-f279-a65c-9f9e-777be087eed7)
+    ///
+    /// Used to begin listening for the synchronization train from the device with the specified BD_ADDR.
+    ReceiveSynchronizationTrain(LINK_CONTROL, 0x0044) {
+        ReceiveSynchronizationTrainParams {
+            bd_addr: BdAddr,
+            sync_scan_timeout: u16,
+            sync_scan_window: u16,
+            sync_scan_interval: u16,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Remote OOB Extended Data Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-46c8dd9e-c31c-8bb5-2e8a-71abb75caada)
+    ///
+    /// Reply to a Remote OOB Data Request event with the C and R values received via OOB transfer for both P-192 and P-256.
+    RemoteOobExtendedDataRequestReply(LINK_CONTROL, 0x0045) {
+        RemoteOobExtendedDataRequestReplyParams {
+            bd_addr: BdAddr,
+            c_192: [u8; 16],
+            r_192: [u8; 16],
+            c_256: [u8; 16],
+            r_256: [u8; 16],
+        }
+        Return = BdAddr;
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -888,5 +987,95 @@ mod tests {
         );
         assert_eq!(TruncatedPage::OPCODE.group(), OpcodeGroup::new(0x01));
         assert_eq!(TruncatedPage::OPCODE.cmd(), 0x003f);
+    }
+
+    #[test]
+    fn test_truncated_page_cancel() {
+        let _cmd = TruncatedPageCancel::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
+        assert_eq!(TruncatedPageCancel::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(TruncatedPageCancel::OPCODE.cmd(), 0x0040);
+    }
+
+    #[test]
+    fn test_set_connectionless_peripheral_broadcast() {
+        let _cmd = SetConnectionlessPeripheralBroadcast::new(
+            true,  // enable
+            1,     // lt_addr
+            false, // lpo_allowed
+            PacketType::new(),
+            800,   // interval_min
+            1600,  // interval_max
+            16000, // supervision_timeout
+        );
+        assert_eq!(
+            SetConnectionlessPeripheralBroadcast::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(SetConnectionlessPeripheralBroadcast::OPCODE.cmd(), 0x0041);
+    }
+
+    #[test]
+    fn test_set_connectionless_peripheral_broadcast_receive() {
+        let _cmd = SetConnectionlessPeripheralBroadcastReceive::new(
+            true, // enable
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            1,      // lt_addr
+            800,    // interval
+            0x1234, // clock_offset
+            0x5678, // next_broadcast_instant
+            16000,  // supervision_timeout
+            20,     // remote_timing_accuracy
+            0,      // skip
+            PacketType::new(),
+            [0xff; 10], // afh_channel_map
+        );
+        assert_eq!(
+            SetConnectionlessPeripheralBroadcastReceive::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(SetConnectionlessPeripheralBroadcastReceive::OPCODE.cmd(), 0x0042);
+    }
+
+    #[test]
+    fn test_start_synchronization_train() {
+        let _cmd = StartSynchronizationTrain::new();
+        assert_eq!(StartSynchronizationTrain::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(StartSynchronizationTrain::OPCODE.cmd(), 0x0043);
+    }
+
+    #[test]
+    fn test_receive_synchronization_train() {
+        let _cmd = ReceiveSynchronizationTrain::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            16384, // sync_scan_timeout
+            36,    // sync_scan_window
+            512,   // sync_scan_interval
+        );
+        assert_eq!(ReceiveSynchronizationTrain::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReceiveSynchronizationTrain::OPCODE.cmd(), 0x0044);
+    }
+
+    #[test]
+    fn test_remote_oob_extended_data_request_reply() {
+        let _cmd = RemoteOobExtendedDataRequestReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            [
+                0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
+            ], // c_192
+            [
+                0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20,
+            ], // r_192
+            [
+                0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30,
+            ], // c_256
+            [
+                0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40,
+            ], // r_256
+        );
+        assert_eq!(
+            RemoteOobExtendedDataRequestReply::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(RemoteOobExtendedDataRequestReply::OPCODE.cmd(), 0x0045);
     }
 }
