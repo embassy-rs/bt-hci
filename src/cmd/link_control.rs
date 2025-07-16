@@ -3,7 +3,7 @@
 use crate::cmd;
 use crate::param::{
     AllowRoleSwitch, AuthenticationRequirements, BdAddr, ClockOffset, ConnHandle, DisconnectReason, IoCapability,
-    OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, Role,
+    KeyFlag, OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, Role,
 };
 
 // 0x0001 - 0x000F
@@ -180,6 +180,28 @@ cmd! {
 }
 
 cmd! {
+    /// Change Connection Link Key command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f5fe9df2-765c-4877-65c3-cd945c4eaace)
+    ///
+    /// Forces the master device to change the link key to a new one.
+    ChangeConnectionLinkKey(LINK_CONTROL, 0x0015) {
+        Params = ConnHandle;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Link Key Selection command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-025df664-313b-5394-f697-48702de64624)
+    ///
+    /// Forces the device to use the temporary link key or the semi-permanent link keys.
+    LinkKeySelection(LINK_CONTROL, 0x0017) {
+        LinkKeySelectionParams {
+            key_flag: KeyFlag,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
     /// Remote Name Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cbd9cb09-59fd-9739-2570-8fae93d45bd7)
     ///
     /// Initiates a remote name request procedure for the specified Bluetooth device.
@@ -195,9 +217,52 @@ cmd! {
 }
 
 cmd! {
+    /// Remote Name Request Cancel command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5acd877b-9043-7cff-82f9-2aa406610643)
+    ///
+    /// Cancels an ongoing Remote Name Request procedure.
+    RemoteNameRequestCancel(LINK_CONTROL, 0x001a) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Read Remote Supported Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-86223376-28a9-e454-15f2-e420aee8c462)
+    ///
+    /// Requests the supported features from a remote device.
+    ReadRemoteSupportedFeatures(LINK_CONTROL, 0x001b) {
+        Params = ConnHandle;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Read Remote Extended Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-99e6584f-76ad-c60c-845e-f9d11b0b3d4e)
+    ///
+    /// Requests the extended features from a remote device for a specific page.
+    ReadRemoteExtendedFeatures(LINK_CONTROL, 0x001c) {
+        ReadRemoteExtendedFeaturesParams {
+            handle: ConnHandle,
+            page_number: u8,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
     /// Read Remote Version Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebf3c9ac-0bfa-0ed0-c014-8f8691ea3fe5)
     ReadRemoteVersionInformation(LINK_CONTROL, 0x001d) {
         Params = ConnHandle;
+    }
+}
+
+cmd! {
+    /// Read Clock Offset command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7942db19-4d63-4322-cabe-00b3a6e81915)
+    ///
+    /// Reads the clock offset of a remote device.
+    ReadClockOffset(LINK_CONTROL, 0x001f) {
+        Params = ConnHandle;
+        Return = ();
     }
 }
 
@@ -231,11 +296,8 @@ cmd! {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::cmd::{Cmd, OpcodeGroup};
-    use crate::param::{
-        AllowRoleSwitch, BdAddr, ClockOffset, ConnHandle, DisconnectReason, PacketType, PageScanRepetitionMode,
-        RejectReason, Role,
-    };
+    use crate::cmd::*;
+    use crate::param::*;
 
     #[test]
     fn test_inquiry() {
@@ -414,5 +476,48 @@ mod tests {
         );
         assert_eq!(ChangeConnectionPacketType::OPCODE.group(), OpcodeGroup::new(0x01));
         assert_eq!(ChangeConnectionPacketType::OPCODE.cmd(), 0x000f);
+    }
+
+    #[test]
+    fn test_change_connection_link_key() {
+        let _cmd = ChangeConnectionLinkKey::new(ConnHandle::new(0x0001));
+        assert_eq!(ChangeConnectionLinkKey::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ChangeConnectionLinkKey::OPCODE.cmd(), 0x0015);
+    }
+
+    #[test]
+    fn test_link_key_selection() {
+        let _cmd = LinkKeySelection::new(KeyFlag::SemiPermanent);
+        assert_eq!(LinkKeySelection::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(LinkKeySelection::OPCODE.cmd(), 0x0017);
+    }
+
+    #[test]
+    fn test_remote_name_request_cancel() {
+        let bd_addr = BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]);
+        let _cmd = RemoteNameRequestCancel::new(bd_addr);
+        assert_eq!(RemoteNameRequestCancel::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(RemoteNameRequestCancel::OPCODE.cmd(), 0x001a);
+    }
+
+    #[test]
+    fn test_read_remote_supported_features() {
+        let _cmd = ReadRemoteSupportedFeatures::new(ConnHandle::new(0x0001));
+        assert_eq!(ReadRemoteSupportedFeatures::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReadRemoteSupportedFeatures::OPCODE.cmd(), 0x001b);
+    }
+
+    #[test]
+    fn test_read_remote_extended_features() {
+        let _cmd = ReadRemoteExtendedFeatures::new(ConnHandle::new(0x0001), 0x01);
+        assert_eq!(ReadRemoteExtendedFeatures::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReadRemoteExtendedFeatures::OPCODE.cmd(), 0x001c);
+    }
+
+    #[test]
+    fn test_read_clock_offset() {
+        let _cmd = ReadClockOffset::new(ConnHandle::new(0x0001));
+        assert_eq!(ReadClockOffset::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReadClockOffset::OPCODE.cmd(), 0x001f);
     }
 }

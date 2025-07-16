@@ -167,3 +167,12 @@ param! {
         UnacceptableBdAddr = 0x0F,
     }
 }
+
+param! {
+    enum KeyFlag{
+        /// Use semi-permanent Link Keys.
+        SemiPermanent = 0x00,
+        /// Use Temporary Link Key.
+        Temporary = 0x01,
+    }
+}
