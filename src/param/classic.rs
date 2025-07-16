@@ -101,3 +101,49 @@ param! {
         // All other values reserved for future use
     }
 }
+
+param! {
+    enum IoCapability{
+        /// Display Only
+        DisplayOnly = 0x00,
+        /// Display Yes/No
+        DisplayYesNo = 0x01,
+        /// Keyboard Only
+        KeyboardOnly = 0x02,
+        /// No Input No Output
+        NoInputNoOutput = 0x03,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum OobDataPresent {
+        /// OOB authentication data not present
+        NotPresent = 0x00,
+        /// P-192 OOB authentication data from remote device present
+        P192Present = 0x01,
+        /// P-256 OOB authentication data from remote device present
+        P256Present = 0x02,
+        /// P-192 and P-256 OOB authentication data from remote device present
+        P192AndP256Present = 0x03,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum AuthenticationRequirements {
+        /// MITM Protection Not Required – No Bonding. Numeric comparison with automatic accept allowed.
+        MitmNotRequiredNoBonding = 0x00,
+        /// MITM Protection Required – No Bonding. Use IO Capabilities to determine authentication procedure
+        MitmRequiredNoBonding = 0x01,
+        /// MITM Protection Not Required – Dedicated Bonding. Numeric comparison with automatic accept allowed.
+        MitmNotRequiredDedicatedBonding = 0x02,
+        /// MITM Protection Required – Dedicated Bonding. Use IO Capabilities to determine authentication procedure
+        MitmRequiredDedicatedBonding = 0x03,
+        /// MITM Protection Not Required – General Bonding. Numeric Comparison with automatic accept allowed.
+        MitmNotRequiredGeneralBonding = 0x04,
+        /// MITM Protection Required – General Bonding. Use IO capabilities to determine authentication procedure.
+        MitmRequiredGeneralBonding = 0x05,
+        // All other values reserved for future use
+    }
+}

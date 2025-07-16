@@ -2,7 +2,8 @@
 
 use crate::cmd;
 use crate::param::{
-    AllowRoleSwitch, BdAddr, ClockOffset, ConnHandle, DisconnectReason, PacketType, PageScanRepetitionMode, Status,
+    AllowRoleSwitch, AuthenticationRequirements, BdAddr, ClockOffset, ConnHandle, DisconnectReason, IoCapability,
+    OobDataPresent, PacketType, PageScanRepetitionMode, Status,
 };
 
 cmd! {
@@ -88,6 +89,32 @@ cmd! {
 }
 
 cmd! {
+    /// Set Connection Encryption command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0dd32c20-9eda-0ee0-b15f-cf896c9a1df5)
+    ///
+    /// Used to enable or disable encryption on a connection after authentication.
+    SetConnectionEncryption(LINK_CONTROL, 0x0013) {
+        SetConnectionEncryptionParams {
+            handle: ConnHandle,
+            encryption_enable: bool,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Link Key Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fcc241d3-b098-3bb3-3885-a1897a0252d2)
+    ///
+    /// Used to respond to a Link Key Request event with the stored link key.
+    LinkKeyRequestReply(LINK_CONTROL, 0x000b) {
+        LinkKeyRequestReplyParams {
+            bd_addr: BdAddr,
+            link_key: [u8; 16],
+        }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
     /// Link Key Request Negative Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1ca1324a-dd2c-15b6-2ccf-b469b18dbd3d)
     ///
     /// Used to respond to a Link Key Request event when no key is available.
@@ -107,6 +134,31 @@ cmd! {
             pin_code_len: u8,
             pin_code: [u8; 16],
         }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// IO Capability Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-063323a1-51b0-a373-8e29-84f9d0e0263e)
+    ///
+    /// Reply to an IO Capability Request event with the current I/O capabilities of the Host.
+    IoCapabilityRequestReply(LINK_CONTROL, 0x002b) {
+        IoCapabilityRequestReplyParams {
+            bd_addr: BdAddr,
+            io_capability: IoCapability,
+            oob_data_present: OobDataPresent,
+            authentication_requirements: AuthenticationRequirements,
+        }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// User Confirmation Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b88e1ed6-d8d8-6472-4b4e-c8467f4b0d9c)
+    ///
+    /// Reply to a User Confirmation Request event indicating that the user selected "yes".
+    UserConfirmationRequestReply(LINK_CONTROL, 0x002c) {
+        Params = BdAddr;
         Return = BdAddr;
     }
 }
@@ -210,5 +262,46 @@ mod tests {
 
         assert_eq!(PinCodeRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
         assert_eq!(PinCodeRequestReply::OPCODE.cmd(), 0x000d);
+    }
+
+    #[test]
+    fn test_set_connection_encryption() {
+        let _cmd = SetConnectionEncryption::new(
+            ConnHandle::new(0x0001),
+            true, // Enable encryption
+        );
+        assert_eq!(SetConnectionEncryption::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(SetConnectionEncryption::OPCODE.cmd(), 0x0013);
+    }
+
+    #[test]
+    fn test_link_key_request_reply() {
+        let _cmd = LinkKeyRequestReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            [
+                0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
+            ],
+        );
+        assert_eq!(LinkKeyRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(LinkKeyRequestReply::OPCODE.cmd(), 0x000b);
+    }
+
+    #[test]
+    fn test_io_capability_request_reply() {
+        let _cmd = IoCapabilityRequestReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            IoCapability::DisplayYesNo,
+            OobDataPresent::NotPresent,
+            AuthenticationRequirements::MitmRequiredGeneralBonding,
+        );
+        assert_eq!(IoCapabilityRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(IoCapabilityRequestReply::OPCODE.cmd(), 0x002b);
+    }
+
+    #[test]
+    fn test_user_confirmation_request_reply() {
+        let _cmd = UserConfirmationRequestReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
+        assert_eq!(UserConfirmationRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(UserConfirmationRequestReply::OPCODE.cmd(), 0x002c);
     }
 }
