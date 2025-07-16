@@ -6,6 +6,8 @@ use crate::param::{
     OobDataPresent, PacketType, PageScanRepetitionMode, Status,
 };
 
+// 0x0001 - 0x000F
+
 cmd! {
     /// Inquiry command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2db7bf11-f361-99bd-6161-dc9696f86c6b)
     Inquiry(LINK_CONTROL, 0x0001) {
@@ -29,39 +31,6 @@ cmd! {
 }
 
 cmd! {
-    /// Disconnect command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6bb8119e-aa67-d517-db2a-7470c35fbf4a)
-    Disconnect(LINK_CONTROL, 0x0006) {
-        DisconnectParams {
-            handle: ConnHandle,
-            reason: DisconnectReason,
-        }
-        Return = ();
-    }
-}
-
-cmd! {
-    /// Read Remote Version Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebf3c9ac-0bfa-0ed0-c014-8f8691ea3fe5)
-    ReadRemoteVersionInformation(LINK_CONTROL, 0x001d) {
-        Params = ConnHandle;
-    }
-}
-
-cmd! {
-    /// Remote Name Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cbd9cb09-59fd-9739-2570-8fae93d45bd7)
-    ///
-    /// Initiates a remote name request procedure for the specified Bluetooth device.
-    RemoteNameRequest(LINK_CONTROL, 0x0019) {
-        RemoteNameRequestParams {
-            bd_addr: BdAddr,
-            page_scan_repetition_mode: PageScanRepetitionMode,
-            reserved: u8, // Reserved, shall be set to 0x00.
-            clock_offset: ClockOffset,
-        }
-        Return = ();
-    }
-}
-
-cmd! {
     /// Create Connection command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4150eaa8-3d28-1113-68cf-5bae5bae78fd)
     ///
     /// Initiates a connection to a remote Bluetooth device.
@@ -79,23 +48,11 @@ cmd! {
 }
 
 cmd! {
-    /// Authentication Requested command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-904095aa-072e-02c1-023a-e16571079cd2)
-    ///
-    /// Initiates authentication (pairing) for the given connection handle.
-    AuthenticationRequested(LINK_CONTROL, 0x0011) {
-        Params = ConnHandle;
-        Return = ();
-    }
-}
-
-cmd! {
-    /// Set Connection Encryption command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0dd32c20-9eda-0ee0-b15f-cf896c9a1df5)
-    ///
-    /// Used to enable or disable encryption on a connection after authentication.
-    SetConnectionEncryption(LINK_CONTROL, 0x0013) {
-        SetConnectionEncryptionParams {
+    /// Disconnect command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6bb8119e-aa67-d517-db2a-7470c35fbf4a)
+    Disconnect(LINK_CONTROL, 0x0006) {
+        DisconnectParams {
             handle: ConnHandle,
-            encryption_enable: bool,
+            reason: DisconnectReason,
         }
         Return = ();
     }
@@ -137,6 +94,55 @@ cmd! {
         Return = BdAddr;
     }
 }
+
+// 0x0011 - 0x001F
+
+cmd! {
+    /// Authentication Requested command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-904095aa-072e-02c1-023a-e16571079cd2)
+    ///
+    /// Initiates authentication (pairing) for the given connection handle.
+    AuthenticationRequested(LINK_CONTROL, 0x0011) {
+        Params = ConnHandle;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Set Connection Encryption command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0dd32c20-9eda-0ee0-b15f-cf896c9a1df5)
+    ///
+    /// Used to enable or disable encryption on a connection after authentication.
+    SetConnectionEncryption(LINK_CONTROL, 0x0013) {
+        SetConnectionEncryptionParams {
+            handle: ConnHandle,
+            encryption_enable: bool,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Remote Name Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cbd9cb09-59fd-9739-2570-8fae93d45bd7)
+    ///
+    /// Initiates a remote name request procedure for the specified Bluetooth device.
+    RemoteNameRequest(LINK_CONTROL, 0x0019) {
+        RemoteNameRequestParams {
+            bd_addr: BdAddr,
+            page_scan_repetition_mode: PageScanRepetitionMode,
+            reserved: u8, // Reserved, shall be set to 0x00.
+            clock_offset: ClockOffset,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Read Remote Version Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebf3c9ac-0bfa-0ed0-c014-8f8691ea3fe5)
+    ReadRemoteVersionInformation(LINK_CONTROL, 0x001d) {
+        Params = ConnHandle;
+    }
+}
+
+// 0x0020 - 0x002F
 
 cmd! {
     /// IO Capability Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-063323a1-51b0-a373-8e29-84f9d0e0263e)
