@@ -1,5 +1,4 @@
 use crate::param::macros::param;
-use crate::param::{BdAddr, Status};
 
 param! {
     bitfield PacketType[2] {
@@ -100,13 +99,5 @@ param! {
         /// Authenticated Combination Key generated from P-256
         AuthenticatedCombinationKeyP256 = 0x08,
         // All other values reserved for future use
-    }
-}
-
-param! {
-    /// Common return parameters for commands that return a status and a Bluetooth device address
-    struct StatusBdAddrReturn {
-        status: Status,
-        bd_addr: BdAddr,
     }
 }

@@ -3,7 +3,6 @@
 use crate::cmd;
 use crate::param::{
     AllowRoleSwitch, BdAddr, ClockOffset, ConnHandle, DisconnectReason, PacketType, PageScanRepetitionMode, Status,
-    StatusBdAddrReturn,
 };
 
 cmd! {
@@ -108,7 +107,7 @@ cmd! {
             pin_code_len: u8,
             pin_code: [u8; 16],
         }
-        Return = StatusBdAddrReturn;
+        Return = BdAddr;
     }
 }
 
