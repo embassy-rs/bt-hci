@@ -24,6 +24,25 @@ param! {
 }
 
 param! {
+    bitfield SyncPacketType[2]{
+        // Basic synchronous packet types
+        (0, hv1_may_be_used, set_hv1_may_be_used);
+        (1, hv2_may_be_used, set_hv2_may_be_used);
+        (2, hv3_may_be_used, set_hv3_may_be_used);
+        // Extended synchronous packet types
+        (3, ev3_may_be_used, set_ev3_may_be_used);
+        (4, ev4_may_be_used, set_ev4_may_be_used);
+        (5, ev5_may_be_used, set_ev5_may_be_used);
+        // EDR synchronous packet types that shall not be used
+        (6, shall_not_be_used_2ev3, set_shall_not_be_used_2ev3);
+        (7, shall_not_be_used_3ev3, set_shall_not_be_used_3ev3);
+        (8, shall_not_be_used_2ev5, set_shall_not_be_used_2ev5);
+        (9, shall_not_be_used_3ev5, set_shall_not_be_used_3ev5);
+        // All other bits reserved for future use
+    }
+}
+
+param! {
     bitfield ClockOffset[2] {
         // Bits 0-14: Bits 2 to 16 of CLKNPeripheral - CLK
         (0, clock_offset_0, set_clock_offset_0);
@@ -43,6 +62,27 @@ param! {
         (14, clock_offset_14, set_clock_offset_14);
         // Bit 15: Clock_Offset_Valid_Flag (0 = Invalid, 1 = Valid)
         (15, clock_offset_valid_flag, set_clock_offset_valid_flag);
+    }
+}
+
+param! {
+    bitfield VoiceSetting[2]{
+        // Bits 0-1: Air coding format
+        (0, air_coding_format_0, set_air_coding_format_0);
+        (1, air_coding_format_1, set_air_coding_format_1);
+        // Bits 2-4: Linear PCM bit position
+        (2, linear_pcm_bit_position_0, set_linear_pcm_bit_position_0);
+        (3, linear_pcm_bit_position_1, set_linear_pcm_bit_position_1);
+        (4, linear_pcm_bit_position_2, set_linear_pcm_bit_position_2);
+        // Bit 5: Input sample size (only for linear PCM)
+        (5, input_sample_size, set_input_sample_size);
+        // Bits 6-7: Input data format
+        (6, input_data_format_0, set_input_data_format_0);
+        (7, input_data_format_1, set_input_data_format_1);
+        // Bits 8-9: Input coding format
+        (8, input_coding_format_0, set_input_coding_format_0);
+        (9, input_coding_format_1, set_input_coding_format_1);
+        // Bits 10-15: Reserved for future use
     }
 }
 
@@ -174,5 +214,19 @@ param! {
         SemiPermanent = 0x00,
         /// Use Temporary Link Key.
         Temporary = 0x01,
+    }
+}
+
+param! {
+    enum RetransmissionEffort{
+        /// No retransmissions (SCO or eSCO connection allowed)
+        NoRetransmissions = 0x00,
+        /// At least one retransmission, optimize for power consumption (eSCO connection required)
+        OptimizePowerConsumption = 0x01,
+        /// At least one retransmission, optimize for link quality (eSCO connection required)
+        OptimizeLinkQuality = 0x02,
+        /// Don't care (SCO or eSCO connection allowed)
+        DontCare = 0xFF,
+        // All other values reserved for future use
     }
 }

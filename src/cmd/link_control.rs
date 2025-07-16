@@ -3,7 +3,8 @@
 use crate::cmd;
 use crate::param::{
     AllowRoleSwitch, AuthenticationRequirements, BdAddr, ClockOffset, ConnHandle, DisconnectReason, IoCapability,
-    KeyFlag, OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, Role,
+    KeyFlag, OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, RetransmissionEffort, Role,
+    SyncPacketType, VoiceSetting,
 };
 
 // 0x0001 - 0x000F
@@ -269,6 +270,69 @@ cmd! {
 // 0x0020 - 0x002F
 
 cmd! {
+    /// Read LMP Handle command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ef969f37-51b8-faab-4c73-42b3da5570c2)
+    ///
+    /// Reads the current LMP Handle associated with the Connection_Handle.
+    ReadLmpHandle(LINK_CONTROL, 0x0020) {
+        Params = ConnHandle;
+        ReadLmpHandleReturn {
+            handle: ConnHandle,
+            lmp_handle: u8,
+            reserved: u32,
+        }
+    }
+}
+
+cmd! {
+    /// Setup Synchronous Connection command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-55d33060-6340-3068-fd72-de602df735a1)
+    ///
+    /// Adds a new or modifies an existing synchronous logical transport (SCO or eSCO) on a physical link.
+    SetupSynchronousConnection(LINK_CONTROL, 0x0028) {
+        SetupSynchronousConnectionParams {
+            handle: ConnHandle,
+            transmit_bandwidth: u32,
+            receive_bandwidth: u32,
+            max_latency: u16,
+            voice_setting: VoiceSetting,
+            retransmission_effort: RetransmissionEffort,
+            packet_type: SyncPacketType,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Accept Synchronous Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-14983bc8-7617-096f-0b3c-ded9a0d225e6)
+    ///
+    /// Accepts an incoming request for a synchronous connection.
+    AcceptSynchronousConnectionRequest(LINK_CONTROL, 0x0029) {
+        AcceptSynchronousConnectionRequestParams {
+            bd_addr: BdAddr,
+            transmit_bandwidth: u32,
+            receive_bandwidth: u32,
+            max_latency: u16,
+            voice_setting: VoiceSetting,
+            retransmission_effort: RetransmissionEffort,
+            packet_type: SyncPacketType,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Reject Synchronous Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8b9406f9-bfa5-cb1d-9926-d14e2e24f8ae)
+    ///
+    /// Declines an incoming request for a synchronous connection.
+    RejectSynchronousConnectionRequest(LINK_CONTROL, 0x002a) {
+        RejectSynchronousConnectionRequestParams {
+            bd_addr: BdAddr,
+            reason: RejectReason,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
     /// IO Capability Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-063323a1-51b0-a373-8e29-84f9d0e0263e)
     ///
     /// Reply to an IO Capability Request event with the current I/O capabilities of the Host.
@@ -288,6 +352,39 @@ cmd! {
     ///
     /// Reply to a User Confirmation Request event indicating that the user selected "yes".
     UserConfirmationRequestReply(LINK_CONTROL, 0x002c) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// User Confirmation Request Negative Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ac00352f-832c-cc33-b873-2c158e372653)
+    ///
+    /// Reply to a User Confirmation Request event indicating that the user selected "no".
+    UserConfirmationRequestNegativeReply(LINK_CONTROL, 0x002d) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// User Passkey Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b1ddf2d8-1c4f-1870-40d5-f153f3e4b8de)
+    ///
+    /// Reply to a User Passkey Request event with the passkey entered by the user.
+    UserPasskeyRequestReply(LINK_CONTROL, 0x002e) {
+        UserPasskeyRequestReplyParams {
+            bd_addr: BdAddr,
+            numeric_value: u32,
+        }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// User Passkey Request Negative Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8ac80157-c838-4082-12aa-4c8c9f7a2f44)
+    ///
+    /// Reply to a User Passkey Request event indicating the Host could not provide a passkey.
+    UserPasskeyRequestNegativeReply(LINK_CONTROL, 0x002f) {
         Params = BdAddr;
         Return = BdAddr;
     }
@@ -519,5 +616,85 @@ mod tests {
         let _cmd = ReadClockOffset::new(ConnHandle::new(0x0001));
         assert_eq!(ReadClockOffset::OPCODE.group(), OpcodeGroup::new(0x01));
         assert_eq!(ReadClockOffset::OPCODE.cmd(), 0x001f);
+    }
+
+    #[test]
+    fn test_read_lmp_handle() {
+        let _cmd = ReadLmpHandle::new(ConnHandle::new(0x0001));
+        assert_eq!(ReadLmpHandle::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReadLmpHandle::OPCODE.cmd(), 0x0020);
+    }
+
+    #[test]
+    fn test_setup_synchronous_connection() {
+        let _cmd = SetupSynchronousConnection::new(
+            ConnHandle::new(0x0001),
+            8000, // transmit_bandwidth
+            8000, // receive_bandwidth
+            10,   // max_latency
+            VoiceSetting::new(),
+            RetransmissionEffort::NoRetransmissions,
+            SyncPacketType::new(),
+        );
+        assert_eq!(SetupSynchronousConnection::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(SetupSynchronousConnection::OPCODE.cmd(), 0x0028);
+    }
+
+    #[test]
+    fn test_accept_synchronous_connection_request() {
+        let _cmd = AcceptSynchronousConnectionRequest::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            8000, // transmit_bandwidth
+            8000, // receive_bandwidth
+            10,   // max_latency
+            VoiceSetting::new(),
+            RetransmissionEffort::NoRetransmissions,
+            SyncPacketType::new(),
+        );
+        assert_eq!(
+            AcceptSynchronousConnectionRequest::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(AcceptSynchronousConnectionRequest::OPCODE.cmd(), 0x0029);
+    }
+
+    #[test]
+    fn test_reject_synchronous_connection_request() {
+        let _cmd = RejectSynchronousConnectionRequest::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            RejectReason::LimitedResources,
+        );
+        assert_eq!(
+            RejectSynchronousConnectionRequest::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(RejectSynchronousConnectionRequest::OPCODE.cmd(), 0x002a);
+    }
+
+    #[test]
+    fn test_user_confirmation_request_negative_reply() {
+        let _cmd = UserConfirmationRequestNegativeReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
+        assert_eq!(
+            UserConfirmationRequestNegativeReply::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(UserConfirmationRequestNegativeReply::OPCODE.cmd(), 0x002d);
+    }
+
+    #[test]
+    fn test_user_passkey_request_reply() {
+        let _cmd = UserPasskeyRequestReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            123456, // numeric_value
+        );
+        assert_eq!(UserPasskeyRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(UserPasskeyRequestReply::OPCODE.cmd(), 0x002e);
+    }
+
+    #[test]
+    fn test_user_passkey_request_negative_reply() {
+        let _cmd = UserPasskeyRequestNegativeReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
+        assert_eq!(UserPasskeyRequestNegativeReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(UserPasskeyRequestNegativeReply::OPCODE.cmd(), 0x002f);
     }
 }
