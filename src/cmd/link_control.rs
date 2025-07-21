@@ -3,7 +3,8 @@
 use crate::cmd;
 use crate::param::{
     AllowRoleSwitch, AuthenticationRequirements, BdAddr, ClockOffset, ConnHandle, DisconnectReason, IoCapability,
-    OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, Role,
+    KeyFlag, OobDataPresent, PacketType, PageScanRepetitionMode, RejectReason, RetransmissionEffort, Role,
+    SyncPacketType, VoiceSetting,
 };
 
 // 0x0001 - 0x000F
@@ -180,6 +181,28 @@ cmd! {
 }
 
 cmd! {
+    /// Change Connection Link Key command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f5fe9df2-765c-4877-65c3-cd945c4eaace)
+    ///
+    /// Forces the master device to change the link key to a new one.
+    ChangeConnectionLinkKey(LINK_CONTROL, 0x0015) {
+        Params = ConnHandle;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Link Key Selection command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-025df664-313b-5394-f697-48702de64624)
+    ///
+    /// Forces the device to use the temporary link key or the semi-permanent link keys.
+    LinkKeySelection(LINK_CONTROL, 0x0017) {
+        LinkKeySelectionParams {
+            key_flag: KeyFlag,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
     /// Remote Name Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cbd9cb09-59fd-9739-2570-8fae93d45bd7)
     ///
     /// Initiates a remote name request procedure for the specified Bluetooth device.
@@ -195,13 +218,119 @@ cmd! {
 }
 
 cmd! {
+    /// Remote Name Request Cancel command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5acd877b-9043-7cff-82f9-2aa406610643)
+    ///
+    /// Cancels an ongoing Remote Name Request procedure.
+    RemoteNameRequestCancel(LINK_CONTROL, 0x001a) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Read Remote Supported Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-86223376-28a9-e454-15f2-e420aee8c462)
+    ///
+    /// Requests the supported features from a remote device.
+    ReadRemoteSupportedFeatures(LINK_CONTROL, 0x001b) {
+        Params = ConnHandle;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Read Remote Extended Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-99e6584f-76ad-c60c-845e-f9d11b0b3d4e)
+    ///
+    /// Requests the extended features from a remote device for a specific page.
+    ReadRemoteExtendedFeatures(LINK_CONTROL, 0x001c) {
+        ReadRemoteExtendedFeaturesParams {
+            handle: ConnHandle,
+            page_number: u8,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
     /// Read Remote Version Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebf3c9ac-0bfa-0ed0-c014-8f8691ea3fe5)
     ReadRemoteVersionInformation(LINK_CONTROL, 0x001d) {
         Params = ConnHandle;
     }
 }
 
+cmd! {
+    /// Read Clock Offset command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7942db19-4d63-4322-cabe-00b3a6e81915)
+    ///
+    /// Reads the clock offset of a remote device.
+    ReadClockOffset(LINK_CONTROL, 0x001f) {
+        Params = ConnHandle;
+        Return = ();
+    }
+}
+
 // 0x0020 - 0x002F
+
+cmd! {
+    /// Read LMP Handle command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ef969f37-51b8-faab-4c73-42b3da5570c2)
+    ///
+    /// Reads the current LMP Handle associated with the Connection_Handle.
+    ReadLmpHandle(LINK_CONTROL, 0x0020) {
+        Params = ConnHandle;
+        ReadLmpHandleReturn {
+            handle: ConnHandle,
+            lmp_handle: u8,
+            reserved: u32,
+        }
+    }
+}
+
+cmd! {
+    /// Setup Synchronous Connection command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-55d33060-6340-3068-fd72-de602df735a1)
+    ///
+    /// Adds a new or modifies an existing synchronous logical transport (SCO or eSCO) on a physical link.
+    SetupSynchronousConnection(LINK_CONTROL, 0x0028) {
+        SetupSynchronousConnectionParams {
+            handle: ConnHandle,
+            transmit_bandwidth: u32,
+            receive_bandwidth: u32,
+            max_latency: u16,
+            voice_setting: VoiceSetting,
+            retransmission_effort: RetransmissionEffort,
+            packet_type: SyncPacketType,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Accept Synchronous Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-14983bc8-7617-096f-0b3c-ded9a0d225e6)
+    ///
+    /// Accepts an incoming request for a synchronous connection.
+    AcceptSynchronousConnectionRequest(LINK_CONTROL, 0x0029) {
+        AcceptSynchronousConnectionRequestParams {
+            bd_addr: BdAddr,
+            transmit_bandwidth: u32,
+            receive_bandwidth: u32,
+            max_latency: u16,
+            voice_setting: VoiceSetting,
+            retransmission_effort: RetransmissionEffort,
+            packet_type: SyncPacketType,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Reject Synchronous Connection Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8b9406f9-bfa5-cb1d-9926-d14e2e24f8ae)
+    ///
+    /// Declines an incoming request for a synchronous connection.
+    RejectSynchronousConnectionRequest(LINK_CONTROL, 0x002a) {
+        RejectSynchronousConnectionRequestParams {
+            bd_addr: BdAddr,
+            reason: RejectReason,
+        }
+        Return = ();
+    }
+}
 
 cmd! {
     /// IO Capability Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-063323a1-51b0-a373-8e29-84f9d0e0263e)
@@ -228,14 +357,44 @@ cmd! {
     }
 }
 
+cmd! {
+    /// User Confirmation Request Negative Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ac00352f-832c-cc33-b873-2c158e372653)
+    ///
+    /// Reply to a User Confirmation Request event indicating that the user selected "no".
+    UserConfirmationRequestNegativeReply(LINK_CONTROL, 0x002d) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// User Passkey Request Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b1ddf2d8-1c4f-1870-40d5-f153f3e4b8de)
+    ///
+    /// Reply to a User Passkey Request event with the passkey entered by the user.
+    UserPasskeyRequestReply(LINK_CONTROL, 0x002e) {
+        UserPasskeyRequestReplyParams {
+            bd_addr: BdAddr,
+            numeric_value: u32,
+        }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// User Passkey Request Negative Reply command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8ac80157-c838-4082-12aa-4c8c9f7a2f44)
+    ///
+    /// Reply to a User Passkey Request event indicating the Host could not provide a passkey.
+    UserPasskeyRequestNegativeReply(LINK_CONTROL, 0x002f) {
+        Params = BdAddr;
+        Return = BdAddr;
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::cmd::{Cmd, OpcodeGroup};
-    use crate::param::{
-        AllowRoleSwitch, BdAddr, ClockOffset, ConnHandle, DisconnectReason, PacketType, PageScanRepetitionMode,
-        RejectReason, Role,
-    };
+    use crate::cmd::*;
+    use crate::param::*;
 
     #[test]
     fn test_inquiry() {
@@ -414,5 +573,128 @@ mod tests {
         );
         assert_eq!(ChangeConnectionPacketType::OPCODE.group(), OpcodeGroup::new(0x01));
         assert_eq!(ChangeConnectionPacketType::OPCODE.cmd(), 0x000f);
+    }
+
+    #[test]
+    fn test_change_connection_link_key() {
+        let _cmd = ChangeConnectionLinkKey::new(ConnHandle::new(0x0001));
+        assert_eq!(ChangeConnectionLinkKey::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ChangeConnectionLinkKey::OPCODE.cmd(), 0x0015);
+    }
+
+    #[test]
+    fn test_link_key_selection() {
+        let _cmd = LinkKeySelection::new(KeyFlag::SemiPermanent);
+        assert_eq!(LinkKeySelection::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(LinkKeySelection::OPCODE.cmd(), 0x0017);
+    }
+
+    #[test]
+    fn test_remote_name_request_cancel() {
+        let bd_addr = BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]);
+        let _cmd = RemoteNameRequestCancel::new(bd_addr);
+        assert_eq!(RemoteNameRequestCancel::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(RemoteNameRequestCancel::OPCODE.cmd(), 0x001a);
+    }
+
+    #[test]
+    fn test_read_remote_supported_features() {
+        let _cmd = ReadRemoteSupportedFeatures::new(ConnHandle::new(0x0001));
+        assert_eq!(ReadRemoteSupportedFeatures::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReadRemoteSupportedFeatures::OPCODE.cmd(), 0x001b);
+    }
+
+    #[test]
+    fn test_read_remote_extended_features() {
+        let _cmd = ReadRemoteExtendedFeatures::new(ConnHandle::new(0x0001), 0x01);
+        assert_eq!(ReadRemoteExtendedFeatures::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReadRemoteExtendedFeatures::OPCODE.cmd(), 0x001c);
+    }
+
+    #[test]
+    fn test_read_clock_offset() {
+        let _cmd = ReadClockOffset::new(ConnHandle::new(0x0001));
+        assert_eq!(ReadClockOffset::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReadClockOffset::OPCODE.cmd(), 0x001f);
+    }
+
+    #[test]
+    fn test_read_lmp_handle() {
+        let _cmd = ReadLmpHandle::new(ConnHandle::new(0x0001));
+        assert_eq!(ReadLmpHandle::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(ReadLmpHandle::OPCODE.cmd(), 0x0020);
+    }
+
+    #[test]
+    fn test_setup_synchronous_connection() {
+        let _cmd = SetupSynchronousConnection::new(
+            ConnHandle::new(0x0001),
+            8000, // transmit_bandwidth
+            8000, // receive_bandwidth
+            10,   // max_latency
+            VoiceSetting::new(),
+            RetransmissionEffort::NoRetransmissions,
+            SyncPacketType::new(),
+        );
+        assert_eq!(SetupSynchronousConnection::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(SetupSynchronousConnection::OPCODE.cmd(), 0x0028);
+    }
+
+    #[test]
+    fn test_accept_synchronous_connection_request() {
+        let _cmd = AcceptSynchronousConnectionRequest::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            8000, // transmit_bandwidth
+            8000, // receive_bandwidth
+            10,   // max_latency
+            VoiceSetting::new(),
+            RetransmissionEffort::NoRetransmissions,
+            SyncPacketType::new(),
+        );
+        assert_eq!(
+            AcceptSynchronousConnectionRequest::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(AcceptSynchronousConnectionRequest::OPCODE.cmd(), 0x0029);
+    }
+
+    #[test]
+    fn test_reject_synchronous_connection_request() {
+        let _cmd = RejectSynchronousConnectionRequest::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            RejectReason::LimitedResources,
+        );
+        assert_eq!(
+            RejectSynchronousConnectionRequest::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(RejectSynchronousConnectionRequest::OPCODE.cmd(), 0x002a);
+    }
+
+    #[test]
+    fn test_user_confirmation_request_negative_reply() {
+        let _cmd = UserConfirmationRequestNegativeReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
+        assert_eq!(
+            UserConfirmationRequestNegativeReply::OPCODE.group(),
+            OpcodeGroup::new(0x01)
+        );
+        assert_eq!(UserConfirmationRequestNegativeReply::OPCODE.cmd(), 0x002d);
+    }
+
+    #[test]
+    fn test_user_passkey_request_reply() {
+        let _cmd = UserPasskeyRequestReply::new(
+            BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]),
+            123456, // numeric_value
+        );
+        assert_eq!(UserPasskeyRequestReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(UserPasskeyRequestReply::OPCODE.cmd(), 0x002e);
+    }
+
+    #[test]
+    fn test_user_passkey_request_negative_reply() {
+        let _cmd = UserPasskeyRequestNegativeReply::new(BdAddr::new([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc]));
+        assert_eq!(UserPasskeyRequestNegativeReply::OPCODE.group(), OpcodeGroup::new(0x01));
+        assert_eq!(UserPasskeyRequestNegativeReply::OPCODE.cmd(), 0x002f);
     }
 }
