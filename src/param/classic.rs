@@ -1,4 +1,5 @@
 use crate::param::macros::param;
+use crate::param::{BdAddr, ConnHandle};
 
 param! {
     bitfield PacketType[2] {
@@ -228,5 +229,65 @@ param! {
         /// Don't care (SCO or eSCO connection allowed)
         DontCare = 0xFF,
         // All other values reserved for future use
+    }
+}
+
+param! {
+    /// Separate params for the Enhanced Setup Synchronous Connection command since they have too many fields
+    struct EnhancedSetupSynchronousConnectionParams {
+        handle: ConnHandle,
+        transmit_bandwidth: u32,
+        receive_bandwidth: u32,
+        transmit_coding_format: [u8; 5],
+        receive_coding_format: [u8; 5],
+        transmit_codec_frame_size: u16,
+        receive_codec_frame_size: u16,
+        input_bandwidth: u32,
+        output_bandwidth: u32,
+        input_coding_format: [u8; 5],
+        output_coding_format: [u8; 5],
+        input_coded_data_size: u16,
+        output_coded_data_size: u16,
+        input_pcm_data_format: u8,
+        output_pcm_data_format: u8,
+        input_pcm_sample_payload_msb_position: u8,
+        output_pcm_sample_payload_msb_position: u8,
+        input_data_path: u8,
+        output_data_path: u8,
+        input_transport_unit_size: u8,
+        output_transport_unit_size: u8,
+        max_latency: u16,
+        packet_type: SyncPacketType,
+        retransmission_effort: RetransmissionEffort,
+    }
+}
+
+param! {
+    /// Separate params for the Enhanced Accept Synchronous Connection Request command since they have too many fields
+    struct EnhancedAcceptSynchronousConnectionRequestParams {
+        bd_addr: BdAddr,
+        transmit_bandwidth: u32,
+        receive_bandwidth: u32,
+        transmit_coding_format: [u8; 5],
+        receive_coding_format: [u8; 5],
+        transmit_codec_frame_size: u16,
+        receive_codec_frame_size: u16,
+        input_bandwidth: u32,
+        output_bandwidth: u32,
+        input_coding_format: [u8; 5],
+        output_coding_format: [u8; 5],
+        input_coded_data_size: u16,
+        output_coded_data_size: u16,
+        input_pcm_data_format: u8,
+        output_pcm_data_format: u8,
+        input_pcm_sample_payload_msb_position: u8,
+        output_pcm_sample_payload_msb_position: u8,
+        input_data_path: u8,
+        output_data_path: u8,
+        input_transport_unit_size: u8,
+        output_transport_unit_size: u8,
+        max_latency: u16,
+        packet_type: SyncPacketType,
+        retransmission_effort: RetransmissionEffort,
     }
 }
