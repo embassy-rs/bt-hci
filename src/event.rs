@@ -111,16 +111,11 @@ macro_rules! events {
 }
 
 events! {
+    // 0x00 - 0x0f
+
     /// Inquiry Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cde759f8-6c4d-2dd4-7053-1657125ded74)
     struct InquiryComplete(0x01) {
         status: Status,
-    }
-
-    /// Disconnection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-332adb1f-b5ac-5289-82a2-c51a59d533e7)
-    struct DisconnectionComplete(0x05) {
-        status: Status,
-        handle: ConnHandle,
-        reason: Status,
     }
 
     /// Inquiry Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3467df70-1d7a-73c5-5a3e-8689dba5523f)
@@ -130,23 +125,33 @@ events! {
         bytes: RemainingBytes<'a>,
     }
 
-    /// Extended Inquiry Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e3e8c7bc-2262-14f4-b6f5-2eeb0b25aa4f)
-    struct ExtendedInquiryResult<'a>(0x2f) {
-        num_responses: u8,
+    /// Connection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebb06dd7-356e-605c-cbc1-d06dc00f1d2b)
+    struct ConnectionComplete(0x03) {
+        status: Status,
+        handle: ConnHandle,
         bd_addr: BdAddr,
-        page_scan_repetition_mode: PageScanRepetitionMode,
-        reserved: u8,
-        class_of_device: [u8; 3],
-        clock_offset: ClockOffset,
-        rssi: i8,
-        eir_data: RemainingBytes<'a>,
+        link_type: ConnectionLinkType,
+        encryption_enabled: bool,
     }
 
-    /// Inquiry Result with RSSI event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c2550565-1c65-a514-6cf0-3d55c8943dab)
-    struct InquiryResultWithRssi<'a>(0x22) {
-        num_responses: u8,
-        /// All remaining bytes for this event (contains all fields for all responses)
-        bytes: RemainingBytes<'a>,
+    /// Disconnection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-332adb1f-b5ac-5289-82a2-c51a59d533e7)
+    struct DisconnectionComplete(0x05) {
+        status: Status,
+        handle: ConnHandle,
+        reason: Status,
+    }
+
+    /// Authentication Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-00ede464-d351-7076-e82a-d8f4b30ee594)
+    struct AuthenticationComplete(0x06) {
+        status: Status,
+        handle: ConnHandle,
+    }
+
+    /// Remote Name Request Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1e2ccd32-b73f-7f00-f4ff-25b2235aaf02)
+    struct RemoteNameRequestComplete<'a>(0x07) {
+        status: Status,
+        bd_addr: BdAddr,
+        remote_name: RemainingBytes<'a>, // 248 bytes max, null-terminated string
     }
 
     /// Encryption Change (v1) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
@@ -154,14 +159,6 @@ events! {
         status: Status,
         handle: ConnHandle,
         enabled: bool,
-    }
-
-    /// Encryption Change (v2) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
-    struct EncryptionChangeV2(0x59) {
-        status: Status,
-        handle: ConnHandle,
-        encryption_enabled: bool,
-        encryption_key_size: u8,
     }
 
     /// Read Remote Version Information Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-81ed98a1-98b1-dae5-a3f5-bb7bc69d39b7)
@@ -188,6 +185,8 @@ events! {
         cmd_opcode: Opcode,
     }
 
+    // 0x10 - 0x1f
+
     /// Hardware Error event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2479a101-ae3b-5b5d-f3d4-4776af39a377)
     struct HardwareError(0x10) {
         hardware_code: u8,
@@ -198,36 +197,6 @@ events! {
         completed_packets: &'a [ConnHandleCompletedPackets],
     }
 
-    /// Data Buffer Overflow event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e15e12c7-d29a-8c25-349f-af6206c2ae57)
-    struct DataBufferOverflow(0x1a) {
-        link_type: LinkType,
-    }
-
-    /// Encryption Key Refresh Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a321123c-83a5-7baf-6971-05edd1241357)
-    struct EncryptionKeyRefreshComplete(0x30) {
-        status: Status,
-        handle: ConnHandle,
-    }
-
-
-
-    /// IO Capability Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-343681e1-ca08-8d4c-79c3-e4b2c86ecba1)
-    struct IoCapabilityRequest(0x31) {
-        bd_addr: BdAddr,
-    }
-
-
-    /// User Confirmation Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e7014a9e-718f-6aa8-d657-35b547e9c5d6)
-    struct UserConfirmationRequest(0x33) {
-        bd_addr: BdAddr,
-        numeric_value: u32,
-    }
-
-    /// Authenticated Payload Timeout Expired event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6cfdff94-ace8-294c-6af9-d90d94653e19)
-    struct AuthenticatedPayloadTimeoutExpired(0x57) {
-        handle: ConnHandle,
-    }
-
     /// Return Link Keys event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e0d451f2-4b53-cdf0-efb5-926e08b27cd2)
     struct ReturnLinkKeys<'a>(0x15) {
         num_keys: u8,
@@ -235,40 +204,13 @@ events! {
         link_key: RemainingBytes<'a>, // Num_Keys × 16 octets, always zero
     }
 
-    /// HCI Event packet [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f209cdf7-0496-8bcd-b7e1-500831511378)
-    struct Vendor<'a>(0xff) {
-        params: RemainingBytes<'a>,
-    }
-
-    /// Remote Name Request Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1e2ccd32-b73f-7f00-f4ff-25b2235aaf02)
-    struct RemoteNameRequestComplete<'a>(0x07) {
-        status: Status,
+    /// PIN Code Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7666987c-9040-9aaa-cad6-96941b46d2b5)
+    struct PinCodeRequest(0x16) {
         bd_addr: BdAddr,
-        remote_name: RemainingBytes<'a>, // 248 bytes max, null-terminated string
-    }
-
-    /// Remote Host Supported Features Notification event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ba740ba0-44d8-d028-0a67-1abab648f6dd)
-    struct RemoteHostSupportedFeaturesNotification(0x3d) {
-        bd_addr: BdAddr,
-        features: LmpFeatureMask,
-    }
-
-    /// Connection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ebb06dd7-356e-605c-cbc1-d06dc00f1d2b)
-    struct ConnectionComplete(0x03) {
-        status: Status,
-        handle: ConnHandle,
-        bd_addr: BdAddr,
-        link_type: ConnectionLinkType,
-        encryption_enabled: bool,
     }
 
     /// Link Key Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-58400663-f69d-a482-13af-ec558a3f4c03)
     struct LinkKeyRequest(0x17) {
-        bd_addr: BdAddr,
-    }
-
-    /// PIN Code Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7666987c-9040-9aaa-cad6-96941b46d2b5)
-    struct PinCodeRequest(0x16) {
         bd_addr: BdAddr,
     }
 
@@ -279,10 +221,97 @@ events! {
         key_type: LinkKeyType,
     }
 
-    /// Authentication Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-00ede464-d351-7076-e82a-d8f4b30ee594)
-    struct AuthenticationComplete(0x06) {
+    /// Data Buffer Overflow event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e15e12c7-d29a-8c25-349f-af6206c2ae57)
+    struct DataBufferOverflow(0x1a) {
+        link_type: LinkType,
+    }
+
+    // 0x20 - 0x2f
+
+    /// Inquiry Result with RSSI event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c2550565-1c65-a514-6cf0-3d55c8943dab)
+    struct InquiryResultWithRssi<'a>(0x22) {
+        num_responses: u8,
+        /// All remaining bytes for this event (contains all fields for all responses)
+        bytes: RemainingBytes<'a>,
+    }
+
+    /// Extended Inquiry Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e3e8c7bc-2262-14f4-b6f5-2eeb0b25aa4f)
+    struct ExtendedInquiryResult<'a>(0x2f) {
+        num_responses: u8,
+        bd_addr: BdAddr,
+        page_scan_repetition_mode: PageScanRepetitionMode,
+        reserved: u8,
+        class_of_device: [u8; 3],
+        clock_offset: ClockOffset,
+        rssi: i8,
+        eir_data: RemainingBytes<'a>,
+    }
+
+    // 0x30 - 0x3f
+
+    /// Encryption Key Refresh Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a321123c-83a5-7baf-6971-05edd1241357)
+    struct EncryptionKeyRefreshComplete(0x30) {
         status: Status,
         handle: ConnHandle,
+    }
+
+    /// IO Capability Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-343681e1-ca08-8d4c-79c3-e4b2c86ecba1)
+    struct IoCapabilityRequest(0x31) {
+        bd_addr: BdAddr,
+    }
+
+    /// User Confirmation Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e7014a9e-718f-6aa8-d657-35b547e9c5d6)
+    struct UserConfirmationRequest(0x33) {
+        bd_addr: BdAddr,
+        numeric_value: u32,
+    }
+
+    /// Remote Host Supported Features Notification event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ba740ba0-44d8-d028-0a67-1abab648f6dd)
+    struct RemoteHostSupportedFeaturesNotification(0x3d) {
+        bd_addr: BdAddr,
+        features: LmpFeatureMask,
+    }
+
+    // 0x40 - 0x4f
+
+    // 0x50 - 0x5f
+
+    /// Authenticated Payload Timeout Expired event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6cfdff94-ace8-294c-6af9-d90d94653e19)
+    struct AuthenticatedPayloadTimeoutExpired(0x57) {
+        handle: ConnHandle,
+    }
+
+    /// Encryption Change (v2) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
+    struct EncryptionChangeV2(0x59) {
+        status: Status,
+        handle: ConnHandle,
+        encryption_enabled: bool,
+        encryption_key_size: u8,
+    }
+
+    // 0x60 - 0x6f
+
+    // 0x70 - 0x7f
+
+    // 0x80 - 0x8f
+
+    // 0x90 - 0x9f
+
+    // 0xa0 - 0xaf
+
+    // 0xb0 - 0xbf
+
+    // 0xc0 - 0xcf
+
+    // 0xd0 - 0xdf
+
+    // 0xe0 - 0xef
+
+    // 0xf0 - 0xff
+
+    /// HCI Event packet [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f209cdf7-0496-8bcd-b7e1-500831511378)
+    struct Vendor<'a>(0xff) {
+        params: RemainingBytes<'a>,
     }
 }
 
