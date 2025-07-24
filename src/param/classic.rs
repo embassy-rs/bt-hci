@@ -233,6 +233,90 @@ param! {
 }
 
 param! {
+    enum ServiceType{
+        /// No Traffic Available.
+        NoTraffic = 0x00,
+        /// Best Effort Available.
+        BestEffort = 0x01,
+        /// Guaranteed Available.
+        Guaranteed = 0x02,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum Mode {
+        /// Active mode
+        Active = 0x00,
+        /// Hold mode
+        Hold = 0x01,
+        /// Sniff mode
+        Sniff = 0x02,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum MaxSlots {
+        /// 1 slot
+        OneSlot = 0x01,
+        /// 3 slots
+        ThreeSlots = 0x03,
+        /// 5 slots
+        FiveSlots = 0x05,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum FlowDirection {
+        /// Outgoing Flow i.e., traffic sent over the ACL connection.
+        Outgoing = 0x00,
+        /// Incoming Flow i.e., traffic received over the ACL connection.
+        Incoming = 0x01,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum KeypressNotificationType {
+        /// Passkey entry started
+        PasskeyEntryStarted = 0x00,
+        /// Passkey digit entered
+        PasskeyDigitEntered = 0x01,
+        /// Passkey digit erased
+        PasskeyDigitErased = 0x02,
+        /// Passkey cleared
+        PasskeyCleared = 0x03,
+        /// Passkey entry completed
+        PasskeyEntryCompleted = 0x04,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum ClockType {
+        /// Local clock
+        Local = 0x00,
+        /// Piconet Clock
+        Piconet = 0x01,
+        // All other values reserved for future use
+    }
+}
+
+param! {
+    enum EncryptionEnabledLevel {
+        /// Link Level Encryption is OFF
+        Off = 0x00,
+        /// Link Level Encryption is ON with E0 for BR/EDR or AES-CCM for LE
+        OnE0OrAesCcm = 0x01,
+        /// Link Level Encryption is ON with AES-CCM for BR/EDR
+        OnAesCcm = 0x02,
+        // All other values reserved for future use
+    }
+}
+
+param! {
     /// Separate params for the Enhanced Setup Synchronous Connection command since they have too many fields
     struct EnhancedSetupSynchronousConnectionParams {
         handle: ConnHandle,

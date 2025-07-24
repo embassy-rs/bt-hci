@@ -2,8 +2,10 @@
 
 use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
-    param, BdAddr, ClockOffset, ConnHandle, ConnHandleCompletedPackets, ConnectionLinkType, CoreSpecificationVersion,
-    Error, LinkKeyType, LinkType, LmpFeatureMask, PageScanRepetitionMode, RemainingBytes, Status,
+    param, AuthenticationRequirements, BdAddr, ClockOffset, ClockType, ConnHandle, ConnHandleCompletedPackets,
+    ConnectionLinkType, CoreSpecificationVersion, EncryptionEnabledLevel, Error, FlowDirection, IoCapability, KeyFlag,
+    KeypressNotificationType, LinkKeyType, LinkType, LmpFeatureMask, MaxSlots, Mode, OobDataPresent, PacketType,
+    PageScanRepetitionMode, RemainingBytes, Role, ServiceType, Status,
 };
 use crate::{AsHciBytes, FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
@@ -134,6 +136,13 @@ events! {
         encryption_enabled: bool,
     }
 
+    /// Connection Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3115f164-ffcd-9451-09ef-0ed3809889eb)
+    struct ConnectionRequest(0x04) {
+        bd_addr: BdAddr,
+        class_of_device: [u8; 3],
+        link_type: ConnectionLinkType,
+    }
+
     /// Disconnection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-332adb1f-b5ac-5289-82a2-c51a59d533e7)
     struct DisconnectionComplete(0x05) {
         status: Status,
@@ -158,7 +167,27 @@ events! {
     struct EncryptionChangeV1(0x08) {
         status: Status,
         handle: ConnHandle,
-        enabled: bool,
+        enabled: EncryptionEnabledLevel,
+    }
+
+    /// Change Connection Link Key Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8d639c74-ec4f-24e3-4e39-952ce11fba57)
+    struct ChangeConnectionLinkKeyComplete(0x09) {
+        status: Status,
+        handle: ConnHandle,
+    }
+
+    /// Link Key Type Changed event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9eb2cea6-248a-e017-2c09-2797aba08cbf)
+    struct LinkKeyTypeChanged(0x0a) {
+        status: Status,
+        handle: ConnHandle,
+        key_flag: KeyFlag,
+    }
+
+    /// Read Remote Supported Features Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e191dc19-453a-d0e0-2317-2406ffc4d512)
+    struct ReadRemoteSupportedFeaturesComplete(0x0b) {
+        status: Status,
+        handle: ConnHandle,
+        lmp_features: LmpFeatureMask,
     }
 
     /// Read Remote Version Information Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-81ed98a1-98b1-dae5-a3f5-bb7bc69d39b7)
@@ -168,6 +197,18 @@ events! {
         version: CoreSpecificationVersion,
         company_id: u16,
         subversion: u16,
+    }
+
+    /// QoS Setup Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a4ff46db-e472-dbd3-eaa6-810300dcd1b6)
+    struct QosSetupComplete(0x0d) {
+        status: Status,
+        handle: ConnHandle,
+        unused: u8, // Always 0
+        service_type: ServiceType,
+        token_rate: u32,
+        peak_bandwidth: u32,
+        latency: u32,
+        delay_variation: u32,
     }
 
     /// Command Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-76d31a33-1a9e-07bc-87c4-8ebffee065fd)
@@ -192,16 +233,35 @@ events! {
         hardware_code: u8,
     }
 
+    /// Flush Occurred event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-26be4e2f-f6c3-eb68-ebf4-d11255eb9ec6)
+    struct FlushOccurred(0x11) {
+        handle: ConnHandle,
+    }
+
+    /// Role Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ed33ee5b-970f-9664-0c15-3db2b884961a)
+    struct RoleChange(0x12) {
+        status: Status,
+        bd_addr: BdAddr,
+        new_role: Role,
+    }
+
     /// Number Of Completed Packets event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9ccbff85-45ce-9c0d-6d0c-2e6e5af52b0e)
     struct NumberOfCompletedPackets<'a>(0x13) {
         completed_packets: &'a [ConnHandleCompletedPackets],
     }
 
+    /// Mode Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b277da2e-804e-d956-9395-37eabc7e7b41)
+    struct ModeChange(0x14) {
+        status: Status,
+        handle: ConnHandle,
+        mode: Mode,
+        interval: u16,
+    }
+
     /// Return Link Keys event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e0d451f2-4b53-cdf0-efb5-926e08b27cd2)
     struct ReturnLinkKeys<'a>(0x15) {
         num_keys: u8,
-        bd_addr: RemainingBytes<'a>, // Num_Keys × 6 octets
-        link_key: RemainingBytes<'a>, // Num_Keys × 16 octets, always zero
+        bytes: RemainingBytes<'a>, // bd_addr: Num_Keys × 6 octets, link_key: Num_Keys × 16 octets, always zero
     }
 
     /// PIN Code Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7666987c-9040-9aaa-cad6-96941b46d2b5)
@@ -221,18 +281,110 @@ events! {
         key_type: LinkKeyType,
     }
 
+    /// Loopback Command event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5f4e8f2c-7b9a-1c8e-8f6d-2e7a4b9c5f8e)
+    struct LoopbackCommand<'a>(0x19) {
+        command_packet: RemainingBytes<'a>,
+    }
+
     /// Data Buffer Overflow event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e15e12c7-d29a-8c25-349f-af6206c2ae57)
     struct DataBufferOverflow(0x1a) {
         link_type: LinkType,
     }
 
+    /// Max Slots Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1561feb4-2f2e-4ec1-1db7-57ec1dc436e2)
+    struct MaxSlotsChange(0x1b) {
+        handle: ConnHandle,
+        lmp_max_slots: MaxSlots,
+    }
+
+    /// Read Clock Offset Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3ab4cf46-7f13-7901-4abb-af026ebee703)
+    struct ReadClockOffsetComplete(0x1c) {
+        status: Status,
+        handle: ConnHandle,
+        clock_offset: ClockOffset,
+    }
+
+    /// Connection Packet Type Changed event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-864f38f0-afde-bd09-09ff-c5bb5fefca62)
+    struct ConnectionPacketTypeChanged(0x1d) {
+        status: Status,
+        handle: ConnHandle,
+        packet_type: PacketType,
+    }
+
+    /// QoS Violation event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cc019a24-4654-aa9f-dcd3-2a286e7cdd55)
+    struct QosViolation(0x1e) {
+        handle: ConnHandle,
+    }
+
     // 0x20 - 0x2f
+
+    /// Page Scan Repetition Mode Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a535391f-0ecf-ff2d-dfad-1e61b021c0d6)
+    struct PageScanRepetitionModeChange(0x20) {
+        bd_addr: BdAddr,
+        page_scan_repetition_mode: PageScanRepetitionMode,
+    }
+
+    /// Flow Specification Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-65dffc5b-4c38-ce5c-a618-0d7a3e145012)
+    struct FlowSpecificationComplete(0x21) {
+        status: Status,
+        handle: ConnHandle,
+        unused: u8, // Always 0
+        flow_direction: FlowDirection,
+        service_type: ServiceType,
+        token_rate: u32,
+        token_bucket_size: u32,
+        peak_bandwidth: u32,
+        access_latency: u32,
+    }
 
     /// Inquiry Result with RSSI event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c2550565-1c65-a514-6cf0-3d55c8943dab)
     struct InquiryResultWithRssi<'a>(0x22) {
         num_responses: u8,
         /// All remaining bytes for this event (contains all fields for all responses)
         bytes: RemainingBytes<'a>,
+    }
+
+    /// Read Remote Extended Features Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6a78850c-d310-761a-74cb-abe8b2ddddd8)
+    struct ReadRemoteExtendedFeaturesComplete(0x23) {
+        status: Status,
+        handle: ConnHandle,
+        page_number: u8,
+        maximum_page_number: u8,
+        extended_lmp_features: LmpFeatureMask,
+    }
+
+    /// Synchronous Connection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a625aef5-c3d7-12e9-39e4-b8f3386150bb)
+    struct SynchronousConnectionComplete(0x2c) {
+        status: Status,
+        handle: ConnHandle,
+        bd_addr: BdAddr,
+        link_type: ConnectionLinkType,
+        transmission_interval: u8,
+        retransmission_window: u8,
+        rx_packet_length: u16,
+        tx_packet_length: u16,
+        air_mode: u8,
+    }
+
+    /// Synchronous Connection Changed event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5774f3c9-81e9-24e6-86a6-6f6935ee8998)
+    struct SynchronousConnectionChanged(0x2d) {
+        status: Status,
+        handle: ConnHandle,
+        transmission_interval: u8,
+        retransmission_window: u8,
+        rx_packet_length: u16,
+        tx_packet_length: u16,
+    }
+
+
+    /// Sniff Subrating event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4c17aedf-cddf-0844-39cc-3dcfddd34ec0)
+    struct SniffSubrating(0x2e) {
+        status: Status,
+        handle: ConnHandle,
+        max_tx_latency: u16,
+        max_rx_latency: u16,
+        min_remote_timeout: u16,
+        min_local_timeout: u16,
     }
 
     /// Extended Inquiry Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e3e8c7bc-2262-14f4-b6f5-2eeb0b25aa4f)
@@ -260,10 +412,57 @@ events! {
         bd_addr: BdAddr,
     }
 
+    /// IO Capability Response event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7f2cf1ee-49ba-de05-5f26-f54925363197)
+    struct IoCapabilityResponse(0x32) {
+        bd_addr: BdAddr,
+        io_capability: IoCapability,
+        oob_data_present: OobDataPresent,
+        authentication_requirements: AuthenticationRequirements,
+    }
+
     /// User Confirmation Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e7014a9e-718f-6aa8-d657-35b547e9c5d6)
     struct UserConfirmationRequest(0x33) {
         bd_addr: BdAddr,
         numeric_value: u32,
+    }
+
+    /// User Passkey Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2f7a60c5-e17f-28f2-699c-e5943e488ec9)
+    struct UserPasskeyRequest(0x34) {
+        bd_addr: BdAddr,
+    }
+
+    /// Remote OOB Data Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c5c5d906-fdde-b062-2bc6-6f5b5de25066)
+    struct RemoteOobDataRequest(0x35) {
+        bd_addr: BdAddr,
+    }
+
+    /// Simple Pairing Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e07a2674-e7bf-c963-0a41-9a997c940d26)
+    struct SimplePairingComplete(0x36) {
+        status: Status,
+        bd_addr: BdAddr,
+    }
+
+    /// Link Supervision Timeout Changed event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4d4758a0-eab4-25b8-f05e-2bbdcc6384cc)
+    struct LinkSupervisionTimeoutChanged(0x38) {
+        handle: ConnHandle,
+        link_supervision_timeout: u16,
+    }
+
+    /// Enhanced Flush Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0102cc4f-0f30-c3cb-fd0a-f70ac2d5ed08)
+    struct EnhancedFlushComplete(0x39) {
+        handle: ConnHandle,
+    }
+
+    /// User Passkey Notification event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-39f61a47-537a-e0d9-4aa4-ccab280ebc99)
+    struct UserPasskeyNotification(0x3b) {
+        bd_addr: BdAddr,
+        passkey: u32,
+    }
+
+    /// Keypress Notification event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a96ae6b4-2259-c16d-0098-34a5e551284e)
+    struct KeypressNotification(0x3c) {
+        bd_addr: BdAddr,
+        notification_type: KeypressNotificationType,
     }
 
     /// Remote Host Supported Features Notification event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ba740ba0-44d8-d028-0a67-1abab648f6dd)
@@ -274,38 +473,102 @@ events! {
 
     // 0x40 - 0x4f
 
+    /// Number Of Completed Data Blocks event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f8e9efbb-ad3e-9f37-ee61-02a17eb0ba48)
+    struct NumberOfCompletedDataBlocks<'a>(0x48) {
+        total_num_data_blocks: u16,
+        num_of_handles: u8,
+        bytes: RemainingBytes<'a>, // Contains handle + num_completed_packets + num_completed_blocks for each handle
+    }
+
+    /// Triggered Clock Capture event  [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0f10aa12-6d70-245a-84d9-342508615b28)
+    struct TriggeredClockCapture(0x4e) {
+        handle: ConnHandle,
+        which_clock: ClockType,
+        clock: u32,
+        slot_offset: u16,
+    }
+
+    /// Synchronization Train Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-57849409-0331-57bf-7c23-ed4a14d4ac3d)
+    struct SynchronizationTrainComplete(0x4f) {
+        status: Status,
+    }
+
     // 0x50 - 0x5f
+
+    /// Synchronization Train Received event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-38436ae8-4bf0-c6cf-9b64-a6d17fac279f)
+    struct SynchronizationTrainReceived(0x50) {
+        status: Status,
+        bd_addr: BdAddr,
+        clock_offset: u32,
+        afh_channel_map: [u8; 10],
+        lt_addr: u8,
+        next_broadcast_instant: u32,
+        connectionless_peripheral_broadcast_interval: u16,
+        service_data: u8,
+    }
+
+    /// Connectionless Peripheral Broadcast Receive event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3ea779f7-980c-f253-7845-2e9df03eaf3d)
+    struct ConnectionlessPeripheralBroadcastReceive<'a>(0x51) {
+        bd_addr: BdAddr,
+        lt_addr: u8,
+        clock: u32,
+        offset: u32,
+        rx_status: u8,
+        fragment: u8,
+        data_length: u8,
+        data: RemainingBytes<'a>,
+    }
+
+    /// Connectionless Peripheral Broadcast Timeout event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-783a9fcb-1c5c-fcb2-2169-445c9cac9f91)
+    struct ConnectionlessPeripheralBroadcastTimeout(0x52) {
+        bd_addr: BdAddr,
+        lt_addr: u8,
+    }
+
+    /// Truncated Page Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-99bf982f-4155-cdc5-eef4-3a198afd5d09)
+    struct TruncatedPageComplete(0x53) {
+        status: Status,
+        bd_addr: BdAddr,
+    }
+
+    /// Peripheral Page Response Timeout event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-928cc95f-6680-8ee0-b48b-31e97ff7ec4e)
+    struct PeripheralPageResponseTimeout(0x54) {
+    }
+
+    /// Connectionless Peripheral Broadcast Channel Map Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2d2c3fab-5387-79bf-03bf-6a3e3ad410a5)
+    struct ConnectionlessPeripheralBroadcastChannelMapChange(0x55) {
+        channel_map: [u8; 10],
+    }
+
+    /// Inquiry Response Notification event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4d5e8f2c-7b9a-3c8e-8f6d-2e7a4b9c5f8e)
+    struct InquiryResponseNotification(0x56) {
+        lap: [u8; 3],
+        rssi: i8,
+    }
 
     /// Authenticated Payload Timeout Expired event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6cfdff94-ace8-294c-6af9-d90d94653e19)
     struct AuthenticatedPayloadTimeoutExpired(0x57) {
         handle: ConnHandle,
     }
 
+    /// SAM Status Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-57dba68a-5205-8c2e-1e2a-9c4d858eb93b)
+    struct SamStatusChange(0x58) {
+        handle: ConnHandle,
+        local_sam_index: u8,
+        local_sam_tx_availability: u8,
+        local_sam_rx_availability: u8,
+        remote_sam_index: u8,
+        remote_sam_tx_availability: u8,
+        remote_sam_rx_availability: u8,
+    }
+
     /// Encryption Change (v2) event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7b7d27f0-1a33-ff57-5b97-7d49a04cea26)
     struct EncryptionChangeV2(0x59) {
         status: Status,
         handle: ConnHandle,
-        encryption_enabled: bool,
+        encryption_enabled: EncryptionEnabledLevel,
         encryption_key_size: u8,
     }
-
-    // 0x60 - 0x6f
-
-    // 0x70 - 0x7f
-
-    // 0x80 - 0x8f
-
-    // 0x90 - 0x9f
-
-    // 0xa0 - 0xaf
-
-    // 0xb0 - 0xbf
-
-    // 0xc0 - 0xcf
-
-    // 0xd0 - 0xdf
-
-    // 0xe0 - 0xef
 
     // 0xf0 - 0xff
 
@@ -545,7 +808,7 @@ impl InquiryResultWithRssi<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::param::PageScanRepetitionMode;
+    use crate::param::*;
 
     #[test]
     fn test_inquiry_result() {
@@ -651,6 +914,174 @@ mod tests {
         let (evt, rest) = UserConfirmationRequest::from_hci_bytes(&data).unwrap();
         assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
         assert_eq!(evt.numeric_value, 0x1234_5678);
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_connection_request() {
+        let data = [
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+            0x20, 0x04, 0x00, // class_of_device
+            0x01, // link_type (ACL)
+        ];
+        let (evt, rest) = ConnectionRequest::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert_eq!(evt.class_of_device, [0x20, 0x04, 0x00]);
+        assert_eq!(evt.link_type, ConnectionLinkType::Acl);
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_role_change() {
+        let data = [
+            0x00, // status (success)
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+            0x00, // new_role (Central)
+        ];
+        let (evt, rest) = RoleChange::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.status, Status::SUCCESS);
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert_eq!(evt.new_role, Role::Central);
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_simple_pairing_complete() {
+        let data = [
+            0x00, // status (success)
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+        ];
+        let (evt, rest) = SimplePairingComplete::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.status, Status::SUCCESS);
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_io_capability_response() {
+        let data = [
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+            0x01, // io_capability (DisplayYesNo)
+            0x00, // oob_data_present (not present)
+            0x03, // authentication_requirements (MITM Protection Required - General Bonding)
+        ];
+        let (evt, rest) = IoCapabilityResponse::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert_eq!(evt.io_capability, IoCapability::DisplayYesNo);
+        assert_eq!(evt.oob_data_present, OobDataPresent::NotPresent);
+        assert_eq!(
+            evt.authentication_requirements,
+            AuthenticationRequirements::MitmRequiredDedicatedBonding
+        );
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_number_of_completed_data_blocks() {
+        let data = [
+            0x00, 0x10, // total_num_data_blocks = 4096
+            0x02, // num_of_handles = 2
+            0x01, 0x00, // handle 1
+            0x02, 0x00, // num_completed_packets for handle 1
+            0x04, 0x00, // num_completed_blocks for handle 1
+            0x02, 0x00, // handle 2
+            0x01, 0x00, // num_completed_packets for handle 2
+            0x02, 0x00, // num_completed_blocks for handle 2
+        ];
+        let (evt, rest) = NumberOfCompletedDataBlocks::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.total_num_data_blocks, 4096);
+        assert_eq!(evt.num_of_handles, 2);
+        assert_eq!(evt.bytes.as_hci_bytes().len(), 12); // 2 handles * 6 bytes each
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_connectionless_peripheral_broadcast_receive() {
+        let data = [
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+            0x07, // lt_addr
+            0x12, 0x34, 0x56, 0x78, // clock
+            0x9A, 0xBC, 0xDE, 0xF0, // offset
+            0x00, // rx_status (success)
+            0x01, // fragment
+            0x04, // data_length
+            0xAA, 0xBB, 0xCC, 0xDD, // data
+        ];
+        let (evt, rest) = ConnectionlessPeripheralBroadcastReceive::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert_eq!(evt.lt_addr, 0x07);
+        assert_eq!(evt.clock, 0x78563412);
+        assert_eq!(evt.offset, 0xF0DEBC9A);
+        assert_eq!(evt.rx_status, 0x00);
+        assert_eq!(evt.fragment, 0x01);
+        assert_eq!(evt.data_length, 0x04);
+        assert_eq!(evt.data.as_hci_bytes(), &[0xAA, 0xBB, 0xCC, 0xDD]);
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_connectionless_peripheral_broadcast_timeout() {
+        let data = [
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+            0x07, // lt_addr
+        ];
+        let (evt, rest) = ConnectionlessPeripheralBroadcastTimeout::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert_eq!(evt.lt_addr, 0x07);
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_truncated_page_complete() {
+        let data = [
+            0x00, // status (success)
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+        ];
+        let (evt, rest) = TruncatedPageComplete::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.status, Status::SUCCESS);
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_peripheral_page_response_timeout() {
+        let data = [];
+        let (_evt, rest) = PeripheralPageResponseTimeout::from_hci_bytes(&data).unwrap();
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_connectionless_peripheral_broadcast_channel_map_change() {
+        let data = [
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, // channel_map
+        ];
+        let (evt, rest) = ConnectionlessPeripheralBroadcastChannelMapChange::from_hci_bytes(&data).unwrap();
+        assert_eq!(
+            evt.channel_map,
+            [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A]
+        );
+        assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn test_sam_status_change() {
+        let data = [
+            0x01, 0x00, // handle
+            0x02, // local_sam_index
+            0x03, // local_sam_tx_availability
+            0x04, // local_sam_rx_availability
+            0x05, // remote_sam_index
+            0x06, // remote_sam_tx_availability
+            0x07, // remote_sam_rx_availability
+        ];
+        let (evt, rest) = SamStatusChange::from_hci_bytes(&data).unwrap();
+        assert_eq!(evt.handle.raw(), 1);
+        assert_eq!(evt.local_sam_index, 0x02);
+        assert_eq!(evt.local_sam_tx_availability, 0x03);
+        assert_eq!(evt.local_sam_rx_availability, 0x04);
+        assert_eq!(evt.remote_sam_index, 0x05);
+        assert_eq!(evt.remote_sam_tx_availability, 0x06);
+        assert_eq!(evt.remote_sam_rx_availability, 0x07);
         assert!(rest.is_empty());
     }
 }
