@@ -5,8 +5,8 @@ use crate::param::{
     BdAddr, ChannelMap, ConnHandle, CteKind, CteMask, Duration, ExtDuration, FilterDuplicates, InitiatingPhy,
     LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions,
     LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData, LePeriodicAdvSyncTransferMode, LeScanKind, Operation,
-    PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode, ScanningFilterPolicy, ScanningPhy,
-    SwitchingSamplingRates, SyncHandle,
+    PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason,
+    ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates, SyncHandle,
 };
 use crate::{cmd, WriteHci};
 
@@ -259,6 +259,31 @@ cmd! {
             random: [u8; 8],
             encrypted_diversifier: u16,
             long_term_key: [u8; 16],
+        }
+    }
+}
+
+cmd! {
+    /// LE Remote Connection Parameter Request Reply  [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-31f1114e-a57b-bcff-812f-d68f95bdec2f)
+    LeRemoteConnectionParameterRequestReply(LE, 0x0020) {
+        LeRemoteConnectionParameterRequestReplyParams {
+            handle: ConnHandle,
+            interval_min: Duration<1_250>,
+            interval_max: Duration<1_250>,
+            max_latency: u16,
+            supervision_timeout: Duration<10_000>,
+            min_ce_length: Duration<625>,
+            max_ce_length: Duration<625>,
+        }
+    }
+}
+
+cmd! {
+    /// LE Remote Connection Parameter Request Negative Reply  [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-44860832-db97-c092-97e7-ea02011f08b0)
+    LeRemoteConnectionParameterRequestNegativeReply(LE, 0x0021) {
+        LeRemoteConnectionParameterRequestNegativeReplyParams {
+            handle: ConnHandle,
+            reason: RemoteConnectionParamsRejectReason,
         }
     }
 }

@@ -259,6 +259,12 @@ param!(
     }
 );
 
+param!(
+    enum RemoteConnectionParamsRejectReason {
+        UnacceptableConnParameters = 0x3b,
+    }
+);
+
 param! {
     #[derive(Default)]
     enum PowerLevelKind {
