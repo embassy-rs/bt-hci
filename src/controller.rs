@@ -311,7 +311,7 @@ impl<const SLOTS: usize> ControllerState<SLOTS> {
                     if !data.is_empty() {
                         assert!(!event.is_null());
                         // Safety: since the slot is in pending, the caller stack will be valid.
-                        unsafe { (**event)[..data.len()].copy_from_slice(data) };
+                        unsafe { (&mut (**event))[..data.len()].copy_from_slice(data) };
                     }
                     self.signals[idx].signal(CommandResponse {
                         status,
