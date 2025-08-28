@@ -788,7 +788,7 @@ impl Iterator for InquiryResultIter<'_> {
 /// Inquiry result event containing multiple responses
 impl InquiryResult<'_> {
     /// Returns an iterator over all valid inquiry result items.
-    pub fn iter(&self) -> InquiryResultIter {
+    pub fn iter(&self) -> InquiryResultIter<'_> {
         let bytes = self.bytes.as_hci_bytes();
         let n = self.num_responses as usize;
         InquiryResultIter::new_standard(bytes, n)
@@ -798,7 +798,7 @@ impl InquiryResult<'_> {
 /// Inquiry result event containing multiple responses with RSSI
 impl InquiryResultWithRssi<'_> {
     /// Returns an iterator over all valid inquiry result items.
-    pub fn iter(&self) -> InquiryResultIter {
+    pub fn iter(&self) -> InquiryResultIter<'_> {
         let bytes = self.bytes.as_hci_bytes();
         let n = self.num_responses as usize;
         InquiryResultIter::new_with_rssi(bytes, n)
