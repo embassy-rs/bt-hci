@@ -63,7 +63,7 @@ macro_rules! events {
 
         /// An Event kind
         #[non_exhaustive]
-        #[derive(Debug, Clone, Hash)]
+        #[derive(Debug, Clone, Copy, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum EventKind {
             $(
