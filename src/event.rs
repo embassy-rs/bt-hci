@@ -11,7 +11,7 @@ use crate::{AsHciBytes, FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
 pub mod le;
 
-use le::LeEvent;
+use le::{LeEvent, LeEventKind};
 
 /// A trait for objects which contain the parameters for a specific HCI event
 pub trait EventParams<'a>: FromHciBytes<'a> {
@@ -60,7 +60,73 @@ macro_rules! events {
             },
         }
 
+
+        /// An Event kind
+        #[non_exhaustive]
+        #[derive(Debug, Clone, Hash)]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        pub enum EventKind {
+            $(
+                #[allow(missing_docs)]
+                $name,
+            )+
+            #[allow(missing_docs)]
+            Le(LeEventKind),
+            /// An event with an unknown code value
+            Unknown {
+                /// The event code
+                code: u8,
+            }
+        }
+
+        /// An Event HCI packet
+        #[derive(Debug, Clone, Hash)]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        pub struct EventPacket<'a> {
+            /// Which kind of event.
+            pub kind: EventKind,
+            /// Event data.
+            pub data: &'a [u8],
+        }
+
+        impl<'a> EventPacket<'a> {
+            fn from_header_hci_bytes(header: EventPacketHeader, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
+                let (kind, data) = EventKind::from_header_hci_bytes(header, data)?;
+                Ok(Self {
+                    kind,
+                    data,
+                })
+            }
+        }
+
+        impl EventKind {
+            fn from_header_hci_bytes(header: EventPacketHeader, data: &[u8]) -> Result<(Self, &[u8]), FromHciBytesError> {
+                let (data, _) = if data.len() < usize::from(header.params_len) {
+                    return Err(FromHciBytesError::InvalidSize);
+                } else {
+                    data.split_at(usize::from(header.params_len))
+                };
+
+                match header.code {
+                    $($code => Ok((Self::$name, data)),)+
+                    0x3e => LeEventKind::from_hci_bytes(data).map(|(x, rest)| (Self::Le(x), rest)),
+                    _ => {
+                        Ok((Self::Unknown { code: header.code }, data))
+                    }
+                }
+            }
+        }
+
         impl<'a> Event<'a> {
+            /// Decode event based on event packet data.
+            pub fn from_packet(packet: EventPacket<'a>) -> Result<Self, FromHciBytesError> {
+                match packet.kind {
+                    $(EventKind::$name => Ok(Self::$name($name::from_hci_bytes_complete(packet.data)?)),)+
+                    EventKind::Le(e) => Ok(Self::Le(LeEvent::from_kind_hci_bytes(e, packet.data)?)),
+                    EventKind::Unknown { code } => Ok(Self::Unknown { code: code, params: packet.data }),
+                }
+            }
+
             fn from_header_hci_bytes(header: EventPacketHeader, data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
                 let (data, rest) = if data.len() < usize::from(header.params_len) {
                     return Err(FromHciBytesError::InvalidSize);
@@ -585,6 +651,51 @@ impl<'de> FromHciBytes<'de> for Event<'de> {
     }
 }
 
+impl<'de> FromHciBytes<'de> for EventPacket<'de> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        let (header, data) = EventPacketHeader::from_hci_bytes(data)?;
+        let pkt = Self::from_header_hci_bytes(header, data)?;
+        Ok((pkt, &[]))
+    }
+}
+
+impl<'de> ReadHci<'de> for EventPacket<'de> {
+    const MAX_LEN: usize = 257;
+
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
+        let mut header = [0; 2];
+        reader.read_exact(&mut header)?;
+        let (header, _) = EventPacketHeader::from_hci_bytes(&header)?;
+        let params_len = usize::from(header.params_len);
+        if buf.len() < params_len {
+            Err(ReadHciError::BufferTooSmall)
+        } else {
+            let (buf, _) = buf.split_at_mut(params_len);
+            reader.read_exact(buf)?;
+            let pkt = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
+        }
+    }
+
+    async fn read_hci_async<R: embedded_io_async::Read>(
+        mut reader: R,
+        buf: &'de mut [u8],
+    ) -> Result<Self, ReadHciError<R::Error>> {
+        let mut header = [0; 2];
+        reader.read_exact(&mut header).await?;
+        let (header, _) = EventPacketHeader::from_hci_bytes(&header)?;
+        let params_len = usize::from(header.params_len);
+        if buf.len() < params_len {
+            Err(ReadHciError::BufferTooSmall)
+        } else {
+            let (buf, _) = buf.split_at_mut(params_len);
+            reader.read_exact(buf).await?;
+            let pkt = Self::from_header_hci_bytes(header, buf)?;
+            Ok(pkt)
+        }
+    }
+}
+
 impl<'de> ReadHci<'de> for Event<'de> {
     const MAX_LEN: usize = 257;
 
@@ -1083,5 +1194,51 @@ mod tests {
         assert_eq!(evt.remote_sam_tx_availability, 0x06);
         assert_eq!(evt.remote_sam_rx_availability, 0x07);
         assert!(rest.is_empty());
+    }
+
+    #[test]
+    fn convert_error_packet() {
+        let data = [
+            0x04, 10, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+            0x20, 0x04, 0x00, // class_of_device
+            0x01, // link_type (ACL)
+        ];
+        let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
+        assert!(matches!(event.kind, EventKind::ConnectionRequest));
+
+        let Event::ConnectionRequest(evt) = Event::from_packet(event).unwrap() else {
+            unreachable!()
+        };
+
+        assert_eq!(evt.bd_addr.raw(), [1, 2, 3, 4, 5, 6]);
+        assert_eq!(evt.class_of_device, [0x20, 0x04, 0x00]);
+        assert_eq!(evt.link_type, ConnectionLinkType::Acl);
+    }
+
+    #[test]
+    fn convert_le_error_packet() {
+        let data = [
+            0x3e, 19, // header
+            1,  // subevent
+            0,  // success
+            1, 0, // handle
+            0, // role
+            1, // kind
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // bd_addr
+            0x10, 0x10, // interval
+            0x00, 0x00, // latency
+            0x10, 0x10, // supervision timeout
+            1,    // accuracy
+        ];
+        let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
+        assert!(matches!(event.kind, EventKind::Le(LeEventKind::LeConnectionComplete)));
+
+        let Event::Le(LeEvent::LeConnectionComplete(e)) = Event::from_packet(event).unwrap() else {
+            unreachable!()
+        };
+
+        assert_eq!(e.status, Status::SUCCESS);
+        assert_eq!(e.handle, ConnHandle::new(1));
+        assert!(matches!(e.central_clock_accuracy, ClockAccuracy::Ppm250));
     }
 }

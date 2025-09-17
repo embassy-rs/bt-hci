@@ -34,6 +34,35 @@ macro_rules! le_events {
             )+
         }
 
+        /// LE Meta event type [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9bfbd351-a103-f197-b85f-ffd9dcc92872)
+        #[non_exhaustive]
+        #[derive(Debug, Clone, Hash)]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        pub enum LeEventKind {
+            $(
+                #[doc = stringify!($name)]
+                $name,
+            )+
+        }
+
+        impl<'a> $crate::FromHciBytes<'a> for LeEventKind {
+            fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
+                let (subcode, data) = data.split_first().ok_or(FromHciBytesError::InvalidSize)?;
+                match subcode {
+                    $($code => Ok((Self::$name, data)),)+
+                    _ => Err(FromHciBytesError::InvalidValue),
+                }
+            }
+        }
+
+        impl<'a> LeEvent<'a> {
+            pub(crate) fn from_kind_hci_bytes(kind: LeEventKind, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
+                Ok(match kind {
+                    $(LeEventKind::$name => LeEvent::$name($name::from_hci_bytes_complete(data)?),)+
+                })
+            }
+        }
+
         impl<'a> $crate::FromHciBytes<'a> for LeEvent<'a> {
             fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
                 let (subcode, data) = data.split_first().ok_or(FromHciBytesError::InvalidSize)?;
