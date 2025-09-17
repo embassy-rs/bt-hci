@@ -13,7 +13,7 @@ use embedded_io::ErrorType;
 use futures_intrusive::sync::LocalSemaphore;
 
 use crate::cmd::{Cmd, CmdReturnBuf};
-use crate::event::{CommandComplete, Event};
+use crate::event::{CommandComplete, CommandStatus, EventKind};
 use crate::param::{RemainingBytes, Status};
 use crate::transport::Transport;
 use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes};
@@ -100,8 +100,9 @@ where
                 let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
                 let value = self.transport.read(&mut buf[..]).await?;
                 match value {
-                    ControllerToHostPacket::Event(ref event) => match &event {
-                        Event::CommandComplete(e) => {
+                    ControllerToHostPacket::Event(ref event) => match event.kind {
+                        EventKind::CommandComplete => {
+                            let e = unwrap!(CommandComplete::from_hci_bytes_complete(event.data));
                             self.slots.complete(
                                 e.cmd_opcode,
                                 e.status,
@@ -110,7 +111,8 @@ where
                             );
                             continue;
                         }
-                        Event::CommandStatus(e) => {
+                        EventKind::CommandStatus => {
+                            let e = unwrap!(CommandStatus::from_hci_bytes_complete(event.data));
                             self.slots
                                 .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
                             continue;
@@ -192,8 +194,9 @@ where
                 let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
                 let value = self.transport.read(&mut buf[..])?;
                 match value {
-                    ControllerToHostPacket::Event(ref event) => match &event {
-                        Event::CommandComplete(e) => {
+                    ControllerToHostPacket::Event(ref event) => match event.kind {
+                        EventKind::CommandComplete => {
+                            let e = unwrap!(CommandComplete::from_hci_bytes_complete(event.data));
                             self.slots.complete(
                                 e.cmd_opcode,
                                 e.status,
@@ -202,7 +205,8 @@ where
                             );
                             continue;
                         }
-                        Event::CommandStatus(e) => {
+                        EventKind::CommandStatus => {
+                            let e = unwrap!(CommandStatus::from_hci_bytes_complete(event.data));
                             self.slots
                                 .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
                             continue;

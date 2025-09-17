@@ -302,7 +302,7 @@ pub enum ControllerToHostPacket<'a> {
     /// Sync packet.
     Sync(data::SyncPacket<'a>),
     /// Event packet.
-    Event(event::Event<'a>),
+    Event(event::EventPacket<'a>),
     /// Isochronous packet.
     Iso(data::IsoPacket<'a>),
 }
@@ -327,7 +327,7 @@ impl<'a> ControllerToHostPacket<'a> {
             PacketKind::Cmd => Err(FromHciBytesError::InvalidValue),
             PacketKind::AclData => data::AclPacket::from_hci_bytes(data).map(|(x, y)| (Self::Acl(x), y)),
             PacketKind::SyncData => data::SyncPacket::from_hci_bytes(data).map(|(x, y)| (Self::Sync(x), y)),
-            PacketKind::Event => event::Event::from_hci_bytes(data).map(|(x, y)| (Self::Event(x), y)),
+            PacketKind::Event => event::EventPacket::from_hci_bytes(data).map(|(x, y)| (Self::Event(x), y)),
             PacketKind::IsoData => data::IsoPacket::from_hci_bytes(data).map(|(x, y)| (Self::Iso(x), y)),
         }
     }
@@ -340,7 +340,7 @@ impl<'de> FromHciBytes<'de> for ControllerToHostPacket<'de> {
             PacketKind::Cmd => Err(FromHciBytesError::InvalidValue),
             PacketKind::AclData => data::AclPacket::from_hci_bytes(data).map(|(x, y)| (Self::Acl(x), y)),
             PacketKind::SyncData => data::SyncPacket::from_hci_bytes(data).map(|(x, y)| (Self::Sync(x), y)),
-            PacketKind::Event => event::Event::from_hci_bytes(data).map(|(x, y)| (Self::Event(x), y)),
+            PacketKind::Event => event::EventPacket::from_hci_bytes(data).map(|(x, y)| (Self::Event(x), y)),
             PacketKind::IsoData => data::IsoPacket::from_hci_bytes(data).map(|(x, y)| (Self::Iso(x), y)),
         }
     }
@@ -356,7 +356,7 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
             PacketKind::Cmd => Err(ReadHciError::InvalidValue),
             PacketKind::AclData => data::AclPacket::read_hci(reader, buf).map(Self::Acl),
             PacketKind::SyncData => data::SyncPacket::read_hci(reader, buf).map(Self::Sync),
-            PacketKind::Event => event::Event::read_hci(reader, buf).map(Self::Event),
+            PacketKind::Event => event::EventPacket::read_hci(reader, buf).map(Self::Event),
             PacketKind::IsoData => data::IsoPacket::read_hci(reader, buf).map(Self::Iso),
         }
     }
@@ -371,7 +371,7 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
             PacketKind::Cmd => Err(ReadHciError::InvalidValue),
             PacketKind::AclData => data::AclPacket::read_hci_async(reader, buf).await.map(Self::Acl),
             PacketKind::SyncData => data::SyncPacket::read_hci_async(reader, buf).await.map(Self::Sync),
-            PacketKind::Event => event::Event::read_hci_async(reader, buf).await.map(Self::Event),
+            PacketKind::Event => event::EventPacket::read_hci_async(reader, buf).await.map(Self::Event),
             PacketKind::IsoData => data::IsoPacket::read_hci_async(reader, buf).await.map(Self::Iso),
         }
     }
