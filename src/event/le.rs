@@ -36,7 +36,7 @@ macro_rules! le_events {
 
         /// LE Meta event type [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9bfbd351-a103-f197-b85f-ffd9dcc92872)
         #[non_exhaustive]
-        #[derive(Debug, Clone, Hash)]
+        #[derive(Debug, Clone, Copy, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub enum LeEventKind {
             $(
