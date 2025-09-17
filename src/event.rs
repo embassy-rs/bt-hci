@@ -123,7 +123,7 @@ macro_rules! events {
                 match packet.kind {
                     $(EventKind::$name => Ok(Self::$name($name::from_hci_bytes_complete(packet.data)?)),)+
                     EventKind::Le(e) => Ok(Self::Le(LeEvent::from_kind_hci_bytes(e, packet.data)?)),
-                    EventKind::Unknown { code } => Ok(Self::Unknown { code: code, params: packet.data }),
+                    EventKind::Unknown { code } => Ok(Self::Unknown { code, params: packet.data }),
                 }
             }
 
