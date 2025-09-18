@@ -6,6 +6,7 @@ use crate::param::{
     LeIQSample, LeTxPowerReportingReason, PacketStatus, PhyKind, PowerLevelKind, Status, SyncHandle, ZoneEntered,
 };
 use crate::{FromHciBytes, FromHciBytesError};
+use paste::paste;
 
 /// A trait for objects which contain the parameters for a specific HCI LE event
 pub trait LeEventParams<'a>: FromHciBytes<'a> {
@@ -36,29 +37,46 @@ macro_rules! le_events {
 
         /// LE Meta event type [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9bfbd351-a103-f197-b85f-ffd9dcc92872)
         #[non_exhaustive]
-        #[derive(Debug, Clone, Copy, Hash)]
+        #[derive(Debug, Clone, Copy, Hash, PartialEq)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        pub enum LeEventKind {
-            $(
-                #[doc = stringify!($name)]
-                $name,
-            )+
+        pub struct LeEventKind(pub u8);
+
+        impl LeEventKind {
+            paste! {
+                $(
+                    #[doc = stringify!($name)]
+                    pub const [<$name:snake:upper>]: LeEventKind = LeEventKind($code);
+                )+
+            }
         }
 
         impl<'a> $crate::FromHciBytes<'a> for LeEventKind {
             fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
                 let (subcode, data) = data.split_first().ok_or(FromHciBytesError::InvalidSize)?;
-                match subcode {
-                    $($code => Ok((Self::$name, data)),)+
-                    _ => Err(FromHciBytesError::InvalidValue),
+                paste! {
+                    match subcode {
+                        $($code => Ok((Self::[<$name:snake:upper>], data)),)+
+                        _ => Err(FromHciBytesError::InvalidValue),
+                    }
                 }
             }
         }
 
-        impl<'a> LeEvent<'a> {
-            pub(crate) fn from_kind_hci_bytes(kind: LeEventKind, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
-                Ok(match kind {
-                    $(LeEventKind::$name => LeEvent::$name($name::from_hci_bytes_complete(data)?),)+
+        /// An Le Event HCI packet
+        #[derive(Debug, Clone, Hash)]
+        #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+        pub struct LeEventPacket<'a> {
+            /// Which kind of le event.
+            pub kind: LeEventKind,
+            /// Le event data.
+            pub data: &'a [u8],
+        }
+
+        impl<'a> LeEventPacket<'a> {
+            fn from_kind_hci_bytes(kind: LeEventKind, data: &'a [u8]) -> Result<Self, FromHciBytesError> {
+                Ok(Self {
+                    kind,
+                    data,
                 })
             }
         }
@@ -104,6 +122,14 @@ macro_rules! le_events {
             }
         )+
     };
+}
+
+impl<'de> FromHciBytes<'de> for LeEventPacket<'de> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        let (kind, data) = LeEventKind::from_hci_bytes(data)?;
+        let pkt = Self::from_kind_hci_bytes(kind, data)?;
+        Ok((pkt, &[]))
+    }
 }
 
 le_events! {
