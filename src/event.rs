@@ -11,7 +11,7 @@ use crate::{AsHciBytes, FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
 pub mod le;
 
-use le::{LeEvent, LeEventKind};
+use le::LeEvent;
 
 /// A trait for objects which contain the parameters for a specific HCI event
 pub trait EventParams<'a>: FromHciBytes<'a> {
@@ -1262,7 +1262,10 @@ mod tests {
         let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
         assert!(matches!(event.kind, EventKind::Le));
         let event = LeEventPacket::from_hci_bytes_complete(event.data).unwrap();
-        assert!(matches!(event.kind, LeEventKind::LeConnectionComplete));
+        assert!(matches!(
+            event.kind,
+            crate::event::le::LeEventKind::LeConnectionComplete
+        ));
         let e = crate::event::le::LeConnectionComplete::from_hci_bytes_complete(event.data).unwrap();
 
         assert_eq!(e.status, Status::SUCCESS);
