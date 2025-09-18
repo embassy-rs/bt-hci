@@ -16,7 +16,7 @@ use crate::cmd::{Cmd, CmdReturnBuf};
 use crate::event::{CommandComplete, CommandStatus, EventKind};
 use crate::param::{RemainingBytes, Status};
 use crate::transport::Transport;
-use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes};
+use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, FromHciBytesError};
 
 pub mod blocking;
 
@@ -77,6 +77,7 @@ where
 impl<T, const SLOTS: usize> Controller for ExternalController<T, SLOTS>
 where
     T: Transport,
+    T::Error: From<FromHciBytesError>,
 {
     async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
         self.transport.write(packet).await?;
@@ -102,7 +103,7 @@ where
                 match value {
                     ControllerToHostPacket::Event(ref event) => match event.kind {
                         EventKind::CommandComplete => {
-                            let e = unwrap!(CommandComplete::from_hci_bytes_complete(event.data));
+                            let e = CommandComplete::from_hci_bytes_complete(event.data)?;
                             self.slots.complete(
                                 e.cmd_opcode,
                                 e.status,
@@ -112,7 +113,7 @@ where
                             continue;
                         }
                         EventKind::CommandStatus => {
-                            let e = unwrap!(CommandStatus::from_hci_bytes_complete(event.data));
+                            let e = CommandStatus::from_hci_bytes_complete(event.data)?;
                             self.slots
                                 .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
                             continue;
@@ -129,6 +130,7 @@ where
 impl<T, const SLOTS: usize> blocking::Controller for ExternalController<T, SLOTS>
 where
     T: crate::transport::blocking::Transport,
+    T::Error: From<FromHciBytesError>,
 {
     fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
         loop {
@@ -196,7 +198,7 @@ where
                 match value {
                     ControllerToHostPacket::Event(ref event) => match event.kind {
                         EventKind::CommandComplete => {
-                            let e = unwrap!(CommandComplete::from_hci_bytes_complete(event.data));
+                            let e = CommandComplete::from_hci_bytes_complete(event.data)?;
                             self.slots.complete(
                                 e.cmd_opcode,
                                 e.status,
@@ -206,7 +208,7 @@ where
                             continue;
                         }
                         EventKind::CommandStatus => {
-                            let e = unwrap!(CommandStatus::from_hci_bytes_complete(event.data));
+                            let e = CommandStatus::from_hci_bytes_complete(event.data)?;
                             self.slots
                                 .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
                             continue;
@@ -225,6 +227,7 @@ where
     T: Transport,
     C: cmd::SyncCmd,
     C::Return: FixedSizeValue,
+    T::Error: From<FromHciBytesError>,
 {
     async fn exec(&self, cmd: &C) -> Result<C::Return, cmd::Error<Self::Error>> {
         let mut retval: C::ReturnBuf = C::ReturnBuf::new();
@@ -255,6 +258,7 @@ impl<T, C, const SLOTS: usize> ControllerCmdAsync<C> for ExternalController<T, S
 where
     T: Transport,
     C: cmd::AsyncCmd,
+    T::Error: From<FromHciBytesError>,
 {
     async fn exec(&self, cmd: &C) -> Result<(), cmd::Error<Self::Error>> {
         let (slot, idx) = self.slots.acquire(C::OPCODE, &mut []).await;

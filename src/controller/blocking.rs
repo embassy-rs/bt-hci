@@ -1,6 +1,6 @@
 //! Blocking controller types and traits.
 use crate::controller::ErrorType;
-use crate::{data, ControllerToHostPacket};
+use crate::{data, ControllerToHostPacket, FromHciBytesError};
 
 /// Trait representing a HCI controller which supports blocking and non-blocking operations.
 pub trait Controller: ErrorType {
@@ -46,4 +46,10 @@ pub enum TryError<E> {
     Error(E),
     /// Operation would block.
     Busy,
+}
+
+impl<E: From<FromHciBytesError>> From<FromHciBytesError> for TryError<E> {
+    fn from(value: FromHciBytesError) -> Self {
+        TryError::Error(E::from(value))
+    }
 }
