@@ -102,7 +102,7 @@ where
                 let value = self.transport.read(&mut buf[..]).await?;
                 match value {
                     ControllerToHostPacket::Event(ref event) => match event.kind {
-                        EventKind::COMMAND_COMPLETE => {
+                        EventKind::CommandComplete => {
                             let e = CommandComplete::from_hci_bytes_complete(event.data)?;
                             self.slots.complete(
                                 e.cmd_opcode,
@@ -112,7 +112,7 @@ where
                             );
                             continue;
                         }
-                        EventKind::COMMAND_STATUS => {
+                        EventKind::CommandStatus => {
                             let e = CommandStatus::from_hci_bytes_complete(event.data)?;
                             self.slots
                                 .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
@@ -197,7 +197,7 @@ where
                 let value = self.transport.read(&mut buf[..])?;
                 match value {
                     ControllerToHostPacket::Event(ref event) => match event.kind {
-                        EventKind::COMMAND_COMPLETE => {
+                        EventKind::CommandComplete => {
                             let e = CommandComplete::from_hci_bytes_complete(event.data)?;
                             self.slots.complete(
                                 e.cmd_opcode,
@@ -207,7 +207,7 @@ where
                             );
                             continue;
                         }
-                        EventKind::COMMAND_STATUS => {
+                        EventKind::CommandStatus => {
                             let e = CommandStatus::from_hci_bytes_complete(event.data)?;
                             self.slots
                                 .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);

@@ -6,7 +6,6 @@ use crate::param::{
     LeIQSample, LeTxPowerReportingReason, PacketStatus, PhyKind, PowerLevelKind, Status, SyncHandle, ZoneEntered,
 };
 use crate::{FromHciBytes, FromHciBytesError};
-use paste::paste;
 
 /// A trait for objects which contain the parameters for a specific HCI LE event
 pub trait LeEventParams<'a>: FromHciBytes<'a> {
@@ -41,23 +40,20 @@ macro_rules! le_events {
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct LeEventKind(pub u8);
 
+        #[allow(non_upper_case_globals)]
         impl LeEventKind {
-            paste! {
-                $(
-                    #[doc = stringify!($name)]
-                    pub const [<$name:snake:upper>]: LeEventKind = LeEventKind($code);
-                )+
-            }
+            $(
+                #[doc = stringify!($name)]
+                pub const $name: LeEventKind = LeEventKind($code);
+            )+
         }
 
         impl<'a> $crate::FromHciBytes<'a> for LeEventKind {
             fn from_hci_bytes(data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
                 let (subcode, data) = data.split_first().ok_or(FromHciBytesError::InvalidSize)?;
-                paste! {
-                    match subcode {
-                        $($code => Ok((Self::[<$name:snake:upper>], data)),)+
-                        _ => Err(FromHciBytesError::InvalidValue),
-                    }
+                match subcode {
+                    $($code => Ok((Self::$name, data)),)+
+                    _ => Err(FromHciBytesError::InvalidValue),
                 }
             }
         }
@@ -78,6 +74,16 @@ macro_rules! le_events {
                     kind,
                     data,
                 })
+            }
+        }
+
+        impl<'a> TryFrom<LeEventPacket<'a>> for LeEvent<'a> {
+            type Error = FromHciBytesError;
+            fn try_from(packet: LeEventPacket<'a>) -> Result<Self, Self::Error> {
+                match packet.kind {
+                    $(LeEventKind::$name => Ok(Self::$name($name::from_hci_bytes_complete(packet.data)?)),)+
+                    _ => Err(FromHciBytesError::InvalidValue),
+                }
             }
         }
 

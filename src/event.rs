@@ -8,11 +8,10 @@ use crate::param::{
     PageScanRepetitionMode, RemainingBytes, Role, ServiceType, Status,
 };
 use crate::{AsHciBytes, FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
-use paste::paste;
 
 pub mod le;
 
-use le::LeEvent;
+use le::{LeEvent, LeEventKind};
 
 /// A trait for objects which contain the parameters for a specific HCI event
 pub trait EventParams<'a>: FromHciBytes<'a> {
@@ -68,15 +67,14 @@ macro_rules! events {
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         pub struct EventKind(pub u8);
 
+        #[allow(non_upper_case_globals)]
         impl EventKind {
             $(
-                paste! {
-                    #[allow(missing_docs)]
-                    pub const [<$name:snake:upper>]: EventKind = EventKind($code);
-                }
+                #[allow(missing_docs)]
+                pub const $name: EventKind = EventKind($code);
             )+
             #[allow(missing_docs)]
-            pub const LE: EventKind = EventKind(0x3F);
+            pub const Le: EventKind = EventKind(0x3F);
         }
 
         /// An Event HCI packet
@@ -107,32 +105,30 @@ macro_rules! events {
                     data.split_at(usize::from(header.params_len))
                 };
 
-                paste! {
-                    match header.code {
-                        $($code => Ok((Self::[<$name:snake:upper>], data)),)+
-                        0x3e => Ok((Self::LE, data)),
-                        _ => {
-                            Ok((EventKind(header.code), data))
-                        }
+                match header.code {
+                    $($code => Ok((Self::$name, data)),)+
+                    0x3e => Ok((Self::Le, data)),
+                    _ => {
+                        Ok((EventKind(header.code), data))
                     }
                 }
             }
         }
 
-        impl<'a> Event<'a> {
-            /// Decode event based on event packet data.
-            pub fn from_packet(packet: EventPacket<'a>) -> Result<Self, FromHciBytesError> {
-                paste! {
-                    match packet.kind {
-                        $(EventKind::[<$name:snake:upper>] => Ok(Self::$name($name::from_hci_bytes_complete(packet.data)?)),)+
-                        EventKind::LE => {
-                            Ok(Self::Le(LeEvent::from_hci_bytes_complete(packet.data)?))
-                        }
-                        EventKind(code) => Ok(Self::Unknown { code, params: packet.data }),
+        impl<'a> TryFrom<EventPacket<'a>> for Event<'a> {
+            type Error = FromHciBytesError;
+            fn try_from(packet: EventPacket<'a>) -> Result<Self, Self::Error> {
+                match packet.kind {
+                    $(EventKind::$name => Ok(Self::$name($name::from_hci_bytes_complete(packet.data)?)),)+
+                    EventKind::Le => {
+                        Ok(Self::Le(LeEvent::from_hci_bytes_complete(packet.data)?))
                     }
+                    EventKind(code) => Ok(Self::Unknown { code, params: packet.data }),
                 }
             }
+        }
 
+        impl<'a> Event<'a> {
             fn from_header_hci_bytes(header: EventPacketHeader, data: &'a [u8]) -> Result<(Self, &'a [u8]), FromHciBytesError> {
                 let (data, rest) = if data.len() < usize::from(header.params_len) {
                     return Err(FromHciBytesError::InvalidSize);
@@ -1210,9 +1206,9 @@ mod tests {
             0x01, // link_type (ACL)
         ];
         let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
-        assert!(matches!(event.kind, EventKind::CONNECTION_REQUEST));
+        assert!(matches!(event.kind, EventKind::ConnectionRequest));
 
-        let Event::ConnectionRequest(evt) = Event::from_packet(event).unwrap() else {
+        let Event::ConnectionRequest(evt) = Event::try_from(event).unwrap() else {
             unreachable!()
         };
 
@@ -1237,9 +1233,9 @@ mod tests {
             1,    // accuracy
         ];
         let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
-        assert!(matches!(event.kind, EventKind::LE));
+        assert!(matches!(event.kind, EventKind::Le));
 
-        let Event::Le(LeEvent::LeConnectionComplete(e)) = Event::from_packet(event).unwrap() else {
+        let Event::Le(LeEvent::LeConnectionComplete(e)) = Event::try_from(event).unwrap() else {
             unreachable!()
         };
 
@@ -1264,12 +1260,9 @@ mod tests {
             1,    // accuracy
         ];
         let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
-        assert!(matches!(event.kind, EventKind::LE));
+        assert!(matches!(event.kind, EventKind::Le));
         let event = LeEventPacket::from_hci_bytes_complete(event.data).unwrap();
-        assert!(matches!(
-            event.kind,
-            crate::event::le::LeEventKind::LE_CONNECTION_COMPLETE
-        ));
+        assert!(matches!(event.kind, LeEventKind::LeConnectionComplete));
         let e = crate::event::le::LeConnectionComplete::from_hci_bytes_complete(event.data).unwrap();
 
         assert_eq!(e.status, Status::SUCCESS);
