@@ -921,7 +921,8 @@ impl InquiryResultWithRssi<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{event::le::LeEventPacket, param::*};
+    use crate::event::le::LeEventPacket;
+    use crate::param::*;
 
     #[test]
     fn test_inquiry_result() {
