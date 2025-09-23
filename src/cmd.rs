@@ -52,6 +52,9 @@ param!(
 );
 
 impl Opcode {
+    /// Special opcode for command events with no associated command
+    pub const UNSOLICITED: Opcode = Opcode::new(OpcodeGroup(0), 0);
+
     /// Create an `Opcode` with the given OGF and OCF values
     pub const fn new(ogf: OpcodeGroup, ocf: u16) -> Self {
         Self(((ogf.0 as u16) << 10) | ocf)
