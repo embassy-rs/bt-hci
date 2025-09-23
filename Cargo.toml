@@ -5,7 +5,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 name = "bt-hci"
 repository = "https://github.com/embassy-rs/bt-hci"
-version = "0.5.0"
+version = "0.6.0"
 documentation = "https://docs.rs/bt-hci"
 keywords = ["bluetooth", "hci", "BLE"]
 categories = ["embedded", "hardware-support", "no-std"]
@@ -38,3 +38,4 @@ serde = { version = "^1", optional = true, features = [
 
 [dev-dependencies]
 postcard = "1.1"
+futures-test = "0.3"

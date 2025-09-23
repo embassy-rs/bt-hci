@@ -62,6 +62,12 @@ impl<'a> FromHciBytes<'a> for RemainingBytes<'a> {
     }
 }
 
+impl<'a> RemainingBytes<'a> {
+    pub(crate) fn into_inner(self) -> &'a [u8] {
+        self.0
+    }
+}
+
 param!(struct BdAddr([u8; 6]));
 
 impl BdAddr {

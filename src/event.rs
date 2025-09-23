@@ -283,8 +283,7 @@ events! {
     struct CommandComplete<'a>(0x0e) {
         num_hci_cmd_pkts: u8,
         cmd_opcode: Opcode,
-        status: Status, // All return parameters have status as the first field
-        return_param_bytes: RemainingBytes<'a>,
+        bytes: RemainingBytes<'a>,
     }
 
     /// Command Status event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4d87067c-be74-d2ff-d5c4-86416bf7af91)
@@ -736,6 +735,44 @@ impl<'de> ReadHci<'de> for Event<'de> {
 }
 
 impl CommandComplete<'_> {
+    /// Whether or not this event has a status
+    pub fn has_status(&self) -> bool {
+        self.cmd_opcode != Opcode::UNSOLICITED
+    }
+}
+
+impl<'d> TryFrom<CommandComplete<'d>> for CommandCompleteWithStatus<'d> {
+    type Error = FromHciBytesError;
+    fn try_from(e: CommandComplete<'d>) -> Result<CommandCompleteWithStatus<'d>, Self::Error> {
+        if e.cmd_opcode == Opcode::UNSOLICITED {
+            return Err(FromHciBytesError::InvalidSize);
+        }
+        let bytes = e.bytes.into_inner();
+        let (status, remaining) = Status::from_hci_bytes(bytes)?;
+        let return_param_bytes: RemainingBytes<'d> = RemainingBytes::from_hci_bytes_complete(remaining)?;
+        Ok(Self {
+            num_hci_cmd_pkts: e.num_hci_cmd_pkts,
+            cmd_opcode: e.cmd_opcode,
+            status,
+            return_param_bytes,
+        })
+    }
+}
+
+/// Struct representing a command complete event with status
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CommandCompleteWithStatus<'d> {
+    /// Number of packets complete.
+    pub num_hci_cmd_pkts: u8,
+    /// Command opcode.
+    pub cmd_opcode: Opcode,
+    /// Command status.
+    pub status: Status,
+    /// Return parameters
+    pub return_param_bytes: RemainingBytes<'d>,
+}
+
+impl CommandCompleteWithStatus<'_> {
     /// Gets the connection handle associated with the command that has completed.
     ///
     /// For commands that return the connection handle provided as a parameter as
@@ -921,6 +958,7 @@ impl InquiryResultWithRssi<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::cmd::OpcodeGroup;
     use crate::event::le::LeEventPacket;
     use crate::param::*;
 
@@ -1272,5 +1310,37 @@ mod tests {
         assert_eq!(e.status, Status::SUCCESS);
         assert_eq!(e.handle, ConnHandle::new(1));
         assert!(matches!(e.central_clock_accuracy, ClockAccuracy::Ppm250));
+    }
+
+    #[test]
+    fn test_special_command_complete() {
+        let data = [
+            0x0e, 3, // header
+            1, 0, 0, // special command
+        ];
+
+        let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
+        assert!(matches!(event.kind, EventKind::CommandComplete));
+        let event = CommandComplete::from_hci_bytes_complete(event.data).unwrap();
+        assert_eq!(event.cmd_opcode, Opcode::new(OpcodeGroup::new(0), 0));
+    }
+
+    #[test]
+    fn test_normal_command_complete() {
+        let opcode = Opcode::new(OpcodeGroup::LE, 0x000D).to_raw().to_le_bytes();
+        let data = [
+            0x0e, 4, // header
+            1, opcode[0], opcode[1], // special command
+            0,         // success
+        ];
+
+        let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
+        assert!(matches!(event.kind, EventKind::CommandComplete));
+        let event = CommandComplete::from_hci_bytes_complete(event.data).unwrap();
+        assert_eq!(event.cmd_opcode, Opcode::new(OpcodeGroup::LE, 0x000d));
+
+        let event: CommandCompleteWithStatus = event.try_into().unwrap();
+        assert_eq!(event.cmd_opcode, Opcode::new(OpcodeGroup::LE, 0x000d));
+        assert_eq!(Status::SUCCESS, event.status);
     }
 }
