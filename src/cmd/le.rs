@@ -609,7 +609,7 @@ cmd! {
 
 cmd! {
     /// LE Set Periodic Advertising Parameters (v2) command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e0bc9abb-d57e-8a02-b515-428c7f30e7d2)
-    LeSetPeriodicAdvParamsV2(LE, 0x003e) {
+    LeSetPeriodicAdvParamsV2(LE, 0x0086) {
         LeSetPeriodicAdvParamsV2Params {
             periodic_adv_interval_min: Duration<1_250>,
             periodic_adv_interval_max: Duration<1_250>,
