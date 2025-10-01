@@ -15,8 +15,8 @@ exclude = [".github", ".vscode", "ci.sh", "rust-toolchain.toml", "rustfmt.toml"]
 [features]
 defmt = [
     "dep:defmt",
-    "embedded-io/defmt-03",
-    "embedded-io-async/defmt-03",
+    "embedded-io/defmt",
+    "embedded-io-async/defmt",
     "btuuid/defmt",
 ]
 serde = ["dep:serde", "btuuid/serde"]
@@ -26,8 +26,8 @@ uuid = ["btuuid/uuid"]
 btuuid = { version = "0.1.0" }
 defmt = { version = "^1", optional = true }
 log = { version = "^0.4", optional = true }
-embedded-io = "0.6.0"
-embedded-io-async = "0.6.0"
+embedded-io = "0.7.1"
+embedded-io-async = "0.7.0"
 embassy-sync = "0.7"
 embassy-time = { version = ">=0.3, <0.6", optional = true }
 heapless = ">=0.8, <0.10"
