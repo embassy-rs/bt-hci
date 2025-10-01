@@ -60,6 +60,14 @@ pub enum ReadHciError<E: embedded_io::Error> {
     Read(ReadExactError<E>),
 }
 
+impl<E: embedded_io::Error> core::fmt::Display for ReadHciError<E> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl<E: embedded_io::Error> core::error::Error for ReadHciError<E> {}
+
 impl<E: embedded_io::Error> embedded_io::Error for ReadHciError<E> {
     fn kind(&self) -> embedded_io::ErrorKind {
         match self {
