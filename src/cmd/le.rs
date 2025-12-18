@@ -1202,6 +1202,34 @@ cmd! {
 }
 
 cmd! {
+    /// LE Set Default Subrate command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d486bcfd-562a-3bef-e705-676715c6c3cc)
+    LeSetDefaultSubrate(LE, 0x007d) {
+        LeSetDefaultSubrateParams {
+            subrate_min: u16,
+            subrate_max: u16,
+            max_latency: u16,
+            continuation_number: u16,
+            supervision_timeout: Duration<10_000>,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Subrate Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e8e89250-dd32-6ec9-5aa4-04678fee288b)
+    LeSubrateRequest(LE, 0x007e) {
+        LeSubrateRequestParams {
+            handle: ConnHandle,
+            subrate_min: u16,
+            subrate_max: u16,
+            max_latency: u16,
+            continuation_number: u16,
+            supervision_timeout: Duration<10_000>,
+        }
+    }
+}
+
+cmd! {
     BASE
     /// LE Set Periodic Advertising Subevent Data command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-927cb8c3-4a12-6154-d2f2-384f4a10f0a4)
     LeSetPeriodicAdvSubeventData(LE, 0x0082) {
