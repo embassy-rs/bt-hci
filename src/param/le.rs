@@ -12,6 +12,16 @@ impl AddrKind {
     pub const RESOLVABLE_PRIVATE_OR_PUBLIC: AddrKind = AddrKind(2);
     pub const RESOLVABLE_PRIVATE_OR_RANDOM: AddrKind = AddrKind(3);
     pub const ANONYMOUS_ADV: AddrKind = AddrKind(0xff);
+
+    /// Create a new instance.
+    pub const fn new(v: u8) -> Self {
+        Self(v)
+    }
+
+    /// Get the inner representation.
+    pub fn as_raw(&self) -> u8 {
+        self.0
+    }
 }
 
 unsafe impl ByteAlignedValue for AddrKind {}

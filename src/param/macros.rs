@@ -46,7 +46,7 @@ macro_rules! param {
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
         #[doc = stringify!($name)]
-        pub struct $name($wrapped);
+        pub struct $name(pub $wrapped);
 
         impl $name {
             /// Get inner representation
