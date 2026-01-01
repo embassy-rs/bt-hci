@@ -42,10 +42,10 @@ impl Status {
     /// Get a result representation of status which will provide an error
     /// if not a success.
     pub const fn to_result(self) -> Result<(), Error> {
-        if self.0 == Self::SUCCESS.0 {
-            Ok(())
+        if let Some(err) = NonZeroU8::new(self.0) {
+            Err(Error(err))
         } else {
-            Err(Error(unsafe { NonZeroU8::new_unchecked(self.0) }))
+            Ok(())
         }
     }
 }
@@ -53,13 +53,21 @@ impl Status {
 #[cfg(feature = "defmt")]
 impl defmt::Format for Status {
     fn format(&self, fmt: defmt::Formatter) {
-        defmt::Format::format(&self.to_result(), fmt)
+        if let Some(err) = NonZeroU8::new(self.0) {
+            defmt::write!(fmt, "{}", Error(err))
+        } else {
+            defmt::write!(fmt, "Success")
+        }
     }
 }
 
 impl core::fmt::Debug for Status {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        core::fmt::Debug::fmt(&self.to_result(), f)
+        if let Some(err) = NonZeroU8::new(self.0) {
+            core::fmt::Debug::fmt(&Error(err), f)
+        } else {
+            f.write_str("Success")
+        }
     }
 }
 
