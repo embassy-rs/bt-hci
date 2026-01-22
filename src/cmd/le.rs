@@ -2,11 +2,12 @@
 
 use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllPhys,
-    BdAddr, ChannelMap, ConnHandle, CteKind, CteMask, Duration, ExtDuration, FilterDuplicates, InitiatingPhy,
-    LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions,
-    LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData, LePeriodicAdvSyncTransferMode, LeScanKind, Operation,
-    PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason,
-    ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates, SyncHandle,
+    BdAddr, ChannelMap, ConnHandle, ConnIntervalGroup, CteKind, CteMask, Duration, DurationU8, ExtDuration,
+    FilterDuplicates, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
+    LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
+    LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
+    PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates,
+    SyncHandle,
 };
 use crate::{cmd, WriteHci};
 
@@ -1311,5 +1312,54 @@ cmd! {
             bit_value: u8,
         }
         Return = ();
+    }
+}
+
+cmd! {
+    /// LE Connection Rate Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d09bc90b-2b78-6a0b-c33d-cc086e4e7e66)
+    LeConnectionRateRequest(LE, 0x00A1) {
+        LeConnectionRateRequestParams {
+            handle: ConnHandle,
+            conn_interval_min: Duration<125>,
+            conn_interval_max: Duration<125>,
+            subrate_min: u16,
+            subrate_max: u16,
+            max_latency: u16,
+            continuation_number: u16,
+            supervision_timeout: Duration<10_000>,
+            min_ce_length: Duration<125>,
+            max_ce_length: Duration<125>,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Set Default Rate Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4d7dcf09-f740-e58a-d0ea-41f29e7bed37)
+    LeSetDefaultRateParameters(LE, 0x00A2) {
+        LeSetDefaultRateParametersParams {
+            conn_interval_min: Duration<125>,
+            conn_interval_max: Duration<125>,
+            subrate_min: u16,
+            subrate_max: u16,
+            max_latency: u16,
+            continuation_number: u16,
+            supervision_timeout: Duration<10_000>,
+            min_ce_length: Duration<125>,
+            max_ce_length: Duration<125>,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Read Minimum Supported Connection Interval command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1cb9e115-3445-39f6-38de-cc3fc5dcb4c7)
+    LeReadMinimumSupportedConnectionInterval(LE, 0x00A3) {
+        Params = ();
+        LeReadMinimumSupportedConnectionIntervalReturn {
+            minimum_supported_connection_interval: DurationU8<125>,
+            num_groups: u8,
+            groups: [ConnIntervalGroup; 255],
+        }
     }
 }

@@ -231,6 +231,14 @@ param! {
     }
 }
 
+param! {
+    struct ConnIntervalGroup {
+        min: Duration<125>,
+        max: Duration<125>,
+        stride: Duration<125>,
+    }
+}
+
 /// Parameters for different phy representations.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
