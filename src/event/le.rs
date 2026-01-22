@@ -463,4 +463,15 @@ le_events! {
         continuation_number: u16,
         supervision_timeout: Duration<10_000>,
     }
+
+    /// LE Connection Rate Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2c599471-bc69-6495-ccfa-56be30d10311)
+    struct LeConnectionRateChange(55) {
+        status: Status,
+        handle: ConnHandle,
+        conn_interval: Duration<125>,
+        subrate_factor: u16,
+        peripheral_latency: u16,
+        continuation_number: u16,
+        supervision_timeout: Duration<10_000>,
+    }
 }

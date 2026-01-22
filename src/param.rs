@@ -106,6 +106,76 @@ impl ConnHandle {
     }
 }
 
+/// An 8-bit duration. The `US` generic parameter indicates the timebase in µs.
+#[repr(transparent)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct DurationU8<const US: u32 = 125>(u8);
+
+unsafe impl<const US: u32> FixedSizeValue for DurationU8<US> {
+    #[inline(always)]
+    fn is_valid(_data: &[u8]) -> bool {
+        true
+    }
+}
+
+impl<const US: u32> DurationU8<US> {
+    #[inline(always)]
+    /// Create a new instance from raw value.
+    pub const fn from_u8(val: u8) -> Self {
+        Self(val)
+    }
+
+    /// Create an instance from microseconds.
+    #[inline(always)]
+    pub fn from_micros(val: u64) -> Self {
+        Self::from_u8(unwrap!((val / u64::from(US)).try_into()))
+    }
+
+    /// Create an instance from milliseconds.
+    #[inline(always)]
+    pub fn from_millis(val: u32) -> Self {
+        Self::from_micros(u64::from(val) * 1000)
+    }
+
+    /// Create an instance from seconds.
+    #[inline(always)]
+    pub fn from_secs(val: u32) -> Self {
+        Self::from_micros(u64::from(val) * 1_000_000)
+    }
+
+    /// Get the underlying representation.
+    #[inline(always)]
+    pub fn as_u8(&self) -> u8 {
+        self.0
+    }
+
+    /// Get value as microseconds.
+    #[inline(always)]
+    pub fn as_micros(&self) -> u64 {
+        u64::from(self.as_u8()) * u64::from(US)
+    }
+
+    /// Get value as milliseconds.
+    #[inline(always)]
+    pub fn as_millis(&self) -> u32 {
+        (self.as_micros() / 1000) as u32
+    }
+
+    /// Get value as seconds.
+    #[inline(always)]
+    pub fn as_secs(&self) -> u32 {
+        (self.as_micros() / 1_000_000) as u32
+    }
+}
+
+#[cfg(feature = "embassy-time")]
+impl<const US: u32> From<embassy_time::Duration> for DurationU8<US> {
+    fn from(duration: embassy_time::Duration) -> Self {
+        Self::from_micros(duration.as_micros())
+    }
+}
+
 /// A 16-bit duration. The `US` generic parameter indicates the timebase in µs.
 #[repr(transparent)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
