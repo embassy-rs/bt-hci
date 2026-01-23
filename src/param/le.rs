@@ -136,6 +136,32 @@ param! {
 }
 
 param! {
+    bitfield Phys[1] {
+        (0, has_le_1m_phy, set_le_1m_phy);
+        (1, has_le_2m_phy, set_le_2m_phy);
+        (2, has_le_coded_phy, set_le_coded_phy);
+    }
+}
+
+param! {
+    bitfield SpacingTypes[2] {
+        (0, has_t_ifs_acl_cp, set_t_ifs_acl_cp);
+        (1, has_t_ifs_acl_pc, set_t_ifs_acl_pc);
+        (2, has_t_mces, set_t_mces);
+        (3, has_t_ifs_cis, set_t_ifs_cis);
+        (4, has_t_mss_cis, set_t_mss_cis);
+    }
+}
+
+param! {
+    enum FrameSpaceInitiator {
+        LocalHostInitiated = 0x00,
+        LocalControllerInitiated = 0x01,
+        PeerInitiated = 0x02,
+    }
+}
+
+param! {
     bitfield AllPhys[1] {
         (0, has_no_tx_phy_preference, set_has_no_tx_phy_preference);
         (1, has_no_rx_phy_preference, set_has_no_rx_phy_preference);

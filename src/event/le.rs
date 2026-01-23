@@ -2,8 +2,9 @@
 
 use crate::param::{
     AddrKind, AdvHandle, BdAddr, BigHandle, BisConnHandle, ClockAccuracy, ConnHandle, CteKind, DataStatus, Duration,
-    ExtDuration, LeAdvReports, LeConnRole, LeDirectedAdvertisingReportParam, LeExtAdvReports, LeFeatureMask,
-    LeIQSample, LeTxPowerReportingReason, PacketStatus, PhyKind, PowerLevelKind, Status, SyncHandle, ZoneEntered,
+    ExtDuration, FrameSpaceInitiator, LeAdvReports, LeConnRole, LeDirectedAdvertisingReportParam, LeExtAdvReports,
+    LeFeatureMask, LeIQSample, LeTxPowerReportingReason, PacketStatus, PhyKind, Phys, PowerLevelKind, SpacingTypes,
+    Status, SyncHandle, ZoneEntered,
 };
 use crate::{FromHciBytes, FromHciBytesError};
 
@@ -463,6 +464,17 @@ le_events! {
         continuation_number: u16,
         supervision_timeout: Duration<10_000>,
     }
+
+    /// LE Frame Space Update Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5ccb539a-6dd4-cd68-a9e1-1600f3868f29)
+    struct LeFrameSpaceUpdateComplete(53) {
+        status: Status,
+        handle: ConnHandle,
+        initiator: FrameSpaceInitiator,
+        frame_space: Duration<1>,
+        phys: Phys,
+        spacing_types: SpacingTypes,
+    }
+
 
     /// LE Connection Rate Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2c599471-bc69-6495-ccfa-56be30d10311)
     struct LeConnectionRateChange(55) {

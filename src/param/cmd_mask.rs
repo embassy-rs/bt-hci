@@ -461,6 +461,7 @@ cmds! {
         (1, le_set_periodic_adv_parameters_v2);
     }
     48 => {
+        (1, le_frame_space_update);
         (5, le_connection_rate_request);
         (6, le_set_default_rate_parameters);
         (7, le_read_minimum_supported_connection_interval);
