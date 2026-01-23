@@ -6,8 +6,8 @@ use crate::param::{
     FilterDuplicates, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
     LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
     LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
-    PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy, SwitchingSamplingRates,
-    SyncHandle,
+    Phys, PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy, SpacingTypes,
+    SwitchingSamplingRates, SyncHandle,
 };
 use crate::{cmd, WriteHci};
 
@@ -1310,6 +1310,20 @@ cmd! {
         LeSetHostFeatureV2Params {
             bit_number: u16,
             bit_value: u8,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Frame Space Update command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d13d94d2-5a3c-66a9-9a17-89659b5dbda6)
+    LeFrameSpaceUpdate(LE, 0x009D) {
+        LeFrameSpaceUpdateParams {
+            handle: ConnHandle,
+            frame_space_min: Duration<1>,
+            frame_space_max: Duration<1>,
+            phy: Phys,
+            spacing_types: SpacingTypes,
         }
         Return = ();
     }
