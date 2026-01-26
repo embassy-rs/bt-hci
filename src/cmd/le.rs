@@ -6,7 +6,7 @@ use crate::param::{
     FilterDuplicates, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
     LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
     LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
-    Phys, PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy, SpacingTypes,
+    PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy, SpacingTypes,
     SwitchingSamplingRates, SyncHandle,
 };
 use crate::{cmd, WriteHci};
@@ -1322,7 +1322,7 @@ cmd! {
             handle: ConnHandle,
             frame_space_min: Duration<1>,
             frame_space_max: Duration<1>,
-            phy: Phys,
+            phy: PhyMask,
             spacing_types: SpacingTypes,
         }
         Return = ();

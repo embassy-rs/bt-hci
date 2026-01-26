@@ -3,7 +3,7 @@
 use crate::param::{
     AddrKind, AdvHandle, BdAddr, BigHandle, BisConnHandle, ClockAccuracy, ConnHandle, CteKind, DataStatus, Duration,
     ExtDuration, FrameSpaceInitiator, LeAdvReports, LeConnRole, LeDirectedAdvertisingReportParam, LeExtAdvReports,
-    LeFeatureMask, LeIQSample, LeTxPowerReportingReason, PacketStatus, PhyKind, Phys, PowerLevelKind, SpacingTypes,
+    LeFeatureMask, LeIQSample, LeTxPowerReportingReason, PacketStatus, PhyKind, PhyMask, PowerLevelKind, SpacingTypes,
     Status, SyncHandle, ZoneEntered,
 };
 use crate::{FromHciBytes, FromHciBytesError};
@@ -471,7 +471,7 @@ le_events! {
         handle: ConnHandle,
         initiator: FrameSpaceInitiator,
         frame_space: Duration<1>,
-        phys: Phys,
+        phys: PhyMask,
         spacing_types: SpacingTypes,
     }
 
