@@ -136,14 +136,6 @@ param! {
 }
 
 param! {
-    bitfield Phys[1] {
-        (0, has_le_1m_phy, set_le_1m_phy);
-        (1, has_le_2m_phy, set_le_2m_phy);
-        (2, has_le_coded_phy, set_le_coded_phy);
-    }
-}
-
-param! {
     bitfield SpacingTypes[2] {
         (0, has_t_ifs_acl_cp, set_t_ifs_acl_cp);
         (1, has_t_ifs_acl_pc, set_t_ifs_acl_pc);
@@ -170,9 +162,9 @@ param! {
 
 param! {
     bitfield PhyMask[1] {
-        (0, is_le_1m_preferred, set_le_1m_preferred);
-        (1, is_le_2m_preferred, set_le_2m_preferred);
-        (2, is_le_coded_preferred, set_le_coded_preferred);
+        (0, has_le_1m_phy, set_le_1m_phy);
+        (1, has_le_2m_phy, set_le_2m_phy);
+        (2, has_le_coded_phy, set_le_coded_phy);
     }
 }
 
@@ -281,9 +273,9 @@ impl<T> PhyParams<T> {
     /// Get the mask associated with the parameters.
     pub fn scanning_phys(&self) -> PhyMask {
         PhyMask::new()
-            .set_le_1m_preferred(self.le_1m_phy.is_some())
-            .set_le_2m_preferred(self.le_2m_phy.is_some())
-            .set_le_coded_preferred(self.le_coded_phy.is_some())
+            .set_le_1m_phy(self.le_1m_phy.is_some())
+            .set_le_2m_phy(self.le_2m_phy.is_some())
+            .set_le_coded_phy(self.le_coded_phy.is_some())
     }
 }
 
