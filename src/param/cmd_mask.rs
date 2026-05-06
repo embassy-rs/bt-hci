@@ -1,6 +1,6 @@
 use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes};
 
-/// A command mask. [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e2532697-4291-5379-5dd4-157ff356f0ac)
+/// A command mask. [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e2532697-4291-5379-5dd4-157ff356f0ac)
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -233,9 +233,9 @@ cmds! {
         (2, send_keypress_notification);
         (3, io_capability_request_negative_reply);
         (4, read_encryption_key_size);
-        (5, le_cs_read_local_supported_capabilities);
+        (5, le_cs_read_local_supported_capabilities_v1);
         (6, le_cs_read_remote_supported_capabilities);
-        (7, le_cs_write_cached_remote_supported_capabilities);
+        (7, le_cs_write_cached_remote_supported_capabilities_v1);
     }
     22 => {
         (2, set_event_mask_page_2);
@@ -255,7 +255,7 @@ cmds! {
         (7, le_cs_set_default_settings);
     }
     25 => {
-        (0, le_set_event_mask);
+        (0, le_set_event_mask_v1);
         (1, le_read_buffer_size_v1);
         (2, le_read_local_supported_features);
         (4, le_set_random_addr);
@@ -492,5 +492,13 @@ cmds! {
         (5, le_connection_rate_request);
         (6, le_set_default_rate_parameters);
         (7, le_read_minimum_supported_connection_interval);
+    }
+    49 => {
+        (0, read_local_supported_commands_v2);
+        (1, le_set_event_mask_v2);
+        (2, le_cs_read_local_supported_capabilities_v2);
+        (3, le_cs_write_cached_remote_supported_capabilities_v2);
+        (4, le_cs_set_security_requirements);
+        (5, le_cs_set_default_security_requirements);
     }
 }
