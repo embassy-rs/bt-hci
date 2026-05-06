@@ -1,6 +1,6 @@
 use crate::{ByteAlignedValue, FixedSizeValue, FromHciBytes};
 
-/// A command mask.
+/// A command mask. [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e2532697-4291-5379-5dd4-157ff356f0ac)
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -165,6 +165,8 @@ cmds! {
     }
     12 => {
         (1, set_afh_host_channel_classification);
+        (2, le_cs_read_remote_fae_table);
+        (3, le_cs_write_cached_remote_fae_table);
         (4, read_inquiry_scan_kind);
         (5, write_inquiry_scan_kind);
         (6, read_inquiry_mode);
@@ -198,6 +200,8 @@ cmds! {
         (3, setup_synchronous_conn_request);
         (4, accept_synchronous_conn_request);
         (5, reject_synchronous_conn_request);
+        (6, le_cs_create_config);
+        (7, le_cs_remove_config);
     }
     17 => {
         (0, read_ext_inquiry_response);
@@ -229,6 +233,9 @@ cmds! {
         (2, send_keypress_notification);
         (3, io_capability_request_negative_reply);
         (4, read_encryption_key_size);
+        (5, le_cs_read_local_supported_capabilities);
+        (6, le_cs_read_remote_supported_capabilities);
+        (7, le_cs_write_cached_remote_supported_capabilities);
     }
     22 => {
         (2, set_event_mask_page_2);
@@ -237,11 +244,15 @@ cmds! {
         (0, read_flow_control_mode);
         (1, write_flow_control_mode);
         (2, read_data_block_size);
+        (3, le_cs_test);
+        (4, le_cs_test_end);
     }
     24 => {
         (0, read_enhanced_transmit_power_level);
+        (1, le_cs_security_enable);
         (5, read_le_host_support);
         (6, write_le_host_support);
+        (7, le_cs_set_default_settings);
     }
     25 => {
         (0, le_set_event_mask);
@@ -280,11 +291,15 @@ cmds! {
         (4, le_receiver_test_v1);
         (5, le_transmitter_test_v1);
         (6, le_test_end);
+        (7, le_enable_monitoring_advertisers);
     }
     29 => {
+        (0, le_cs_set_channel_classification);
+        (1, le_cs_set_procedure_parameters);
+        (2, le_cs_procedure_enable);
         (3, enhanced_setup_synchronous_conn);
         (4, enhanced_accept_synchronous_conn);
-        (5, read_local_supported_codecs);
+        (5, read_local_supported_codecs_v1);
         (6, set_mws_channel_parameters);
         (7, set_external_frame_configuration);
     }
@@ -341,7 +356,7 @@ cmds! {
     35 => {
         (0, le_read_local_resolvable_addr);
         (1, le_set_addr_resolution_enable);
-        (2, le_set_resolvable_private_addr_timeout);
+        (2, le_set_resolvable_private_addr_timeout_v1);
         (3, le_read_maximum_data_length);
         (4, le_read_phy);
         (5, le_set_default_phy);
@@ -351,7 +366,7 @@ cmds! {
     36 => {
         (0, le_transmitter_test_v2);
         (1, le_set_adv_set_random_addr);
-        (2, le_set_ext_adv_parameters);
+        (2, le_set_ext_adv_parameters_v1);
         (3, le_set_ext_adv_data);
         (4, le_set_ext_scan_response_data);
         (5, le_set_ext_adv_enable);
@@ -361,12 +376,12 @@ cmds! {
     37 => {
         (0, le_remove_adv_set);
         (1, le_clear_adv_sets);
-        (2, le_set_periodic_adv_parameters);
+        (2, le_set_periodic_adv_parameters_v1);
         (3, le_set_periodic_adv_data);
         (4, le_set_periodic_adv_enable);
         (5, le_set_ext_scan_parameters);
         (6, le_set_ext_scan_enable);
-        (7, le_ext_create_conn);
+        (7, le_ext_create_conn_v1);
     }
     38 => {
         (0, le_periodic_adv_create_sync);
@@ -430,7 +445,7 @@ cmds! {
     }
     44 => {
         (0, le_iso_test_end);
-        (1, le_set_host_feature);
+        (1, le_set_host_feature_v1);
         (2, le_read_iso_link_quality);
         (3, le_enhanced_read_transmit_power_level);
         (4, le_read_remote_transmit_power_level);
@@ -452,6 +467,8 @@ cmds! {
         (0, le_set_default_subrate);
         (1, le_subrate_request);
         (2, le_set_ext_adv_parameters_v2);
+        (3, le_set_decision_data);
+        (4, le_set_decision_instructions);
         (5, le_set_periodic_adv_subevent_data);
         (6, le_set_periodic_adv_response_data);
         (7, le_set_periodic_sync_subevent);
@@ -459,9 +476,19 @@ cmds! {
     47 => {
         (0, le_ext_create_conn_v2);
         (1, le_set_periodic_adv_parameters_v2);
+        (2, le_read_all_local_supported_features);
+        (3, le_read_all_remote_features);
+        (4, le_set_host_feature_v2);
+        (5, le_add_device_to_monitored_advertisers_list);
+        (6, le_remove_device_from_monitored_advertisers_list);
+        (7, le_clear_monitored_advertisers_list);
     }
     48 => {
+        (0, le_read_monitored_adv_list_size);
         (1, le_frame_space_update);
+        (2, le_set_resolvable_private_addr_timeout_v2);
+        (3, le_enable_ota_utp_mode);
+        (4, le_utp_send);
         (5, le_connection_rate_request);
         (6, le_set_default_rate_parameters);
         (7, le_read_minimum_supported_connection_interval);
