@@ -106,8 +106,8 @@ cmd! {
     LeSetScanParams(LE, 0x000b) {
         LeSetScanParamsParams {
             le_scan_kind: LeScanKind,
-            le_scan_interval: Duration<10_000>,
-            le_scan_window: Duration<10_000>,
+            le_scan_interval: Duration<625>,
+            le_scan_window: Duration<625>,
             own_addr_kind: AddrKind,
             scanning_filter_policy: ScanningFilterPolicy,
         }
@@ -130,8 +130,8 @@ cmd! {
     /// LE Create Connection command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-dc5080f3-63c3-ac48-23d1-2d35c6393ac2)
     LeCreateConn(LE, 0x000d) {
         LeCreateConnParams {
-            le_scan_interval: Duration<10_000>,
-            le_scan_window: Duration<10_000>,
+            le_scan_interval: Duration<625>,
+            le_scan_window: Duration<625>,
             use_filter_accept_list: bool,
             peer_addr_kind: AddrKind,
             peer_addr: BdAddr,
