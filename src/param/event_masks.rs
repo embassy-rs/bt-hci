@@ -76,18 +76,18 @@ param! {
         (0, is_le_conn_complete_enabled, enable_le_conn_complete);
         (1, is_le_adv_report_enabled, enable_le_adv_report);
         (2, is_le_conn_update_complete_enabled, enable_le_conn_update_complete);
-        (3, is_le_read_remote_features_complete_enabled, enable_le_read_remote_features_complete);
+        (3, is_le_read_remote_features_page_0_complete_enabled, enable_le_read_remote_features_page_0_complete);
         (4, is_le_long_term_key_request_enabled, enable_le_long_term_key_request);
         (5, is_le_remote_conn_parameter_request_enabled, enable_le_remote_conn_parameter_request);
         (6, is_le_data_length_change_enabled, enable_le_data_length_change);
         (7, is_le_read_local_p256_public_key_complete_enabled, enable_le_read_local_p256_public_key_complete);
         (8, is_le_generate_dhkey_complete_enabled, enable_le_generate_dhkey_complete);
-        (9, is_le_enhanced_conn_complete_enabled, enable_le_enhanced_conn_complete);
+        (9, is_le_enhanced_conn_complete_v1_enabled, enable_le_enhanced_conn_complete_v1);
         (10, is_le_directed_adv_report_enabled, enable_le_directed_adv_report);
         (11, is_le_phy_update_complete_enabled, enable_le_phy_update_complete);
         (12, is_le_ext_adv_report_enabled, enable_le_ext_adv_report);
-        (13, is_le_periodic_adv_sync_established_enabled, enable_le_periodic_adv_sync_established);
-        (14, is_le_periodic_adv_report_enabled, enable_le_periodic_adv_report);
+        (13, is_le_periodic_adv_sync_established_v1_enabled, enable_le_periodic_adv_sync_established_v1);
+        (14, is_le_periodic_adv_report_v1_enabled, enable_le_periodic_adv_report_v1);
         (15, is_le_periodic_adv_sync_lost_enabled, enable_le_periodic_adv_sync_lost);
         (16, is_le_scan_timeout_enabled, enable_le_scan_timeout);
         (17, is_le_adv_set_terminated_enabled, enable_le_adv_set_terminated);
@@ -96,8 +96,8 @@ param! {
         (20, is_le_connectionless_iq_report_enabled, enable_le_connectionless_iq_report);
         (21, is_le_conn_iq_report_enabled, enable_le_conn_iq_report);
         (22, is_le_cte_request_failed_enabled, enable_le_cte_request_failed);
-        (23, is_le_periodic_adv_sync_transfer_received_enabled, enable_le_periodic_adv_sync_transfer_received);
-        (24, is_le_cis_established_enabled, enable_le_cis_established);
+        (23, is_le_periodic_adv_sync_transfer_received_v1_enabled, enable_le_periodic_adv_sync_transfer_received_v1);
+        (24, is_le_cis_established_v1_enabled, enable_le_cis_established_v1);
         (25, is_le_cis_request_enabled, enable_le_cis_request);
         (26, is_le_create_big_complete_enabled, enable_le_create_big_complete);
         (27, is_le_terminate_big_complete_enabled, enable_le_terminate_big_complete);
@@ -114,5 +114,20 @@ param! {
         (38, is_le_periodic_adv_subevent_data_request_enabled, enable_le_periodic_adv_subevent_data_request);
         (39, is_le_periodic_adv_response_report_enabled, enable_le_periodic_adv_response_report);
         (40, is_le_enhanced_conn_complete_v2_enabled, enable_le_enhanced_conn_complete_v2);
+        (41, is_le_cis_established_v2_enabled, enable_le_cis_established_v2);
+        (42, is_le_read_all_remote_features_complete_enabled, enable_le_read_all_remote_features_complete);
+        (43, is_le_cs_read_remote_supported_capabilities_complete_v1_enabled, enable_le_cs_read_remote_supported_capabilities_complete_v1);
+        (44, is_le_cs_read_remote_fae_table_complete_enabled, enable_le_cs_read_remote_fae_table_complete);
+        (45, is_le_cs_security_enable_complete_enabled, enable_le_cs_security_enable_complete);
+        (46, is_le_cs_config_complete_enabled, enable_le_cs_config_complete);
+        (47, is_le_cs_procedure_enable_complete_enabled, enable_le_cs_procedure_enable_complete);
+        (48, is_le_cs_subevent_result_enabled, enable_le_cs_subevent_result);
+        (49, is_le_cs_subevent_result_continue_enabled, enable_le_cs_subevent_result_continue);
+        (50, is_le_cs_test_end_complete_enabled, enable_le_cs_test_end_complete);
+        (51, is_le_monitored_advertisers_report_enabled, enable_le_monitored_advertisers_report);
+        (52, is_le_frame_space_update_complete_enabled, enable_le_frame_space_update_complete);
+        (53, is_le_utp_receive_enabled, enable_le_utp_receive);
+        (54, is_le_connection_rate_change_enabled, enable_le_connection_rate_change);
+        (55, is_le_cs_read_remote_supported_capabilities_complete_v2_enabled, enable_le_cs_read_remote_supported_capabilities_complete_v2);
     }
 }
