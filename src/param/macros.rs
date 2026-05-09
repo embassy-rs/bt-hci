@@ -40,12 +40,12 @@ macro_rules! param {
         $(#[$attrs:meta])*
         struct $name:ident($wrapped:ty)
     ) => {
+        #[doc = stringify!($name)]
         $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-        #[doc = stringify!($name)]
         pub struct $name(pub $wrapped);
 
         impl $name {
@@ -70,10 +70,10 @@ macro_rules! param {
             $(,)?
         }
     ) => {
+        #[doc = stringify!($name)]
         $(#[$attrs])*
         #[repr(C, packed)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        #[doc = stringify!($name)]
         #[allow(missing_docs)]
         pub struct $name {
             $(pub $field: $ty,)*
@@ -119,10 +119,10 @@ macro_rules! param {
             $(,)?
         }
     ) => {
+        #[doc = concat!(stringify!($name), " parameter")]
         $(#[$attrs])*
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        #[doc = concat!(stringify!($name), " parameter")]
         #[allow(missing_docs)]
         pub struct $name$(<$life>)? {
             $(pub $field: $ty,)*
@@ -170,12 +170,12 @@ macro_rules! param {
             )+
         }
     ) => {
+        #[doc = stringify!($name)]
         $(#[$attrs])*
         #[repr(u8)]
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
         #[allow(missing_docs)]
-        #[doc = stringify!($name)]
         pub enum $name {
             $(
                 $(#[$variant_attrs])*
@@ -206,11 +206,11 @@ macro_rules! param {
             $(($bit:expr, $get:ident, $set:ident);)+
         }
     ) => {
+        #[doc = stringify!($name)]
         $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        #[doc = stringify!($name)]
         pub struct $name(u8);
 
         impl $name {
@@ -259,11 +259,11 @@ macro_rules! param {
             $(($bit:expr, $get:ident, $set:ident);)+
         }
     ) => {
+        #[doc = stringify!($name)]
         $(#[$attrs])*
         #[repr(transparent)]
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        #[doc = stringify!($name)]
         pub struct $name([u8; $octets]);
 
         impl $name {
@@ -348,10 +348,10 @@ macro_rules! param_slice {
             $(,)?
         }
     ) => {
+        #[doc = stringify!($name)]
         $(#[$attrs])*
         #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-        #[doc = stringify!($name)]
         pub struct $name([u8; $octets]);
 
         impl $name {
