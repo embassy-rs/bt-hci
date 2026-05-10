@@ -1,6 +1,7 @@
 use super::param;
 
 param! {
+    /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/br-edr-controller/link-manager-protocol-specification.html#UUID-c1d8d04b-edcc-8fea-a3f6-f41b520a03de)
     bitfield LmpFeatureMask[8] {
         (0, supports_3_slot_packets, set_3_slot_packets);
         (1, supports_5_slot_packets, set_5_slot_packets);
@@ -57,6 +58,32 @@ param! {
         (57, supports_variable_inquiry_tx_power_level, set_variable_inquiry_tx_power_level);
         (58, supports_enhanced_power_control, set_enhanced_power_control);
         (63, supports_ext_features, set_ext_features);
+    }
+}
+
+param! {
+    /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/br-edr-controller/link-manager-protocol-specification.html#UUID-c1d8d04b-edcc-8fea-a3f6-f41b520a03de)
+    bitfield LmpFeatureMaskPage1[8] {
+        (0, supports_secure_simple_pairing_host, set_secure_simple_pairing_host);
+        (1, supports_le_host, set_le_host);
+        (3, supports_secure_connections_host, set_secure_connections_host);
+    }
+}
+
+param! {
+    /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/br-edr-controller/link-manager-protocol-specification.html#UUID-c1d8d04b-edcc-8fea-a3f6-f41b520a03de)
+    bitfield LmpFeatureMaskPage2[8] {
+        (0, supports_connectionless_peripheral_broadcast_transmitter, set_connectionless_peripheral_broadcast_transmitter);
+        (1, supports_connectionless_peripheral_broadcast_receiver, set_connectionless_peripheral_broadcast_receiver);
+        (2, supports_synchronization_train, set_synchronization_train);
+        (3, supports_synchronization_scan, set_synchronization_scan);
+        (4, supports_hci_inquiry_response_notification_event, set_hci_inquiry_response_notification_event);
+        (5, supports_generalized_interlaced_scan, set_generalized_interlaced_scan);
+        (6, supports_coarse_clock_adjustment, set_coarse_clock_adjustment);
+        (8, supports_secure_connections_controller, set_secure_connections_controller);
+        (9, supports_ping, set_ping);
+        (10, supports_slot_availability_mask, set_slot_availability_mask);
+        (11, supports_train_nudging, set_train_nudging);
     }
 }
 
