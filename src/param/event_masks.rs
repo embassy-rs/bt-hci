@@ -1,6 +1,7 @@
 use super::param;
 
 param! {
+    /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9cf88217-77b4-aeb6-61fb-d1129d48a67c)
     bitfield EventMask[8] {
         (0, is_inquiry_complete_enabled, enable_inquiry_complete);
         (1, is_inquiry_result_enabled, enable_inquiry_result);
@@ -54,6 +55,7 @@ param! {
 }
 
 param! {
+    /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4e91f200-b802-45d6-9282-fd03c0dfefbe)
     bitfield EventMaskPage2[8] {
         (8, is_number_of_completed_data_blocks_enabled, enable_number_of_completed_data_blocks);
         (14, is_triggered_clock_capture_enabled, enable_triggered_clock_capture);
@@ -72,6 +74,7 @@ param! {
 }
 
 param! {
+    /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8d6890a5-79b9-ba8a-2079-4efa3128263c)
     bitfield LeEventMask[8] {
         (0, is_le_conn_complete_enabled, enable_le_conn_complete);
         (1, is_le_adv_report_enabled, enable_le_adv_report);
