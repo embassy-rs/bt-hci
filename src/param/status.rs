@@ -83,7 +83,7 @@ impl From<Status> for u8 {
     }
 }
 
-/// An error representation for HCI errors.
+/// An error representation for HCI errors. [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/architecture,-change-history,-and-conventions/controller-error-codes.html#UUID-d9ef882f-1ac5-f85d-9a8f-0221f9c1828a)
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Error(NonZeroU8);
@@ -115,7 +115,7 @@ impl From<Error> for u8 {
     }
 }
 
-macro_rules! errnos {
+macro_rules! errors {
         (
             $(
                 ($val:expr, $konst:ident, $desc:expr);
@@ -160,7 +160,7 @@ macro_rules! errnos {
         }
     }
 
-errnos! {
+errors! {
     (0x01, UNKNOWN_CMD, "Unknown HCI Command");
     (0x02, UNKNOWN_CONN_IDENTIFIER, "Unknown Connection Identifier");
     (0x03, HARDWARE_FAILURE, "Hardware Failure");
@@ -226,4 +226,7 @@ errnos! {
     (0x43, LIMIT_REACHED, "Limit Reached");
     (0x44, OPERATION_CANCELLED_BY_HOST, "Operation Cancelled by Host");
     (0x45, PACKET_TOO_LONG, "Packet Too Long");
+    (0x46, TOO_LATE, "Too Late");
+    (0x47, TOO_EARLY, "Too Early");
+    (0x48, INSUFFICIENT_CHANNELS, "Insufficient Channels");
 }
