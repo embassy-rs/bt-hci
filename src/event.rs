@@ -3,9 +3,9 @@
 use crate::cmd::{Opcode, SyncCmd};
 use crate::param::{
     param, AuthenticationRequirements, BdAddr, ClockOffset, ClockType, ConnHandle, ConnHandleCompletedPackets,
-    ConnectionLinkType, CoreSpecificationVersion, EncryptionEnabledLevel, Error, FlowDirection, IoCapability, KeyFlag,
-    KeypressNotificationType, LinkKeyType, LinkType, LmpFeatureMask, MaxSlots, Mode, OobDataPresent, PacketType,
-    PageScanRepetitionMode, RemainingBytes, Role, ServiceType, Status,
+    ConnectionLinkType, CoreSpecificationVersion, EncryptionEnabledLevel, Error, ExtendedLmpFeatures, FlowDirection,
+    IoCapability, KeyFlag, KeypressNotificationType, LinkKeyType, LinkType, LmpFeatureMask, MaxSlots, Mode,
+    OobDataPresent, PacketType, PageScanRepetitionMode, RemainingBytes, Role, ServiceType, Status,
 };
 use crate::{AsHciBytes, FromHciBytes, FromHciBytesError, ReadHci, ReadHciError};
 
@@ -411,7 +411,7 @@ events! {
         handle: ConnHandle,
         page_number: u8,
         maximum_page_number: u8,
-        extended_lmp_features: LmpFeatureMask,
+        extended_lmp_features: ExtendedLmpFeatures,
     }
 
     /// Synchronous Connection Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a625aef5-c3d7-12e9-39e4-b8f3386150bb)

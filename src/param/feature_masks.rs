@@ -1,4 +1,34 @@
 use super::param;
+use crate::FixedSizeValue;
+
+/// Extended LMP features that can be viewed as different page types.
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ExtendedLmpFeatures([u8; 8]);
+
+impl ExtendedLmpFeatures {
+    /// View as page 0 LMP features.
+    pub const fn as_page_0(&self) -> &LmpFeatureMask {
+        unsafe { &*(&self.0 as *const [u8; 8] as *const LmpFeatureMask) }
+    }
+
+    /// View as page 1 LMP features.
+    pub const fn as_page_1(&self) -> &LmpFeatureMaskPage1 {
+        unsafe { &*(&self.0 as *const [u8; 8] as *const LmpFeatureMaskPage1) }
+    }
+
+    /// View as page 2 LMP features.
+    pub const fn as_page_2(&self) -> &LmpFeatureMaskPage2 {
+        unsafe { &*(&self.0 as *const [u8; 8] as *const LmpFeatureMaskPage2) }
+    }
+}
+
+unsafe impl FixedSizeValue for ExtendedLmpFeatures {
+    #[inline(always)]
+    fn is_valid(_data: &[u8]) -> bool {
+        true
+    }
+}
 
 param! {
     /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/br-edr-controller/link-manager-protocol-specification.html#UUID-c1d8d04b-edcc-8fea-a3f6-f41b520a03de)
