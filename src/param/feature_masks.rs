@@ -88,6 +88,7 @@ param! {
 }
 
 param! {
+    /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/low-energy-controller/link-layer-specification.html#UUID-56ada5ed-4ae3-acee-198f-27ead57d86f1)
     bitfield LeFeatureMask[8] {
         (0, supports_le_encryption, set_le_encryption);
         (1, supports_conn_parameters_request_procedure, set_conn_parameters_request_procedure);
@@ -129,8 +130,29 @@ param! {
         (38, supports_conn_subrating_host, set_conn_subrating_host);
         (39, supports_channel_classification, set_channel_classification);
         (40, supports_adv_coding_selection, set_adv_coding_selection);
-        (41, supports_adv_coding_selection_host_support, set_adv_coding_selection_host_support);
+        (41, supports_adv_coding_selection_host, set_adv_coding_selection_host);
         (43, supports_periodic_adv_with_resp_advertiser, set_periodic_adv_with_resp_advertiser);
         (44, supports_periodic_adv_with_resp_scanner, set_periodic_adv_with_resp_scanner);
+        (45, supports_unsegmented_framed_mode, set_unsegmented_framed_mode);
+        (46, supports_channel_sounding, set_channel_sounding);
+        (47, supports_channel_sounding_host, set_channel_sounding_host);
+        (48, supports_channel_sounding_tone_quality_indication, set_channel_sounding_tone_quality_indication);
+        (63, supports_ll_extended_feature_set, set_ll_extended_feature_set);
+    }
+}
+
+param! {
+    /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/low-energy-controller/link-layer-specification.html#UUID-56ada5ed-4ae3-acee-198f-27ead57d86f1)
+    bitfield LeFeatureMaskPage1[8] {
+        (0, supports_monitoring_advertisers, set_monitoring_advertisers);
+        (1, supports_frame_space_update, set_frame_space_update);
+        (2, supports_utp_ota_mode, set_utp_ota_mode);
+        (3, supports_utp_hci_mode, set_utp_hci_mode);
+        (4, ll_ota_utp_ind_max_length_bit_68, set_ll_ota_utp_ind_max_length_bit_68);
+        (5, ll_ota_utp_ind_max_length_bit_69, set_ll_ota_utp_ind_max_length_bit_69);
+        (8, supports_shorter_connection_intervals, set_shorter_connection_intervals);
+        (9, supports_shorter_connection_intervals_host, set_shorter_connection_intervals_host);
+        (10, supports_le_flushable_acl_data, set_le_flushable_acl_data);
+        (11, supports_channel_sounding_enhancement_1, set_channel_sounding_enhancement_1);
     }
 }
