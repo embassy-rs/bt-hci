@@ -176,6 +176,12 @@ impl<const US: u32> From<embassy_time::Duration> for DurationU8<US> {
     }
 }
 
+impl<const US: u32> From<core::time::Duration> for DurationU8<US> {
+    fn from(duration: core::time::Duration) -> Self {
+        Self::from_micros(duration.as_micros().try_into().unwrap())
+    }
+}
+
 /// A 16-bit duration. The `US` generic parameter indicates the timebase in µs.
 #[repr(transparent)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -244,6 +250,12 @@ impl<const US: u32> Duration<US> {
 impl<const US: u32> From<embassy_time::Duration> for Duration<US> {
     fn from(duration: embassy_time::Duration) -> Self {
         Self::from_micros(duration.as_micros())
+    }
+}
+
+impl<const US: u32> From<core::time::Duration> for Duration<US> {
+    fn from(duration: core::time::Duration) -> Self {
+        Self::from_micros(duration.as_micros().try_into().unwrap())
     }
 }
 
@@ -320,6 +332,12 @@ impl<const US: u16> ExtDuration<US> {
 impl<const US: u16> From<embassy_time::Duration> for ExtDuration<US> {
     fn from(duration: embassy_time::Duration) -> Self {
         Self::from_micros(duration.as_micros())
+    }
+}
+
+impl<const US: u16> From<core::time::Duration> for ExtDuration<US> {
+    fn from(duration: core::time::Duration) -> Self {
+        Self::from_micros(duration.as_micros().try_into().unwrap())
     }
 }
 
