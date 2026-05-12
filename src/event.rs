@@ -409,8 +409,6 @@ events! {
     struct ReadRemoteExtendedFeaturesComplete(0x23) {
         status: Status,
         handle: ConnHandle,
-        page_number: u8,
-        maximum_page_number: u8,
         extended_lmp_features: ExtendedLmpFeatures,
     }
 
