@@ -1,32 +1,61 @@
 use super::param;
-use crate::FixedSizeValue;
+use crate::{FixedSizeValue, FromHciBytes};
 
-/// Extended LMP features that can be viewed as different page types.
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+/// A single page of extended LMP features.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct ExtendedLmpFeatures([u8; 8]);
+#[repr(u8)]
+pub enum LmpFeaturePage {
+    /// Page 0 of the LmpFeatureMask.
+    Page0(LmpFeatureMask),
+    /// Page 1 of the LmpFeatureMask.
+    Page1(LmpFeatureMaskPage1),
+    /// Page 2 of the LmpFeatureMask.
+    Page2(LmpFeatureMaskPage2),
+    /// An unknown page.
+    Unknown([u8; 8]),
+}
 
-impl ExtendedLmpFeatures {
-    /// View as page 0 LMP features.
-    pub const fn as_page_0(&self) -> &LmpFeatureMask {
-        unsafe { &*(&self.0 as *const [u8; 8] as *const LmpFeatureMask) }
-    }
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(C)]
+struct ExtendedLmpFeaturesRaw {
+    page_number: u8,
+    max_page_number: u8,
+    features: [u8; 8],
+}
 
-    /// View as page 1 LMP features.
-    pub const fn as_page_1(&self) -> &LmpFeatureMaskPage1 {
-        unsafe { &*(&self.0 as *const [u8; 8] as *const LmpFeatureMaskPage1) }
-    }
+/// Return parameters of the Read Local/Remote Extended Features commands.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(transparent)]
+pub struct ExtendedLmpFeatures(ExtendedLmpFeaturesRaw);
 
-    /// View as page 2 LMP features.
-    pub const fn as_page_2(&self) -> &LmpFeatureMaskPage2 {
-        unsafe { &*(&self.0 as *const [u8; 8] as *const LmpFeatureMaskPage2) }
+unsafe impl FixedSizeValue for ExtendedLmpFeatures {
+    fn is_valid(_data: &[u8]) -> bool {
+        true
     }
 }
 
-unsafe impl FixedSizeValue for ExtendedLmpFeatures {
-    #[inline(always)]
-    fn is_valid(_data: &[u8]) -> bool {
-        true
+impl ExtendedLmpFeatures {
+    /// Returns the feature page.
+    pub fn lmp_feature_page(&self) -> LmpFeaturePage {
+        match self.0.page_number {
+            0 => LmpFeaturePage::Page0(LmpFeatureMask::from_hci_bytes(&self.0.features).unwrap().0),
+            1 => LmpFeaturePage::Page1(LmpFeatureMaskPage1::from_hci_bytes(&self.0.features).unwrap().0),
+            2 => LmpFeaturePage::Page2(LmpFeatureMaskPage2::from_hci_bytes(&self.0.features).unwrap().0),
+            _ => LmpFeaturePage::Unknown(self.0.features),
+        }
+    }
+
+    /// Returns the maximum page number containing non-zero bits.
+    pub fn max_page_number(&self) -> u8 {
+        self.0.max_page_number
+    }
+
+    /// Returns the page number of the returned features.
+    pub fn page_number(&self) -> u8 {
+        self.0.page_number
     }
 }
 
@@ -160,7 +189,7 @@ param! {
         (38, supports_conn_subrating_host, set_conn_subrating_host);
         (39, supports_channel_classification, set_channel_classification);
         (40, supports_adv_coding_selection, set_adv_coding_selection);
-        (41, supports_adv_coding_selection_host, set_adv_coding_selection_host);
+        (41, supports_adv_coding_selection_host_support, set_adv_coding_selection_host_support);
         (43, supports_periodic_adv_with_resp_advertiser, set_periodic_adv_with_resp_advertiser);
         (44, supports_periodic_adv_with_resp_scanner, set_periodic_adv_with_resp_scanner);
         (45, supports_unsegmented_framed_mode, set_unsegmented_framed_mode);

@@ -1,7 +1,7 @@
 //! Informational parameters [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-42372304-c9ef-dcab-6905-4e5b64703d45)
 
 use super::cmd;
-use crate::param::{BdAddr, CmdMask, CoreSpecificationVersion, LmpFeatureMask};
+use crate::param::{BdAddr, CmdMask, CoreSpecificationVersion, ExtendedLmpFeatures, LmpFeatureMask};
 
 cmd! {
     /// Read Local Version Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cf7fef88-faa4-fd2e-7c00-ab1ec7985a19)
@@ -30,6 +30,16 @@ cmd! {
     ReadLocalSupportedFeatures(INFO_PARAMS, 0x0003) {
         Params = ();
         Return = LmpFeatureMask;
+    }
+}
+
+cmd! {
+    /// Read Local Extended Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a63cc912-c71e-b53c-8b25-ee759f7b33c3)
+    ReadLocalExtendedFeatures(INFO_PARAMS, 0x0004) {
+        ReadLocalSupportedFeaturesParams {
+            page_number: u8,
+        }
+        Return = ExtendedLmpFeatures;
     }
 }
 
