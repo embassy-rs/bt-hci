@@ -74,7 +74,7 @@ macro_rules! events {
                 pub const $name: EventKind = EventKind($code);
             )+
             #[allow(missing_docs)]
-            pub const Le: EventKind = EventKind(0x3F);
+            pub const Le: EventKind = EventKind(0x3e);
         }
 
         /// An Event HCI packet
@@ -105,13 +105,7 @@ macro_rules! events {
                     data.split_at(usize::from(header.params_len))
                 };
 
-                match header.code {
-                    $($code => Ok((Self::$name, data)),)+
-                    0x3e => Ok((Self::Le, data)),
-                    _ => {
-                        Ok((EventKind(header.code), data))
-                    }
-                }
+                Ok((EventKind(header.code), data))
             }
         }
 
