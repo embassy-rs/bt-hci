@@ -21,6 +21,7 @@ defmt = [
 ]
 serde = ["dep:serde", "btuuid/serde"]
 uuid = ["btuuid/uuid"]
+std = ["embassy-sync/std"]
 
 [dependencies]
 btuuid = { version = "0.1.0" }
