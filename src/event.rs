@@ -1335,4 +1335,166 @@ mod tests {
         assert_eq!(event.cmd_opcode, Opcode::new(OpcodeGroup::LE, 0x000d));
         assert_eq!(Status::SUCCESS, event.status);
     }
+
+    #[test]
+    fn parse_le_periodic_adv_response_report() {
+        let data = [
+            0x3e, 22,   // event header: LE Meta, param total = 22
+            0x28, // subevent: LE Periodic Advertising Response Report (40)
+            0x01, // adv_handle
+            0x00, // subevent
+            0x00, // tx_status = Transmitted
+            0x02, // num_responses = 2
+            0x0A, 0xF6, // tx_power [10, -10]
+            0xE2, 0x1E, // rssi [-30, 30]
+            0x00, 0xFF, // cte_type [AoA, NoCte]
+            0x00, 0x01, // response_slot [0, 1]
+            0x00, 0xFF, // data_status [Complete, Failed]
+            0x02, 0x03, // data_length [2, 3]
+            0xBE, 0xEF, // data[0]
+            0xAA, 0xBB, 0xCC, // data[1]
+        ];
+        let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
+        assert!(matches!(event.kind, EventKind::Le));
+
+        let le = LeEventPacket::from_hci_bytes_complete(event.data).unwrap();
+        assert!(matches!(
+            le.kind,
+            crate::event::le::LeEventKind::LePeriodicAdvertisingResponseReport
+        ));
+
+        let Event::Le(LeEvent::LePeriodicAdvertisingResponseReport(e)) = Event::try_from(event).unwrap() else {
+            unreachable!()
+        };
+
+        assert_eq!(e.adv_handle, crate::param::AdvHandle::new(1));
+        assert_eq!(e.subevent, 0);
+        assert_eq!(e.tx_status, crate::param::TxStatus::Transmitted);
+        assert_eq!(e.reports.len(), 2);
+
+        let r0 = e.reports.get(0).unwrap();
+        assert_eq!(r0.tx_power, 10);
+        assert_eq!(r0.rssi, -30);
+        assert_eq!(r0.cte_type, crate::param::CteKind::AoA);
+        assert_eq!(r0.response_slot, 0);
+        assert_eq!(r0.data_status, crate::param::DataStatus::Complete);
+        assert_eq!(r0.data, &[0xBE, 0xEF]);
+
+        let r1 = e.reports.get(1).unwrap();
+        assert_eq!(r1.tx_power, -10);
+        assert_eq!(r1.rssi, 30);
+        assert_eq!(r1.cte_type, crate::param::CteKind::NoCte);
+        assert_eq!(r1.response_slot, 1);
+        assert_eq!(r1.data_status, crate::param::DataStatus::Failed);
+        assert_eq!(r1.data, &[0xAA, 0xBB, 0xCC]);
+
+        assert!(e.reports.get(2).is_none());
+
+        // Test ExactSizeIterator contract
+        let mut iter = e.reports.iter();
+        assert_eq!(iter.len(), 2);
+        assert_eq!(iter.size_hint(), (2, Some(2)));
+        let _ = iter.next();
+        assert_eq!(iter.len(), 1);
+        assert_eq!(iter.size_hint(), (1, Some(1)));
+        let _ = iter.next();
+        assert_eq!(iter.len(), 0);
+        assert!(iter.next().is_none());
+    }
+
+    #[test]
+    fn parse_le_cs_subevent_result() {
+        let data = [
+            0x3e, 27,   // event header: LE Meta, param total = 27
+            0x31, // subevent: LE CS Subevent Result (49)
+            0x01, 0x00, // connection_handle = 1
+            0x00, // config_id = 0
+            0x00, 0x00, // start_acl_conn_event_counter
+            0x00, 0x00, // procedure_counter
+            0xF0, 0x58, // frequency_compensation = -10000 (0.01 ppm units) = -100 ppm
+            0x7F, // reference_power_level = N/A
+            0x00, // procedure_done_status
+            0x00, // subevent_done_status
+            0x00, // abort_reason
+            0x01, // num_antenna_paths = 1
+            0x02, // num_steps_reported = 2
+            0x01, 0x02, // step_mode [1, 2]
+            0x0A, 0x14, // step_channel [10, 20]
+            0x02, 0x03, // step_data_length [2, 3]
+            0xBE, 0xEF, // step_data[0]
+            0xAA, 0xBB, 0xCC, // step_data[1]
+        ];
+        let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
+        assert!(matches!(event.kind, EventKind::Le));
+
+        let le = LeEventPacket::from_hci_bytes_complete(event.data).unwrap();
+        assert!(matches!(le.kind, crate::event::le::LeEventKind::LeCsSubeventResult));
+
+        let Event::Le(LeEvent::LeCsSubeventResult(e)) = Event::try_from(event).unwrap() else {
+            unreachable!()
+        };
+
+        assert_eq!(e.connection_handle, ConnHandle::new(1));
+        assert_eq!(e.config_id, 0);
+        assert_eq!(e.frequency_compensation.as_raw(), 0x58F0);
+        assert!(e.frequency_compensation.is_available());
+        assert_eq!(e.frequency_compensation.as_ppm_x100(), Some(-10000)); // -100 ppm
+        assert_eq!(e.reference_power_level, 0x7F);
+        assert_eq!(e.procedure_done_status, crate::param::DoneStatus::Complete);
+        assert_eq!(e.subevent_done_status, crate::param::DoneStatus::Complete);
+        assert_eq!(
+            e.abort_reason.procedure_reason(),
+            crate::param::ProcedureAbortReason::NoAbort
+        );
+        assert_eq!(
+            e.abort_reason.subevent_reason(),
+            crate::param::SubeventAbortReason::NoAbort
+        );
+        assert_eq!(e.num_antenna_paths, 1);
+        assert_eq!(e.steps.len(), 2);
+
+        let s0 = e.steps.get(0).unwrap();
+        assert_eq!(s0.step_mode, 1);
+        assert_eq!(s0.step_channel, 10);
+        assert_eq!(s0.step_data_length, 2);
+        assert_eq!(s0.step_data, &[0xBE, 0xEF]);
+
+        let s1 = e.steps.get(1).unwrap();
+        assert_eq!(s1.step_mode, 2);
+        assert_eq!(s1.step_channel, 20);
+        assert_eq!(s1.step_data_length, 3);
+        assert_eq!(s1.step_data, &[0xAA, 0xBB, 0xCC]);
+
+        assert!(e.steps.get(2).is_none());
+
+        // Test ExactSizeIterator contract
+        let mut iter = e.steps.iter();
+        assert_eq!(iter.len(), 2);
+        let _ = iter.next();
+        assert_eq!(iter.len(), 1);
+        let _ = iter.next();
+        assert_eq!(iter.len(), 0);
+        assert!(iter.next().is_none());
+    }
+
+    #[test]
+    fn parse_le_utp_receive() {
+        let data = [
+            0x3e, 5,    // event header: LE Meta, param total = 5
+            0x36, // subevent: LE UTP Receive (54)
+            0x03, // utp_data_length = 3
+            0xAA, 0xBB, 0xCC, // utp_data
+        ];
+        let event = EventPacket::from_hci_bytes_complete(&data).unwrap();
+        assert!(matches!(event.kind, EventKind::Le));
+
+        let le = LeEventPacket::from_hci_bytes_complete(event.data).unwrap();
+        assert!(matches!(le.kind, crate::event::le::LeEventKind::LeUtpReceive));
+
+        let Event::Le(LeEvent::LeUtpReceive(e)) = Event::try_from(event).unwrap() else {
+            unreachable!()
+        };
+
+        assert_eq!(e.utp_data, &[0xAA, 0xBB, 0xCC]);
+    }
 }
