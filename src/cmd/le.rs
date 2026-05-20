@@ -265,6 +265,16 @@ cmd! {
 }
 
 cmd! {
+    /// LE Receiver Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d5d30b61-e8be-8fa5-a04b-7d505a74ea9d)
+    LeReceiverTest(LE, 0x001d) {
+        LeReceiverTestParams {
+            rx_frequency: u8,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
     /// LE Remote Connection Parameter Request Reply  [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-31f1114e-a57b-bcff-812f-d68f95bdec2f)
     LeRemoteConnectionParameterRequestReply(LE, 0x0020) {
         LeRemoteConnectionParameterRequestReplyParams {
@@ -314,6 +324,18 @@ cmd! {
     LeReadSupportedStates(LE, 0x001c) {
         Params = ();
         Return = [u8; 8];
+    }
+}
+
+cmd! {
+    /// LE Transmitter Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-15c2cfce-06a0-5da7-5cbb-45c1896cca8d)
+    LeTransmitterTest(LE, 0x001c) {
+        LeTransmitterTestParams {
+            tx_frequency: u8,
+            length_of_test_data: u8,
+            packet_payload: u8,
+        }
+        Return = ();
     }
 }
 
@@ -462,6 +484,31 @@ cmd! {
             rx_phys: PhyMask,
             phy_options: PhyOptions,
         }
+    }
+}
+
+cmd! {
+    /// LE Receiver Test V2 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d5d30b61-e8be-8fa5-a04b-7d505a74ea9d)
+    LeReceiverTestV2(LE, 0x0033) {
+        LeReceiverTestV2Params {
+            rx_frequency: u8,
+            phy: u8,
+            modulation_index: u8,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Transmitter Test V2 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-15c2cfce-06a0-5da7-5cbb-45c1896cca8d)
+    LeTransmitterTestV2(LE, 0x0034) {
+        LeTransmitterTestV2Params {
+            tx_frequency: u8,
+            length_of_test_data: u8,
+            packet_payload: u8,
+            phy: u8,
+        }
+        Return = ();
     }
 }
 
@@ -1056,6 +1103,19 @@ cmd! {
             enable: LePeriodicAdvReceiveEnable,
         }
         Return = ();
+    }
+}
+
+cmd! {
+    /// LE Read Buffer Size command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1446fd8f-af42-e54c-890d-3cc275ed372f)
+    LeReadBufferSizeV2(LE, 0x0060) {
+        Params = ();
+        LeReadBufferSizeV2Return {
+            le_acl_data_packet_length: u16,
+            total_num_le_acl_data_packets: u8,
+            iso_data_packet_length: u16,
+            total_num_iso_data_packets: u16,
+        }
     }
 }
 
