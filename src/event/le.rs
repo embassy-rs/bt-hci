@@ -1,10 +1,11 @@
 //! LE Meta events [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9bfbd351-a103-f197-b85f-ffd9dcc92872)
 
 use crate::param::{
-    AddrKind, AdvHandle, BdAddr, BigHandle, BisConnHandle, ClockAccuracy, ConnHandle, CteKind, DataStatus, Duration,
-    ExtDuration, FrameSpaceInitiator, LeAdvReports, LeConnRole, LeDirectedAdvertisingReportParam, LeExtAdvReports,
-    LeFeatureMask, LeIQSample, LeTxPowerReportingReason, PacketStatus, PhyKind, PhyMask, PowerLevelKind, SpacingTypes,
-    Status, SyncHandle, ZoneEntered,
+    AddrKind, AdvHandle, BdAddr, BigHandle, BisConnHandle, ClockAccuracy, ConnHandle, CteKind, DataStatus, DoneStatus,
+    Duration, ExtDuration, FrameSpaceInitiator, FrequencyCompensation, LeAdvReports, LeConnRole, LeCsSubeventStepData,
+    LeDirectedAdvertisingReportParam, LeExtAdvReports, LeFeatureMask, LeIQSample, LePeriodicAdvertisingResponseReports,
+    LeTxPowerReportingReason, PackedAbortReasons, PacketStatus, PhyKind, PhyMask, PowerLevelKind, SpacingTypes, Status,
+    SyncHandle, TxStatus, ZoneEntered,
 };
 use crate::{FromHciBytes, FromHciBytesError};
 
@@ -465,6 +466,40 @@ le_events! {
         supervision_timeout: Duration<10_000>,
     }
 
+    /// LE Periodic Advertising Response Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7f8dc3f0-80f4-724d-bc78-51d22c615df1)
+    struct LePeriodicAdvertisingResponseReport<'a>(40) {
+        adv_handle: AdvHandle,
+        subevent: u8,
+        tx_status: TxStatus,
+        reports: LePeriodicAdvertisingResponseReports<'a>,
+    }
+
+    /// LE CS Subevent Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fd033d23-c560-45ed-27e6-4a5da97b7ba4)
+    struct LeCsSubeventResult<'a>(49) {
+        connection_handle: ConnHandle,
+        config_id: u8,
+        start_acl_conn_event_counter: u16,
+        procedure_counter: u16,
+        frequency_compensation: FrequencyCompensation,
+        reference_power_level: i8,
+        procedure_done_status: DoneStatus,
+        subevent_done_status: DoneStatus,
+        abort_reason: PackedAbortReasons,
+        num_antenna_paths: u8,
+        steps: LeCsSubeventStepData<'a>,
+    }
+
+    /// LE CS Subevent Result Continue event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4f3f5e64-3080-5a09-bcb1-3ca8d5c42327)
+    struct LeCsSubeventResultContinue<'a>(50) {
+        connection_handle: ConnHandle,
+        config_id: u8,
+        procedure_done_status: DoneStatus,
+        subevent_done_status: DoneStatus,
+        abort_reason: PackedAbortReasons,
+        num_antenna_paths: u8,
+        steps: LeCsSubeventStepData<'a>,
+    }
+
     /// LE Frame Space Update Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5ccb539a-6dd4-cd68-a9e1-1600f3868f29)
     struct LeFrameSpaceUpdateComplete(53) {
         status: Status,
@@ -475,6 +510,10 @@ le_events! {
         spacing_types: SpacingTypes,
     }
 
+    /// LE UTP Receive event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0fb41a62-3180-485f-92b9-1701c900dd00)
+    struct LeUtpReceive<'a>(54) {
+        utp_data: &'a [u8],
+    }
 
     /// LE Connection Rate Change event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2c599471-bc69-6495-ccfa-56be30d10311)
     struct LeConnectionRateChange(55) {

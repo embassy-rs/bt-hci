@@ -415,6 +415,7 @@ param! {
         AoA = 0,
         AoD1Us = 1,
         AoD2Us = 2,
+        NoCte = 0xff,
     }
 }
 
@@ -515,6 +516,7 @@ param! {
         #[default]
         Complete = 0,
         Incomplete = 1,
+        Failed = 0xff,
     }
 }
 
@@ -526,6 +528,15 @@ param! {
         CrcIncorrectUsedLength = 1,
         CrcIncorrectUsedOther = 2,
         InsufficientResources = 0xff,
+    }
+}
+
+param! {
+    #[derive(Default)]
+    enum TxStatus {
+        #[default]
+        Transmitted = 0,
+        NotTransmitted = 1,
     }
 }
 
@@ -896,6 +907,377 @@ impl<'a, 'b: 'a> WriteHci for &'a [LePeriodicAdvSubeventData<'b>] {
     }
 }
 
+#[allow(missing_docs)]
+fn read_n<T: ByteAlignedValue>(data: &[u8], n: usize) -> Result<(&[T], &[u8]), FromHciBytesError> {
+    let size = n * core::mem::size_of::<T>();
+    if data.len() < size {
+        return Err(FromHciBytesError::InvalidSize);
+    }
+    let (bytes, rest) = data.split_at(size);
+    let slice = unsafe { core::slice::from_raw_parts(bytes.as_ptr() as *const T, n) };
+    Ok((slice, rest))
+}
+
+param! {
+    struct LePeriodicAdvertisingResponseReport<'a> {
+        tx_power: i8,
+        rssi: i8,
+        cte_type: CteKind,
+        response_slot: u8,
+        data_status: DataStatus,
+        data_length: u8,
+        data: &'a [u8],
+    }
+}
+
+/// Container for periodic advertising response report data.
+#[derive(Debug, Clone, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LePeriodicAdvertisingResponseReports<'a> {
+    num_responses: u8,
+    tx_power: &'a [i8],
+    rssi: &'a [i8],
+    cte_type: &'a [CteKind],
+    response_slot: &'a [u8],
+    data_status: &'a [DataStatus],
+    data_length: &'a [u8],
+    data: &'a [u8],
+}
+
+impl<'a> LePeriodicAdvertisingResponseReports<'a> {
+    /// Returns `true` if there are no responses.
+    pub fn is_empty(&self) -> bool {
+        self.num_responses == 0
+    }
+
+    /// Returns the number of responses.
+    pub fn len(&self) -> usize {
+        usize::from(self.num_responses)
+    }
+
+    /// Returns the response entry at the given index, or `None` if out of bounds.
+    pub fn get(&self, index: usize) -> Option<LePeriodicAdvertisingResponseReport<'a>> {
+        if index >= self.len() {
+            return None;
+        }
+        let data_offset: usize = self.data_length[..index].iter().map(|&l| l as usize).sum();
+        let data_len = self.data_length[index] as usize;
+        Some(LePeriodicAdvertisingResponseReport {
+            tx_power: self.tx_power[index],
+            rssi: self.rssi[index],
+            cte_type: self.cte_type[index],
+            response_slot: self.response_slot[index],
+            data_status: self.data_status[index],
+            data_length: self.data_length[index],
+            data: &self.data[data_offset..data_offset + data_len],
+        })
+    }
+
+    /// Returns an iterator over all response entries.
+    pub fn iter(&self) -> LePeriodicAdvertisingResponseReportsIter<'_> {
+        LePeriodicAdvertisingResponseReportsIter {
+            reports: self,
+            index: 0,
+        }
+    }
+}
+
+impl<'de> FromHciBytes<'de> for LePeriodicAdvertisingResponseReports<'de> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        let (num_responses, data) = u8::from_hci_bytes(data)?;
+        let n = num_responses as usize;
+
+        let (tx_power, data) = read_n::<i8>(data, n)?;
+        let (rssi, data) = read_n::<i8>(data, n)?;
+        let (cte_type, data) = read_n::<CteKind>(data, n)?;
+        let (response_slot, data) = read_n::<u8>(data, n)?;
+        let (data_status, data) = read_n::<DataStatus>(data, n)?;
+        let (data_length, data) = read_n::<u8>(data, n)?;
+
+        Ok((
+            Self {
+                num_responses,
+                tx_power,
+                rssi,
+                cte_type,
+                response_slot,
+                data_status,
+                data_length,
+                data,
+            },
+            &[],
+        ))
+    }
+}
+
+/// An iterator over the LePeriodicAdvertisingResponse reports.
+pub struct LePeriodicAdvertisingResponseReportsIter<'a> {
+    reports: &'a LePeriodicAdvertisingResponseReports<'a>,
+    index: usize,
+}
+
+impl<'a> Iterator for LePeriodicAdvertisingResponseReportsIter<'a> {
+    type Item = LePeriodicAdvertisingResponseReport<'a>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let entry = self.reports.get(self.index)?;
+        self.index += 1;
+        Some(entry)
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let remaining = self.reports.len() - self.index;
+        (remaining, Some(remaining))
+    }
+}
+
+impl ExactSizeIterator for LePeriodicAdvertisingResponseReportsIter<'_> {
+    fn len(&self) -> usize {
+        self.reports.len() - self.index
+    }
+}
+
+impl FusedIterator for LePeriodicAdvertisingResponseReportsIter<'_> {}
+
+param! {
+    struct LeCsSubeventStepEntry<'a> {
+        step_mode: u8,
+        step_channel: u8,
+        step_data_length: u8,
+        step_data: &'a [u8],
+    }
+}
+
+/// Container for CS subevent step data.
+///
+/// Parses the column-major wire format:
+/// `num_steps_reported | step_mode[] | step_channel[] | step_data_length[] | step_data[]`
+///
+/// Entries are accessed via [`get`](LeCsSubeventStepData::get)
+/// or [`iter`](LeCsSubeventStepData::iter).
+#[derive(Debug, Clone, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeCsSubeventStepData<'a> {
+    num_steps_reported: u8,
+    step_mode: &'a [u8],
+    step_channel: &'a [u8],
+    step_data_length: &'a [u8],
+    step_data: &'a [u8],
+}
+
+impl<'a> LeCsSubeventStepData<'a> {
+    /// Returns `true` if there are no steps.
+    pub fn is_empty(&self) -> bool {
+        self.num_steps_reported == 0
+    }
+
+    /// Returns the number of steps.
+    pub fn len(&self) -> usize {
+        usize::from(self.num_steps_reported)
+    }
+
+    /// Returns the step entry at the given index, or `None` if out of bounds.
+    pub fn get(&self, index: usize) -> Option<LeCsSubeventStepEntry<'a>> {
+        if index >= self.len() {
+            return None;
+        }
+        let data_offset: usize = self.step_data_length[..index].iter().map(|&l| l as usize).sum();
+        let data_len = self.step_data_length[index] as usize;
+        Some(LeCsSubeventStepEntry {
+            step_mode: self.step_mode[index],
+            step_channel: self.step_channel[index],
+            step_data_length: self.step_data_length[index],
+            step_data: &self.step_data[data_offset..data_offset + data_len],
+        })
+    }
+
+    /// Returns an iterator over all step entries.
+    pub fn iter(&self) -> LeCsSubeventStepDataIter<'_> {
+        LeCsSubeventStepDataIter { data: self, index: 0 }
+    }
+}
+
+impl<'de> FromHciBytes<'de> for LeCsSubeventStepData<'de> {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        let (num_steps_reported, data) = u8::from_hci_bytes(data)?;
+        let n = num_steps_reported as usize;
+
+        let (step_mode, data) = read_n::<u8>(data, n)?;
+        let (step_channel, data) = read_n::<u8>(data, n)?;
+        let (step_data_length, data) = read_n::<u8>(data, n)?;
+
+        Ok((
+            Self {
+                num_steps_reported,
+                step_mode,
+                step_channel,
+                step_data_length,
+                step_data: data,
+            },
+            &[],
+        ))
+    }
+}
+
+/// An iterator over LeCsSubeventStepEntry values.
+pub struct LeCsSubeventStepDataIter<'a> {
+    data: &'a LeCsSubeventStepData<'a>,
+    index: usize,
+}
+
+impl<'a> Iterator for LeCsSubeventStepDataIter<'a> {
+    type Item = LeCsSubeventStepEntry<'a>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let entry = self.data.get(self.index)?;
+        self.index += 1;
+        Some(entry)
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let remaining = self.data.len() - self.index;
+        (remaining, Some(remaining))
+    }
+}
+
+impl ExactSizeIterator for LeCsSubeventStepDataIter<'_> {
+    fn len(&self) -> usize {
+        self.data.len() - self.index
+    }
+}
+
+impl FusedIterator for LeCsSubeventStepDataIter<'_> {}
+
+param! {
+    #[derive(Default)]
+    enum DoneStatus {
+        #[default]
+        Complete = 0,
+        Partial = 1,
+        Aborted = 0xf,
+    }
+}
+
+/// Procedure abort reason.
+#[repr(u8)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum ProcedureAbortReason {
+    #[default]
+    /// Report with no abort.
+    NoAbort = 0x0,
+    /// Abort because of local Host or remote request.
+    HostRequest = 0x1,
+    /// Abort because filtered channel map has less than 15 channels.
+    FilteredChannelMap = 0x2,
+    /// Abort because the channel map update instant has passed.
+    ChannelMapInstantPassed = 0x3,
+    /// Abort because of unspecified reasons.
+    Unspecified = 0xf,
+}
+
+impl From<u8> for ProcedureAbortReason {
+    fn from(v: u8) -> Self {
+        match v {
+            0x0 => Self::NoAbort,
+            0x1 => Self::HostRequest,
+            0x2 => Self::FilteredChannelMap,
+            0x3 => Self::ChannelMapInstantPassed,
+            _ => Self::Unspecified,
+        }
+    }
+}
+
+/// Subevent abort reason.
+#[repr(u8)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum SubeventAbortReason {
+    #[default]
+    /// Report with no abort.
+    NoAbort = 0x0,
+    /// Abort because of local Host or remote request.
+    HostRequest = 0x1,
+    /// Abort because no CS_SYNC (mode-0) received.
+    NoCsSync = 0x2,
+    /// Abort because of scheduling conflicts or limited resources.
+    SchedulingConflict = 0x3,
+    /// Abort because of unspecified reasons.
+    Unspecified = 0xf,
+}
+
+impl From<u8> for SubeventAbortReason {
+    fn from(v: u8) -> Self {
+        match v {
+            0x0 => Self::NoAbort,
+            0x1 => Self::HostRequest,
+            0x2 => Self::NoCsSync,
+            0x3 => Self::SchedulingConflict,
+            _ => Self::Unspecified,
+        }
+    }
+}
+
+/// Abort reason for CS subevent result, packed as two 4-bit nibbles.
+///
+/// Bits 0-3: procedure abort reason ([`ProcedureAbortReason`])
+/// Bits 4-7: subevent abort reason ([`SubeventAbortReason`])
+#[repr(transparent)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct PackedAbortReasons(u8);
+
+impl PackedAbortReasons {
+    /// Returns the procedure-level abort reason.
+    pub fn procedure_reason(&self) -> ProcedureAbortReason {
+        ProcedureAbortReason::from(self.0 & 0x0f)
+    }
+
+    /// Returns the subevent-level abort reason.
+    pub fn subevent_reason(&self) -> SubeventAbortReason {
+        SubeventAbortReason::from((self.0 >> 4) & 0x0f)
+    }
+}
+
+unsafe impl FixedSizeValue for PackedAbortReasons {
+    fn is_valid(_data: &[u8]) -> bool {
+        true
+    }
+}
+
+/// Frequency compensation value in units of 0.01 ppm.
+#[repr(transparent)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct FrequencyCompensation(u16);
+
+impl FrequencyCompensation {
+    /// Returns the raw 16-bit value.
+    pub fn as_raw(&self) -> u16 {
+        self.0
+    }
+
+    /// Returns `true` if the value is available.
+    pub fn is_available(&self) -> bool {
+        self.0 != 0xC000
+    }
+
+    /// Returns the frequency compensation in 0.01 ppm units, or `None` if not available.
+    pub fn as_ppm_x100(&self) -> Option<i16> {
+        if !self.is_available() {
+            return None;
+        }
+        let val = self.0 & 0x7FFF;
+        Some(((val << 1) as i16) >> 1)
+    }
+}
+
+unsafe impl FixedSizeValue for FrequencyCompensation {
+    fn is_valid(_data: &[u8]) -> bool {
+        true
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -922,5 +1304,29 @@ mod tests {
         for chan in 37..40 {
             assert!(m.is_channel_bad(chan));
         }
+    }
+
+    #[test]
+    fn test_frequency_compensation_positive() {
+        let fc = FrequencyCompensation(0x2710);
+        assert!(fc.is_available());
+        assert_eq!(fc.as_ppm_x100(), Some(10000));
+        assert_eq!(fc.as_raw(), 0x2710);
+    }
+
+    #[test]
+    fn test_frequency_compensation_negative() {
+        let fc = FrequencyCompensation(0x58F0);
+        assert!(fc.is_available());
+        assert_eq!(fc.as_ppm_x100(), Some(-10000));
+        assert_eq!(fc.as_raw(), 0x58F0);
+    }
+
+    #[test]
+    fn test_frequency_compensation_not_available() {
+        let fc = FrequencyCompensation(0xC000);
+        assert!(!fc.is_available());
+        assert_eq!(fc.as_ppm_x100(), None);
+        assert_eq!(fc.as_raw(), 0xC000);
     }
 }
