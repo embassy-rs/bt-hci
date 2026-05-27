@@ -3,6 +3,7 @@
 use core::cell::RefCell;
 use core::future::{poll_fn, Future};
 use core::mem::MaybeUninit;
+use core::slice;
 use core::task::Poll;
 
 use cmd::controller_baseband::Reset;
@@ -22,6 +23,12 @@ pub mod blocking;
 
 /// Trait representing a HCI controller which supports async operations.
 pub trait Controller: ErrorType {
+    /// Type of the buffer
+    type Buffer<'a>;
+
+    /// Allocate a buffer
+    fn alloc_buf(&self) -> Result<Self::Buffer<'_>, Self::Error>;
+
     /// Write ACL data to the controller.
     fn write_acl_data(&self, packet: &data::AclPacket) -> impl Future<Output = Result<(), Self::Error>>;
     /// Write Sync data to the controller.
@@ -30,7 +37,10 @@ pub trait Controller: ErrorType {
     fn write_iso_data(&self, packet: &data::IsoPacket) -> impl Future<Output = Result<(), Self::Error>>;
 
     /// Read a valid HCI packet from the controller.
-    fn read<'a>(&self, buf: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
+    fn read<'a>(
+        &self,
+        buf: &'a mut Self::Buffer<'_>,
+    ) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>>;
 }
 
 /// Marker trait for declaring that a controller supports a given HCI command.
@@ -79,6 +89,13 @@ where
     T: Transport,
     T::Error: From<FromHciBytesError>,
 {
+    type Buffer<'a> = [u8; 259];
+
+    #[inline]
+    fn alloc_buf(&self) -> Result<Self::Buffer<'_>, Self::Error> {
+        Ok([0u8; 259])
+    }
+
     async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
         self.transport.write(packet).await?;
         Ok(())
@@ -94,11 +111,11 @@ where
         Ok(())
     }
 
-    async fn read<'a>(&self, buf: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, Self::Error> {
+    async fn read<'a>(&self, buf: &'a mut Self::Buffer<'_>) -> Result<ControllerToHostPacket<'a>, Self::Error> {
         loop {
             {
                 // Safety: we will not hold references across loop iterations.
-                let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
+                let buf = unsafe { slice::from_raw_parts_mut(buf as *mut u8, buf.len()) };
                 let value = self.transport.read(&mut buf[..]).await?;
                 match value {
                     ControllerToHostPacket::Event(ref event) => match event.kind {
@@ -136,6 +153,13 @@ where
     T: crate::transport::blocking::Transport,
     T::Error: From<FromHciBytesError>,
 {
+    type Buffer<'a> = [u8; 259];
+
+    #[inline]
+    fn alloc_buf(&self) -> Result<Self::Buffer<'_>, Self::Error> {
+        Ok([0u8; 259])
+    }
+
     fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
         loop {
             match self.try_write_acl_data(packet) {
@@ -166,10 +190,10 @@ where
         }
     }
 
-    fn read<'a>(&self, buf: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, Self::Error> {
+    fn read<'a>(&self, buf: &'a mut Self::Buffer<'_>) -> Result<ControllerToHostPacket<'a>, Self::Error> {
         loop {
             // Safety: we will not hold references across loop iterations.
-            let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
+            let buf = unsafe { &mut *(buf as *mut _) };
             match self.try_read(buf) {
                 Err(blocking::TryError::Busy) => {}
                 Err(blocking::TryError::Error(e)) => return Err(e),
@@ -193,11 +217,14 @@ where
         Ok(())
     }
 
-    fn try_read<'a>(&self, buf: &'a mut [u8]) -> Result<ControllerToHostPacket<'a>, blocking::TryError<Self::Error>> {
+    fn try_read<'a>(
+        &self,
+        buf: &'a mut Self::Buffer<'_>,
+    ) -> Result<ControllerToHostPacket<'a>, blocking::TryError<Self::Error>> {
         loop {
             {
                 // Safety: we will not hold references across loop iterations.
-                let buf = unsafe { core::slice::from_raw_parts_mut(buf.as_mut_ptr(), buf.len()) };
+                let buf = unsafe { slice::from_raw_parts_mut(buf as *mut u8, buf.len()) };
                 let value = self.transport.read(&mut buf[..])?;
                 match value {
                     ControllerToHostPacket::Event(ref event) => match event.kind {
@@ -480,8 +507,8 @@ mod tests {
         };
         let c: ExternalController<_, 10> = ExternalController::new(t);
 
-        let mut rx = [0; 255];
-        let pkt = c.read(&mut rx).await;
+        let mut buf = c.alloc_buf().unwrap();
+        let pkt = c.read(&mut buf).await;
         assert!(pkt.is_ok());
     }
 }
