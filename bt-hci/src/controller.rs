@@ -1,11 +1,13 @@
 //! HCI controller
 
 use core::cell::RefCell;
+use core::convert::Infallible;
 use core::future::{poll_fn, Future};
 use core::mem::MaybeUninit;
 use core::slice;
 use core::task::Poll;
 
+use bt_hci_driver::ReadHciError;
 use cmd::controller_baseband::Reset;
 use embassy_sync::blocking_mutex::raw::NoopRawMutex;
 use embassy_sync::signal::Signal;
@@ -16,8 +18,8 @@ use futures_intrusive::sync::LocalSemaphore;
 use crate::cmd::{Cmd, CmdReturnBuf};
 use crate::event::{CommandComplete, CommandCompleteWithStatus, CommandStatus, EventKind};
 use crate::param::{RemainingBytes, Status};
-use crate::transport::Transport;
-use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes, FromHciBytesError};
+use crate::transport::{Transport, WithIndicator};
+use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes};
 
 pub mod blocking;
 
@@ -87,7 +89,7 @@ where
 impl<T, const SLOTS: usize> Controller for ExternalController<T, SLOTS>
 where
     T: Transport,
-    T::Error: From<FromHciBytesError>,
+    T::Error: From<ReadHciError<Infallible>>,
 {
     type Buffer<'a> = [u8; 259];
 
@@ -97,17 +99,17 @@ where
     }
 
     async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
-        self.transport.write(packet).await?;
+        self.transport.write(&WithIndicator(packet)).await?;
         Ok(())
     }
 
     async fn write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), Self::Error> {
-        self.transport.write(packet).await?;
+        self.transport.write(&WithIndicator(packet)).await?;
         Ok(())
     }
 
     async fn write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), Self::Error> {
-        self.transport.write(packet).await?;
+        self.transport.write(&WithIndicator(packet)).await?;
         Ok(())
     }
 
@@ -120,11 +122,11 @@ where
                 match value {
                     ControllerToHostPacket::Event(ref event) => match event.kind {
                         EventKind::CommandComplete => {
-                            let e = CommandComplete::from_hci_bytes_complete(event.data)?;
+                            let e = CommandComplete::from_hci_bytes_complete(event.data).map_err(ReadHciError::from)?;
                             if !e.has_status() {
                                 return Ok(value);
                             }
-                            let e: CommandCompleteWithStatus = e.try_into()?;
+                            let e: CommandCompleteWithStatus = e.try_into().map_err(ReadHciError::from)?;
                             self.slots.complete(
                                 e.cmd_opcode,
                                 e.status,
@@ -134,7 +136,7 @@ where
                             continue;
                         }
                         EventKind::CommandStatus => {
-                            let e = CommandStatus::from_hci_bytes_complete(event.data)?;
+                            let e = CommandStatus::from_hci_bytes_complete(event.data).map_err(ReadHciError::from)?;
                             self.slots
                                 .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
                             continue;
@@ -151,7 +153,7 @@ where
 impl<T, const SLOTS: usize> blocking::Controller for ExternalController<T, SLOTS>
 where
     T: crate::transport::blocking::Transport,
-    T::Error: From<FromHciBytesError>,
+    T::Error: From<ReadHciError<Infallible>>,
 {
     type Buffer<'a> = [u8; 259];
 
@@ -203,17 +205,17 @@ where
     }
 
     fn try_write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
-        self.transport.write(packet)?;
+        self.transport.write(&WithIndicator(packet))?;
         Ok(())
     }
 
     fn try_write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
-        self.transport.write(packet)?;
+        self.transport.write(&WithIndicator(packet))?;
         Ok(())
     }
 
     fn try_write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
-        self.transport.write(packet)?;
+        self.transport.write(&WithIndicator(packet))?;
         Ok(())
     }
 
@@ -229,11 +231,11 @@ where
                 match value {
                     ControllerToHostPacket::Event(ref event) => match event.kind {
                         EventKind::CommandComplete => {
-                            let e = CommandComplete::from_hci_bytes_complete(event.data)?;
+                            let e = CommandComplete::from_hci_bytes_complete(event.data).map_err(ReadHciError::from)?;
                             if !e.has_status() {
                                 return Ok(value);
                             }
-                            let e: CommandCompleteWithStatus = e.try_into()?;
+                            let e: CommandCompleteWithStatus = e.try_into().map_err(ReadHciError::from)?;
                             self.slots.complete(
                                 e.cmd_opcode,
                                 e.status,
@@ -243,7 +245,7 @@ where
                             continue;
                         }
                         EventKind::CommandStatus => {
-                            let e = CommandStatus::from_hci_bytes_complete(event.data)?;
+                            let e = CommandStatus::from_hci_bytes_complete(event.data).map_err(ReadHciError::from)?;
                             self.slots
                                 .complete(e.cmd_opcode, e.status, e.num_hci_cmd_pkts as usize, &[]);
                             continue;
@@ -262,7 +264,7 @@ where
     T: Transport,
     C: cmd::SyncCmd,
     C::Return: FixedSizeValue,
-    T::Error: From<FromHciBytesError>,
+    T::Error: From<ReadHciError<Infallible>>,
 {
     async fn exec(&self, cmd: &C) -> Result<C::Return, cmd::Error<Self::Error>> {
         let mut retval: C::ReturnBuf = C::ReturnBuf::new();
@@ -273,7 +275,10 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.transport.write(cmd).await.map_err(cmd::Error::Io)?;
+        self.transport
+            .write(&WithIndicator(cmd))
+            .await
+            .map_err(cmd::Error::Io)?;
 
         let result = slot.wait().await;
         let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
@@ -293,7 +298,7 @@ impl<T, C, const SLOTS: usize> ControllerCmdAsync<C> for ExternalController<T, S
 where
     T: Transport,
     C: cmd::AsyncCmd,
-    T::Error: From<FromHciBytesError>,
+    T::Error: for<'a> From<ReadHciError<Infallible>>,
 {
     async fn exec(&self, cmd: &C) -> Result<(), cmd::Error<Self::Error>> {
         let (slot, idx) = self.slots.acquire(C::OPCODE, &mut []).await;
@@ -301,7 +306,10 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.transport.write(cmd).await.map_err(cmd::Error::Io)?;
+        self.transport
+            .write(&WithIndicator(cmd))
+            .await
+            .map_err(cmd::Error::Io)?;
 
         let result = slot.wait().await;
         result.status.to_result()?;
@@ -450,6 +458,8 @@ impl<F: FnOnce()> Drop for OnDrop<F> {
 
 #[cfg(test)]
 mod tests {
+    use bt_hci_driver::{PacketToController, PacketToHost};
+
     use super::*;
 
     pub struct TestTransport<'d> {
@@ -467,8 +477,8 @@ mod tests {
 
     impl core::error::Error for Error {}
 
-    impl From<FromHciBytesError> for Error {
-        fn from(_: FromHciBytesError) -> Self {
+    impl From<ReadHciError<Infallible>> for Error {
+        fn from(_: ReadHciError<Infallible>) -> Self {
             Self
         }
     }
@@ -482,17 +492,19 @@ mod tests {
         }
     }
     impl Transport for TestTransport<'_> {
-        fn read<'a>(&self, rx: &'a mut [u8]) -> impl Future<Output = Result<ControllerToHostPacket<'a>, Self::Error>> {
+        fn read<'a, P: PacketToHost<'a>>(&self, rx: &'a mut [u8]) -> impl Future<Output = Result<P, Self::Error>> {
             async {
                 let to_read = rx.len().min(self.rx.len());
-
-                rx[..to_read].copy_from_slice(&self.rx[..to_read]);
-                let pkt = ControllerToHostPacket::from_hci_bytes_complete(&rx[..to_read])?;
+                let mut reader = &self.rx[..to_read];
+                let pkt = P::read_hci(&mut reader, rx).map_err(|_| Error)?;
+                if !reader.is_empty() {
+                    return Err(Error);
+                }
                 Ok(pkt)
             }
         }
 
-        fn write<T: crate::HostToControllerPacket>(&self, _val: &T) -> impl Future<Output = Result<(), Self::Error>> {
+        fn write<T: PacketToController>(&self, _val: &T) -> impl Future<Output = Result<(), Self::Error>> {
             async { todo!() }
         }
     }

@@ -1,6 +1,6 @@
 //! Blocking controller types and traits.
 use crate::controller::ErrorType;
-use crate::{data, ControllerToHostPacket, FromHciBytesError};
+use crate::{data, ControllerToHostPacket};
 
 /// Trait representing a HCI controller which supports blocking and non-blocking operations.
 pub trait Controller: ErrorType {
@@ -43,19 +43,4 @@ pub trait Controller: ErrorType {
     fn try_read<'a>(&self, buf: &'a mut Self::Buffer<'_>) -> Result<ControllerToHostPacket<'a>, TryError<Self::Error>>;
 }
 
-/// Error for representing an operation that blocks or fails
-/// with an error.
-#[derive(Debug)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum TryError<E> {
-    /// Underlying controller error.
-    Error(E),
-    /// Operation would block.
-    Busy,
-}
-
-impl<E: From<FromHciBytesError>> From<FromHciBytesError> for TryError<E> {
-    fn from(value: FromHciBytesError) -> Self {
-        TryError::Error(E::from(value))
-    }
-}
+pub use bt_hci_driver::blocking::TryError;

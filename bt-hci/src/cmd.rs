@@ -93,7 +93,7 @@ impl<E> From<param::Error> for Error<E> {
 }
 
 /// An object representing an HCI Command
-pub trait Cmd: WriteHci {
+pub trait Cmd: WriteHci + HostToControllerPacket {
     /// The opcode identifying this kind of HCI Command
     const OPCODE: Opcode;
 

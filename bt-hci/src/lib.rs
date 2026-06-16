@@ -4,6 +4,8 @@
 
 use core::future::Future;
 
+use bt_hci_driver::blocking::TryError;
+use bt_hci_driver::PacketToHost;
 use embedded_io::ReadExactError;
 
 mod fmt;
@@ -14,6 +16,7 @@ pub mod data;
 pub mod event;
 pub mod param;
 pub mod transport;
+pub use bt_hci_driver::ReadHciError;
 pub use btuuid as uuid;
 
 /// Errors from parsing HCI data.
@@ -24,6 +27,21 @@ pub enum FromHciBytesError {
     InvalidSize,
     /// Value of input did not match valid values.
     InvalidValue,
+}
+
+impl<E: From<FromHciBytesError>> From<FromHciBytesError> for TryError<E> {
+    fn from(value: FromHciBytesError) -> Self {
+        TryError::Error(E::from(value))
+    }
+}
+
+impl<E: embedded_io::Error> From<FromHciBytesError> for ReadHciError<E> {
+    fn from(value: FromHciBytesError) -> Self {
+        match value {
+            FromHciBytesError::InvalidSize => ReadHciError::Read(ReadExactError::UnexpectedEof),
+            FromHciBytesError::InvalidValue => ReadHciError::InvalidValue,
+        }
+    }
 }
 
 /// A HCI type which can be represented as bytes.
@@ -48,48 +66,37 @@ pub trait FromHciBytes<'de>: Sized {
     }
 }
 
-/// Errors from reading HCI data.
+/// Enum of valid HCI packet types.
+#[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum ReadHciError<E: embedded_io::Error> {
-    /// Not enough bytes in buffer for reading.
-    BufferTooSmall,
-    /// Value of input did not match valid values.
-    InvalidValue,
-    /// Error from underlying embedded-io type.
-    Read(ReadExactError<E>),
+pub enum PacketKind {
+    /// Command.
+    Cmd = 1,
+    /// ACL data.
+    AclData = 2,
+    /// Sync data.
+    SyncData = 3,
+    /// Event.
+    Event = 4,
+    /// Isochronous Data.
+    IsoData = 5,
 }
 
-impl<E: embedded_io::Error> core::fmt::Display for ReadHciError<E> {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-impl<E: embedded_io::Error> core::error::Error for ReadHciError<E> {}
-
-impl<E: embedded_io::Error> embedded_io::Error for ReadHciError<E> {
-    fn kind(&self) -> embedded_io::ErrorKind {
-        match self {
-            Self::BufferTooSmall => embedded_io::ErrorKind::OutOfMemory,
-            Self::InvalidValue => embedded_io::ErrorKind::InvalidInput,
-            Self::Read(ReadExactError::Other(e)) => e.kind(),
-            Self::Read(ReadExactError::UnexpectedEof) => embedded_io::ErrorKind::BrokenPipe,
-        }
-    }
-}
-
-impl<E: embedded_io::Error> From<ReadExactError<E>> for ReadHciError<E> {
-    fn from(value: ReadExactError<E>) -> Self {
-        ReadHciError::Read(value)
-    }
-}
-
-impl<E: embedded_io::Error> From<FromHciBytesError> for ReadHciError<E> {
-    fn from(value: FromHciBytesError) -> Self {
-        match value {
-            FromHciBytesError::InvalidSize => ReadHciError::Read(ReadExactError::UnexpectedEof),
-            FromHciBytesError::InvalidValue => ReadHciError::InvalidValue,
+impl<'de> FromHciBytes<'de> for PacketKind {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        if data.is_empty() {
+            Err(FromHciBytesError::InvalidSize)
+        } else {
+            let (data, rest) = data.split_at(1);
+            match data[0] {
+                1 => Ok((PacketKind::Cmd, rest)),
+                2 => Ok((PacketKind::AclData, rest)),
+                3 => Ok((PacketKind::SyncData, rest)),
+                4 => Ok((PacketKind::Event, rest)),
+                5 => Ok((PacketKind::IsoData, rest)),
+                _ => Err(FromHciBytesError::InvalidValue),
+            }
         }
     }
 }
@@ -249,58 +256,6 @@ impl<T: FixedSizeValue> WriteHci for T {
     }
 }
 
-/// Enum of valid HCI packet types.
-#[repr(u8)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum PacketKind {
-    /// Command.
-    Cmd = 1,
-    /// ACL data.
-    AclData = 2,
-    /// Sync data.
-    SyncData = 3,
-    /// Event.
-    Event = 4,
-    /// Isochronous Data.
-    IsoData = 5,
-}
-
-impl<'de> FromHciBytes<'de> for PacketKind {
-    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        if data.is_empty() {
-            Err(FromHciBytesError::InvalidSize)
-        } else {
-            let (data, rest) = data.split_at(1);
-            match data[0] {
-                1 => Ok((PacketKind::Cmd, rest)),
-                2 => Ok((PacketKind::AclData, rest)),
-                3 => Ok((PacketKind::SyncData, rest)),
-                4 => Ok((PacketKind::Event, rest)),
-                5 => Ok((PacketKind::IsoData, rest)),
-                _ => Err(FromHciBytesError::InvalidValue),
-            }
-        }
-    }
-}
-
-impl WriteHci for PacketKind {
-    #[inline(always)]
-    fn size(&self) -> usize {
-        1
-    }
-
-    #[inline(always)]
-    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&(*self as u8).to_le_bytes())
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&(*self as u8).to_le_bytes()).await
-    }
-}
-
 /// Type representing valid deserialized HCI packets.
 #[derive(Debug)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -371,6 +326,35 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
 
     async fn read_hci_async<R: embedded_io_async::Read>(
         mut reader: R,
+        buf: &'de mut [u8],
+    ) -> Result<Self, ReadHciError<R::Error>> {
+        let mut kind = [0u8];
+        reader.read_exact(&mut kind).await?;
+        match PacketKind::from_hci_bytes(&kind)?.0 {
+            PacketKind::Cmd => Err(ReadHciError::InvalidValue),
+            PacketKind::AclData => data::AclPacket::read_hci_async(reader, buf).await.map(Self::Acl),
+            PacketKind::SyncData => data::SyncPacket::read_hci_async(reader, buf).await.map(Self::Sync),
+            PacketKind::Event => event::EventPacket::read_hci_async(reader, buf).await.map(Self::Event),
+            PacketKind::IsoData => data::IsoPacket::read_hci_async(reader, buf).await.map(Self::Iso),
+        }
+    }
+}
+
+impl<'de> PacketToHost<'de> for ControllerToHostPacket<'de> {
+    fn read_hci<R: embedded_io::Read>(reader: &mut R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
+        let mut kind = [0];
+        reader.read_exact(&mut kind)?;
+        match PacketKind::from_hci_bytes(&kind)?.0 {
+            PacketKind::Cmd => Err(ReadHciError::InvalidValue),
+            PacketKind::AclData => data::AclPacket::read_hci(reader, buf).map(Self::Acl),
+            PacketKind::SyncData => data::SyncPacket::read_hci(reader, buf).map(Self::Sync),
+            PacketKind::Event => event::EventPacket::read_hci(reader, buf).map(Self::Event),
+            PacketKind::IsoData => data::IsoPacket::read_hci(reader, buf).map(Self::Iso),
+        }
+    }
+
+    async fn read_hci_async<R: embedded_io_async::Read>(
+        reader: &mut R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
         let mut kind = [0u8];

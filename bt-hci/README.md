@@ -11,10 +11,6 @@ Rust types for the Bluetooth HCI (Host Controller Interface) specification, and 
 
 See [Trouble](https://github.com/embassy-rs/trouble) for an example of using this crate.
 
-# bt-hci-driver
-
-Transport trait that can be implemented to easily opt-in into using the `bt-hci` crate.
-
 ## Bluetooth UUIDs
 
 The bluetooth specification includes [reference information](https://bitbucket.org/bluetooth-SIG/public/src/main/) for pre-defined UUIDs that can be used to communicate specific services, characteristics, properties, etc of a device.  These are also made available as constants from this crate through the [uuid module](./src/uuid/) for users of this crate.
