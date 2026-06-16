@@ -8,10 +8,6 @@ use crate::controller::{ControllerCmdAsync, ControllerCmdSync};
 use crate::{param, FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
 
 pub mod controller_baseband;
-pub mod info;
-pub mod le;
-pub mod link_control;
-pub mod status;
 
 /// The 6-bit Opcode Group Field (OGF)
 ///

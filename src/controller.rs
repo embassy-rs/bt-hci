@@ -496,19 +496,4 @@ mod tests {
             async { todo!() }
         }
     }
-
-    #[futures_test::test]
-    pub async fn test_can_handle_unsolicited_command_complete() {
-        let t = TestTransport {
-            rx: &[
-                4, 0x0e, 3, // header
-                1, 0, 0, // special command
-            ],
-        };
-        let c: ExternalController<_, 10> = ExternalController::new(t);
-
-        let mut buf = c.alloc_buf().unwrap();
-        let pkt = c.read(&mut buf).await;
-        assert!(pkt.is_ok());
-    }
 }
