@@ -154,3 +154,25 @@ impl<E: embedded_io::Error> From<ReadExactError<E>> for ReadHciError<E> {
         ReadHciError::Read(value)
     }
 }
+
+/// Wrapper for a [`PacketToController`] type that will write the [`PacketKind`](crate::PacketKind) indicator byte before the packet itself
+/// when serialized with [`PacketToController`] by the [`Transport`] implementation.
+///
+/// This is used for transports where all packets are sent over a common channel, such as the UART transport.
+pub struct WithIndicator<'a, T: PacketToController>(pub &'a T);
+
+impl<'a, T: PacketToController> PacketToController for WithIndicator<'a, T> {
+    const KIND: PacketKind = T::KIND;
+
+    #[inline(always)]
+    fn write_hci<W: Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        writer.write_all(&[Self::KIND as u8])?;
+        self.0.write_hci(writer)
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: AsyncWrite>(&self, mut writer: W) -> Result<(), W::Error> {
+        writer.write_all(&[Self::KIND as u8]).await?;
+        self.0.write_hci_async(writer).await
+    }
+}

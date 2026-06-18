@@ -2,12 +2,12 @@
 
 use core::future::Future;
 
-use crate::param::{param, ConnHandle};
-use crate::{FromHciBytes, FromHciBytesError, PacketKind, ReadHci, ReadHciError, WriteHci};
-
 use bt_hci_driver::PacketToController;
 use embedded_io::Write;
 use embedded_io_async::Write as AsyncWrite;
+
+use crate::param::{param, ConnHandle};
+use crate::{FromHciBytes, FromHciBytesError, PacketKind, ReadHci, ReadHciError, WriteHci};
 
 /// HCI ACL Data packet `Packet_Boundary_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-49cf6aaa-b2f3-30b0-e737-5b515d3b3168)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]

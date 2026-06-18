@@ -2,8 +2,8 @@
 
 use core::future::Future;
 
-pub use bt_hci_driver::Transport;
 use bt_hci_driver::{PacketKind, PacketToController, PacketToHost};
+pub use bt_hci_driver::{Transport, WithIndicator};
 use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
 use embedded_io::{ErrorType, ReadExactError, Write};
@@ -136,28 +136,6 @@ impl<'a, T: Cmd> PacketToController for CmdPacketWrapper<'a, T> {
     #[inline(always)]
     fn write_hci_async<W: AsyncWrite>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>> {
         self.0.write_hci_async(writer)
-    }
-}
-
-/// Wrapper for a [`PacketToController`] type that will write the [`PacketKind`](crate::PacketKind) indicator byte before the packet itself
-/// when serialized with [`PacketToController`] by the [`Transport`] implementation.
-///
-/// This is used for transports where all packets are sent over a common channel, such as the UART transport.
-pub struct WithIndicator<'a, T: PacketToController>(pub &'a T);
-
-impl<'a, T: PacketToController> PacketToController for WithIndicator<'a, T> {
-    const KIND: PacketKind = T::KIND;
-
-    #[inline(always)]
-    fn write_hci<W: Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&[Self::KIND as u8])?;
-        self.0.write_hci(writer)
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: AsyncWrite>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&[Self::KIND as u8]).await?;
-        self.0.write_hci_async(writer).await
     }
 }
 
