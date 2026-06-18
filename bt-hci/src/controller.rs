@@ -18,7 +18,7 @@ use futures_intrusive::sync::LocalSemaphore;
 use crate::cmd::{Cmd, CmdReturnBuf};
 use crate::event::{CommandComplete, CommandCompleteWithStatus, CommandStatus, EventKind};
 use crate::param::{RemainingBytes, Status};
-use crate::transport::{Transport, WithIndicator};
+use crate::transport::{CmdPacketWrapper, Transport};
 use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes};
 
 pub mod blocking;
@@ -99,17 +99,17 @@ where
     }
 
     async fn write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), Self::Error> {
-        self.transport.write(&WithIndicator(packet)).await?;
+        self.transport.write(packet).await?;
         Ok(())
     }
 
     async fn write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), Self::Error> {
-        self.transport.write(&WithIndicator(packet)).await?;
+        self.transport.write(packet).await?;
         Ok(())
     }
 
     async fn write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), Self::Error> {
-        self.transport.write(&WithIndicator(packet)).await?;
+        self.transport.write(packet).await?;
         Ok(())
     }
 
@@ -205,17 +205,17 @@ where
     }
 
     fn try_write_acl_data(&self, packet: &data::AclPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
-        self.transport.write(&WithIndicator(packet))?;
+        self.transport.write(packet)?;
         Ok(())
     }
 
     fn try_write_sync_data(&self, packet: &data::SyncPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
-        self.transport.write(&WithIndicator(packet))?;
+        self.transport.write(packet)?;
         Ok(())
     }
 
     fn try_write_iso_data(&self, packet: &data::IsoPacket<'_>) -> Result<(), blocking::TryError<Self::Error>> {
-        self.transport.write(&WithIndicator(packet))?;
+        self.transport.write(packet)?;
         Ok(())
     }
 
@@ -276,7 +276,7 @@ where
         });
 
         self.transport
-            .write(&WithIndicator(cmd))
+            .write(&CmdPacketWrapper(cmd))
             .await
             .map_err(cmd::Error::Io)?;
 
@@ -307,7 +307,7 @@ where
         });
 
         self.transport
-            .write(&WithIndicator(cmd))
+            .write(&CmdPacketWrapper(cmd))
             .await
             .map_err(cmd::Error::Io)?;
 
