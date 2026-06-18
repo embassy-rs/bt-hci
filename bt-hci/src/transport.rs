@@ -11,7 +11,7 @@ use embedded_io_async::Write as AsyncWrite;
 
 use crate::cmd::Cmd;
 use crate::controller::blocking::TryError;
-use crate::{HostToControllerPacket, ReadHciError};
+use crate::ReadHciError;
 
 /// HCI transport layer for a split serial bus using the UART transport layer protocol [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/uart-transport-layer.html)
 pub struct SerialTransport<M: RawMutex, R, W> {
@@ -123,7 +123,7 @@ impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error =
 }
 
 /// Wrapper for [`Cmd`] types.
-pub(crate) struct CmdPacketWrapper<'a, T: Cmd>(pub &'a T);
+pub struct CmdPacketWrapper<'a, T: Cmd>(pub &'a T);
 
 impl<'a, T: Cmd> PacketToController for CmdPacketWrapper<'a, T> {
     const KIND: PacketKind = PacketKind::Cmd;
@@ -139,13 +139,13 @@ impl<'a, T: Cmd> PacketToController for CmdPacketWrapper<'a, T> {
     }
 }
 
-/// Wrapper for a [`HostToControllerPacket`] that will write the [`PacketKind`](crate::PacketKind) indicator byte before the packet itself
+/// Wrapper for a [`PacketToController`] type that will write the [`PacketKind`](crate::PacketKind) indicator byte before the packet itself
 /// when serialized with [`PacketToController`] by the [`Transport`] implementation.
 ///
 /// This is used for transports where all packets are sent over a common channel, such as the UART transport.
-pub struct WithIndicator<'a, T: HostToControllerPacket>(pub &'a T);
+pub struct WithIndicator<'a, T: PacketToController>(pub &'a T);
 
-impl<'a, T: HostToControllerPacket> PacketToController for WithIndicator<'a, T> {
+impl<'a, T: PacketToController> PacketToController for WithIndicator<'a, T> {
     const KIND: PacketKind = T::KIND;
 
     #[inline(always)]

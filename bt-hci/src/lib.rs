@@ -111,12 +111,6 @@ pub trait WriteHci {
     fn write_hci_async<W: embedded_io_async::Write>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>>;
 }
 
-/// Trait representing a HCI packet.
-pub trait HostToControllerPacket: WriteHci {
-    /// Packet kind associated with this HCI packet.
-    const KIND: PacketKind;
-}
-
 /// Marker trait for HCI values that have a known, fixed size
 ///
 /// # Safety

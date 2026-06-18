@@ -3,7 +3,7 @@
 use core::future::Future;
 
 use crate::param::{param, ConnHandle};
-use crate::{FromHciBytes, FromHciBytesError, HostToControllerPacket, PacketKind, ReadHci, ReadHciError, WriteHci};
+use crate::{FromHciBytes, FromHciBytesError, PacketKind, ReadHci, ReadHciError, WriteHci};
 
 use bt_hci_driver::PacketToController;
 use embedded_io::Write;
@@ -227,10 +227,6 @@ impl WriteHci for AclPacket<'_> {
     }
 }
 
-impl HostToControllerPacket for AclPacket<'_> {
-    const KIND: PacketKind = PacketKind::AclData;
-}
-
 impl PacketToController for AclPacket<'_> {
     const KIND: PacketKind = PacketKind::AclData;
 
@@ -417,10 +413,6 @@ impl WriteHci for SyncPacket<'_> {
         header.write_hci_async(&mut writer).await?;
         writer.write_all(self.data).await
     }
-}
-
-impl HostToControllerPacket for SyncPacket<'_> {
-    const KIND: PacketKind = PacketKind::SyncData;
 }
 
 impl PacketToController for SyncPacket<'_> {
@@ -720,10 +712,6 @@ impl WriteHci for IsoPacket<'_> {
         }
         writer.write_all(self.data).await
     }
-}
-
-impl HostToControllerPacket for IsoPacket<'_> {
-    const KIND: PacketKind = PacketKind::IsoData;
 }
 
 impl PacketToController for IsoPacket<'_> {

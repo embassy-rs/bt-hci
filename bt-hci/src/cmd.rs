@@ -5,7 +5,7 @@ use core::future::Future;
 use embedded_io::ErrorType;
 
 use crate::controller::{ControllerCmdAsync, ControllerCmdSync};
-use crate::{param, FixedSizeValue, FromHciBytes, HostToControllerPacket, PacketKind, WriteHci};
+use crate::{param, FixedSizeValue, FromHciBytes, WriteHci};
 
 pub mod controller_baseband;
 pub mod info;
@@ -93,7 +93,7 @@ impl<E> From<param::Error> for Error<E> {
 }
 
 /// An object representing an HCI Command
-pub trait Cmd: WriteHci + HostToControllerPacket {
+pub trait Cmd: WriteHci {
     /// The opcode identifying this kind of HCI Command
     const OPCODE: Opcode;
 
@@ -108,10 +108,6 @@ pub trait Cmd: WriteHci + HostToControllerPacket {
         let opcode_bytes = Self::OPCODE.0.to_le_bytes();
         [opcode_bytes[0], opcode_bytes[1], self.params().size() as u8]
     }
-}
-
-impl<T: Cmd> HostToControllerPacket for T {
-    const KIND: PacketKind = PacketKind::Cmd;
 }
 
 /// A marker trait for objects representing HCI Commands that generate [`CommandStatus`](crate::event::CommandStatus)
