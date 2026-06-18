@@ -9,11 +9,12 @@ use embedded_io_async::{Read as AsyncRead, Write as AsyncWrite};
 
 /// An HCI packet from the controller to the host.
 pub trait PacketToHost<'d>: Sized {
-    /// Deserialize bytes into a HCI type, return additional bytes.
-    fn read_hci<R: Read>(data: &mut R, buf: &'d mut [u8]) -> Result<Self, ReadHciError<R::Error>>;
+    /// Deserialize bytes into a HCI type.
+    fn read_hci<R: Read>(kind: PacketKind, data: &mut R, buf: &'d mut [u8]) -> Result<Self, ReadHciError<R::Error>>;
 
-    /// Deserialize bytes into a HCI type, return the value and any remaining bytes.
+    /// Deserialize bytes into a HCI type.
     fn read_hci_async<R: AsyncRead>(
+        kind: PacketKind,
         data: &mut R,
         buf: &'d mut [u8],
     ) -> impl Future<Output = Result<Self, ReadHciError<R::Error>>>;
@@ -21,6 +22,9 @@ pub trait PacketToHost<'d>: Sized {
 
 /// An HCI packet from the host to the controller.
 pub trait PacketToController: Sized {
+    /// The kind of packet this trait represents.
+    const KIND: PacketKind;
+
     /// Write this value to the provided writer.
     fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error>;
 
@@ -30,11 +34,57 @@ pub trait PacketToController: Sized {
 
 /// A packet-oriented HCI Transport Layer
 pub trait Transport: embedded_io::ErrorType {
-    /// Read a complete HCI packet into the rx buffer
+    /// Read a complete HCI packet into the rx buffer.
     fn read<'a, P: PacketToHost<'a>>(&self, rx: &'a mut [u8]) -> impl Future<Output = Result<P, Self::Error>>;
 
-    /// Write a complete HCI packet from the tx buffer
+    /// Write a complete HCI packet from the tx buffer.
     fn write<P: PacketToController>(&self, tx: &P) -> impl Future<Output = Result<(), Self::Error>>;
+}
+
+/// Enum of valid HCI packet types.
+#[repr(u8)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum PacketKind {
+    /// Command.
+    Cmd = 1,
+    /// ACL data.
+    AclData = 2,
+    /// Sync data.
+    SyncData = 3,
+    /// Event.
+    Event = 4,
+    /// Isochronous Data.
+    IsoData = 5,
+}
+
+impl PacketKind {
+    fn from_byte<E: embedded_io::Error>(value: u8) -> Result<Self, ReadHciError<E>> {
+        match value {
+            1 => Ok(PacketKind::Cmd),
+            2 => Ok(PacketKind::AclData),
+            3 => Ok(PacketKind::SyncData),
+            4 => Ok(PacketKind::Event),
+            5 => Ok(PacketKind::IsoData),
+            _ => Err(ReadHciError::InvalidValue),
+        }
+    }
+}
+
+impl PacketKind {
+    /// Read one byte from the reader and parse it into a packet kind.
+    pub fn read<R: Read>(reader: &mut R) -> Result<Self, ReadHciError<R::Error>> {
+        let mut data: u8 = 0;
+        reader.read_exact(core::slice::from_mut(&mut data))?;
+        PacketKind::from_byte(data)
+    }
+
+    /// Read one byte from the reader and parse it into a packet kind.
+    pub async fn read_async<R: AsyncRead>(reader: &mut R) -> Result<Self, ReadHciError<R::Error>> {
+        let mut data: u8 = 0;
+        reader.read_exact(core::slice::from_mut(&mut data)).await?;
+        PacketKind::from_byte(data)
+    }
 }
 
 /// Blocking transport trait.

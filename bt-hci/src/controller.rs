@@ -458,7 +458,7 @@ impl<F: FnOnce()> Drop for OnDrop<F> {
 
 #[cfg(test)]
 mod tests {
-    use bt_hci_driver::{PacketToController, PacketToHost};
+    use bt_hci_driver::{PacketKind, PacketToController, PacketToHost};
 
     use super::*;
 
@@ -496,7 +496,8 @@ mod tests {
             async {
                 let to_read = rx.len().min(self.rx.len());
                 let mut reader = &self.rx[..to_read];
-                let pkt = P::read_hci(&mut reader, rx).map_err(|_| Error)?;
+                let kind = PacketKind::read(&mut reader)?;
+                let pkt = P::read_hci(kind, &mut reader, rx)?;
                 if !reader.is_empty() {
                     return Err(Error);
                 }

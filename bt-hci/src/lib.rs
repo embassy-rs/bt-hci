@@ -16,7 +16,7 @@ pub mod data;
 pub mod event;
 pub mod param;
 pub mod transport;
-pub use bt_hci_driver::ReadHciError;
+pub use bt_hci_driver::{PacketKind, ReadHciError};
 pub use btuuid as uuid;
 
 /// Errors from parsing HCI data.
@@ -64,23 +64,6 @@ pub trait FromHciBytes<'de>: Sized {
             Err(FromHciBytesError::InvalidSize)
         }
     }
-}
-
-/// Enum of valid HCI packet types.
-#[repr(u8)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum PacketKind {
-    /// Command.
-    Cmd = 1,
-    /// ACL data.
-    AclData = 2,
-    /// Sync data.
-    SyncData = 3,
-    /// Event.
-    Event = 4,
-    /// Isochronous Data.
-    IsoData = 5,
 }
 
 impl<'de> FromHciBytes<'de> for PacketKind {
@@ -341,10 +324,12 @@ impl<'de> ReadHci<'de> for ControllerToHostPacket<'de> {
 }
 
 impl<'de> PacketToHost<'de> for ControllerToHostPacket<'de> {
-    fn read_hci<R: embedded_io::Read>(reader: &mut R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
-        let mut kind = [0];
-        reader.read_exact(&mut kind)?;
-        match PacketKind::from_hci_bytes(&kind)?.0 {
+    fn read_hci<R: embedded_io::Read>(
+        kind: PacketKind,
+        reader: &mut R,
+        buf: &'de mut [u8],
+    ) -> Result<Self, ReadHciError<R::Error>> {
+        match kind {
             PacketKind::Cmd => Err(ReadHciError::InvalidValue),
             PacketKind::AclData => data::AclPacket::read_hci(reader, buf).map(Self::Acl),
             PacketKind::SyncData => data::SyncPacket::read_hci(reader, buf).map(Self::Sync),
@@ -354,12 +339,11 @@ impl<'de> PacketToHost<'de> for ControllerToHostPacket<'de> {
     }
 
     async fn read_hci_async<R: embedded_io_async::Read>(
+        kind: PacketKind,
         reader: &mut R,
         buf: &'de mut [u8],
     ) -> Result<Self, ReadHciError<R::Error>> {
-        let mut kind = [0u8];
-        reader.read_exact(&mut kind).await?;
-        match PacketKind::from_hci_bytes(&kind)?.0 {
+        match kind {
             PacketKind::Cmd => Err(ReadHciError::InvalidValue),
             PacketKind::AclData => data::AclPacket::read_hci_async(reader, buf).await.map(Self::Acl),
             PacketKind::SyncData => data::SyncPacket::read_hci_async(reader, buf).await.map(Self::Sync),

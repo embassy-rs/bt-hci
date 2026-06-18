@@ -1,7 +1,9 @@
 //! HCI transport layers [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface.html)
 
+use core::future::Future;
+
 pub use bt_hci_driver::Transport;
-use bt_hci_driver::{PacketToController, PacketToHost};
+use bt_hci_driver::{PacketKind, PacketToController, PacketToHost};
 use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
 use embedded_io::{ErrorType, ReadExactError, Write};
@@ -55,6 +57,12 @@ impl<E: embedded_io::Error> From<ReadExactError<E>> for Error<E> {
     }
 }
 
+impl<E: embedded_io::Error> From<ReadHciError<E>> for Error<E> {
+    fn from(e: ReadHciError<E>) -> Self {
+        Self::Read(e)
+    }
+}
+
 impl<M: RawMutex, R: embedded_io_async::Read, W: embedded_io_async::Write> SerialTransport<M, R, W> {
     /// Create a new instance.
     pub fn new(reader: R, writer: W) -> Self {
@@ -84,7 +92,8 @@ impl<
 {
     async fn read<'a, P: PacketToHost<'a>>(&self, rx: &'a mut [u8]) -> Result<P, Self::Error> {
         let mut r = self.reader.lock().await;
-        P::read_hci_async(&mut *r, rx).await.map_err(Error::Read)
+        let kind = PacketKind::read_async(&mut *r).await?;
+        P::read_hci_async(kind, &mut *r, rx).await.map_err(Error::Read)
     }
 
     async fn write<P: PacketToController>(&self, tx: &P) -> Result<(), Self::Error> {
@@ -98,7 +107,10 @@ impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error =
 {
     fn read<'a, P: PacketToHost<'a>>(&self, rx: &'a mut [u8]) -> Result<P, TryError<Self::Error>> {
         let mut r = self.reader.try_lock().map_err(|_| TryError::Busy)?;
-        P::read_hci(&mut *r, rx).map_err(Error::Read).map_err(TryError::Error)
+        let kind = PacketKind::read(&mut *r)?;
+        P::read_hci(kind, &mut *r, rx)
+            .map_err(Error::Read)
+            .map_err(TryError::Error)
     }
 
     fn write<P: PacketToController>(&self, tx: &P) -> Result<(), TryError<Self::Error>> {
@@ -116,16 +128,16 @@ impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error =
 pub(crate) struct WithIndicator<'a, T: HostToControllerPacket>(pub &'a T);
 
 impl<'a, T: HostToControllerPacket> PacketToController for WithIndicator<'a, T> {
+    const KIND: PacketKind = T::KIND;
+
     #[inline(always)]
-    fn write_hci<W: Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&[T::KIND as u8])?;
+    fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error> {
         self.0.write_hci(writer)
     }
 
     #[inline(always)]
-    async fn write_hci_async<W: AsyncWrite>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&[T::KIND as u8]).await?;
-        self.0.write_hci_async(writer).await
+    fn write_hci_async<W: AsyncWrite>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>> {
+        self.0.write_hci_async(writer)
     }
 }
 
