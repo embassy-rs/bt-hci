@@ -1,7 +1,13 @@
 //! HCI data packets [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c8fdfc58-ec59-1a87-6e78-0a01de2e0846)
 
+use core::future::Future;
+
+use bt_hci_driver::PacketToController;
+use embedded_io::Write;
+use embedded_io_async::Write as AsyncWrite;
+
 use crate::param::{param, ConnHandle};
-use crate::{FromHciBytes, FromHciBytesError, HostToControllerPacket, PacketKind, ReadHci, ReadHciError, WriteHci};
+use crate::{FromHciBytes, FromHciBytesError, PacketKind, ReadHci, ReadHciError, WriteHci};
 
 /// HCI ACL Data packet `Packet_Boundary_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-49cf6aaa-b2f3-30b0-e737-5b515d3b3168)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -221,8 +227,18 @@ impl WriteHci for AclPacket<'_> {
     }
 }
 
-impl HostToControllerPacket for AclPacket<'_> {
+impl PacketToController for AclPacket<'_> {
     const KIND: PacketKind = PacketKind::AclData;
+
+    #[inline(always)]
+    fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error> {
+        <Self as WriteHci>::write_hci(self, writer)
+    }
+
+    #[inline(always)]
+    fn write_hci_async<W: AsyncWrite>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>> {
+        <Self as WriteHci>::write_hci_async(self, writer)
+    }
 }
 
 /// HCI Synchronous Data packet `Packet_Status_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ea780739-1980-92c8-1a0a-96fcf9bec7b7)
@@ -399,8 +415,18 @@ impl WriteHci for SyncPacket<'_> {
     }
 }
 
-impl HostToControllerPacket for SyncPacket<'_> {
+impl PacketToController for SyncPacket<'_> {
     const KIND: PacketKind = PacketKind::SyncData;
+
+    #[inline(always)]
+    fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error> {
+        <Self as WriteHci>::write_hci(self, writer)
+    }
+
+    #[inline(always)]
+    fn write_hci_async<W: AsyncWrite>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>> {
+        <Self as WriteHci>::write_hci_async(self, writer)
+    }
 }
 
 /// HCI ISO Data packet `PB_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b5fb085-278b-5084-ac33-bee2839abe6b)
@@ -688,8 +714,18 @@ impl WriteHci for IsoPacket<'_> {
     }
 }
 
-impl HostToControllerPacket for IsoPacket<'_> {
+impl PacketToController for IsoPacket<'_> {
     const KIND: PacketKind = PacketKind::IsoData;
+
+    #[inline(always)]
+    fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error> {
+        <Self as WriteHci>::write_hci(self, writer)
+    }
+
+    #[inline(always)]
+    fn write_hci_async<W: AsyncWrite>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>> {
+        <Self as WriteHci>::write_hci_async(self, writer)
+    }
 }
 
 #[cfg(test)]
