@@ -46,13 +46,13 @@ pub trait Controller: ErrorType {
 }
 
 /// Marker trait for declaring that a controller supports a given HCI command.
-pub trait ControllerCmdSync<C: cmd::SyncCmd + ?Sized>: Controller {
+pub trait ControllerCmdSync<C: cmd::SyncCmd>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<C::Return, cmd::Error<Self::Error>>>;
 }
 
 /// Marker trait for declaring that a controller supports a given async HCI command.
-pub trait ControllerCmdAsync<C: cmd::AsyncCmd + ?Sized>: Controller {
+pub trait ControllerCmdAsync<C: cmd::AsyncCmd>: Controller {
     /// Note: Some implementations may require [`Controller::read()`] to be polled for this to return.
     fn exec(&self, cmd: &C) -> impl Future<Output = Result<(), cmd::Error<Self::Error>>>;
 }
