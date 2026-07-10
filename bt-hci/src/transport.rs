@@ -1,15 +1,11 @@
 //! HCI transport layers [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface.html)
 
-use core::future::Future;
-
 use bt_hci_driver::{PacketKind, PacketToController, PacketToHost};
 pub use bt_hci_driver::{Transport, WithIndicator};
 use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
-use embedded_io::{ErrorType, ReadExactError, Write};
-use embedded_io_async::Write as AsyncWrite;
+use embedded_io::{ErrorType, ReadExactError};
 
-use crate::cmd::Cmd;
 use crate::controller::blocking::TryError;
 use crate::ReadHciError;
 
@@ -119,23 +115,6 @@ impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error =
         tx.write_hci(&mut *w)
             .map_err(|e| Error::Write(e))
             .map_err(TryError::Error)
-    }
-}
-
-/// Wrapper for [`Cmd`] types.
-pub struct CmdPacketWrapper<'a, T: Cmd>(pub &'a T);
-
-impl<'a, T: Cmd> PacketToController for CmdPacketWrapper<'a, T> {
-    const KIND: PacketKind = PacketKind::Cmd;
-
-    #[inline(always)]
-    fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error> {
-        self.0.write_hci(writer)
-    }
-
-    #[inline(always)]
-    fn write_hci_async<W: AsyncWrite>(&self, writer: W) -> impl Future<Output = Result<(), W::Error>> {
-        self.0.write_hci_async(writer)
     }
 }
 
