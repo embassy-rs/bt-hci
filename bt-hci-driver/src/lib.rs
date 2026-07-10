@@ -21,7 +21,7 @@ pub trait PacketToHost<'d>: Sized {
 }
 
 /// An HCI packet from the host to the controller.
-pub trait PacketToController: Sized {
+pub trait PacketToController {
     /// The kind of packet this trait represents.
     const KIND: PacketKind;
 
