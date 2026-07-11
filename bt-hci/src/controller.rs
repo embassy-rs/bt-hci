@@ -18,7 +18,7 @@ use futures_intrusive::sync::LocalSemaphore;
 use crate::cmd::{Cmd, CmdReturnBuf};
 use crate::event::{CommandComplete, CommandCompleteWithStatus, CommandStatus, EventKind};
 use crate::param::{RemainingBytes, Status};
-use crate::transport::{CmdPacketWrapper, Transport};
+use crate::transport::Transport;
 use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes};
 
 pub mod blocking;
@@ -275,10 +275,7 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.transport
-            .write(&CmdPacketWrapper(cmd))
-            .await
-            .map_err(cmd::Error::Io)?;
+        self.transport.write(cmd).await.map_err(cmd::Error::Io)?;
 
         let result = slot.wait().await;
         let return_param_bytes = RemainingBytes::from_hci_bytes_complete(&retval.as_ref()[..result.len]).unwrap();
@@ -306,10 +303,7 @@ where
             self.slots.release_slot(idx);
         });
 
-        self.transport
-            .write(&CmdPacketWrapper(cmd))
-            .await
-            .map_err(cmd::Error::Io)?;
+        self.transport.write(cmd).await.map_err(cmd::Error::Io)?;
 
         let result = slot.wait().await;
         result.status.to_result()?;

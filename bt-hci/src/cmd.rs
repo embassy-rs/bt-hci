@@ -93,7 +93,7 @@ impl<E> From<param::Error> for Error<E> {
 }
 
 /// An object representing an HCI Command
-pub trait Cmd: WriteHci {
+pub trait Cmd: WriteHci + ::bt_hci_driver::PacketToController {
     /// The opcode identifying this kind of HCI Command
     const OPCODE: Opcode;
 
@@ -410,6 +410,18 @@ macro_rules! cmd {
         impl$(<$life>)? From<$params> for $name$(<$life>)? {
             fn from(params: $params) -> Self {
                 Self(params)
+            }
+        }
+
+        impl$(<$life>)? ::bt_hci_driver::PacketToController for $name$(<$life>)? {
+            const KIND: ::bt_hci_driver::PacketKind = ::bt_hci_driver::PacketKind::Cmd;
+
+            fn write_hci<W: embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
+                <Self as $crate::WriteHci>::write_hci(self, writer)
+            }
+
+            async fn write_hci_async<W: embedded_io_async::Write>(&self, writer: W) -> Result<(), W::Error> {
+                <Self as $crate::WriteHci>::write_hci_async(self, writer).await
             }
         }
 
