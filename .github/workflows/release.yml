@@ -1,9 +1,21 @@
 name: Release
 
+# This repo is a Cargo workspace with two independently versioned crates:
+#   - bt-hci-driver
+#   - bt-hci  (depends on bt-hci-driver)
+#
+# Each crate is released with its own tag: `<crate>-v<version>`, e.g.
+#   bt-hci-driver-v0.1.0
+#   bt-hci-v0.9.0
+#
+# Because `bt-hci` depends on `bt-hci-driver`, publish the driver first
+# (tag + release it) so the required version is available on crates.io
+# before releasing `bt-hci`.
 on:
   push:
     tags:
-     - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'bt-hci-v[0-9]+.[0-9]+.[0-9]+'
+      - 'bt-hci-driver-v[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
   contents: write
@@ -29,13 +41,34 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Parse tag
+      id: parse
+      run: |
+        TAG=${GITHUB_REF#refs/tags/}
+        # `<crate>-v<version>` -> crate is everything before the last `-v`,
+        # version is everything after it.
+        CRATE=${TAG%-v*}
+        VERSION=${TAG##*-v}
+        echo "crate=$CRATE" >> "$GITHUB_OUTPUT"
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        echo "Releasing crate '$CRATE' version '$VERSION'"
+      shell: bash
 
     - name: Verify Version
       run: |
-        TAG_VERSION=${GITHUB_REF#refs/tags/v}
-        CARGO_VERSION=$(grep '^version =' Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
+        CRATE="${{ steps.parse.outputs.crate }}"
+        TAG_VERSION="${{ steps.parse.outputs.version }}"
+        MANIFEST="${CRATE}/Cargo.toml"
+        if [ ! -f "$MANIFEST" ]; then
+          echo "No manifest found for crate '$CRATE' at $MANIFEST"
+          exit 1
+        fi
+        CARGO_VERSION=$(grep -m1 '^version =' "$MANIFEST" | sed -E 's/version = "([^"]+)"/\1/')
         if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
-          echo "Version mismatch: tag is $TAG_VERSION but Cargo.toml is $CARGO_VERSION"
+          echo "Version mismatch: tag is $TAG_VERSION but $MANIFEST is $CARGO_VERSION"
           exit 1  # Exits with a non-zero status to fail the workflow
         fi
       shell: bash
@@ -46,26 +79,40 @@ jobs:
         toolchain: stable
 
     - name: Build project
-      run: cargo build --release
+      run: cargo build --release --package "${{ steps.parse.outputs.crate }}"
 
     - name: Create GitHub release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.ref_name }}
+        crate: ${{ steps.parse.outputs.crate }}
+        version: ${{ steps.parse.outputs.version }}
       run: |
+        PREVIOUS_TAG=$(git describe --tags \
+            --match "${crate}-v[0-9]*" \
+            --abbrev=0 "${tag}^" 2>/dev/null || true)
+        NOTES_ARGS=(--generate-notes)
+        if [ -n "$PREVIOUS_TAG" ]; then
+          echo "Generating notes since $PREVIOUS_TAG"
+          NOTES_ARGS+=(--notes-start-tag "$PREVIOUS_TAG")
+        else
+          echo "No previous $crate release tag found"
+        fi
+
         gh release create "$tag" \
             --repo="$GITHUB_REPOSITORY" \
-            --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
-            --generate-notes
+            --title="$crate $version" \
+            "${NOTES_ARGS[@]}"
+      shell: bash
 
     - name: Publish to crates.io
       env:
         CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-      # Publish to the main registry
+      # Publish only the crate referenced by the tag.
       run: |
-        echo "Publishing to crates.io"
-        cargo publish
+        echo "Publishing ${{ steps.parse.outputs.crate }} to crates.io"
+        cargo publish --package "${{ steps.parse.outputs.crate }}"
       # To publish to the staging/testing registry, uncomment the following lines
       # run: |
       #   echo "Performing dry-run publish to crates.io"
-      #   cargo publish --dry-run
+      #   cargo publish --dry-run --package "${{ steps.parse.outputs.crate }}"
