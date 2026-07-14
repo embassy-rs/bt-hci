@@ -25,6 +25,9 @@ pub trait PacketToController {
     /// The kind of packet this trait represents.
     const KIND: PacketKind;
 
+    /// Returns the size of the packet in bytes.
+    fn size(&self) -> usize;
+
     /// Write this value to the provided writer.
     fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error>;
 
@@ -155,14 +158,28 @@ impl<E: embedded_io::Error> From<ReadExactError<E>> for ReadHciError<E> {
     }
 }
 
-/// Wrapper for a [`PacketToController`] type that will write the [`PacketKind`](crate::PacketKind) indicator byte before the packet itself
-/// when serialized with [`PacketToController`] by the [`Transport`] implementation.
+/// Wrapper for a [`PacketToController`] type that will write the [`PacketKind`] indicator
+/// byte before the packet itself when serialized with [`PacketToController`] by the
+/// [`Transport`] implementation.
 ///
-/// This is used for transports where all packets are sent over a common channel, such as the UART transport.
-pub struct WithIndicator<'a, T: PacketToController>(pub &'a T);
+/// This is used for transports where all packets are sent over a common channel,
+/// such as the UART transport.
+pub struct WithIndicator<'a, T: PacketToController>(&'a T);
+
+impl<'a, T: PacketToController> WithIndicator<'a, T> {
+    /// Create a new instance.
+    pub fn new(pkt: &'a T) -> Self {
+        Self(pkt)
+    }
+}
 
 impl<'a, T: PacketToController> PacketToController for WithIndicator<'a, T> {
     const KIND: PacketKind = T::KIND;
+
+    #[inline(always)]
+    fn size(&self) -> usize {
+        1 + self.0.size()
+    }
 
     #[inline(always)]
     fn write_hci<W: Write>(&self, mut writer: W) -> Result<(), W::Error> {

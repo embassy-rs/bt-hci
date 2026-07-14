@@ -231,6 +231,11 @@ impl PacketToController for AclPacket<'_> {
     const KIND: PacketKind = PacketKind::AclData;
 
     #[inline(always)]
+    fn size(&self) -> usize {
+        <Self as WriteHci>::size(self)
+    }
+
+    #[inline(always)]
     fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error> {
         <Self as WriteHci>::write_hci(self, writer)
     }
@@ -417,6 +422,11 @@ impl WriteHci for SyncPacket<'_> {
 
 impl PacketToController for SyncPacket<'_> {
     const KIND: PacketKind = PacketKind::SyncData;
+
+    #[inline(always)]
+    fn size(&self) -> usize {
+        <Self as WriteHci>::size(self)
+    }
 
     #[inline(always)]
     fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error> {
@@ -716,6 +726,11 @@ impl WriteHci for IsoPacket<'_> {
 
 impl PacketToController for IsoPacket<'_> {
     const KIND: PacketKind = PacketKind::IsoData;
+
+    #[inline(always)]
+    fn size(&self) -> usize {
+        <Self as WriteHci>::size(self)
+    }
 
     #[inline(always)]
     fn write_hci<W: Write>(&self, writer: W) -> Result<(), W::Error> {

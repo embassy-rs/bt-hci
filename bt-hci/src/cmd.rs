@@ -416,6 +416,11 @@ macro_rules! cmd {
         impl$(<$life>)? ::bt_hci_driver::PacketToController for $name$(<$life>)? {
             const KIND: ::bt_hci_driver::PacketKind = ::bt_hci_driver::PacketKind::Cmd;
 
+            #[inline(always)]
+            fn size(&self) -> usize {
+                <Self as $crate::WriteHci>::size(self)
+            }
+
             fn write_hci<W: embedded_io::Write>(&self, writer: W) -> Result<(), W::Error> {
                 <Self as $crate::WriteHci>::write_hci(self, writer)
             }
