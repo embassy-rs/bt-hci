@@ -7,7 +7,7 @@ use core::mem::MaybeUninit;
 use core::slice;
 use core::task::Poll;
 
-use bt_hci_driver::ReadHciError;
+use bt_hci_transport::ReadHciError;
 use cmd::controller_baseband::Reset;
 use embassy_sync::blocking_mutex::raw::NoopRawMutex;
 use embassy_sync::signal::Signal;
@@ -452,7 +452,7 @@ impl<F: FnOnce()> Drop for OnDrop<F> {
 
 #[cfg(test)]
 mod tests {
-    use bt_hci_driver::{PacketKind, PacketToController, PacketToHost};
+    use bt_hci_transport::{PacketKind, PacketToController, PacketToHost};
 
     use super::*;
 

@@ -1,12 +1,12 @@
 [package]
 authors = ["Embassy project contributors"]
-description = "Transport trait for Bluetooth HCI"
+description = "Serial (UART) transport for Bluetooth HCI"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-name = "bt-hci-driver"
+name = "bt-hci-serial"
 repository = "https://github.com/embassy-rs/bt-hci"
 version = "0.1.0"
-documentation = "https://docs.rs/bt-hci-driver"
+documentation = "https://docs.rs/bt-hci-serial"
 keywords = ["bluetooth", "hci", "BLE"]
 categories = ["embedded", "hardware-support", "no-std"]
 rust-version = "1.87"
@@ -15,13 +15,15 @@ exclude = [".github", ".vscode", "ci.sh", "rust-toolchain.toml", "rustfmt.toml"]
 [features]
 defmt = [
     "dep:defmt",
+    "bt-hci-transport/defmt",
     "embedded-io/defmt",
     "embedded-io-async/defmt",
 ]
 
 [dependencies]
+bt-hci-transport = { version = "0.1.0", path = "../bt-hci-transport" }
+embassy-sync = ">=0.7, <0.9"
 embedded-io = "0.7.1"
 embedded-io-async = "0.7.0"
 
 defmt = { version = "^1", optional = true }
-log = { version = "^0.4", optional = true }
