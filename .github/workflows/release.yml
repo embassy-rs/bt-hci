@@ -1,21 +1,27 @@
 name: Release
 
-# This repo is a Cargo workspace with two independently versioned crates:
-#   - bt-hci-driver
-#   - bt-hci  (depends on bt-hci-driver)
+# This repo is a Cargo workspace with independently versioned crates:
+#   - bt-hci-transport
+#   - bt-hci  (depends on bt-hci-transport)
+#   - bt-hci-serial  (depends on bt-hci-transport)
+#   - bt-hci-linux  (depends on bt-hci-transport)
+#   - bt-hci-usb  (depends on bt-hci-transport)
 #
 # Each crate is released with its own tag: `<crate>-v<version>`, e.g.
-#   bt-hci-driver-v0.1.0
+#   bt-hci-transport-v0.1.0
 #   bt-hci-v0.9.0
 #
-# Because `bt-hci` depends on `bt-hci-driver`, publish the driver first
-# (tag + release it) so the required version is available on crates.io
-# before releasing `bt-hci`.
+# Publish dependencies first (tag + release them) so the required version
+# is available on crates.io before releasing the dependent crates:
+# bt-hci-transport before all the others.
 on:
   push:
     tags:
       - 'bt-hci-v[0-9]+.[0-9]+.[0-9]+'
-      - 'bt-hci-driver-v[0-9]+.[0-9]+.[0-9]+'
+      - 'bt-hci-transport-v[0-9]+.[0-9]+.[0-9]+'
+      - 'bt-hci-serial-v[0-9]+.[0-9]+.[0-9]+'
+      - 'bt-hci-linux-v[0-9]+.[0-9]+.[0-9]+'
+      - 'bt-hci-usb-v[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
   contents: write

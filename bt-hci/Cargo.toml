@@ -18,13 +18,13 @@ defmt = [
     "embedded-io/defmt",
     "embedded-io-async/defmt",
     "btuuid/defmt",
-    "bt-hci-driver/defmt",
+    "bt-hci-transport/defmt",
 ]
 serde = ["dep:serde", "btuuid/serde"]
 uuid = ["btuuid/uuid"]
 
 [dependencies]
-bt-hci-driver = { version = "0.1.0", path = "../bt-hci-driver" }
+bt-hci-transport = { version = "0.1.0", path = "../bt-hci-transport" }
 btuuid = { version = "0.1.0" }
 defmt = { version = "^1", optional = true }
 log = { version = "^0.4", optional = true }

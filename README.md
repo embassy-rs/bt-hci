@@ -11,9 +11,21 @@ Rust types for the Bluetooth HCI (Host Controller Interface) specification, and 
 
 See [Trouble](https://github.com/embassy-rs/trouble) for an example of using this crate.
 
-# bt-hci-driver
+# bt-hci-transport
 
 Transport trait that can be implemented to easily opt-in into using the `bt-hci` crate.
+
+# bt-hci-serial
+
+Transport implementation for a split serial bus using the HCI UART transport layer protocol.
+
+# bt-hci-linux
+
+Transport implementation using the Linux HCI socket interface.
+
+# bt-hci-usb
+
+Transport implementation for USB Bluetooth adapters (Core Vol. 4 Part B).
 
 ## Bluetooth UUIDs
 

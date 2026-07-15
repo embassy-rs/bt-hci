@@ -93,7 +93,7 @@ impl<E> From<param::Error> for Error<E> {
 }
 
 /// An object representing an HCI Command
-pub trait Cmd: WriteHci + ::bt_hci_driver::PacketToController {
+pub trait Cmd: WriteHci + ::bt_hci_transport::PacketToController {
     /// The opcode identifying this kind of HCI Command
     const OPCODE: Opcode;
 
@@ -413,8 +413,8 @@ macro_rules! cmd {
             }
         }
 
-        impl$(<$life>)? ::bt_hci_driver::PacketToController for $name$(<$life>)? {
-            const KIND: ::bt_hci_driver::PacketKind = ::bt_hci_driver::PacketKind::Cmd;
+        impl$(<$life>)? ::bt_hci_transport::PacketToController for $name$(<$life>)? {
+            const KIND: ::bt_hci_transport::PacketKind = ::bt_hci_transport::PacketKind::Cmd;
 
             #[inline(always)]
             fn size(&self) -> usize {

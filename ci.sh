@@ -7,14 +7,17 @@ export RUSTFLAGS=-Dwarnings
 cargo +nightly fmt -- --check
 
 cargo clippy
-cargo clippy --features embassy-time
 
-cargo clippy --features defmt
-cargo clippy --features defmt,embassy-time
+cargo clippy -p bt-hci --features embassy-time
+cargo clippy -p bt-hci --features defmt
+cargo clippy -p bt-hci --features defmt,embassy-time
+cargo clippy -p bt-hci --features log
+cargo clippy -p bt-hci --features log,embassy-time
+cargo clippy -p bt-hci --features serde
 
-cargo clippy --features log
-cargo clippy --features log,embassy-time
+cargo clippy -p bt-hci-transport --features defmt
+cargo clippy -p bt-hci-serial --features defmt
+cargo clippy -p bt-hci-linux
+cargo clippy -p bt-hci-usb 
 
-cargo clippy --features serde
-
-cargo test --features embassy-time,serde
+cargo test -p bt-hci --features embassy-time,serde
