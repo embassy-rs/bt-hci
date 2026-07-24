@@ -1178,6 +1178,177 @@ cmd! {
 }
 
 cmd! {
+    /// LE Set CIG Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html) (§7.8.97).
+    ///
+    /// The real command carries a `CIS_Count`-length array of per-CIS records; this only defines a
+    /// fixed 2-CIS layout (`Params` here is a fixed struct, not a variable-length array).
+    LeSetCigParameters(LE, 0x0062) {
+        LeSetCigParametersParams {
+            sdu_interval_c_to_p: [u8; 3],
+            sdu_interval_p_to_c: [u8; 3],
+            worst_case_sca: u8,
+            packing: u8,
+            framing: u8,
+            max_transport_latency_c_to_p: u16,
+            max_transport_latency_p_to_c: u16,
+            cis_count: u8,
+            cis_id_0: u8,
+            max_sdu_c_to_p_0: u16,
+            max_sdu_p_to_c_0: u16,
+            phy_c_to_p_0: u8,
+            phy_p_to_c_0: u8,
+            rtn_c_to_p_0: u8,
+            rtn_p_to_c_0: u8,
+            cis_id_1: u8,
+            max_sdu_c_to_p_1: u16,
+            max_sdu_p_to_c_1: u16,
+            phy_c_to_p_1: u8,
+            phy_p_to_c_1: u8,
+            rtn_c_to_p_1: u8,
+            rtn_p_to_c_1: u8,
+        }
+        LeSetCigParametersReturn {
+            num_handles: u8,
+            connection_handle_0: ConnHandle,
+            connection_handle_1: ConnHandle,
+        }
+        Handle = cig_id: u8;
+    }
+}
+
+cmd! {
+    /// LE Set CIG Parameters Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html) (§7.8.98).
+    ///
+    /// Like [`LeSetCigParameters`] but with explicit low-level scheduling parameters
+    /// (`FT`/`ISO_Interval`/`NSE`/`Max_PDU`/`BN`) instead of letting the controller derive them -
+    /// Nordic's SDC docs (`sdc_hci_cmd_vs_cig_reserved_time_set`) recommend this as the workaround
+    /// when `LeSetCigParameters` rejects otherwise-valid parameters with "Unsupported Feature or
+    /// Parameter Value". Flattened to exactly 2 CIS, see [`LeSetCigParameters`].
+    LeSetCigParametersTest(LE, 0x0063) {
+        LeSetCigParametersTestParams {
+            sdu_interval_c_to_p: [u8; 3],
+            sdu_interval_p_to_c: [u8; 3],
+            ft_c_to_p: u8,
+            ft_p_to_c: u8,
+            iso_interval: u16,
+            worst_case_sca: u8,
+            packing: u8,
+            framing: u8,
+            cis_count: u8,
+            cis_id_0: u8,
+            nse_0: u8,
+            max_sdu_c_to_p_0: u16,
+            max_sdu_p_to_c_0: u16,
+            max_pdu_c_to_p_0: u16,
+            max_pdu_p_to_c_0: u16,
+            phy_c_to_p_0: u8,
+            phy_p_to_c_0: u8,
+            bn_c_to_p_0: u8,
+            bn_p_to_c_0: u8,
+            cis_id_1: u8,
+            nse_1: u8,
+            max_sdu_c_to_p_1: u16,
+            max_sdu_p_to_c_1: u16,
+            max_pdu_c_to_p_1: u16,
+            max_pdu_p_to_c_1: u16,
+            phy_c_to_p_1: u8,
+            phy_p_to_c_1: u8,
+            bn_c_to_p_1: u8,
+            bn_p_to_c_1: u8,
+        }
+        LeSetCigParametersTestReturn {
+            num_handles: u8,
+            connection_handle_0: ConnHandle,
+            connection_handle_1: ConnHandle,
+        }
+        Handle = cig_id: u8;
+    }
+}
+
+cmd! {
+    /// LE Create CIS command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html) (§7.8.99).
+    ///
+    /// Completion is per-CIS, via `LE CIS Established` events, not this command's own (immediate)
+    /// Command Status - hence no `Return`. Flattened to exactly 2 CIS, see [`LeSetCigParameters`].
+    LeCreateCis(LE, 0x0064) {
+        LeCreateCisParams {
+            num_cis: u8,
+            cis_connection_handle_0: ConnHandle,
+            acl_connection_handle_0: ConnHandle,
+            cis_connection_handle_1: ConnHandle,
+            acl_connection_handle_1: ConnHandle,
+        }
+    }
+}
+
+cmd! {
+    /// LE Remove CIG command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html) (§7.8.100).
+    LeRemoveCig(LE, 0x0065) {
+        Params = u8;
+        Return = u8;
+        Handle = u8;
+    }
+}
+
+cmd! {
+    /// LE Accept CIS Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e7bb8a8f-45bd-2308-1e4d-0d0a92cb0473)
+    LeAcceptCisRequest(LE, 0x0066) {
+        Params = ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Reject CIS Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9426926e-b73a-2f7d-a9cc-24c3a2d6d3e1)
+    LeRejectCisRequest(LE, 0x0067) {
+        LeRejectCisRequestParams {
+            reason: u8,
+        }
+        Return = ConnHandle;
+        Handle = cis_handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Setup ISO Data Path command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b3823f9-b840-3e7d-7a3a-2e9a3c6cf1e1)
+    LeSetupIsoDataPath(LE, 0x006e) {
+        LeSetupIsoDataPathParams<'a> {
+            data_path_direction: u8,
+            data_path_id: u8,
+            coding_format: u8,
+            company_id: u16,
+            vendor_specific_codec_id: u16,
+            controller_delay: [u8; 3],
+            codec_configuration: &'a [u8],
+        }
+        Return = ConnHandle;
+        Handle = connection_handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Remove ISO Data Path command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b3823f9-b840-3e7d-7a3a-2e9a3c6cf1e2)
+    LeRemoveIsoDataPath(LE, 0x006f) {
+        LeRemoveIsoDataPathParams {
+            data_path_direction: u8,
+        }
+        Return = ConnHandle;
+        Handle = connection_handle: ConnHandle;
+    }
+}
+
+/// `Data_Path_Direction` for [`LeSetupIsoDataPath`]/[`LeRemoveIsoDataPath`].
+pub mod data_path_direction {
+    /// Host to Controller (e.g. a source device's encoded frames going out over the air).
+    pub const INPUT: u8 = 0x00;
+    /// Controller to Host (e.g. a sink device's received frames).
+    pub const OUTPUT: u8 = 0x01;
+}
+
+/// `Data_Path_ID` for [`LeSetupIsoDataPath`]/[`LeRemoveIsoDataPath`]: the standard HCI transport,
+/// as opposed to a vendor-specific one.
+pub const DATA_PATH_ID_HCI: u8 = 0x00;
+
+cmd! {
     /// LE Set Host Feature command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-873282cd-6e49-e9aa-cf6f-02fb4c0ea924)
     LeSetHostFeature(LE, 0x0074) {
         LeSetHostFeatureParams {
