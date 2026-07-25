@@ -229,6 +229,17 @@ impl<'de> FromHciBytes<'de> for &'de AdvPhyOptions {
 }
 
 param! {
+    #[derive(Default)]
+    enum IsoDataPathDirection {
+        /// Host to Controller
+        #[default]
+        Input = 0x00,
+        /// Controller to Host (e.g. a sink device's received frames).
+        Output = 0x01,
+    }
+}
+
+param! {
     struct ScanningPhy {
         active_scan: bool,
         scan_interval: Duration<625>,

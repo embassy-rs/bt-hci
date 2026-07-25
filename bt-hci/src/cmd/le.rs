@@ -3,7 +3,7 @@
 use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllPhys,
     BdAddr, ChannelMap, ConnHandle, ConnIntervalGroup, CteKind, CteMask, Duration, DurationU8, ExtDuration,
-    FilterDuplicates, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
+    FilterDuplicates, InitiatingPhy, IsoDataPathDirection, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
     LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
     LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
     PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy, SpacingTypes,
@@ -1312,7 +1312,7 @@ cmd! {
     /// LE Setup ISO Data Path command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b3823f9-b840-3e7d-7a3a-2e9a3c6cf1e1)
     LeSetupIsoDataPath(LE, 0x006e) {
         LeSetupIsoDataPathParams<'a> {
-            data_path_direction: u8,
+            data_path_direction: IsoDataPathDirection,
             data_path_id: u8,
             coding_format: u8,
             company_id: u16,
@@ -1329,24 +1329,12 @@ cmd! {
     /// LE Remove ISO Data Path command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b3823f9-b840-3e7d-7a3a-2e9a3c6cf1e2)
     LeRemoveIsoDataPath(LE, 0x006f) {
         LeRemoveIsoDataPathParams {
-            data_path_direction: u8,
+            data_path_direction: IsoDataPathDirection,
         }
         Return = ConnHandle;
         Handle = connection_handle: ConnHandle;
     }
 }
-
-/// `Data_Path_Direction` for [`LeSetupIsoDataPath`]/[`LeRemoveIsoDataPath`].
-pub mod data_path_direction {
-    /// Host to Controller (e.g. a source device's encoded frames going out over the air).
-    pub const INPUT: u8 = 0x00;
-    /// Controller to Host (e.g. a sink device's received frames).
-    pub const OUTPUT: u8 = 0x01;
-}
-
-/// `Data_Path_ID` for [`LeSetupIsoDataPath`]/[`LeRemoveIsoDataPath`]: the standard HCI transport,
-/// as opposed to a vendor-specific one.
-pub const DATA_PATH_ID_HCI: u8 = 0x00;
 
 cmd! {
     /// LE Set Host Feature command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-873282cd-6e49-e9aa-cf6f-02fb4c0ea924)
