@@ -43,4 +43,4 @@ pub trait Controller: ErrorType {
     fn try_read<'a>(&self, buf: &'a mut Self::Buffer<'_>) -> Result<ControllerToHostPacket<'a>, TryError<Self::Error>>;
 }
 
-pub use bt_hci_driver::blocking::TryError;
+pub use bt_hci_transport::blocking::TryError;

@@ -1289,6 +1289,229 @@ unsafe impl FixedSizeValue for FrequencyCompensation {
     }
 }
 
+// ============================================================================
+// LE Audio / Isochronous parameters (Bluetooth Core Specification v5.4+)
+// ============================================================================
+
+param!(
+    /// CIG ID (0x00 – 0xEF)
+    struct CigId(u8)
+);
+
+#[allow(missing_docs)]
+impl CigId {
+    /// Create a new instance.
+    pub const fn new(v: u8) -> Self {
+        Self(v)
+    }
+
+    /// Get the inner representation.
+    pub fn as_raw(&self) -> u8 {
+        self.0
+    }
+}
+
+unsafe impl ByteAlignedValue for CigId {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de CigId {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <CigId as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
+
+param!(
+    /// CIS ID (0x00 – 0xEF)
+    struct CisId(u8)
+);
+
+#[allow(missing_docs)]
+impl CisId {
+    /// Create a new instance.
+    pub const fn new(v: u8) -> Self {
+        Self(v)
+    }
+
+    /// Get the inner representation.
+    pub fn as_raw(&self) -> u8 {
+        self.0
+    }
+}
+
+unsafe impl ByteAlignedValue for CisId {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de CisId {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <CisId as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
+
+param! {
+    /// Per-CIS configuration for `LE Set CIG Parameters`.
+    struct CisConfig {
+        cis_id: CisId,
+        max_sdu_c_to_p: u16,
+        max_sdu_p_to_c: u16,
+        phy_c_to_p: PhyMask,
+        phy_p_to_c: PhyMask,
+        rtn_c_to_p: u8,
+        rtn_p_to_c: u8,
+    }
+}
+
+param_slice!(&'a [CisConfig]);
+
+param! {
+    /// Per-CIS configuration for `LE Set CIG Parameters Test`.
+    struct CisConfigTest {
+        cis_id: CisId,
+        max_sdu_c_to_p: u16,
+        max_sdu_p_to_c: u16,
+        max_pdu_c_to_p: u16,
+        max_pdu_p_to_c: u16,
+        phy_c_to_p: PhyMask,
+        phy_p_to_c: PhyMask,
+        bn_c_to_p: u8,
+        bn_p_to_c: u8,
+    }
+}
+
+param_slice!(&'a [CisConfigTest]);
+
+param! {
+    /// CIS-to-ACL handle mapping for `LE Create CIS`.
+    struct CisConnConfig {
+        cis_handle: ConnHandle,
+        acl_handle: ConnHandle,
+    }
+}
+
+param_slice!(&'a [CisConnConfig]);
+
+param! {
+    /// Data path direction.
+    #[derive(Default)]
+    enum DataPathDirection {
+        #[default]
+        Input = 0,
+        Output = 1,
+    }
+}
+
+param!(
+    /// Data path identifier.
+    ///
+    /// - `0x00` = HCI
+    /// - `0x01`–`0xFE` = Logical channel number (vendor-specific)
+    /// - `0xFF` = Audio test mode
+    struct DataPathId(u8)
+);
+
+#[allow(missing_docs)]
+impl DataPathId {
+    /// HCI data path.
+    pub const HCI: DataPathId = DataPathId(0x00);
+    /// Audio test mode.
+    pub const AUDIO_TEST_MODE: DataPathId = DataPathId(0xFF);
+
+    /// Create a new instance.
+    pub const fn new(v: u8) -> Self {
+        Self(v)
+    }
+
+    /// Get the inner representation.
+    pub fn as_raw(&self) -> u8 {
+        self.0
+    }
+}
+
+unsafe impl ByteAlignedValue for DataPathId {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de DataPathId {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <DataPathId as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
+
+param! {
+    /// Codec ID (5 octets).
+    struct CodecId {
+        coding_format: u8,
+        company_id: u16,
+        vendor_specific_codec_id: u16,
+    }
+}
+
+param!(
+    /// Broadcast code (16 octets).
+    struct BroadcastCode([u8; 16])
+);
+
+#[allow(missing_docs)]
+impl BroadcastCode {
+    /// Create a new instance.
+    pub const fn new(v: [u8; 16]) -> Self {
+        Self(v)
+    }
+
+    /// Get the byte representation.
+    pub fn raw(&self) -> &[u8] {
+        &self.0[..]
+    }
+}
+
+unsafe impl ByteAlignedValue for BroadcastCode {}
+
+impl<'de> crate::FromHciBytes<'de> for &'de BroadcastCode {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), crate::FromHciBytesError> {
+        <BroadcastCode as crate::ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
+
+param! {
+    /// BIG encryption mode.
+    #[derive(Default)]
+    enum EncryptionMode {
+        #[default]
+        Unencrypted = 0,
+        Encrypted = 1,
+    }
+}
+
+param! {
+    /// CIS/BIG packing method.
+    #[derive(Default)]
+    enum Packing {
+        #[default]
+        Sequential = 0,
+        Interleaved = 1,
+    }
+}
+
+param! {
+    /// CIS/BIG framing mode.
+    #[derive(Default)]
+    enum Framing {
+        #[default]
+        Unframed = 0,
+        Framed = 1,
+    }
+}
+
+param! {
+    /// ISO test payload type.
+    #[derive(Default)]
+    enum PayloadType {
+        #[default]
+        ZeroLength = 0,
+        VariableLength = 1,
+        MaximumLength = 2,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

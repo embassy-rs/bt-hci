@@ -4,8 +4,8 @@
 
 use core::future::Future;
 
-use bt_hci_driver::blocking::TryError;
-use bt_hci_driver::PacketToHost;
+use bt_hci_transport::blocking::TryError;
+use bt_hci_transport::PacketToHost;
 use embedded_io::ReadExactError;
 
 mod fmt;
@@ -16,7 +16,7 @@ pub mod data;
 pub mod event;
 pub mod param;
 pub mod transport;
-pub use bt_hci_driver::{PacketKind, ReadHciError};
+pub use bt_hci_transport::{PacketKind, ReadHciError};
 pub use btuuid as uuid;
 
 /// Errors from parsing HCI data.

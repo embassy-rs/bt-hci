@@ -1,0 +1,18 @@
+[package]
+name = "bt-hci-usb"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+description = "USB transport for Bluetooth HCI"
+repository = "https://github.com/embassy-rs/bt-hci"
+keywords = ["bluetooth", "hci", "BLE"]
+categories = ["embedded", "hardware-support"]
+readme = "README.md"
+documentation = "https://docs.rs/bt-hci-usb"
+
+[dependencies]
+bt-hci-transport = { version = "0.1.0", path = "../bt-hci-transport" }
+embedded-io = { version = "0.7.1", features = ["std"] }
+futures = { version = "0.3.32", default-features = false }
+nusb = { version = "0.2.3", features = ["tokio"] }
+tokio = { version = "1", features = ["io-util", "rt", "sync"] }

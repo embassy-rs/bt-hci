@@ -2,7 +2,7 @@
 
 use core::future::Future;
 
-use bt_hci_driver::PacketToController;
+use bt_hci_transport::PacketToController;
 use embedded_io::Write;
 use embedded_io_async::Write as AsyncWrite;
 

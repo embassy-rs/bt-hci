@@ -1,0 +1,17 @@
+[package]
+name = "bt-hci-linux"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "Linux integration with bt-hci"
+repository = "https://github.com/embassy-rs/bt-hci"
+keywords = ["bluetooth", "hci", "BLE"]
+categories = ["embedded", "hardware-support"]
+readme = "README.md"
+documentation = "https://docs.rs/bt-hci-linux"
+
+[dependencies]
+tokio = { version = "1", features = ["io-util", "net", "rt", "macros", "signal", "sync"] }
+embedded-io = { version = "0.7", features = ["std"] }
+libc = "0.2"
+bt-hci-transport = { version = "0.1.0", path = "../bt-hci-transport" }

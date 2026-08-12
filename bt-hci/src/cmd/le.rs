@@ -1,13 +1,18 @@
 //! LE Controller commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0f07d2b9-81e3-6508-ee08-8c808e468fed)
 
+use core::mem;
+
 use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllPhys,
     BdAddr, ChannelMap, ConnHandle, ConnIntervalGroup, CteKind, CteMask, Duration, DurationU8, ExtDuration,
     FilterDuplicates, InitiatingPhy, IsoDataPathDirection, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
+    BdAddr, BigHandle, BroadcastCode, ChannelMap, CigId, CisConfig, CisConfigTest, CisConnConfig, CodecId, ConnHandle,
+    ConnIntervalGroup, CteKind, CteMask, DataPathDirection, DataPathId, Duration, DurationU8, EncryptionMode,
+    ExtDuration, FilterDuplicates, Framing, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
     LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
-    LePeriodicAdvSyncTransferMode, LeScanKind, Operation, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams,
-    PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy, SpacingTypes,
-    SwitchingSamplingRates, SyncHandle,
+    LePeriodicAdvSyncTransferMode, LeScanKind, Operation, Packing, PayloadType, PeriodicAdvProps, PhyKind, PhyMask,
+    PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy,
+    SpacingTypes, SwitchingSamplingRates, SyncHandle,
 };
 use crate::{cmd, WriteHci};
 
@@ -696,7 +701,7 @@ cmd! {
     }
 }
 
-crate::cmd! {
+cmd! {
     BASE
     /// LE Set Extended Scan Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-431e2ed0-fe1f-17bd-6e6a-91ff801c6063)
     LeSetExtScanParams(LE, 0x0041) {
@@ -764,7 +769,7 @@ cmd! {
     }
 }
 
-crate::cmd! {
+cmd! {
     BASE
     /// LE Extended Create Connection (v1) command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1dad213e-f660-2937-c94d-7a3162e94105)
     LeExtCreateConn(LE, 0x0043) {
@@ -1594,5 +1599,706 @@ cmd! {
             num_groups: u8,
             groups: [ConnIntervalGroup; 255],
         }
+    }
+}
+
+// ============================================================================
+// ISO / LE Audio commands (Bluetooth Core Specification v5.4+)
+// ============================================================================
+
+cmd! {
+    /// LE Read ISO TX Sync command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cf634e13-b00c-6cfc-0b17-207ac33e6b61)
+    LeReadIsoTxSync(LE, 0x0061) {
+        Params = ConnHandle;
+        LeReadIsoTxSyncReturn {
+            packet_sequence_number: u16,
+            tx_time_stamp: u32,
+            time_offset: ExtDuration<1>,
+        }
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Set CIG Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b09845e-f6b6-d9a5-229e-67c56ef64bbd)
+    LeSetCigParameters(LE, 0x0062) {
+        LeSetCigParametersParams<'a> {
+            cig_id: CigId,
+            sdu_interval_c_to_p: ExtDuration<1>,
+            sdu_interval_p_to_c: ExtDuration<1>,
+            ft_c_to_p: u8,
+            ft_p_to_c: u8,
+            iso_interval: u16,
+            worst_case_sca: u8,
+            packing: Packing,
+            framing: Framing,
+            cis_configs: &'a [CisConfig],
+        }
+        LeSetCigParametersReturn {
+            cig_id: CigId,
+            num_cis: u8,
+            cis_handles: [ConnHandle; 31],
+        }
+    }
+}
+
+cmd! {
+    /// LE Set CIG Parameters Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7e0787ab-982b-5f41-25d9-36b34a0296ec)
+    LeSetCigParametersTest(LE, 0x0063) {
+        LeSetCigParametersTestParams<'a> {
+            cig_id: CigId,
+            sdu_interval_c_to_p: ExtDuration<1>,
+            sdu_interval_p_to_c: ExtDuration<1>,
+            ft_c_to_p: u8,
+            ft_p_to_c: u8,
+            iso_interval: u16,
+            worst_case_sca: u8,
+            packing: Packing,
+            framing: Framing,
+            cis_configs: &'a [CisConfigTest],
+        }
+        LeSetCigParametersTestReturn {
+            cig_id: CigId,
+            num_cis: u8,
+            cis_handles: [ConnHandle; 31],
+        }
+    }
+}
+
+cmd! {
+    /// LE Create CIS command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4c126319-a7b1-6765-ab23-04777e78599f)
+    LeCreateCis(LE, 0x0064) {
+        LeCreateCisParams<'a> {
+            cig_id: CigId,
+            cis_configs: &'a [CisConnConfig],
+        }
+    }
+}
+
+cmd! {
+    /// LE Remove CIG command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0d4fd619-7ae9-67ef-8f00-70264a5b3a0c)
+    LeRemoveCig(LE, 0x0065) {
+        Params = CigId;
+        LeRemoveCigReturn {
+            cig_id: CigId,
+        }
+    }
+}
+
+cmd! {
+    /// LE Accept CIS Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-999840ef-fb58-166d-2822-14b10a259d20)
+    LeAcceptCisRequest(LE, 0x0066) {
+        Params = ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Reject CIS Request command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-bb5d147e-a5d2-9fd0-b7a2-a2e9827a965a)
+    LeRejectCisRequest(LE, 0x0067) {
+        LeRejectCisRequestParams {
+            reason: u8,
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Create BIG command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b085cd32-0c2b-9b20-acfa-c825ee69820f)
+    LeCreateBig(LE, 0x0068) {
+        LeCreateBigParams {
+            big_handle: u8,
+            adv_handle: AdvHandle,
+            num_bis: u8,
+            sdu_interval: ExtDuration<1>,
+            max_sdu: u16,
+            max_transport_latency: u16,
+            rtn: u8,
+            phy: PhyMask,
+            packing: Packing,
+            framing: Framing,
+            encryption: EncryptionMode,
+            broadcast_code: BroadcastCode,
+        }
+    }
+}
+
+cmd! {
+    BASE
+    /// LE Create BIG Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a15005d1-019f-e827-284b-e8ee558d9a69)
+    LeCreateBigTest(LE, 0x0069) {
+        Params<'a> = LeCreateBigTestParams<'a>;
+    }
+}
+
+impl<'a> LeCreateBigTest<'a> {
+    /// Create a new instance.
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        big_handle: u8,
+        adv_handle: AdvHandle,
+        num_bis: u8,
+        sdu_interval: ExtDuration<1>,
+        iso_interval: u16,
+        nse: u8,
+        max_sdu: u16,
+        max_pdu: u16,
+        phy: PhyMask,
+        packing: Packing,
+        framing: Framing,
+        bn: u8,
+        irc: u8,
+        pto: u8,
+        encryption: EncryptionMode,
+        broadcast_code: BroadcastCode,
+        bis_handles: &'a [ConnHandle],
+    ) -> Self {
+        Self(LeCreateBigTestParams {
+            big_handle,
+            adv_handle,
+            num_bis,
+            sdu_interval,
+            iso_interval,
+            nse,
+            max_sdu,
+            max_pdu,
+            phy,
+            packing,
+            framing,
+            bn,
+            irc,
+            pto,
+            encryption,
+            broadcast_code,
+            bis_handles,
+        })
+    }
+}
+
+/// Parameters for LE Create BIG Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeCreateBigTestParams<'a> {
+    /// BIG handle.
+    pub big_handle: u8,
+    /// Advertising handle.
+    pub adv_handle: AdvHandle,
+    /// Number of BIS.
+    pub num_bis: u8,
+    /// SDU interval.
+    pub sdu_interval: ExtDuration<1>,
+    /// ISO interval.
+    pub iso_interval: u16,
+    /// Number of subevents.
+    pub nse: u8,
+    /// Maximum SDU.
+    pub max_sdu: u16,
+    /// Maximum PDU.
+    pub max_pdu: u16,
+    /// PHY.
+    pub phy: PhyMask,
+    /// Packing.
+    pub packing: Packing,
+    /// Framing.
+    pub framing: Framing,
+    /// Burst number.
+    pub bn: u8,
+    /// Immediate repetition count.
+    pub irc: u8,
+    /// Pre-transmission offset.
+    pub pto: u8,
+    /// Encryption mode.
+    pub encryption: EncryptionMode,
+    /// Broadcast code.
+    pub broadcast_code: BroadcastCode,
+    /// BIS handles.
+    pub bis_handles: &'a [ConnHandle],
+}
+
+impl WriteHci for LeCreateBigTestParams<'_> {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        1 + 1 + 1 + 3 + 2 + 1 + 2 + 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 16 + mem::size_of_val(self.bis_handles)
+    }
+
+    #[inline(always)]
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.big_handle.write_hci(&mut writer)?;
+        self.adv_handle.write_hci(&mut writer)?;
+        self.num_bis.write_hci(&mut writer)?;
+        self.sdu_interval.write_hci(&mut writer)?;
+        self.iso_interval.write_hci(&mut writer)?;
+        self.nse.write_hci(&mut writer)?;
+        self.max_sdu.write_hci(&mut writer)?;
+        self.max_pdu.write_hci(&mut writer)?;
+        self.phy.write_hci(&mut writer)?;
+        self.packing.write_hci(&mut writer)?;
+        self.framing.write_hci(&mut writer)?;
+        self.bn.write_hci(&mut writer)?;
+        self.irc.write_hci(&mut writer)?;
+        self.pto.write_hci(&mut writer)?;
+        self.encryption.write_hci(&mut writer)?;
+        self.broadcast_code.write_hci(&mut writer)?;
+        for h in self.bis_handles {
+            h.write_hci(&mut writer)?;
+        }
+        Ok(())
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.big_handle.write_hci_async(&mut writer).await?;
+        self.adv_handle.write_hci_async(&mut writer).await?;
+        self.num_bis.write_hci_async(&mut writer).await?;
+        self.sdu_interval.write_hci_async(&mut writer).await?;
+        self.iso_interval.write_hci_async(&mut writer).await?;
+        self.nse.write_hci_async(&mut writer).await?;
+        self.max_sdu.write_hci_async(&mut writer).await?;
+        self.max_pdu.write_hci_async(&mut writer).await?;
+        self.phy.write_hci_async(&mut writer).await?;
+        self.packing.write_hci_async(&mut writer).await?;
+        self.framing.write_hci_async(&mut writer).await?;
+        self.bn.write_hci_async(&mut writer).await?;
+        self.irc.write_hci_async(&mut writer).await?;
+        self.pto.write_hci_async(&mut writer).await?;
+        self.encryption.write_hci_async(&mut writer).await?;
+        self.broadcast_code.write_hci_async(&mut writer).await?;
+        for h in self.bis_handles {
+            h.write_hci_async(&mut writer).await?;
+        }
+        Ok(())
+    }
+}
+
+cmd! {
+    /// LE Terminate BIG command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-aa21e86e-aeb9-35a3-dbf4-15d48fc30491)
+    LeTerminateBig(LE, 0x006a) {
+        LeTerminateBigParams {
+            big_handle: u8,
+            reason: u8,
+        }
+    }
+}
+
+cmd! {
+    BASE
+    /// LE BIG Create Sync command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-19c7d386-e227-0e12-cd0b-eb567f3c7d18)
+    LeBigCreateSync(LE, 0x006b) {
+        Params<'a> = LeBigCreateSyncParams<'a>;
+    }
+}
+
+impl<'a> LeBigCreateSync<'a> {
+    /// Create a new instance.
+    pub fn new(
+        big_sync_handle: BigHandle,
+        encryption: EncryptionMode,
+        broadcast_code: BroadcastCode,
+        mse: u8,
+        big_sync_timeout: u16,
+        num_bis: u8,
+        bis: &'a [u8],
+    ) -> Self {
+        Self(LeBigCreateSyncParams {
+            big_sync_handle,
+            encryption,
+            broadcast_code,
+            mse,
+            big_sync_timeout,
+            num_bis,
+            bis,
+        })
+    }
+}
+
+/// Parameters for LE BIG Create Sync command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeBigCreateSyncParams<'a> {
+    /// BIG sync handle.
+    pub big_sync_handle: BigHandle,
+    /// Encryption mode.
+    pub encryption: EncryptionMode,
+    /// Broadcast code.
+    pub broadcast_code: BroadcastCode,
+    /// Maximum subevents.
+    pub mse: u8,
+    /// BIG sync timeout.
+    pub big_sync_timeout: u16,
+    /// Number of BIS.
+    pub num_bis: u8,
+    /// BIS indices.
+    pub bis: &'a [u8],
+}
+
+impl WriteHci for LeBigCreateSyncParams<'_> {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        2 + 1 + 16 + 1 + 2 + 1 + self.bis.len()
+    }
+
+    #[inline(always)]
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.big_sync_handle.write_hci(&mut writer)?;
+        self.encryption.write_hci(&mut writer)?;
+        self.broadcast_code.write_hci(&mut writer)?;
+        self.mse.write_hci(&mut writer)?;
+        self.big_sync_timeout.write_hci(&mut writer)?;
+        self.num_bis.write_hci(&mut writer)?;
+        writer.write_all(self.bis)
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.big_sync_handle.write_hci_async(&mut writer).await?;
+        self.encryption.write_hci_async(&mut writer).await?;
+        self.broadcast_code.write_hci_async(&mut writer).await?;
+        self.mse.write_hci_async(&mut writer).await?;
+        self.big_sync_timeout.write_hci_async(&mut writer).await?;
+        self.num_bis.write_hci_async(&mut writer).await?;
+        writer.write_all(self.bis).await
+    }
+}
+
+cmd! {
+    /// LE BIG Terminate Sync command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-94cd26e9-d16d-2b51-a84e-90fca3d503a9)
+    LeBigTerminateSync(LE, 0x006c) {
+        Params = BigHandle;
+        Return = BigHandle;
+        Handle = BigHandle;
+    }
+}
+
+cmd! {
+    BASE
+    /// LE Setup ISO Data Path command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d93e717d-07ab-4342-fe66-c09383326a37)
+    LeSetupIsoDataPath(LE, 0x006e) {
+        Params<'a> = LeSetupIsoDataPathParams<'a>;
+        Return = ConnHandle;
+        Handle = ConnHandle;
+    }
+}
+
+impl<'a> LeSetupIsoDataPath<'a> {
+    /// Create a new instance.
+    pub fn new(
+        handle: ConnHandle,
+        data_path_direction: DataPathDirection,
+        data_path_id: DataPathId,
+        codec_id: CodecId,
+        controller_delay: ExtDuration<1>,
+        codec_configuration: &'a [u8],
+    ) -> Self {
+        Self(LeSetupIsoDataPathParams {
+            handle,
+            data_path_direction,
+            data_path_id,
+            codec_id,
+            controller_delay,
+            codec_configuration,
+        })
+    }
+
+    fn handle(&self) -> ConnHandle {
+        self.0.handle
+    }
+}
+
+/// Parameters for LE Setup ISO Data Path command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeSetupIsoDataPathParams<'a> {
+    /// Connection handle.
+    pub handle: ConnHandle,
+    /// Data path direction.
+    pub data_path_direction: DataPathDirection,
+    /// Data path ID.
+    pub data_path_id: DataPathId,
+    /// Codec ID.
+    pub codec_id: CodecId,
+    /// Controller delay.
+    pub controller_delay: ExtDuration<1>,
+    /// Codec configuration.
+    pub codec_configuration: &'a [u8],
+}
+
+impl WriteHci for LeSetupIsoDataPathParams<'_> {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        2 + 1 + 1 + 5 + 3 + 1 + self.codec_configuration.len()
+    }
+
+    #[inline(always)]
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.handle.write_hci(&mut writer)?;
+        self.data_path_direction.write_hci(&mut writer)?;
+        self.data_path_id.write_hci(&mut writer)?;
+        self.codec_id.write_hci(&mut writer)?;
+        self.controller_delay.write_hci(&mut writer)?;
+        (self.codec_configuration.len() as u8).write_hci(&mut writer)?;
+        writer.write_all(self.codec_configuration)
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.handle.write_hci_async(&mut writer).await?;
+        self.data_path_direction.write_hci_async(&mut writer).await?;
+        self.data_path_id.write_hci_async(&mut writer).await?;
+        self.codec_id.write_hci_async(&mut writer).await?;
+        self.controller_delay.write_hci_async(&mut writer).await?;
+        (self.codec_configuration.len() as u8)
+            .write_hci_async(&mut writer)
+            .await?;
+        writer.write_all(self.codec_configuration).await
+    }
+}
+
+cmd! {
+    /// LE Remove ISO Data Path command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-13ba6ab3-ba00-3bde-f665-cbe23031e3dd)
+    LeRemoveIsoDataPath(LE, 0x006f) {
+        LeRemoveIsoDataPathParams {
+            data_path_direction: DataPathDirection,
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE ISO Transmit Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7a343577-d006-456f-0351-9ff745b156ff)
+    LeIsoTransmitTest(LE, 0x0070) {
+        LeIsoTransmitTestParams {
+            payload_type: PayloadType,
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE ISO Receive Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ec377f99-b758-f458-701b-a2e7c02468b0)
+    LeIsoReceiveTest(LE, 0x0071) {
+        LeIsoReceiveTestParams {
+            payload_type: PayloadType,
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE ISO Read Test Counters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-11231b0e-6027-2024-f2dc-8338dfc3bf5b)
+    LeIsoReadTestCounters(LE, 0x0072) {
+        Params = ConnHandle;
+        LeIsoReadTestCountersReturn {
+            received_sdu_count: u32,
+            missed_sdu_count: u32,
+            failed_sdu_count: u32,
+        }
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE ISO Test End command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a406d2c9-513e-03d9-854b-5bc0974373dc)
+    LeIsoTestEnd(LE, 0x0073) {
+        Params = ConnHandle;
+        LeIsoTestEndReturn {
+            received_sdu_count: u32,
+            missed_sdu_count: u32,
+            failed_sdu_count: u32,
+        }
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Read ISO Link Quality command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4f70cb64-62e9-0b89-90ba-7f3c033f1f72)
+    LeReadIsoLinkQuality(LE, 0x0075) {
+        Params = ConnHandle;
+        LeReadIsoLinkQualityReturn {
+            tx_unacked_packets: u32,
+            tx_flushed_packets: u32,
+            tx_last_sdu_subevent_packets: u32,
+            retx_packets: u32,
+            crc_error_packets: u32,
+            rx_unreceived_packets: u32,
+            duplicate_packets: u32,
+        }
+        Handle = handle: ConnHandle;
+    }
+}
+
+// ============================================================================
+// Missing test-mode commands
+// ============================================================================
+
+cmd! {
+    BASE
+    /// LE Transmitter Test V3 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-15c2cfce-06a0-5da7-5cbb-45c1896cca8d)
+    LeTransmitterTestV3(LE, 0x005e) {
+        Params<'a> = LeTransmitterTestV3Params<'a>;
+        Return = ();
+    }
+}
+
+impl<'a> LeTransmitterTestV3<'a> {
+    /// Create a new instance.
+    pub fn new(
+        tx_channel: u8,
+        test_data_length: u8,
+        packet_payload: u8,
+        phy: PhyMask,
+        cte_length: u8,
+        cte_type: CteKind,
+        switching_pattern: &'a [u8],
+    ) -> Self {
+        Self(LeTransmitterTestV3Params {
+            tx_channel,
+            test_data_length,
+            packet_payload,
+            phy,
+            cte_length,
+            cte_type,
+            switching_pattern,
+        })
+    }
+}
+
+/// Parameters for LE Transmitter Test V3 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeTransmitterTestV3Params<'a> {
+    /// TX channel.
+    pub tx_channel: u8,
+    /// Test data length.
+    pub test_data_length: u8,
+    /// Packet payload.
+    pub packet_payload: u8,
+    /// PHY.
+    pub phy: PhyMask,
+    /// CTE length.
+    pub cte_length: u8,
+    /// CTE type.
+    pub cte_type: CteKind,
+    /// Antenna switching pattern.
+    pub switching_pattern: &'a [u8],
+}
+
+impl WriteHci for LeTransmitterTestV3Params<'_> {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        1 + 1 + 1 + 1 + 1 + 1 + 1 + self.switching_pattern.len()
+    }
+
+    #[inline(always)]
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.tx_channel.write_hci(&mut writer)?;
+        self.test_data_length.write_hci(&mut writer)?;
+        self.packet_payload.write_hci(&mut writer)?;
+        self.phy.write_hci(&mut writer)?;
+        self.cte_length.write_hci(&mut writer)?;
+        self.cte_type.write_hci(&mut writer)?;
+        (self.switching_pattern.len() as u8).write_hci(&mut writer)?;
+        writer.write_all(self.switching_pattern)
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.tx_channel.write_hci_async(&mut writer).await?;
+        self.test_data_length.write_hci_async(&mut writer).await?;
+        self.packet_payload.write_hci_async(&mut writer).await?;
+        self.phy.write_hci_async(&mut writer).await?;
+        self.cte_length.write_hci_async(&mut writer).await?;
+        self.cte_type.write_hci_async(&mut writer).await?;
+        (self.switching_pattern.len() as u8)
+            .write_hci_async(&mut writer)
+            .await?;
+        writer.write_all(self.switching_pattern).await
+    }
+}
+
+cmd! {
+    BASE
+    /// LE Receiver Test V3 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d5d30b61-e8be-8fa5-a04b-7d505a74ea9d)
+    LeReceiverTestV3(LE, 0x005f) {
+        Params<'a> = LeReceiverTestV3Params<'a>;
+        Return = ();
+    }
+}
+
+impl<'a> LeReceiverTestV3<'a> {
+    /// Create a new instance.
+    pub fn new(
+        rx_channel: u8,
+        phy: PhyMask,
+        modulation_index: u8,
+        expected_cte_length: u8,
+        expected_cte_type: CteKind,
+        slot_durations: u8,
+        switching_pattern: &'a [u8],
+    ) -> Self {
+        Self(LeReceiverTestV3Params {
+            rx_channel,
+            phy,
+            modulation_index,
+            expected_cte_length,
+            expected_cte_type,
+            slot_durations,
+            switching_pattern,
+        })
+    }
+}
+
+/// Parameters for LE Receiver Test V3 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeReceiverTestV3Params<'a> {
+    /// RX channel.
+    pub rx_channel: u8,
+    /// PHY.
+    pub phy: PhyMask,
+    /// Modulation index.
+    pub modulation_index: u8,
+    /// Expected CTE length.
+    pub expected_cte_length: u8,
+    /// Expected CTE type.
+    pub expected_cte_type: CteKind,
+    /// Slot durations.
+    pub slot_durations: u8,
+    /// Antenna switching pattern.
+    pub switching_pattern: &'a [u8],
+}
+
+impl WriteHci for LeReceiverTestV3Params<'_> {
+    #[inline(always)]
+    fn size(&self) -> usize {
+        1 + 1 + 1 + 1 + 1 + 1 + 1 + self.switching_pattern.len()
+    }
+
+    #[inline(always)]
+    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.rx_channel.write_hci(&mut writer)?;
+        self.phy.write_hci(&mut writer)?;
+        self.modulation_index.write_hci(&mut writer)?;
+        self.expected_cte_length.write_hci(&mut writer)?;
+        self.expected_cte_type.write_hci(&mut writer)?;
+        self.slot_durations.write_hci(&mut writer)?;
+        (self.switching_pattern.len() as u8).write_hci(&mut writer)?;
+        writer.write_all(self.switching_pattern)
+    }
+
+    #[inline(always)]
+    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+        self.rx_channel.write_hci_async(&mut writer).await?;
+        self.phy.write_hci_async(&mut writer).await?;
+        self.modulation_index.write_hci_async(&mut writer).await?;
+        self.expected_cte_length.write_hci_async(&mut writer).await?;
+        self.expected_cte_type.write_hci_async(&mut writer).await?;
+        self.slot_durations.write_hci_async(&mut writer).await?;
+        (self.switching_pattern.len() as u8)
+            .write_hci_async(&mut writer)
+            .await?;
+        writer.write_all(self.switching_pattern).await
     }
 }
