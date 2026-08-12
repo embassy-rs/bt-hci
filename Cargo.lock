@@ -45,7 +45,7 @@ dependencies = [
 
 [[package]]
 name = "bt-hci-linux"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "bt-hci-transport",
  "embedded-io",
@@ -75,7 +75,7 @@ dependencies = [
 
 [[package]]
 name = "bt-hci-usb"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "bt-hci-transport",
  "embedded-io",
