@@ -4,12 +4,10 @@ use core::mem;
 
 use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllPhys,
-    BdAddr, ChannelMap, ConnHandle, ConnIntervalGroup, CteKind, CteMask, Duration, DurationU8, ExtDuration,
-    FilterDuplicates, InitiatingPhy, IsoDataPathDirection, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
     BdAddr, BigHandle, BroadcastCode, ChannelMap, CigId, CisConfig, CisConfigTest, CisConnConfig, CodecId, ConnHandle,
     ConnIntervalGroup, CteKind, CteMask, DataPathDirection, DataPathId, Duration, DurationU8, EncryptionMode,
-    ExtDuration, FilterDuplicates, Framing, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
-    LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
+    ExtDuration, FilterDuplicates, Framing, InitiatingPhy, IsoDataPathDirection, LeDataRelatedAddrChangeReasons,
+    LeEventMask, LeFeatureMask, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
     LePeriodicAdvSyncTransferMode, LeScanKind, Operation, Packing, PayloadType, PeriodicAdvProps, PhyKind, PhyMask,
     PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy,
     SpacingTypes, SwitchingSamplingRates, SyncHandle,
