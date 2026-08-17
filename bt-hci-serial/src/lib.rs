@@ -41,21 +41,24 @@ impl<E: embedded_io::Error> embedded_io::Error for Error<E> {
     }
 }
 
-impl<E: embedded_io::Error> From<E> for Error<E> {
-    fn from(e: E) -> Self {
-        Self::Write(e)
-    }
-}
-
 impl<E: embedded_io::Error> From<ReadExactError<E>> for Error<E> {
     fn from(e: ReadExactError<E>) -> Self {
         Self::Read(e.into())
     }
 }
 
-impl<E: embedded_io::Error> From<ReadHciError<E>> for Error<E> {
-    fn from(e: ReadHciError<E>) -> Self {
-        Self::Read(e)
+// Required by `ExternalController`, which bounds its transport error type on
+// `From<ReadHciError<Infallible>>`. A blanket `From<ReadHciError<E>>` would
+// overlap with this impl at `E = Infallible`, so the conversion is widening
+// instead: an infallible read error maps into the equivalent `ReadHciError<E>`.
+impl<E: embedded_io::Error> From<ReadHciError<core::convert::Infallible>> for Error<E> {
+    fn from(e: ReadHciError<core::convert::Infallible>) -> Self {
+        Self::Read(match e {
+            ReadHciError::BufferTooSmall => ReadHciError::BufferTooSmall,
+            ReadHciError::InvalidValue => ReadHciError::InvalidValue,
+            ReadHciError::Read(ReadExactError::UnexpectedEof) => ReadHciError::Read(ReadExactError::UnexpectedEof),
+            ReadHciError::Read(ReadExactError::Other(e)) => match e {},
+        })
     }
 }
 
@@ -88,7 +91,7 @@ impl<
 {
     async fn read<'a, P: PacketToHost<'a>>(&self, rx: &'a mut [u8]) -> Result<P, Self::Error> {
         let mut r = self.reader.lock().await;
-        let kind = PacketKind::read_async(&mut *r).await?;
+        let kind = PacketKind::read_async(&mut *r).await.map_err(Error::Read)?;
         P::read_hci_async(kind, &mut *r, rx).await.map_err(Error::Read)
     }
 
@@ -103,7 +106,9 @@ impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error =
 {
     fn read<'a, P: PacketToHost<'a>>(&self, rx: &'a mut [u8]) -> Result<P, TryError<Self::Error>> {
         let mut r = self.reader.try_lock().map_err(|_| TryError::Busy)?;
-        let kind = PacketKind::read(&mut *r)?;
+        let kind = PacketKind::read(&mut *r)
+            .map_err(Error::Read)
+            .map_err(TryError::Error)?;
         P::read_hci(kind, &mut *r, rx)
             .map_err(Error::Read)
             .map_err(TryError::Error)
