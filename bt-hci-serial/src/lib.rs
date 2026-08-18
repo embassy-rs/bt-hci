@@ -3,7 +3,7 @@
 #![no_std]
 
 use bt_hci_transport::blocking::TryError;
-use bt_hci_transport::{PacketKind, PacketToController, PacketToHost, ReadHciError, Transport};
+use bt_hci_transport::{PacketKind, PacketToController, PacketToHost, ReadHciError, Transport, WithIndicator};
 use embassy_sync::blocking_mutex::raw::RawMutex;
 use embassy_sync::mutex::Mutex;
 use embedded_io::{ErrorType, ReadExactError};
@@ -97,7 +97,10 @@ impl<
 
     async fn write<P: PacketToController>(&self, tx: &P) -> Result<(), Self::Error> {
         let mut w = self.writer.lock().await;
-        tx.write_hci_async(&mut *w).await.map_err(|e| Error::Write(e))
+        WithIndicator::new(tx)
+            .write_hci_async(&mut *w)
+            .await
+            .map_err(|e| Error::Write(e))
     }
 }
 
@@ -116,7 +119,8 @@ impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error =
 
     fn write<P: PacketToController>(&self, tx: &P) -> Result<(), TryError<Self::Error>> {
         let mut w = self.writer.try_lock().map_err(|_| TryError::Busy)?;
-        tx.write_hci(&mut *w)
+        WithIndicator::new(tx)
+            .write_hci(&mut *w)
             .map_err(|e| Error::Write(e))
             .map_err(TryError::Error)
     }
@@ -125,4 +129,72 @@ impl<M: RawMutex, R: embedded_io::Read<Error = E>, W: embedded_io::Write<Error =
 pub mod blocking {
     //! Blocking transport trait.
     pub use bt_hci_transport::blocking::Transport;
+}
+
+#[cfg(test)]
+mod tests {
+    use embassy_sync::blocking_mutex::raw::NoopRawMutex;
+
+    use super::*;
+
+    struct FakeCmd;
+
+    impl PacketToController for FakeCmd {
+        const KIND: PacketKind = PacketKind::Cmd;
+
+        fn size(&self) -> usize {
+            3
+        }
+
+        fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            writer.write_all(&[0x03, 0x0c, 0x00])
+        }
+
+        async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
+            writer.write_all(&[0x03, 0x0c, 0x00]).await
+        }
+    }
+
+    struct SliceWriter<'a> {
+        buf: &'a mut [u8],
+        pos: usize,
+    }
+
+    impl embedded_io::ErrorType for SliceWriter<'_> {
+        type Error = core::convert::Infallible;
+    }
+
+    impl embedded_io::Write for SliceWriter<'_> {
+        fn write(&mut self, data: &[u8]) -> Result<usize, Self::Error> {
+            let n = data.len().min(self.buf.len() - self.pos);
+            self.buf[self.pos..self.pos + n].copy_from_slice(&data[..n]);
+            self.pos += n;
+            Ok(n)
+        }
+
+        fn flush(&mut self) -> Result<(), Self::Error> {
+            Ok(())
+        }
+    }
+
+    impl embedded_io_async::Write for SliceWriter<'_> {
+        async fn write(&mut self, data: &[u8]) -> Result<usize, Self::Error> {
+            embedded_io::Write::write(self, data)
+        }
+
+        async fn flush(&mut self) -> Result<(), Self::Error> {
+            Ok(())
+        }
+    }
+
+    #[test]
+    fn write_prepends_packet_kind_indicator() {
+        let mut buf = [0u8; 4];
+        {
+            let transport: SerialTransport<NoopRawMutex, &[u8], SliceWriter<'_>> =
+                SerialTransport::new(&[][..], SliceWriter { buf: &mut buf, pos: 0 });
+            blocking::Transport::write(&transport, &FakeCmd).unwrap();
+        }
+        assert_eq!(buf, [0x01, 0x03, 0x0c, 0x00]);
+    }
 }
