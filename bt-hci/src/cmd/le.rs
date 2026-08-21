@@ -6,11 +6,11 @@ use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllPhys,
     BdAddr, BigHandle, BroadcastCode, ChannelMap, CigId, CisConfig, CisConfigTest, CisConnConfig, CodecId, ConnHandle,
     ConnIntervalGroup, CteKind, CteMask, DataPathDirection, DataPathId, Duration, DurationU8, EncryptionMode,
-    ExtDuration, FilterDuplicates, Framing, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
-    LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
-    LePeriodicAdvSyncTransferMode, LeScanKind, Operation, Packing, PayloadType, PeriodicAdvProps, PhyKind, PhyMask,
-    PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy,
-    SpacingTypes, SwitchingSamplingRates, SyncHandle,
+    ExtDuration, FilterDuplicates, FlagOp, Framing, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask,
+    LeFeatureMask, LeHostFeature, LeHostFeatureV2, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable,
+    LePeriodicAdvSubeventData, LePeriodicAdvSyncTransferMode, LeScanKind, Operation, Packing, PayloadType,
+    PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason,
+    ScanningFilterPolicy, ScanningPhy, SpacingTypes, SwitchingSamplingRates, SyncHandle,
 };
 use crate::{cmd, WriteHci};
 
@@ -1184,8 +1184,8 @@ cmd! {
     /// LE Set Host Feature command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-873282cd-6e49-e9aa-cf6f-02fb4c0ea924)
     LeSetHostFeature(LE, 0x0074) {
         LeSetHostFeatureParams {
-            bit_number: u8,
-            bit_value: u8,
+            bit_number: LeHostFeature,
+            bit_value: FlagOp,
         }
         Return = ();
     }
@@ -1371,8 +1371,8 @@ cmd! {
     /// LE Set Host Feature V2 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c8e1603a-50b7-6ba6-2867-d9c78fd5c89d)
     LeSetHostFeatureV2(LE, 0x0097) {
         LeSetHostFeatureV2Params {
-            bit_number: u16,
-            bit_value: u8,
+            bit_number: LeHostFeatureV2,
+            bit_value: FlagOp,
         }
         Return = ();
     }
