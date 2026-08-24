@@ -446,6 +446,52 @@ param! {
 }
 
 param! {
+    enum LeHostFeature {
+        ConnIsoStream = 32,
+        ConnSubrating = 38,
+        AdvCodingSelection = 41,
+        ChannelSounding = 47,
+    }
+}
+
+/// Feature host support flags
+#[repr(u16, align(1))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[allow(missing_docs)]
+pub enum LeHostFeatureV2 {
+    ConnIsoStream = 32,
+    ConnSubrating = 38,
+    AdvCodingSelection = 41,
+    ChannelSounding = 47,
+    ShorterConnectionIntervals = 73,
+}
+
+unsafe impl FixedSizeValue for LeHostFeatureV2 {
+    #[inline(always)]
+    fn is_valid(data: &[u8]) -> bool {
+        let val = u16::from_le_bytes([data[0], data[1]]);
+        val == 32 || val == 38 || val == 41 || val == 47 || val == 73
+    }
+}
+
+unsafe impl ByteAlignedValue for LeHostFeatureV2 {}
+
+impl<'de> FromHciBytes<'de> for &'de LeHostFeatureV2 {
+    #[inline(always)]
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        <LeHostFeatureV2 as ByteAlignedValue>::ref_from_hci_bytes(data)
+    }
+}
+
+param! {
+    enum FlagOp {
+        Clear = 0,
+        Set = 1,
+    }
+}
+
+param! {
     bitfield LeDataRelatedAddrChangeReasons[1] {
         (0, change_on_adv_data_change, set_change_addr_on_adv_data_changes);
         (1, change_on_scan_response_data_change, set_change_addr_on_scan_response_data_changes);
