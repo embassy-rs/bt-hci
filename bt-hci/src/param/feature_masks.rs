@@ -59,6 +59,94 @@ impl ExtendedLmpFeatures {
     }
 }
 
+/// Feature page index for LE features.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum LeFeaturePage {
+    /// Page 0 (the standard LE feature mask).
+    Page0(LeFeatureMask),
+    /// Page 1 (Shorter Connection Intervals, Frame Space Update, etc.).
+    Page1(LeFeatureMaskPage1),
+    /// An unknown/future page.
+    Unknown([u8; 8]),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+struct AllLeFeaturesRaw {
+    max_page: u8,
+    le_features: [u8; 248],
+}
+
+/// Return parameters of the `LE Read All Local Supported Features` command.
+///
+/// Contains all supported LE feature pages from the Controller.
+/// Call [`AllLeFeatures::le_feature_page`] with a page index to inspect individual pages.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(transparent)]
+pub struct AllLeFeatures(AllLeFeaturesRaw);
+
+unsafe impl FixedSizeValue for AllLeFeatures {
+    fn is_valid(_data: &[u8]) -> bool {
+        true
+    }
+}
+
+#[cfg(feature = "defmt")]
+impl defmt::Format for AllLeFeatures {
+    fn format(&self, f: defmt::Formatter) {
+        defmt::write!(f, "AllLeFeatures {{ max_page: {}, ... }}", self.0.max_page)
+    }
+}
+
+impl AllLeFeatures {
+    /// Returns the highest page number that contains at least one feature bit set.
+    pub fn max_page(&self) -> u8 {
+        self.0.max_page
+    }
+
+    /// Returns a slice of 8 bytes for the given page, or `None` if `page > 30`.
+    fn page_bytes(&self, page: u8) -> Option<[u8; 8]> {
+        let offset = page as usize * 8;
+        if offset + 8 > 248 {
+            return None;
+        }
+        let mut buf = [0u8; 8];
+        buf.copy_from_slice(&self.0.le_features[offset..offset + 8]);
+        Some(buf)
+    }
+
+    /// Returns the parsed feature page for the given page number.
+    pub fn le_feature_page(&self, page: u8) -> Option<LeFeaturePage> {
+        let bytes = self.page_bytes(page)?;
+        Some(match page {
+            0 => LeFeaturePage::Page0(LeFeatureMask::from_hci_bytes(&bytes).unwrap().0),
+            1 => LeFeaturePage::Page1(LeFeatureMaskPage1::from_hci_bytes(&bytes).unwrap().0),
+            _ => LeFeaturePage::Unknown(bytes),
+        })
+    }
+
+    /// Convenience: get Page 0 (the standard LE features).
+    pub fn page0(&self) -> LeFeatureMask {
+        match self.le_feature_page(0) {
+            Some(LeFeaturePage::Page0(m)) => m,
+            _ => unreachable!(),
+        }
+    }
+
+    /// Convenience: get Page 1 if available (Shorter Connection Intervals, etc.).
+    pub fn page1(&self) -> Option<LeFeatureMaskPage1> {
+        if self.0.max_page >= 1 {
+            match self.le_feature_page(1) {
+                Some(LeFeaturePage::Page1(m)) => Some(m),
+                _ => None,
+            }
+        } else {
+            None
+        }
+    }
+}
+
 param! {
     /// [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/br-edr-controller/link-manager-protocol-specification.html#UUID-c1d8d04b-edcc-8fea-a3f6-f41b520a03de)
     bitfield LmpFeatureMask[8] {
