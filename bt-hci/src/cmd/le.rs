@@ -3,11 +3,11 @@
 use core::mem;
 
 use crate::param::{
-    AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllPhys,
-    BdAddr, BigHandle, BroadcastCode, ChannelMap, CigId, CisConfig, CisConfigTest, CisConnConfig, CodecId, ConnHandle,
-    ConnIntervalGroup, CteKind, CteMask, DataPathDirection, DataPathId, Duration, DurationU8, EncryptionMode,
-    ExtDuration, FilterDuplicates, Framing, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask, LeFeatureMask,
-    LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
+    AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllLeFeatures,
+    AllPhys, BdAddr, BigHandle, BroadcastCode, ChannelMap, CigId, CisConfig, CisConfigTest, CisConnConfig, CodecId,
+    ConnHandle, ConnIntervalGroup, CteKind, CteMask, DataPathDirection, DataPathId, Duration, DurationU8,
+    EncryptionMode, ExtDuration, FilterDuplicates, Framing, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask,
+    LeFeatureMask, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData,
     LePeriodicAdvSyncTransferMode, LeScanKind, Operation, Packing, PayloadType, PeriodicAdvProps, PhyKind, PhyMask,
     PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy,
     SpacingTypes, SwitchingSamplingRates, SyncHandle,
@@ -38,6 +38,14 @@ cmd! {
     LeReadLocalSupportedFeatures(LE, 0x0003) {
         Params = ();
         Return = LeFeatureMask;
+    }
+}
+
+cmd! {
+    /// LE Read All Local Supported Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c6cb0f13-342d-2c5b-eee4-c7de9d1d3514)
+    LeReadAllLocalSupportedFeatures(LE, 0x0087) {
+        Params = ();
+        Return = AllLeFeatures;
     }
 }
 
