@@ -47,7 +47,7 @@ impl WriteHci for &[u8] {
 
     #[inline(always)]
     async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        writer.write_all(&[self.size() as u8]).await?;
+        writer.write_all(&[self.len() as u8]).await?;
         writer.write_all(self).await
     }
 }
