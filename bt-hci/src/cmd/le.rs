@@ -289,7 +289,6 @@ cmd! {
     /// LE Remote Connection Parameter Request Reply  [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-31f1114e-a57b-bcff-812f-d68f95bdec2f)
     LeRemoteConnectionParameterRequestReply(LE, 0x0020) {
         LeRemoteConnectionParameterRequestReplyParams {
-            handle: ConnHandle,
             interval_min: Duration<1_250>,
             interval_max: Duration<1_250>,
             max_latency: u16,
@@ -297,6 +296,8 @@ cmd! {
             min_ce_length: Duration<625>,
             max_ce_length: Duration<625>,
         }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
     }
 }
 
@@ -304,9 +305,10 @@ cmd! {
     /// LE Remote Connection Parameter Request Negative Reply  [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-44860832-db97-c092-97e7-ea02011f08b0)
     LeRemoteConnectionParameterRequestNegativeReply(LE, 0x0021) {
         LeRemoteConnectionParameterRequestNegativeReplyParams {
-            handle: ConnHandle,
             reason: RemoteConnectionParamsRejectReason,
         }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
     }
 }
 
