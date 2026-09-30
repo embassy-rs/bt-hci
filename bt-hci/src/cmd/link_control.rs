@@ -66,7 +66,6 @@ cmd! {
             handle: ConnHandle,
             reason: DisconnectReason,
         }
-        Return = ();
     }
 }
 
