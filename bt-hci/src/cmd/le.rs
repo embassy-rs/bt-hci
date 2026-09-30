@@ -1,7 +1,5 @@
 //! LE Controller commands [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0f07d2b9-81e3-6508-ee08-8c808e468fed)
 
-use core::mem;
-
 use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllLeFeatures,
     AllPhys, BdAddr, BigHandle, BroadcastCode, ChannelMap, CigId, CisConfig, CisConfigTest, CisConnConfig, CodecId,
@@ -342,7 +340,7 @@ cmd! {
 
 cmd! {
     /// LE Transmitter Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-15c2cfce-06a0-5da7-5cbb-45c1896cca8d)
-    LeTransmitterTest(LE, 0x001c) {
+    LeTransmitterTest(LE, 0x001e) {
         LeTransmitterTestParams {
             tx_frequency: u8,
             length_of_test_data: u8,
@@ -1127,7 +1125,7 @@ cmd! {
             le_acl_data_packet_length: u16,
             total_num_le_acl_data_packets: u8,
             iso_data_packet_length: u16,
-            total_num_iso_data_packets: u16,
+            total_num_iso_data_packets: u8,
         }
     }
 }
@@ -1398,7 +1396,6 @@ cmd! {
             phy: PhyMask,
             spacing_types: SpacingTypes,
         }
-        Return = ();
     }
 }
 
@@ -1576,11 +1573,11 @@ cmd! {
     BASE
     /// LE Create BIG Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a15005d1-019f-e827-284b-e8ee558d9a69)
     LeCreateBigTest(LE, 0x0069) {
-        Params<'a> = LeCreateBigTestParams<'a>;
+        Params = LeCreateBigTestParams;
     }
 }
 
-impl<'a> LeCreateBigTest<'a> {
+impl LeCreateBigTest {
     /// Create a new instance.
     #[allow(clippy::too_many_arguments)]
     pub fn new(
@@ -1600,7 +1597,6 @@ impl<'a> LeCreateBigTest<'a> {
         pto: u8,
         encryption: EncryptionMode,
         broadcast_code: BroadcastCode,
-        bis_handles: &'a [ConnHandle],
     ) -> Self {
         Self(LeCreateBigTestParams {
             big_handle,
@@ -1619,7 +1615,6 @@ impl<'a> LeCreateBigTest<'a> {
             pto,
             encryption,
             broadcast_code,
-            bis_handles,
         })
     }
 }
@@ -1627,7 +1622,7 @@ impl<'a> LeCreateBigTest<'a> {
 /// Parameters for LE Create BIG Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct LeCreateBigTestParams<'a> {
+pub struct LeCreateBigTestParams {
     /// BIG handle.
     pub big_handle: u8,
     /// Advertising handle.
@@ -1660,14 +1655,12 @@ pub struct LeCreateBigTestParams<'a> {
     pub encryption: EncryptionMode,
     /// Broadcast code.
     pub broadcast_code: BroadcastCode,
-    /// BIS handles.
-    pub bis_handles: &'a [ConnHandle],
 }
 
-impl WriteHci for LeCreateBigTestParams<'_> {
+impl WriteHci for LeCreateBigTestParams {
     #[inline(always)]
     fn size(&self) -> usize {
-        1 + 1 + 1 + 3 + 2 + 1 + 2 + 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 16 + mem::size_of_val(self.bis_handles)
+        1 + 1 + 1 + 3 + 2 + 1 + 2 + 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 16
     }
 
     #[inline(always)]
@@ -1688,9 +1681,7 @@ impl WriteHci for LeCreateBigTestParams<'_> {
         self.pto.write_hci(&mut writer)?;
         self.encryption.write_hci(&mut writer)?;
         self.broadcast_code.write_hci(&mut writer)?;
-        for h in self.bis_handles {
-            h.write_hci(&mut writer)?;
-        }
+
         Ok(())
     }
 
@@ -1712,9 +1703,7 @@ impl WriteHci for LeCreateBigTestParams<'_> {
         self.pto.write_hci_async(&mut writer).await?;
         self.encryption.write_hci_async(&mut writer).await?;
         self.broadcast_code.write_hci_async(&mut writer).await?;
-        for h in self.bis_handles {
-            h.write_hci_async(&mut writer).await?;
-        }
+
         Ok(())
     }
 }
@@ -1783,7 +1772,7 @@ pub struct LeBigCreateSyncParams<'a> {
 impl WriteHci for LeBigCreateSyncParams<'_> {
     #[inline(always)]
     fn size(&self) -> usize {
-        2 + 1 + 16 + 1 + 2 + 1 + self.bis.len()
+        1 + 1 + 16 + 1 + 2 + 1 + self.bis.len()
     }
 
     #[inline(always)]
@@ -1985,7 +1974,7 @@ cmd! {
 cmd! {
     BASE
     /// LE Transmitter Test V3 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-15c2cfce-06a0-5da7-5cbb-45c1896cca8d)
-    LeTransmitterTestV3(LE, 0x005e) {
+    LeTransmitterTestV3(LE, 0x0050) {
         Params<'a> = LeTransmitterTestV3Params<'a>;
         Return = ();
     }
@@ -2070,7 +2059,7 @@ impl WriteHci for LeTransmitterTestV3Params<'_> {
 cmd! {
     BASE
     /// LE Receiver Test V3 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d5d30b61-e8be-8fa5-a04b-7d505a74ea9d)
-    LeReceiverTestV3(LE, 0x005f) {
+    LeReceiverTestV3(LE, 0x004f) {
         Params<'a> = LeReceiverTestV3Params<'a>;
         Return = ();
     }

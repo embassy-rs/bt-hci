@@ -199,7 +199,7 @@ impl<'de> FromHciBytes<'de> for &'de PhyOptions {
 
 /// PHY preference or requirement during extended advertisement (BLE5.4)
 #[derive(Default)]
-#[repr(u16, align(1))]
+#[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[allow(missing_docs)]
@@ -397,7 +397,7 @@ param! {
 
 param!(struct SyncHandle(u16));
 
-param!(struct BigHandle(u16));
+param!(struct BigHandle(u8));
 
 param! {
     #[derive(Default)]
