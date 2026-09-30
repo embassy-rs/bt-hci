@@ -1553,7 +1553,7 @@ cmd! {
     /// LE Create BIG command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b085cd32-0c2b-9b20-acfa-c825ee69820f)
     LeCreateBig(LE, 0x0068) {
         LeCreateBigParams {
-            big_handle: u8,
+            big_handle: BigHandle,
             adv_handle: AdvHandle,
             num_bis: u8,
             sdu_interval: ExtDuration<1>,
@@ -1712,7 +1712,7 @@ cmd! {
     /// LE Terminate BIG command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-aa21e86e-aeb9-35a3-dbf4-15d48fc30491)
     LeTerminateBig(LE, 0x006a) {
         LeTerminateBigParams {
-            big_handle: u8,
+            big_handle: BigHandle,
             reason: u8,
         }
     }
