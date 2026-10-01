@@ -1570,141 +1570,26 @@ cmd! {
 }
 
 cmd! {
-    BASE
     /// LE Create BIG Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a15005d1-019f-e827-284b-e8ee558d9a69)
     LeCreateBigTest(LE, 0x0069) {
-        Params = LeCreateBigTestParams;
-    }
-}
-
-impl LeCreateBigTest {
-    /// Create a new instance.
-    #[allow(clippy::too_many_arguments)]
-    pub fn new(
-        big_handle: u8,
-        adv_handle: AdvHandle,
-        num_bis: u8,
-        sdu_interval: ExtDuration<1>,
-        iso_interval: u16,
-        nse: u8,
-        max_sdu: u16,
-        max_pdu: u16,
-        phy: PhyMask,
-        packing: Packing,
-        framing: Framing,
-        bn: u8,
-        irc: u8,
-        pto: u8,
-        encryption: EncryptionMode,
-        broadcast_code: BroadcastCode,
-    ) -> Self {
-        Self(LeCreateBigTestParams {
-            big_handle,
-            adv_handle,
-            num_bis,
-            sdu_interval,
-            iso_interval,
-            nse,
-            max_sdu,
-            max_pdu,
-            phy,
-            packing,
-            framing,
-            bn,
-            irc,
-            pto,
-            encryption,
-            broadcast_code,
-        })
-    }
-}
-
-/// Parameters for LE Create BIG Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html)
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct LeCreateBigTestParams {
-    /// BIG handle.
-    pub big_handle: u8,
-    /// Advertising handle.
-    pub adv_handle: AdvHandle,
-    /// Number of BIS.
-    pub num_bis: u8,
-    /// SDU interval.
-    pub sdu_interval: ExtDuration<1>,
-    /// ISO interval.
-    pub iso_interval: u16,
-    /// Number of subevents.
-    pub nse: u8,
-    /// Maximum SDU.
-    pub max_sdu: u16,
-    /// Maximum PDU.
-    pub max_pdu: u16,
-    /// PHY.
-    pub phy: PhyMask,
-    /// Packing.
-    pub packing: Packing,
-    /// Framing.
-    pub framing: Framing,
-    /// Burst number.
-    pub bn: u8,
-    /// Immediate repetition count.
-    pub irc: u8,
-    /// Pre-transmission offset.
-    pub pto: u8,
-    /// Encryption mode.
-    pub encryption: EncryptionMode,
-    /// Broadcast code.
-    pub broadcast_code: BroadcastCode,
-}
-
-impl WriteHci for LeCreateBigTestParams {
-    #[inline(always)]
-    fn size(&self) -> usize {
-        1 + 1 + 1 + 3 + 2 + 1 + 2 + 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 16
-    }
-
-    #[inline(always)]
-    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        self.big_handle.write_hci(&mut writer)?;
-        self.adv_handle.write_hci(&mut writer)?;
-        self.num_bis.write_hci(&mut writer)?;
-        self.sdu_interval.write_hci(&mut writer)?;
-        self.iso_interval.write_hci(&mut writer)?;
-        self.nse.write_hci(&mut writer)?;
-        self.max_sdu.write_hci(&mut writer)?;
-        self.max_pdu.write_hci(&mut writer)?;
-        self.phy.write_hci(&mut writer)?;
-        self.packing.write_hci(&mut writer)?;
-        self.framing.write_hci(&mut writer)?;
-        self.bn.write_hci(&mut writer)?;
-        self.irc.write_hci(&mut writer)?;
-        self.pto.write_hci(&mut writer)?;
-        self.encryption.write_hci(&mut writer)?;
-        self.broadcast_code.write_hci(&mut writer)?;
-
-        Ok(())
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        self.big_handle.write_hci_async(&mut writer).await?;
-        self.adv_handle.write_hci_async(&mut writer).await?;
-        self.num_bis.write_hci_async(&mut writer).await?;
-        self.sdu_interval.write_hci_async(&mut writer).await?;
-        self.iso_interval.write_hci_async(&mut writer).await?;
-        self.nse.write_hci_async(&mut writer).await?;
-        self.max_sdu.write_hci_async(&mut writer).await?;
-        self.max_pdu.write_hci_async(&mut writer).await?;
-        self.phy.write_hci_async(&mut writer).await?;
-        self.packing.write_hci_async(&mut writer).await?;
-        self.framing.write_hci_async(&mut writer).await?;
-        self.bn.write_hci_async(&mut writer).await?;
-        self.irc.write_hci_async(&mut writer).await?;
-        self.pto.write_hci_async(&mut writer).await?;
-        self.encryption.write_hci_async(&mut writer).await?;
-        self.broadcast_code.write_hci_async(&mut writer).await?;
-
-        Ok(())
+        LeCreateBigTestParams {
+            big_handle: BigHandle,
+            adv_handle: AdvHandle,
+            num_bis: u8,
+            sdu_interval: ExtDuration<1>,
+            iso_interval: u16,
+            nse: u8,
+            max_sdu: u16,
+            max_pdu: u16,
+            phy: PhyMask,
+            packing: Packing,
+            framing: Framing,
+            bn: u8,
+            irc: u8,
+            pto: u8,
+            encryption: EncryptionMode,
+            broadcast_code: BroadcastCode,
+        }
     }
 }
 
@@ -1719,82 +1604,17 @@ cmd! {
 }
 
 cmd! {
-    BASE
     /// LE BIG Create Sync command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-19c7d386-e227-0e12-cd0b-eb567f3c7d18)
     LeBigCreateSync(LE, 0x006b) {
-        Params<'a> = LeBigCreateSyncParams<'a>;
-    }
-}
-
-impl<'a> LeBigCreateSync<'a> {
-    /// Create a new instance.
-    pub fn new(
-        big_sync_handle: BigHandle,
-        encryption: EncryptionMode,
-        broadcast_code: BroadcastCode,
-        mse: u8,
-        big_sync_timeout: u16,
-        num_bis: u8,
-        bis: &'a [u8],
-    ) -> Self {
-        Self(LeBigCreateSyncParams {
-            big_sync_handle,
-            encryption,
-            broadcast_code,
-            mse,
-            big_sync_timeout,
-            num_bis,
-            bis,
-        })
-    }
-}
-
-/// Parameters for LE BIG Create Sync command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html)
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct LeBigCreateSyncParams<'a> {
-    /// BIG sync handle.
-    pub big_sync_handle: BigHandle,
-    /// Encryption mode.
-    pub encryption: EncryptionMode,
-    /// Broadcast code.
-    pub broadcast_code: BroadcastCode,
-    /// Maximum subevents.
-    pub mse: u8,
-    /// BIG sync timeout.
-    pub big_sync_timeout: u16,
-    /// Number of BIS.
-    pub num_bis: u8,
-    /// BIS indices.
-    pub bis: &'a [u8],
-}
-
-impl WriteHci for LeBigCreateSyncParams<'_> {
-    #[inline(always)]
-    fn size(&self) -> usize {
-        1 + 1 + 16 + 1 + 2 + 1 + self.bis.len()
-    }
-
-    #[inline(always)]
-    fn write_hci<W: embedded_io::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        self.big_sync_handle.write_hci(&mut writer)?;
-        self.encryption.write_hci(&mut writer)?;
-        self.broadcast_code.write_hci(&mut writer)?;
-        self.mse.write_hci(&mut writer)?;
-        self.big_sync_timeout.write_hci(&mut writer)?;
-        self.num_bis.write_hci(&mut writer)?;
-        writer.write_all(self.bis)
-    }
-
-    #[inline(always)]
-    async fn write_hci_async<W: embedded_io_async::Write>(&self, mut writer: W) -> Result<(), W::Error> {
-        self.big_sync_handle.write_hci_async(&mut writer).await?;
-        self.encryption.write_hci_async(&mut writer).await?;
-        self.broadcast_code.write_hci_async(&mut writer).await?;
-        self.mse.write_hci_async(&mut writer).await?;
-        self.big_sync_timeout.write_hci_async(&mut writer).await?;
-        self.num_bis.write_hci_async(&mut writer).await?;
-        writer.write_all(self.bis).await
+        LeBigCreateSyncParams<'a> {
+            big_sync_handle: BigHandle,
+            sync_handle: SyncHandle,
+            encryption: EncryptionMode,
+            broadcast_code: BroadcastCode,
+            mase: u8,
+            big_sync_timeout: u16,
+            bis: &'a [u8],
+        }
     }
 }
 
@@ -1986,7 +1806,7 @@ impl<'a> LeTransmitterTestV3<'a> {
         tx_channel: u8,
         test_data_length: u8,
         packet_payload: u8,
-        phy: PhyMask,
+        phy: PhyKind,
         cte_length: u8,
         cte_type: CteKind,
         switching_pattern: &'a [u8],
@@ -2014,7 +1834,7 @@ pub struct LeTransmitterTestV3Params<'a> {
     /// Packet payload.
     pub packet_payload: u8,
     /// PHY.
-    pub phy: PhyMask,
+    pub phy: PhyKind,
     /// CTE length.
     pub cte_length: u8,
     /// CTE type.
@@ -2069,7 +1889,7 @@ impl<'a> LeReceiverTestV3<'a> {
     /// Create a new instance.
     pub fn new(
         rx_channel: u8,
-        phy: PhyMask,
+        phy: PhyKind,
         modulation_index: u8,
         expected_cte_length: u8,
         expected_cte_type: CteKind,
@@ -2094,8 +1914,8 @@ impl<'a> LeReceiverTestV3<'a> {
 pub struct LeReceiverTestV3Params<'a> {
     /// RX channel.
     pub rx_channel: u8,
-    /// PHY.
-    pub phy: PhyMask,
+    /// PHY. [`PhyKind::LeCodedS2`] is not valid for the receiver
+    pub phy: PhyKind,
     /// Modulation index.
     pub modulation_index: u8,
     /// Expected CTE length.
