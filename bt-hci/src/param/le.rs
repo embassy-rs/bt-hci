@@ -1426,6 +1426,7 @@ impl<'de> crate::FromHciBytes<'de> for &'de DataPathId {
 
 param! {
     /// Codec ID (5 octets).
+    #[derive(Default)]
     struct CodecId {
         coding_format: u8,
         company_id: u16,
@@ -1435,7 +1436,9 @@ param! {
 
 param! {
     /// Logical transport type.
+    #[derive(Default)]
     enum LogicalTransportType {
+        #[default]
         BrEdrAcl = 0,
         BrEdrSco = 1,
         LeCis = 2,
