@@ -48,6 +48,239 @@ cmd! {
 }
 
 cmd! {
+    /// LE Read All Remote Features command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-34695fdf-d4ca-6138-5bcf-8a5ad0296f7f)
+    LeReadAllRemoteFeatures(LE, 0x0088) {
+        LeReadAllRemoteFeaturesParams {
+            handle: ConnHandle,
+            pages_requested: u8,
+        }
+    }
+}
+
+cmd! {
+    /// LE CS Read Local Supported Capabilities command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-730b735b-83e3-3921-9fed-0ab5b1025938)
+    LeCsReadLocalSupportedCapabilities(LE, 0x0089) {
+        Params = ();
+        LeCsReadLocalSupportedCapabilitiesReturn {
+            num_config_supported: u8,
+            max_consecutive_procedures_supported: u16,
+            num_antennas_supported: u8,
+            max_antenna_paths_supported: u8,
+            roles_supported: u8,
+            optional_modes_supported: u8,
+            rtt_capability: u8,
+            rtt_aa_only_n: u8,
+            rtt_sounding_n: u8,
+            rtt_random_payload_n: u8,
+            nadm_sounding_capability: u16,
+            nadm_random_capability: u16,
+            cs_sync_phys_supported: u8,
+            subfeatures_supported: u16,
+            t_ip1_times_supported: u16,
+            t_ip2_times_supported: u16,
+            t_fcs_times_supported: u16,
+            t_pm_times_supported: u16,
+            t_sw_time_supported: u8,
+            tx_snr_capability: u8,
+        }
+    }
+}
+
+cmd! {
+    /// LE CS Read Remote Supported Capabilities command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3b195e3d-3f9b-8f0e-1292-a3c56e9b76d5)
+    LeCsReadRemoteSupportedCapabilities(LE, 0x008a) {
+        Params = ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE CS Write Cached Remote Supported Capabilities command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f0bb51e5-a727-46b7-106e-db37b67bc43b)
+    LeCsWriteCachedRemoteSupportedCapabilities(LE, 0x008b) {
+        LeCsWriteCachedRemoteSupportedCapabilitiesParams {
+            num_config_supported: u8,
+            max_consecutive_procedures_supported: u16,
+            num_antennas_supported: u8,
+            max_antenna_paths_supported: u8,
+            roles_supported: u8,
+            modes_supported: u8,
+            rtt_capability: u8,
+            rtt_aa_only_n: u8,
+            rtt_sounding_n: u8,
+            rtt_random_payload_n: u8,
+            nadm_sounding_capability: u16,
+            nadm_random_capability: u16,
+            cs_sync_phys_supported: u8,
+            subfeatures_supported: u16,
+            t_ip1_times_supported: u16,
+            t_ip2_times_supported: u16,
+            t_fcs_times_supported: u16,
+            t_pm_times_supported: u16,
+            t_sw_time_supported: u8,
+            tx_snr_capability: u8,
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE CS Security Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fbf11b16-b638-554b-a6db-c5594a5c5442)
+    LeCsSecurityEnableCommand(LE, 0x008c) {
+        Params = ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE CS Set Default Settings command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f7f6d516-b433-0664-33bd-261cbfa168b8)
+    LeCsSetDefaultSettings(LE, 0x008d) {
+        LeCsSetDefaultSettingsParams {
+            role_enable: u8,
+            cs_sync_antenna_selection: u8,
+            max_tx_power: i8,
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE CS Read Remote FAE Table command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-185cf599-6949-988c-07ef-7bdbb6370aad)
+    LeCsReadRemoteFaeTable(LE, 0x008e) {
+        Params = ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE CS Write Cached Remote FAE Table command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7aef4e15-4fe0-2a57-0d2d-6bbeca973ff0)
+    LeCsWriteCachedRemoteFaeTable(LE, 0x008f) {
+        LeCsWriteCachedRemoteFaeTableParams {
+            remote_fae_table: [u8; 72],
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE CS Create Config command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6647575f-ceb6-e3e7-dd03-8ac82677a3a4)
+    LeCsCreateConfig(LE, 0x0090) {
+        LeCsCreateConfigParams {
+            handle: ConnHandle,
+            config_id: u8,
+            create_context: u8,
+            main_mode_type: u8,
+            sub_mode_type: u8,
+            min_main_mode_steps: u8,
+            max_main_mode_steps: u8,
+            main_mode_repetition: u8,
+            mode_0_steps: u8,
+            role: u8,
+            rtt_type: u8,
+            cs_sync_phy: u8,
+            channel_map: [u8; 10],
+            channel_map_repetition: u8,
+            channel_selection_type: u8,
+            ch3c_shape: u8,
+            ch3c_jump: u8,
+            reserved: u8,
+        }
+    }
+}
+
+cmd! {
+    /// LE CS Remove Config command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-df1df40d-b8db-5ecd-7114-30b9e18a79c3)
+    LeCsRemoveConfig(LE, 0x0091) {
+        LeCsRemoveConfigParams {
+            handle: ConnHandle,
+            config_id: u8,
+        }
+    }
+}
+
+cmd! {
+    /// LE CS Set Channel Classification command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-17c54c10-3ea0-9c98-6708-f0a8d6b2658b)
+    LeCsSetChannelClassification(LE, 0x0092) {
+        Params = [u8; 10];
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE CS Set Procedure Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-874b4326-0043-5b98-b910-69b46116774e)
+    LeCsSetProcedureParams(LE, 0x0093) {
+        LeCsSetProcedureParamsParams {
+            config_id: u8,
+            max_procedure_len: Duration<625>,
+            min_procedure_interval: u16,
+            max_procedure_interval: u16,
+            max_procedure_count: u16,
+            min_subevent_len: ExtDuration<1>,
+            max_subevent_len: ExtDuration<1>,
+            tone_antenna_config_selection: u8,
+            phy: PhyKind,
+            tx_power_delta: i8,
+            preferred_peer_antenna: u8,
+            snr_control_initiator: u8,
+            snr_control_reflector: u8,
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE CS Procedure Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-617d20e0-bf48-195d-778c-34b5a5f909e4)
+    LeCsProcedureEnable(LE, 0x0094) {
+        LeCsProcedureEnableParams {
+            handle: ConnHandle,
+            config_id: u8,
+            enable: bool,
+        }
+    }
+}
+
+cmd! {
+    /// LE CS Test command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-79eac656-27b0-91ee-6776-06092b93bc8c)
+    LeCsTest(LE, 0x0095) {
+        LeCsTestParams<'a> {
+            main_mode_type: u8,
+            sub_mode_type: u8,
+            main_mode_repetition: u8,
+            mode_0_steps: u8,
+            role: u8,
+            rtt_type: u8,
+            cs_sync_phy: u8,
+            cs_sync_antenna_selection: u8,
+            subevent_len: ExtDuration<1>,
+            subevent_interval: Duration<625>,
+            max_num_subevents: u8,
+            transmit_power_level: i8,
+            t_ip1_time: u8,
+            t_ip2_time: u8,
+            t_fcs_time: u8,
+            t_pm_time: u8,
+            t_sw_time: u8,
+            tone_antenna_config_selection: u8,
+            reserved: u8,
+            snr_control_initiator: u8,
+            snr_control_reflector: u8,
+            drbg_nonce: u16,
+            channel_map_repetition: u8,
+            override_config: u16,
+            override_parameters_data: &'a [u8],
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE CS Test End command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-02c5f1fd-7880-224c-d166-d2128fd83777)
+    LeCsTestEnd(LE, 0x0096) {
+        Params = ();
+    }
+}
+
+cmd! {
     /// LE Set Random Address command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-89d45457-bdb5-cade-32c5-a27240733659)
     LeSetRandomAddr(LE, 0x0005) {
         Params = BdAddr;
@@ -393,6 +626,24 @@ cmd! {
 }
 
 cmd! {
+    /// LE Read Local P-256 Public Key command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0584eac0-17e3-fe2a-5870-642dc8711508)
+    ///
+    /// The key arrives in an [`LeReadLocalP256PublicKeyComplete`](crate::event::le::LeReadLocalP256PublicKeyComplete) event.
+    LeReadLocalP256PublicKey(LE, 0x0025) {
+        Params = ();
+    }
+}
+
+cmd! {
+    /// LE Generate DHKey command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3e12f0bc-bec6-f519-7dc7-544396c0eeb8)
+    ///
+    /// The key arrives in an [`LeGenerateDhkeyComplete`](crate::event::le::LeGenerateDhkeyComplete) event.
+    LeGenerateDhkey(LE, 0x0026) {
+        Params = [u8; 64];
+    }
+}
+
+cmd! {
     /// LE Add Device To Resolving List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d9a635b2-e7bc-359b-2e6a-5e8b45b38df3)
     LeAddDeviceToResolvingList(LE, 0x0027) {
         LeAddDeviceToResolvingListParams {
@@ -429,6 +680,28 @@ cmd! {
     LeReadResolvingListSize(LE, 0x002a) {
         Params = ();
         Return = u8;
+    }
+}
+
+cmd! {
+    /// LE Read Peer Resolvable Address command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-2929c17b-0b4b-ec14-ccfc-0901f4bdc035)
+    LeReadPeerResolvableAddr(LE, 0x002b) {
+        LeReadPeerResolvableAddrParams {
+            peer_id_addr_kind: AddrKind,
+            peer_id_addr: BdAddr,
+        }
+        Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// LE Read Local Resolvable Address command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ea29c3c3-278a-e3a3-a84a-ea8159183476)
+    LeReadLocalResolvableAddr(LE, 0x002c) {
+        LeReadLocalResolvableAddrParams {
+            peer_id_addr_kind: AddrKind,
+            peer_id_addr: BdAddr,
+        }
+        Return = BdAddr;
     }
 }
 
@@ -1071,11 +1344,52 @@ cmd! {
 }
 
 cmd! {
+    /// LE Set Connectionless IQ Sampling Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7cb279b8-3634-75b5-d6fc-52a55172673d)
+    LeSetConnectionlessIqSamplingEnable(LE, 0x0053) {
+        LeSetConnectionlessIqSamplingEnableParams<'a> {
+            sampling_enable: bool,
+            slot_durations: u8,
+            max_sampled_ctes: u8,
+            switching_pattern: &'a [u8],
+        }
+        Return = SyncHandle;
+        Handle = sync_handle: SyncHandle;
+    }
+}
+
+cmd! {
+    /// LE Set Connection CTE Receive Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9d29d497-891f-e05e-e043-59fe8b7c11a7)
+    LeSetConnCteReceiveParams(LE, 0x0054) {
+        LeSetConnCteReceiveParamsParams<'a> {
+            sampling_enable: bool,
+            slot_durations: u8,
+            switching_pattern: &'a [u8],
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
     /// LE Set Connection CTE Transmit Parameters command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-a8cd66e1-b702-2d8e-c027-4f0a89d4f8a1)
     LeSetConnCteTransmitParams(LE, 0x0055) {
         LeSetConnCteTransmitParamsParams<'a> {
             cte_kinds: CteMask,
             switching_pattern: &'a [u8],
+        }
+        Return = ConnHandle;
+        Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Connection CTE Request Enable command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-469dbd0a-9a4f-1366-ea4f-f38cf19031a4)
+    LeConnCteRequestEnable(LE, 0x0056) {
+        LeConnCteRequestEnableParams {
+            enable: bool,
+            cte_request_interval: u16,
+            requested_cte_length: u8,
+            requested_cte_kind: CteKind,
         }
         Return = ConnHandle;
         Handle = handle: ConnHandle;
@@ -1182,6 +1496,18 @@ cmd! {
 }
 
 cmd! {
+    /// LE Generate DHKey V2 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3e12f0bc-bec6-f519-7dc7-544396c0eeb8)
+    ///
+    /// The key arrives in an [`LeGenerateDhkeyComplete`](crate::event::le::LeGenerateDhkeyComplete) event.
+    LeGenerateDhkeyV2(LE, 0x005e) {
+        LeGenerateDhkeyV2Params {
+            remote_p256_public_key: [u8; 64],
+            use_debug_key: bool,
+        }
+    }
+}
+
+cmd! {
     /// LE Request Peer SCA command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4960a916-5311-968d-b432-8537b2dd12ed)
     LeRequestPeerSca(LE, 0x006d) {
         Params = ConnHandle;
@@ -1259,6 +1585,23 @@ cmd! {
         }
         Return = ConnHandle;
         Handle = handle: ConnHandle;
+    }
+}
+
+cmd! {
+    /// LE Transmitter Test V4 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-15c2cfce-06a0-5da7-5cbb-45c1896cca8d)
+    LeTransmitterTestV4(LE, 0x007b) {
+        LeTransmitterTestV4Params<'a> {
+            tx_channel: u8,
+            test_data_length: u8,
+            packet_payload: u8,
+            phy: PhyKind,
+            cte_length: u8,
+            cte_kind: CteKind,
+            switching_pattern: &'a [u8],
+            tx_power_level: i8,
+        }
+        Return = ();
     }
 }
 
@@ -1396,6 +1739,66 @@ cmd! {
             phy: PhyMask,
             spacing_types: SpacingTypes,
         }
+    }
+}
+
+cmd! {
+    /// LE Add Device To Monitored Advertisers List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1fba0fa9-c2ca-a414-8bb5-a2b9d6843ceb)
+    LeAddDeviceToMonitoredAdvList(LE, 0x0098) {
+        LeAddDeviceToMonitoredAdvListParams {
+            addr_kind: AddrKind,
+            addr: BdAddr,
+            rssi_threshold_low: i8,
+            rssi_threshold_high: i8,
+            timeout: u8,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Remove Device From Monitored Advertisers List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-d02c54a5-012b-dba0-4979-b7536e44112d)
+    LeRemoveDeviceFromMonitoredAdvList(LE, 0x0099) {
+        LeRemoveDeviceFromMonitoredAdvListParams {
+            addr_kind: AddrKind,
+            addr: BdAddr,
+        }
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Clear Monitored Advertisers List command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8f5aef39-3dea-9ce2-b323-14a73b6b59cd)
+    LeClearMonitoredAdvList(LE, 0x009a) {
+        Params = ();
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Read Monitored Advertisers List Size command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4fce6390-cce5-0d24-c5b4-1c7e3f1f943d)
+    LeReadMonitoredAdvListSize(LE, 0x009b) {
+        Params = ();
+        Return = u8;
+    }
+}
+
+cmd! {
+    /// LE Enable Monitoring Advertisers command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-61e73411-6be7-c08f-e2d1-fc99257837e3)
+    LeEnableMonitoringAdv(LE, 0x009c) {
+        Params = bool;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// LE Set Resolvable Private Address Timeout V2 command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-f539d523-751b-6ffa-fa0c-e9633f0d7cc9)
+    LeSetResolvablePrivateAddrTimeoutV2(LE, 0x009e) {
+        LeSetResolvablePrivateAddrTimeoutV2Params {
+            rpa_timeout_min: Duration<1_000_000>,
+            rpa_timeout_max: Duration<1_000_000>,
+        }
+        Return = ();
     }
 }
 
