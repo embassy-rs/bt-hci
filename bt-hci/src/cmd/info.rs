@@ -1,7 +1,10 @@
 //! Informational parameters [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-42372304-c9ef-dcab-6905-4e5b64703d45)
 
 use super::cmd;
-use crate::param::{BdAddr, CmdMask, CoreSpecificationVersion, ExtendedLmpFeatures, LmpFeatureMask};
+use crate::param::{
+    BdAddr, CmdMask, CodecId, CoreSpecificationVersion, DataPathDirection, ExtDuration, ExtendedLmpFeatures,
+    LmpFeatureMask, LogicalTransportType,
+};
 
 cmd! {
     /// Read Local Version Information command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-cf7fef88-faa4-fd2e-7c00-ab1ec7985a19)
@@ -48,5 +51,21 @@ cmd! {
     ReadBdAddr(INFO_PARAMS, 0x0009) {
         Params = ();
         Return = BdAddr;
+    }
+}
+
+cmd! {
+    /// Read Local Supported Controller Delay command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-88882a6c-2cd1-2959-0010-987c89c3348a)
+    ReadLocalSupportedControllerDelay(INFO_PARAMS, 0x000f) {
+        ReadLocalSupportedControllerDelayParams<'a> {
+            codec_id: CodecId,
+            logical_transport_type: LogicalTransportType,
+            direction: DataPathDirection,
+            codec_configuration: &'a [u8],
+        }
+        ReadLocalSupportedControllerDelayReturn {
+            min_controller_delay: ExtDuration<1>,
+            max_controller_delay: ExtDuration<1>,
+        }
     }
 }

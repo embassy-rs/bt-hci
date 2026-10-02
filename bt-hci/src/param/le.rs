@@ -1433,6 +1433,16 @@ param! {
     }
 }
 
+param! {
+    /// Logical transport type.
+    enum LogicalTransportType {
+        BrEdrAcl = 0,
+        BrEdrSco = 1,
+        LeCis = 2,
+        LeBis = 3,
+    }
+}
+
 param!(
     /// Broadcast code (16 octets).
     struct BroadcastCode([u8; 16])

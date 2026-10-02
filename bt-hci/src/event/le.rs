@@ -2,10 +2,10 @@
 
 use crate::param::{
     AddrKind, AdvHandle, BdAddr, BigHandle, BisConnHandle, ClockAccuracy, ConnHandle, CteKind, DataStatus, DoneStatus,
-    Duration, ExtDuration, FrameSpaceInitiator, FrequencyCompensation, LeAdvReports, LeConnRole, LeCsSubeventStepData,
-    LeDirectedAdvertisingReportParam, LeExtAdvReports, LeFeatureMask, LeIQSample, LePeriodicAdvertisingResponseReports,
-    LeTxPowerReportingReason, PackedAbortReasons, PacketStatus, PhyKind, PhyMask, PowerLevelKind, SpacingTypes, Status,
-    SyncHandle, TxStatus, ZoneEntered,
+    Duration, ExtDuration, FrameSpaceInitiator, Framing, FrequencyCompensation, LeAdvReports, LeConnRole,
+    LeCsSubeventStepData, LeDirectedAdvertisingReportParam, LeExtAdvReports, LeFeatureMask, LeIQSample,
+    LePeriodicAdvertisingResponseReports, LeTxPowerReportingReason, PackedAbortReasons, PacketStatus, PhyKind, PhyMask,
+    PowerLevelKind, SpacingTypes, Status, SyncHandle, TxStatus, ZoneEntered,
 };
 use crate::{FromHciBytes, FromHciBytesError};
 
@@ -466,12 +466,200 @@ le_events! {
         supervision_timeout: Duration<10_000>,
     }
 
+    /// LE Periodic Advertising Sync Established V2 event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1f76b4e2-f279-1976-1e33-5ba86d0955c2)
+    struct LePeriodicAdvertisingSyncEstablishedV2(36) {
+        status: Status,
+        sync_handle: SyncHandle,
+        adv_sid: u8,
+        adv_addr_kind: AddrKind,
+        adv_addr: BdAddr,
+        adv_phy: PhyKind,
+        periodic_adv_interval: Duration<1_250>,
+        adv_clock_accuracy: ClockAccuracy,
+        num_subevents: u8,
+        subevent_interval: u8,
+        response_slot_delay: u8,
+        response_slot_spacing: u8,
+    }
+
+    /// LE Periodic Advertising Report V2 event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e216c26f-0383-c651-4b8d-1409b91c7e34)
+    struct LePeriodicAdvertisingReportV2<'a>(37) {
+        sync_handle: SyncHandle,
+        tx_power: i8,
+        rssi: i8,
+        cte_kind: CteKind,
+        periodic_event_counter: u16,
+        subevent: u8,
+        data_status: DataStatus,
+        data: &'a [u8],
+    }
+
+    /// LE Periodic Advertising Sync Transfer Received V2 event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6feaf258-f0a9-7db2-d837-5bd8c07ef396)
+    struct LePeriodicAdvertisingSyncTransferReceivedV2(38) {
+        status: Status,
+        handle: ConnHandle,
+        service_data: u16,
+        sync_handle: SyncHandle,
+        adv_sid: u8,
+        adv_addr_kind: AddrKind,
+        adv_addr: BdAddr,
+        adv_phy: PhyKind,
+        periodic_adv_interval: Duration<1_250>,
+        adv_clock_accuracy: ClockAccuracy,
+        num_subevents: u8,
+        subevent_interval: u8,
+        response_slot_delay: u8,
+        response_slot_spacing: u8,
+    }
+
+    /// LE Periodic Advertising Subevent Data Request event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-0b3202ef-474d-139e-ad5d-50f30b267102)
+    struct LePeriodicAdvertisingSubeventDataRequest(39) {
+        adv_handle: AdvHandle,
+        subevent_start: u8,
+        subevent_data_count: u8,
+    }
+
     /// LE Periodic Advertising Response Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-7f8dc3f0-80f4-724d-bc78-51d22c615df1)
     struct LePeriodicAdvertisingResponseReport<'a>(40) {
         adv_handle: AdvHandle,
         subevent: u8,
         tx_status: TxStatus,
         reports: LePeriodicAdvertisingResponseReports<'a>,
+    }
+
+    /// LE Enhanced Connection Complete V2 event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-ed5dc708-ff96-949f-586a-4d418466b226)
+    struct LeEnhancedConnectionCompleteV2(41) {
+        status: Status,
+        handle: ConnHandle,
+        role: LeConnRole,
+        peer_addr_kind: AddrKind,
+        peer_addr: BdAddr,
+        local_resolvable_private_addr: BdAddr,
+        peer_resolvable_private_addr: BdAddr,
+        conn_interval: Duration<1_250>,
+        peripheral_latency: u16,
+        supervision_timeout: Duration<10_000>,
+        central_clock_accuracy: ClockAccuracy,
+        adv_handle: AdvHandle,
+        sync_handle: SyncHandle,
+    }
+
+    /// LE CIS Established V2 event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6cb0784c-542b-1554-f7bb-ac37cd07d18e)
+    struct LeCisEstablishedV2(42) {
+        status: Status,
+        handle: ConnHandle,
+        cig_sync_delay: ExtDuration,
+        cis_sync_delay: ExtDuration,
+        transport_latency_c_to_p: ExtDuration,
+        transport_latency_p_to_c: ExtDuration,
+        phy_c_to_p: PhyKind,
+        phy_p_to_c: PhyKind,
+        nse: u8,
+        bn_c_to_p: u8,
+        bn_p_to_c: u8,
+        ft_c_to_p: u8,
+        ft_p_to_c: u8,
+        max_pdu_c_to_p: u16,
+        max_pdu_p_to_c: u16,
+        iso_interval: Duration<1_250>,
+        sub_interval: ExtDuration,
+        max_sdu_c_to_p: u16,
+        max_sdu_p_to_c: u16,
+        sdu_interval_c_to_p: ExtDuration,
+        sdu_interval_p_to_c: ExtDuration,
+        framing: Framing,
+    }
+
+    /// LE Read All Remote Features Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-e4db403e-acf1-164d-2d90-07dd6c7a5095)
+    struct LeReadAllRemoteFeaturesComplete<'a>(43) {
+        status: Status,
+        handle: ConnHandle,
+        max_remote_page: u8,
+        max_valid_page: u8,
+        le_features: &'a [u8; 248],
+    }
+
+    /// LE CS Read Remote Supported Capabilities Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5beb1d0d-b8a4-63b0-9b0b-0b4005388101)
+    struct LeCsReadRemoteSupportedCapabilitiesComplete(44) {
+        status: Status,
+        handle: ConnHandle,
+        num_config_supported: u8,
+        max_consecutive_procedures_supported: u16,
+        num_antennas_supported: u8,
+        max_antenna_paths_supported: u8,
+        roles_supported: u8,
+        optional_modes_supported: u8,
+        rtt_capability: u8,
+        rtt_aa_only_n: u8,
+        rtt_sounding_n: u8,
+        rtt_random_payload_n: u8,
+        nadm_sounding_capability: u16,
+        nadm_random_capability: u16,
+        cs_sync_phys_supported: u8,
+        subfeatures_supported: u16,
+        t_ip1_times_supported: u16,
+        t_ip2_times_supported: u16,
+        t_fcs_times_supported: u16,
+        t_pm_times_supported: u16,
+        t_sw_time_supported: u8,
+        tx_snr_capability: u8,
+    }
+
+    /// LE CS Read Remote FAE Table Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-b7384cc8-7a89-4b96-c25b-93a4fce41f4b)
+    struct LeCsReadRemoteFaeTableComplete<'a>(45) {
+        status: Status,
+        handle: ConnHandle,
+        remote_fae_table: &'a [u8; 72],
+    }
+
+    /// LE CS Security Enable Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3ddda36b-eaca-3a7f-3894-6bd4cf840c03)
+    struct LeCsSecurityEnableComplete(46) {
+        status: Status,
+        handle: ConnHandle,
+    }
+
+    /// LE CS Config Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-61ba591e-6232-b96f-1b86-2ee25fbd0777)
+    struct LeCsConfigComplete(47) {
+        status: Status,
+        handle: ConnHandle,
+        config_id: u8,
+        action: u8,
+        main_mode_type: u8,
+        sub_mode_type: u8,
+        min_main_mode_steps: u8,
+        max_main_mode_steps: u8,
+        main_mode_repetition: u8,
+        mode_0_steps: u8,
+        role: u8,
+        rtt_type: u8,
+        cs_sync_phy: u8,
+        channel_map: [u8; 10],
+        channel_map_repetition: u8,
+        channel_selection_type: u8,
+        ch3c_shape: u8,
+        ch3c_jump: u8,
+        reserved: u8,
+        t_ip1_time: u8,
+        t_ip2_time: u8,
+        t_fcs_time: u8,
+        t_pm_time: u8,
+    }
+
+    /// LE CS Procedure Enable Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-38ef8c9a-9c2f-242b-1013-d4e1e7cbb38f)
+    struct LeCsProcedureEnableComplete(48) {
+        status: Status,
+        handle: ConnHandle,
+        config_id: u8,
+        state: bool,
+        tone_antenna_config_selection: u8,
+        selected_tx_power: i8,
+        subevent_len: ExtDuration,
+        subevents_per_event: u8,
+        subevent_interval: Duration<625>,
+        event_interval: u16,
+        procedure_interval: u16,
+        procedure_count: u16,
+        max_procedure_len: Duration<625>,
     }
 
     /// LE CS Subevent Result event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core_v6.3/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-fd033d23-c560-45ed-27e6-4a5da97b7ba4)
@@ -499,6 +687,19 @@ le_events! {
         num_antenna_paths: u8,
         steps: LeCsSubeventStepData<'a>,
     }
+
+    /// LE CS Test End Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-1745b62b-73c7-dcdb-d404-5abfcc468c27)
+    struct LeCsTestEndComplete(51) {
+        status: Status,
+    }
+
+    /// LE Monitored Advertisers Report event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-19decb6a-857e-cda1-acfc-7409933f951c)
+    struct LeMonitoredAdvertisersReport(52) {
+        addr_kind: AddrKind,
+        addr: BdAddr,
+        condition: u8,
+    }
+
 
     /// LE Frame Space Update Complete event [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-60/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-5ccb539a-6dd4-cd68-a9e1-1600f3868f29)
     struct LeFrameSpaceUpdateComplete(53) {

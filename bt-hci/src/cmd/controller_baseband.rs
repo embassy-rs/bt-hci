@@ -2,8 +2,8 @@
 
 use crate::cmd;
 use crate::param::{
-    BdAddr, ConnHandle, ConnHandleCompletedPackets, ControllerToHostFlowControl, Duration, EventMask, EventMaskPage2,
-    PowerLevelKind, Status,
+    BdAddr, ConnHandle, ConnHandleCompletedPackets, ControllerToHostFlowControl, DataPathDirection, DataPathId,
+    Duration, EventMask, EventMaskPage2, PowerLevelKind, Status,
 };
 
 cmd! {
@@ -111,5 +111,57 @@ cmd! {
             num_keys_read: u8,
         }
 
+    }
+}
+
+cmd! {
+    /// Read Connection Accept Timeout command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-c273cd12-19e3-f637-987e-c7c2f6f1f334)
+    ReadConnectionAcceptTimeout(CONTROL_BASEBAND, 0x0015) {
+        Params = ();
+        Return = Duration<625>;
+    }
+}
+
+cmd! {
+    /// Write Connection Accept Timeout command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-70c4664c-429c-c90d-2acf-7af43001c656)
+    WriteConnectionAceeptTimeout(CONTROL_BASEBAND, 0x0016) {
+        Params = Duration<625>;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Read AFH Channel Assessment Mode command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-20cc4548-ff1e-0102-0f8a-593746e3f3b4)
+    ReadAfhChannelAssessmentMode(CONTROL_BASEBAND, 0x0048) {
+        Params = ();
+        Return = bool;
+    }
+}
+
+cmd! {
+    /// Write AFH Channel Assessment Mode command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-80994aff-be68-6510-c995-df5de4a66db9)
+    WriteAfhChannelAssessmentMode(CONTROL_BASEBAND, 0x0049) {
+        Params = bool;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Set Ecosystem Base Interval command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-3d0ee297-3672-5e33-2838-4ec63069a7a1)
+    SetEcosystemBaseInterval(CONTROL_BASEBAND, 0x0082) {
+        Params = Duration<1250>;
+        Return = ();
+    }
+}
+
+cmd! {
+    /// Configure Data Path command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-6bb7b4d9-f5a2-8baa-e113-473f14c4baa0)
+    ConfigureDataPath(CONTROL_BASEBAND, 0x0083) {
+        ConfigureDataPathParams<'a> {
+            data_path_direction: DataPathDirection,
+            data_path_id: DataPathId,
+            vendor_specific_config: &'a [u8],
+        }
+        Return = ();
     }
 }
