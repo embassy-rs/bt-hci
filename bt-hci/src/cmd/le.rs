@@ -4,12 +4,11 @@ use crate::param::{
     AddrKind, AdvChannelMap, AdvEventProps, AdvFilterPolicy, AdvHandle, AdvKind, AdvPhyOptions, AdvSet, AllLeFeatures,
     AllPhys, BdAddr, BigHandle, BroadcastCode, ChannelMap, CigId, CisConfig, CisConfigTest, CisConnConfig, CodecId,
     ConnHandle, ConnIntervalGroup, CteKind, CteMask, DataPathDirection, DataPathId, Duration, DurationU8,
-    EncryptionMode, ExtDuration, FilterDuplicates, FlagOp, Framing, InitiatingPhy, LeDataRelatedAddrChangeReasons,
-    LeEventMask, LeFeatureMask, LeHostFeature, LeHostFeatureV2, LePeriodicAdvCreateSyncOptions,
-    LePeriodicAdvReceiveEnable, LePeriodicAdvSubeventData, LePeriodicAdvSyncTransferMode, LeScanKind, Operation,
-    Packing, PayloadType, PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode,
-    RemoteConnectionParamsRejectReason, ScanningFilterPolicy, ScanningPhy, SpacingTypes, SwitchingSamplingRates,
-    SyncHandle,
+    EncryptionMode, ExtDuration, FilterDuplicates, Framing, InitiatingPhy, LeDataRelatedAddrChangeReasons, LeEventMask,
+    LeFeatureMask, LeHostFeature, LeHostFeatureV2, LePeriodicAdvCreateSyncOptions, LePeriodicAdvReceiveEnable,
+    LePeriodicAdvSubeventData, LePeriodicAdvSyncTransferMode, LeScanKind, Operation, Packing, PayloadType,
+    PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason,
+    ScanningFilterPolicy, ScanningPhy, SpacingTypes, SwitchingSamplingRates, SyncHandle,
 };
 use crate::{cmd, WriteHci};
 
@@ -1520,7 +1519,7 @@ cmd! {
     LeSetHostFeature(LE, 0x0074) {
         LeSetHostFeatureParams {
             bit_number: LeHostFeature,
-            bit_value: FlagOp,
+            bit_value: bool,
         }
         Return = ();
     }
@@ -1724,7 +1723,7 @@ cmd! {
     LeSetHostFeatureV2(LE, 0x0097) {
         LeSetHostFeatureV2Params {
             bit_number: LeHostFeatureV2,
-            bit_value: FlagOp,
+            bit_value: bool,
         }
         Return = ();
     }
