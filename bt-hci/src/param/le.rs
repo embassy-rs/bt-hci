@@ -445,49 +445,39 @@ param! {
     }
 }
 
-param! {
-    enum LeHostFeature {
-        ConnIsoStream = 32,
-        ConnSubrating = 38,
-        AdvCodingSelection = 41,
-        ChannelSounding = 47,
-    }
-}
+param!(struct LeHostFeature(u8));
 
-/// Feature host support flags
-#[repr(u16, align(1))]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[allow(missing_docs)]
-pub enum LeHostFeatureV2 {
-    ConnIsoStream = 32,
-    ConnSubrating = 38,
-    AdvCodingSelection = 41,
-    ChannelSounding = 47,
-    ShorterConnectionIntervals = 73,
+impl LeHostFeature {
+    pub const CONN_ISO_STREAM: LeHostFeature = LeHostFeature(32);
+    pub const CONN_SUBRATING: LeHostFeature = LeHostFeature(38);
+    pub const ADV_CODING_SELECTION: LeHostFeature = LeHostFeature(41);
+    pub const CHANNEL_SOUNDING: LeHostFeature = LeHostFeature(47);
 }
 
-unsafe impl FixedSizeValue for LeHostFeatureV2 {
-    #[inline(always)]
-    fn is_valid(data: &[u8]) -> bool {
-        let val = u16::from_le_bytes([data[0], data[1]]);
-        val == 32 || val == 38 || val == 41 || val == 47 || val == 73
-    }
-}
+unsafe impl ByteAlignedValue for LeHostFeature {}
 
-unsafe impl ByteAlignedValue for LeHostFeatureV2 {}
-
-impl<'de> FromHciBytes<'de> for &'de LeHostFeatureV2 {
+impl<'de> FromHciBytes<'de> for &'de LeHostFeature {
     #[inline(always)]
     fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
-        <LeHostFeatureV2 as ByteAlignedValue>::ref_from_hci_bytes(data)
+        <LeHostFeature as ByteAlignedValue>::ref_from_hci_bytes(data)
     }
 }
 
-param! {
-    enum FlagOp {
-        Clear = 0,
-        Set = 1,
+param!(struct LeHostFeatureV2(u16));
+
+#[allow(missing_docs)]
+impl LeHostFeatureV2 {
+    pub const CONN_ISO_STREAM: LeHostFeatureV2 = LeHostFeatureV2(32);
+    pub const CONN_SUBRATING: LeHostFeatureV2 = LeHostFeatureV2(38);
+    pub const ADV_CODING_SELECTION: LeHostFeatureV2 = LeHostFeatureV2(41);
+    pub const CHANNEL_SOUNDING: LeHostFeatureV2 = LeHostFeatureV2(47);
+    pub const SHORTER_CONNECTION_INTERVALS: LeHostFeatureV2 = LeHostFeatureV2(73);
+}
+
+impl From<LeHostFeature> for LeHostFeatureV2 {
+    fn from(value: LeHostFeature) -> Self {
+        LeHostFeatureV2(value.0.into())
     }
 }
 
