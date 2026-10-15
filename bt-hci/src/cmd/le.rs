@@ -10,7 +10,7 @@ use crate::param::{
     PeriodicAdvProps, PhyKind, PhyMask, PhyOptions, PhyParams, PrivacyMode, RemoteConnectionParamsRejectReason,
     ScanningFilterPolicy, ScanningPhy, SpacingTypes, SwitchingSamplingRates, SyncHandle,
 };
-use crate::{cmd, WriteHci};
+use crate::{cmd, FromHciBytes, FromHciBytesError, ReadHci, ReadHciError, WriteHci};
 
 cmd! {
     /// LE Set Event Mask command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-8d6890a5-79b9-ba8a-2079-4efa3128263c)
@@ -1875,19 +1875,14 @@ cmd! {
             cig_id: CigId,
             sdu_interval_c_to_p: ExtDuration<1>,
             sdu_interval_p_to_c: ExtDuration<1>,
-            ft_c_to_p: u8,
-            ft_p_to_c: u8,
-            iso_interval: u16,
             worst_case_sca: u8,
             packing: Packing,
             framing: Framing,
+            max_transport_latency_c_to_p: u16,
+            max_transport_latency_p_to_c: u16,
             cis_configs: &'a [CisConfig],
         }
-        LeSetCigParametersReturn {
-            cig_id: CigId,
-            num_cis: u8,
-            cis_handles: [ConnHandle; 31],
-        }
+        Return = LeSetCigParametersReturn;
     }
 }
 
@@ -1906,11 +1901,101 @@ cmd! {
             framing: Framing,
             cis_configs: &'a [CisConfigTest],
         }
-        LeSetCigParametersTestReturn {
-            cig_id: CigId,
-            num_cis: u8,
-            cis_handles: [ConnHandle; 31],
+        Return = LeSetCigParametersTestReturn;
+    }
+}
+
+/// Maximum number of CISes in a CIG (`CIS_Count` range is 0x00 to 0x1F).
+pub const MAX_CIS_PER_CIG: usize = 0x1F;
+
+/// Return parameters for [`LeSetCigParameters`] and [`LeSetCigParametersTest`].
+///
+/// The controller returns one connection handle per configured CIS, so the
+/// number of handles varies. Only the first `num_cis` entries of `cis_handles`
+/// are meaningful; use [`Self::handles`] to get them as a slice.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct LeSetCigParametersReturn {
+    /// CIG identifier.
+    pub cig_id: CigId,
+    /// Number of valid entries in `cis_handles`.
+    pub num_cis: u8,
+    /// CIS connection handles, in the order the CISes were configured.
+    pub cis_handles: [ConnHandle; MAX_CIS_PER_CIG],
+}
+
+/// Return parameters for [`LeSetCigParametersTest`].
+pub type LeSetCigParametersTestReturn = LeSetCigParametersReturn;
+
+impl LeSetCigParametersReturn {
+    const HEADER_LEN: usize = 2;
+
+    /// The CIS connection handles returned by the controller.
+    pub fn handles(&self) -> &[ConnHandle] {
+        &self.cis_handles[..usize::from(self.num_cis).min(MAX_CIS_PER_CIG)]
+    }
+
+    fn total_len(header: &[u8]) -> Result<usize, FromHciBytesError> {
+        let num_cis = usize::from(header[1]);
+        if num_cis > MAX_CIS_PER_CIG {
+            return Err(FromHciBytesError::InvalidValue);
         }
+        Ok(Self::HEADER_LEN + num_cis * 2)
+    }
+}
+
+impl<'de> FromHciBytes<'de> for LeSetCigParametersReturn {
+    fn from_hci_bytes(data: &'de [u8]) -> Result<(Self, &'de [u8]), FromHciBytesError> {
+        let (cig_id, rest) = CigId::from_hci_bytes(data)?;
+        let (num_cis, mut rest) = u8::from_hci_bytes(rest)?;
+        if usize::from(num_cis) > MAX_CIS_PER_CIG {
+            return Err(FromHciBytesError::InvalidValue);
+        }
+        let mut cis_handles = [ConnHandle::new(0); MAX_CIS_PER_CIG];
+        for handle in cis_handles.iter_mut().take(usize::from(num_cis)) {
+            (*handle, rest) = ConnHandle::from_hci_bytes(rest)?;
+        }
+        Ok((
+            Self {
+                cig_id,
+                num_cis,
+                cis_handles,
+            },
+            rest,
+        ))
+    }
+}
+
+impl<'de> ReadHci<'de> for LeSetCigParametersReturn {
+    const MAX_LEN: usize = Self::HEADER_LEN + MAX_CIS_PER_CIG * 2;
+
+    fn read_hci<R: embedded_io::Read>(mut reader: R, buf: &'de mut [u8]) -> Result<Self, ReadHciError<R::Error>> {
+        if buf.len() < Self::HEADER_LEN {
+            return Err(ReadHciError::BufferTooSmall);
+        }
+        reader.read_exact(&mut buf[..Self::HEADER_LEN])?;
+        let len = Self::total_len(buf)?;
+        if buf.len() < len {
+            return Err(ReadHciError::BufferTooSmall);
+        }
+        reader.read_exact(&mut buf[Self::HEADER_LEN..len])?;
+        Self::from_hci_bytes_complete(&buf[..len]).map_err(Into::into)
+    }
+
+    async fn read_hci_async<R: embedded_io_async::Read>(
+        mut reader: R,
+        buf: &'de mut [u8],
+    ) -> Result<Self, ReadHciError<R::Error>> {
+        if buf.len() < Self::HEADER_LEN {
+            return Err(ReadHciError::BufferTooSmall);
+        }
+        reader.read_exact(&mut buf[..Self::HEADER_LEN]).await?;
+        let len = Self::total_len(buf)?;
+        if buf.len() < len {
+            return Err(ReadHciError::BufferTooSmall);
+        }
+        reader.read_exact(&mut buf[Self::HEADER_LEN..len]).await?;
+        Self::from_hci_bytes_complete(&buf[..len]).map_err(Into::into)
     }
 }
 
@@ -1918,7 +2003,6 @@ cmd! {
     /// LE Create CIS command [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-4c126319-a7b1-6765-ab23-04777e78599f)
     LeCreateCis(LE, 0x0064) {
         LeCreateCisParams<'a> {
-            cig_id: CigId,
             cis_configs: &'a [CisConnConfig],
         }
     }
