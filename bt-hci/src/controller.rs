@@ -19,7 +19,7 @@ use crate::cmd::{Cmd, CmdReturnBuf};
 use crate::event::{CommandComplete, CommandCompleteWithStatus, CommandStatus, EventKind};
 use crate::param::{RemainingBytes, Status};
 use crate::transport::Transport;
-use crate::{cmd, data, ControllerToHostPacket, FixedSizeValue, FromHciBytes};
+use crate::{cmd, data, ControllerToHostPacket, FromHciBytes};
 
 pub mod blocking;
 
@@ -263,7 +263,6 @@ impl<T, C, const SLOTS: usize> ControllerCmdSync<C> for ExternalController<T, SL
 where
     T: Transport,
     C: cmd::SyncCmd,
-    C::Return: FixedSizeValue,
     T::Error: From<ReadHciError<Infallible>>,
 {
     async fn exec(&self, cmd: &C) -> Result<C::Return, cmd::Error<Self::Error>> {
