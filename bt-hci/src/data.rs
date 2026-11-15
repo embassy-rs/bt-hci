@@ -442,15 +442,16 @@ impl PacketToController for SyncPacket<'_> {
 /// HCI ISO Data packet `PB_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b5fb085-278b-5084-ac33-bee2839abe6b)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(u8)]
 pub enum IsoPacketBoundary {
     /// The `ISO_Data_Load` field contains a header and the first fragment of a fragmented SDU.
-    FirstFragment,
+    FirstFragment = 0x00,
     /// The `ISO_Data_Load` field contains a continuation fragment of an SDU.
-    ContinuationFragment,
+    ContinuationFragment = 0x01,
     /// The `ISO_Data_Load` field contains a header and a complete SDU.
-    Complete,
+    Complete = 0x02,
     /// The `ISO_Data_Load` field contains the last fragment of an SDU.
-    LastFragment,
+    LastFragment = 0x03,
 }
 
 /// HCI ISO Data packet `Packet_Status_Flag` [📖](https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-54/out/en/host-controller-interface/host-controller-interface-functional-specification.html#UUID-9b5fb085-278b-5084-ac33-bee2839abe6b)
@@ -586,6 +587,64 @@ pub struct IsoPacket<'a> {
 }
 
 impl<'a> IsoPacket<'a> {
+    /// Create a new `IsoPacket` for transmitting over a Controller.
+    ///
+    /// `data_load_header` must be `Some` when `boundary` is [`IsoPacketBoundary::FirstFragment`]
+    /// or [`IsoPacketBoundary::Complete`], and `None` when `boundary` is
+    /// [`IsoPacketBoundary::ContinuationFragment`] or [`IsoPacketBoundary::LastFragment`].
+    ///
+    /// Panics if the header presence does not match `boundary`, if `iso_sdu_len` exceeds the
+    /// 12-bit field (`0x0fff`), or if the total `ISO_Data_Load` length exceeds 14 bits (`0x3fff`).
+    pub fn new(
+        handle: ConnHandle,
+        boundary: IsoPacketBoundary,
+        data_load_header: Option<IsoDataLoadHeader>,
+        data: &'a [u8],
+    ) -> Self {
+        let ts_flag = match boundary {
+            IsoPacketBoundary::FirstFragment | IsoPacketBoundary::Complete => {
+                let header = data_load_header.expect("ISO data load header required for FirstFragment and Complete");
+                assert!(header.iso_sdu_len <= 0x0fff, "ISO SDU length exceeds 12-bit field");
+                u16::from(header.timestamp.is_some())
+            }
+            IsoPacketBoundary::ContinuationFragment | IsoPacketBoundary::LastFragment => {
+                assert!(
+                    data_load_header.is_none(),
+                    "ISO data load header only valid for FirstFragment and Complete"
+                );
+                0
+            }
+        };
+
+        let header_len = data_load_header.as_ref().map_or(0, IsoDataLoadHeader::size);
+        assert!(
+            data.len().saturating_add(header_len) <= 0x3fff,
+            "ISO data load length exceeds 14-bit field"
+        );
+
+        let handle = handle.into_inner() | ((boundary as u16) << 12) | (ts_flag << 14);
+        Self {
+            handle,
+            data_load_header,
+            data,
+        }
+    }
+
+    /// Create a complete single-SDU `IsoPacket` for transmitting over a Controller.
+    pub fn complete(handle: ConnHandle, sequence_num: u16, timestamp: Option<u32>, data: &'a [u8]) -> Self {
+        let iso_sdu_len = u16::try_from(data.len()).expect("ISO SDU length exceeds 12-bit field");
+        Self::new(
+            handle,
+            IsoPacketBoundary::Complete,
+            Some(IsoDataLoadHeader {
+                timestamp,
+                sequence_num,
+                iso_sdu_len,
+            }),
+            data,
+        )
+    }
+
     /// Create an `IsoPacket` from `header` and `data`
     pub fn from_header_hci_bytes(
         header: IsoPacketHeader,
@@ -745,9 +804,9 @@ impl PacketToController for IsoPacket<'_> {
 
 #[cfg(test)]
 mod tests {
-    use super::AclPacketHeader;
+    use super::{AclPacketHeader, IsoDataLoadHeader, IsoPacket, IsoPacketBoundary};
     use crate::param::ConnHandle;
-    use crate::FromHciBytes;
+    use crate::{FromHciBytes, WriteHci};
 
     #[test]
     fn test_decode_acl_handle() {
@@ -758,5 +817,142 @@ mod tests {
         let input = &[0, 33, 0, 0];
         let header = AclPacketHeader::from_hci_bytes_complete(input).unwrap();
         assert_eq!(header.handle(), ConnHandle::new(256));
+    }
+
+    #[test]
+    fn test_iso_packet_complete_roundtrip() {
+        let handle = ConnHandle::new(0x0040);
+        let payload = [0x01, 0x02, 0x03, 0x04];
+        let pkt = IsoPacket::complete(handle, 7, None, &payload);
+
+        let mut buf = [0u8; 32];
+        let len = pkt.size();
+        assert_eq!(len, 12);
+        pkt.write_hci(&mut buf[..len]).unwrap();
+        assert_eq!(
+            &buf[..len],
+            &[
+                0x40, 0x20, // handle=0x0040 | PB=Complete(0b10) | TS=0
+                0x08, 0x00, // data_load_len = 8
+                0x07, 0x00, // sequence_num = 7
+                0x04, 0x00, // iso_sdu_len = 4
+                0x01, 0x02, 0x03, 0x04,
+            ]
+        );
+
+        let decoded = IsoPacket::from_hci_bytes_complete(&buf[..len]).unwrap();
+        assert_eq!(decoded.handle(), handle);
+        assert_eq!(decoded.boundary_flag(), IsoPacketBoundary::Complete);
+        assert_eq!(
+            decoded.data_load_header(),
+            Some(IsoDataLoadHeader {
+                timestamp: None,
+                sequence_num: 7,
+                iso_sdu_len: 4,
+            })
+        );
+        assert_eq!(decoded.data(), &payload);
+    }
+
+    #[test]
+    fn test_iso_packet_complete_with_timestamp() {
+        let handle = ConnHandle::new(0x0040);
+        let payload = [0xaa, 0xbb];
+        let pkt = IsoPacket::complete(handle, 42, Some(0x1234_5678), &payload);
+
+        let mut buf = [0u8; 32];
+        let len = pkt.size();
+        assert_eq!(len, 14);
+        pkt.write_hci(&mut buf[..len]).unwrap();
+        assert_eq!(
+            &buf[..len],
+            &[
+                0x40, 0x60, // handle=0x0040 | PB=Complete(0b10) | TS=1
+                0x0a, 0x00, // data_load_len = 10
+                0x78, 0x56, 0x34, 0x12, // timestamp
+                0x2a, 0x00, // sequence_num = 42
+                0x02, 0x00, // iso_sdu_len = 2
+                0xaa, 0xbb,
+            ]
+        );
+
+        let decoded = IsoPacket::from_hci_bytes_complete(&buf[..len]).unwrap();
+        assert_eq!(decoded, pkt);
+    }
+
+    #[test]
+    fn test_iso_packet_fragments_roundtrip() {
+        let handle = ConnHandle::new(0x0012);
+        let first = IsoPacket::new(
+            handle,
+            IsoPacketBoundary::FirstFragment,
+            Some(IsoDataLoadHeader {
+                timestamp: None,
+                sequence_num: 1,
+                iso_sdu_len: 6,
+            }),
+            &[1, 2],
+        );
+        let cont = IsoPacket::new(handle, IsoPacketBoundary::ContinuationFragment, None, &[3, 4]);
+        let last = IsoPacket::new(handle, IsoPacketBoundary::LastFragment, None, &[5, 6]);
+
+        for (pkt, expected_boundary, expected_hdr) in [
+            (
+                first,
+                IsoPacketBoundary::FirstFragment,
+                Some(IsoDataLoadHeader {
+                    timestamp: None,
+                    sequence_num: 1,
+                    iso_sdu_len: 6,
+                }),
+            ),
+            (cont, IsoPacketBoundary::ContinuationFragment, None),
+            (last, IsoPacketBoundary::LastFragment, None),
+        ] {
+            let mut buf = [0u8; 16];
+            let len = pkt.size();
+            pkt.write_hci(&mut buf[..len]).unwrap();
+            let decoded = IsoPacket::from_hci_bytes_complete(&buf[..len]).unwrap();
+            assert_eq!(decoded.handle(), handle);
+            assert_eq!(decoded.boundary_flag(), expected_boundary);
+            assert_eq!(decoded.data_load_header(), expected_hdr);
+            assert_eq!(decoded, pkt);
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "ISO data load header required")]
+    fn test_iso_packet_complete_requires_header() {
+        IsoPacket::new(ConnHandle::new(0), IsoPacketBoundary::Complete, None, &[1]);
+    }
+
+    #[test]
+    #[should_panic(expected = "ISO data load header only valid")]
+    fn test_iso_packet_continuation_rejects_header() {
+        IsoPacket::new(
+            ConnHandle::new(0),
+            IsoPacketBoundary::ContinuationFragment,
+            Some(IsoDataLoadHeader {
+                timestamp: None,
+                sequence_num: 0,
+                iso_sdu_len: 1,
+            }),
+            &[1],
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "ISO SDU length exceeds 12-bit field")]
+    fn test_iso_packet_sdu_len_overflow() {
+        IsoPacket::new(
+            ConnHandle::new(0),
+            IsoPacketBoundary::Complete,
+            Some(IsoDataLoadHeader {
+                timestamp: None,
+                sequence_num: 0,
+                iso_sdu_len: 0x1000,
+            }),
+            &[],
+        );
     }
 }
